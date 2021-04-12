@@ -36,3 +36,39 @@
     transform: rotate(360deg);
   }
 }
+
+.MuiDrawer-paper {
+  top: 0;
+  flex: 1 0 auto;
+  height: 100%;
+  display: flex;
+  outline: 0;
+  z-index: 1200;
+  position: fixed;
+  overflow-y: auto;
+  flex-direction: column;
+  -webkit-overflow-scrolling: touch;
+  border-top-left-radius: 50px;
+  border-top-right-radius: 50px;
+}
+
+.PhoneInputInput {
+  border: none;
+}
+
+.PhoneInput {
+  display: flex;
+  align-items: center;
+  width: inherit !important;
+}
+
+.MuiInput-underline::before {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  content: "\00a0";
+  position: absolute;
+  transition: none !important;
+  border-bottom: 1px solid #e9e9e9 !important;
+  pointer-events: none;
+}
