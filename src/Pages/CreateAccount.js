@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { makeStyles, Grid } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
@@ -62,6 +63,7 @@ export default function LoginPage() {
           alignItems="center"
           style={{ height: 60 }}
         >
+          <Link id="complete" to="/complete-profile"></Link>
           <ArrowBackIosIcon style={{ marginLeft: 20 }}></ArrowBackIosIcon>
           <p
             style={{
@@ -169,7 +171,14 @@ export default function LoginPage() {
             </Grid>
           </Grid>
         </div>{" "}
-        <button className={classes.button}>Register</button>
+        <button
+          className={classes.button}
+          onClick={() => {
+            document.getElementById("complete").click();
+          }}
+        >
+          Register
+        </button>
         <Drawer
           anchor={"bottom"}
           open={state}

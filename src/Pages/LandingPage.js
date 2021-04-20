@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Grid, makeStyles } from "@material-ui/core";
 import UPlumberLogo from "../assets/uplumberlogo.png";
 import Plumbers from "../assets/Plumbers.png";
@@ -12,6 +13,7 @@ const useStyles = makeStyles((theme) => ({
     width: "80%",
     background: "#1075c2",
     height: 45,
+    cursor: "pointer",
     marginTop: 20,
   },
 }));
@@ -26,6 +28,7 @@ export default function LandingPage() {
         background: "linear-gradient(to right, #F6F6F6 50%, #F2F2F2 50%)",
       }}
     >
+      <Link id="signup" to="/create-account"></Link>
       <Grid
         container
         direction="row"
@@ -47,7 +50,13 @@ export default function LandingPage() {
           //   height: "50vh",
         }}
       >
-        <button className={classes.button} style={{ marginTop: 200 }}>
+        <button
+          className={classes.button}
+          style={{ marginTop: 200 }}
+          onClick={() => {
+            document.getElementById("signup").click();
+          }}
+        >
           <Grid container direction="row" justify="center" alignItems="center">
             Start Exploring <ArrowRightAltIcon></ArrowRightAltIcon>
           </Grid>

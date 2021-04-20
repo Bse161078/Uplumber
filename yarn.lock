@@ -7943,6 +7943,11 @@ os-browserify@^0.3.0:
   resolved "https://registry.yarnpkg.com/os-browserify/-/os-browserify-0.3.0.tgz#854373c7f5c2315914fc9bfc6bd8238fdda1ec27"
   integrity sha1-hUNzx/XCMVkU/Jv8a9gjj92h7Cc=
 
+otp-input-react@^0.2.4:
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/otp-input-react/-/otp-input-react-0.2.4.tgz#efb3f2a94ab6bfe1eb936de424a45087296c5a60"
+  integrity sha512-3RkekIT5lFx5Au5cvn/pK8TRJQbHHLD6OewUd8sDDyBIQGb3VtkfpB6NwnrRukdw6XERqPPM9Gs+pCZBH1cIMg==
+
 p-each-series@^2.1.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/p-each-series/-/p-each-series-2.2.0.tgz#105ab0357ce72b202a8a8b94933672657b5e2a9a"
@@ -9263,6 +9268,11 @@ react-is@^17.0.1:
   version "17.0.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.1.tgz#5b3531bd76a645a4c9fb6e693ed36419e3301339"
   integrity sha512-NAnt2iGDXohE5LI7uBnLnqvLQMtzhkiAOLXTmv+qnF9Ky7xAPcX8Up/xWIhxvLVGJvuLiNc4xQLtuqDRzb4fSA==
+
+react-otp-input@^2.3.0:
+  version "2.3.0"
+  resolved "https://registry.yarnpkg.com/react-otp-input/-/react-otp-input-2.3.0.tgz#2457b47540e2de2751c3a3e14311452b0c8313a8"
+  integrity sha512-xzljlohVaPkUqO4H61x4r7KMRSq2ZPYFFZeSqqVXid+kJNL1UekSBP1xPafvI0eGNpus/PA1447jYZf2EJRY0A==
 
 react-phone-number-input@^3.1.18:
   version "3.1.18"

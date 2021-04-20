@@ -4,6 +4,7 @@ import LandingPage from "./Pages/LandingPage";
 import LoginPage from "./Pages/LoginPage";
 import CreateAccount from "./Pages/CreateAccount";
 import CompleteProfile from "./Pages/CompleteProfile";
+import ConfirmOTP from "./Pages/ConfirmOTP";
 import "react-phone-number-input/style.css";
 
 // import "antd/dist/antd.css";
@@ -21,6 +22,8 @@ export default function App() {
           path="/complete-profile"
           render={() => <CompleteProfile />}
         />
+        <Route exact path="/confirm-otp" render={() => <ConfirmOTP />} />
+
         <Route exact path="/" render={() => <LandingPage />} />
       </Switch>
     </BrowserRouter>

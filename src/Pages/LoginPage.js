@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { makeStyles, Grid } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import LoginPic from "../assets/loginPic.png";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
@@ -54,6 +55,7 @@ export default function LoginPage() {
 
   return (
     <div>
+      <Link id="signup" to="/create-account"></Link>
       <img style={{ width: "100%" }} src={LoginPic}></img>
       <Grid
         container
