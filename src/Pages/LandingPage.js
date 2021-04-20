@@ -16,6 +16,30 @@ const useStyles = makeStyles((theme) => ({
     cursor: "pointer",
     marginTop: 20,
   },
+  topDiv: {
+    height: "50vh",
+    [theme.breakpoints.up("sm")]: {
+      height: "50vh",
+    },
+  },
+  bottomDiv: {
+    backgroundPosition: "center",
+    backgroundSize: "cover",
+    height: "50vh",
+    [theme.breakpoints.up("sm")]: {
+      // height: "100vh",
+      width: "100vw",
+      backgroundSize: "contain",
+      backgroundRepeat: "no-repeat",
+      height: "unset",
+    },
+  },
+  logo: {
+    width: "90%",
+    [theme.breakpoints.up("sm")]: {
+      width: 400,
+    },
+  },
 }));
 
 export default function LandingPage() {
@@ -33,21 +57,18 @@ export default function LandingPage() {
         container
         direction="row"
         justify="center"
-        style={{ height: "50vh" }}
+        className={classes.topDiv}
       >
-        <img src={UPlumberLogo} style={{ width: "90%" }}></img>
+        <img src={UPlumberLogo} className={classes.logo}></img>
       </Grid>
       <Grid
         container
         direction="column"
         justify="center"
         alignItems="center"
+        className={classes.bottomDiv}
         style={{
-          height: "inherit",
           background: `url(${Plumbers})`,
-          backgroundPosition: "center",
-          backgroundSize: "cover",
-          //   height: "50vh",
         }}
       >
         <button
