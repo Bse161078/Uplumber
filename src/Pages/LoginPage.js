@@ -55,7 +55,7 @@ export default function LoginPage() {
 
   return (
     <div>
-      <Link id="signup" to="/create-account"></Link>
+      <Link id="signup" to="/homepage"></Link>
       <img style={{ width: "100%" }} src={LoginPic}></img>
       <Grid
         container
@@ -120,7 +120,14 @@ export default function LoginPage() {
             </Grid>
           </Grid>
         </div>
-        <button className={classes.button}>Log In</button>
+        <button
+          className={classes.button}
+          onClick={() => {
+            document.getElementById("signup").click();
+          }}
+        >
+          Log In
+        </button>
         <Drawer
           anchor={"bottom"}
           open={state}

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { makeStyles, Grid, TextField } from "@material-ui/core";
 import PhoneInput from "react-phone-number-input";
 import Drawer from "@material-ui/core/Drawer";
@@ -54,6 +55,7 @@ export default function LoginPage() {
 
   return (
     <div>
+      <Link id="signup" to="/confirm-otp"></Link>
       <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
         <Grid
           container
@@ -185,7 +187,7 @@ export default function LoginPage() {
           onClose={toggleDrawer("bottom", false)}
         >
           <p style={{ fontWeight: 600, fontSize: 26, textAlign: "center" }}>
-            Verificatin Code Sent
+            Verification Code Sent
           </p>
           <Grid container direction="row" justify="center">
             <p style={{ width: "90%", textAlign: "center", marginTop: 0 }}>
@@ -199,7 +201,13 @@ export default function LoginPage() {
             >
               Tap Continue to enter code
             </p>
-            <button className={classes.button} style={{ marginBottom: 40 }}>
+            <button
+              className={classes.button}
+              style={{ marginBottom: 40 }}
+              onClick={() => {
+                document.getElementById("signup").click();
+              }}
+            >
               Continue
             </button>
           </Grid>
