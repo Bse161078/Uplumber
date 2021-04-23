@@ -37,7 +37,13 @@ export default function Header(props) {
   const classes = useStyles();
 
   return (
-    <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
+    <div
+      style={{
+        borderBottom: "1px solid #e9e9e9",
+        background: "white",
+        height: 60,
+      }}
+    >
       <Grid
         container
         direction="row"
@@ -46,12 +52,16 @@ export default function Header(props) {
       >
         <Grid md={2} xs={2}>
           <Grid container direction="row" justify="center">
-            <ClearAllIcon
-              style={{ cursor: "pointer" }}
-              onClick={() => {
-                props.onSidebarDisplay();
-              }}
-            ></ClearAllIcon>
+            {props.leftIcon ? (
+              props.leftIcon
+            ) : (
+              <ClearAllIcon
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  props.onSidebarDisplay();
+                }}
+              ></ClearAllIcon>
+            )}
           </Grid>
         </Grid>
         <Grid md={8} xs={8}>
@@ -64,12 +74,16 @@ export default function Header(props) {
               width: "100%",
             }}
           >
-            Nearby Plumbers
+            {props.heading}
           </p>
         </Grid>
         <Grid md={2} xs={2}>
           <Grid container direction="row" justify="center">
-            <NotificationsIcon></NotificationsIcon>
+            {props.rightIcon ? (
+              props.rightIcon
+            ) : (
+              <NotificationsIcon></NotificationsIcon>
+            )}
           </Grid>
         </Grid>
       </Grid>
