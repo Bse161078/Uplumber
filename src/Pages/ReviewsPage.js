@@ -9,7 +9,7 @@ import ExploreIcon from "@material-ui/icons/Explore";
 import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import PersonIcon from "@material-ui/icons/Person";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import { Link, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -41,10 +41,10 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 20,
   },
 }));
-function ProviderDetail(props) {
+export default function LoginPage() {
   const classes = useStyles();
   const [value, setValue] = useState("");
-  const [offerAccepted, setOfferAccepted] = useState(false);
+  const [OTP, setOTP] = useState("");
   const [typeConfirm, setTypeConfirm] = useState("text");
 
   const [state, setState] = React.useState(false);
@@ -58,11 +58,10 @@ function ProviderDetail(props) {
     setBottomState(open);
   };
   const position = [51.505, -0.09];
-  console.log("THis is great", props);
+
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
-      <Link id="homepage" to="/homepage"></Link>
-      <Link id="reviews" to="/reviews/0"></Link>
+      <Link id="homepage" to="/details/0"></Link>
       <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
         <Header
           onSidebarDisplay={() => {
@@ -92,194 +91,15 @@ function ProviderDetail(props) {
           overflowY: "scroll",
         }}
       >
-        {/* props.match.params.jobType === "jobStarted" ? (
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            spacing={1}
-            style={{
-              background: "#1075c2",
-              height: "max-content",
-              position: "absolute",
-            }}
-          >
-            {" "}
-            <p style={{ color: "white", width: "100%", textAlign: "center" }}>
-              Job Started
-            </p>
-          </Grid>
-        ) : */}{" "}
-        {offerAccepted ? (
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            spacing={1}
-            style={{
-              background: "#10c228",
-              height: "max-content",
-              position: "absolute",
-            }}
-          >
-            {" "}
-            <p style={{ color: "white", width: "100%", textAlign: "center" }}>
-              You Accepted this offer
-            </p>
-          </Grid>
-        ) : (
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            spacing={1}
-            style={{
-              background: "rgba(0,0,0,0.8)",
-              height: "max-content",
-              position: "absolute",
-            }}
-          >
-            <p style={{ color: "white", width: "100%", marginLeft: 10 }}>
-              Would you like to accept this offer?
-            </p>
-            <Grid item md={6} xs={6}>
-              <Grid
-                container
-                direction="row"
-                justify="center"
-                alignItems="center"
-                style={{
-                  background: "#ff0000",
-                  height: 35,
-                  width: "98%",
-                  borderRadius: 20,
-                  color: "white",
-                  fontSize: 12,
-                }}
-              >
-                Cancel
-              </Grid>
-            </Grid>
-            <Grid item md={6} xs={6}>
-              <Grid
-                container
-                direction="row"
-                justify="center"
-                alignItems="center"
-                style={{
-                  background: "#10c228",
-                  height: 35,
-                  width: "98%",
-                  borderRadius: 20,
-                  color: "white",
-                  fontSize: 12,
-                }}
-                onClick={() => {
-                  setOfferAccepted(true);
-                }}
-              >
-                Accept
-              </Grid>
-            </Grid>
-          </Grid>
-        )}
+        {" "}
         <Grid
           container
           direction="row"
           justify="center"
           style={{ height: "max-content" }}
         >
-          <img
-            src={Avatar}
-            style={{
-              width: 125,
-              height: 125,
-              borderRadius: 100,
-              marginTop: 120,
-            }}
-          ></img>
-          <Grid container direction="row" justify="center">
-            <p
-              style={{
-                width: "100%",
-                textAlign: "center",
-                margin: 0,
-                fontWeight: 600,
-              }}
-            >
-              Jane Doe
-            </p>
-            <Rating value={5} style={{ fontSize: 10 }}></Rating>
-            <span style={{ fontSize: 10 }}>5.0(433) </span>
-            <div style={{ width: "100%" }}></div>
-            <span style={{ fontSize: 10 }}>$25 / hr</span>
-          </Grid>
-          <div
-            style={{ width: "100%", border: "1px solid #f6f6f6", margin: 20 }}
-          ></div>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            style={{ padding: 20, paddingTop: 0 }}
-          >
-            <Grid item md={6} xs={6}>
-              <span style={{ color: "#60a3d6", fontSize: 10 }}>Date</span>
-              <p style={{ fontSize: 10, margin: 0 }}>March 23 , 2021</p>
-            </Grid>
-            <Grid item md={6} xs={6}>
-              <span style={{ color: "#60a3d6", fontSize: 10 }}>Item</span>
-              <p style={{ fontSize: 10, margin: 0 }}>Dishwasher</p>
-            </Grid>
-            <Grid item md={6} xs={6}>
-              <span style={{ color: "#60a3d6", fontSize: 10 }}>
-                Estimated Distance
-              </span>
-              <p style={{ fontSize: 10, margin: 0 }}>5 miles</p>
-            </Grid>
-            <Grid item md={6} xs={6}>
-              <span style={{ color: "#60a3d6", fontSize: 10 }}>
-                Estimated Travel Time
-              </span>
-              <p style={{ fontSize: 10, margin: 0 }}>5 minutes</p>
-            </Grid>
-          </Grid>
-          <div
-            style={{ width: "100%", border: "1px solid #f6f6f6", margin: 20 }}
-          ></div>
-          <Grid container direction="row" justify="center">
-            <Grid item md={8} xs={8}>
-              {" "}
-              <p
-                style={{
-                  margin: 0,
-                  marginBottom: 10,
-                  marginLeft: 10,
-                  fontWeight: 600,
-                }}
-              >
-                Jane Doe
-              </p>
-            </Grid>
-            <Grid item md={4} xs={4}>
-              <p
-                style={{
-                  margin: 0,
-                  marginBottom: 10,
-                  marginLeft: 10,
-                  fontWeight: 500,
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  document.getElementById("reviews").click();
-                }}
-              >
-                All Reviews
-              </p>
-            </Grid>
-          </Grid>
           <Grid container direction="row">
-            {[1, 2, 3].map((item) => {
+            {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => {
               return (
                 <Grid container direction="row" justify="center">
                   {" "}
@@ -458,4 +278,3 @@ function ProviderDetail(props) {
     </div>
   );
 }
-export default withRouter(ProviderDetail);

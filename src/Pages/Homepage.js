@@ -9,7 +9,7 @@ import ExploreIcon from "@material-ui/icons/Explore";
 import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import PersonIcon from "@material-ui/icons/Person";
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
-
+import { Link } from "react-router-dom";
 import FavoriteBorderOutlinedIcon from "@material-ui/icons/FavoriteBorderOutlined";
 import PhoneEnabledIcon from "@material-ui/icons/PhoneEnabled";
 import MessageIcon from "@material-ui/icons/Message";
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 20,
   },
 }));
-export default function LoginPage() {
+export default function LoginPage(pros) {
   const classes = useStyles();
   const [value, setValue] = useState("");
   const [OTP, setOTP] = useState("");
@@ -52,7 +52,7 @@ export default function LoginPage() {
 
   const [state, setState] = React.useState(false);
   const [bottomState, setBottomState] = React.useState(false);
-  const [activeTab, setActiveTab] = React.useState("Contacts");
+  const [activeTab, setActiveTab] = React.useState("NearBy");
 
   const toggleDrawer = (anchor, open) => (event) => {
     setState(open);
@@ -62,14 +62,26 @@ export default function LoginPage() {
   };
   const position = [51.505, -0.09];
 
-  const OfferCards = () => {
+  const OfferCards = (props) => {
+    var type = props.item;
+    if (props.item === "Job Started") {
+      type = "jobStarted";
+    }
     return (
       <Paper style={{ width: "90%", padding: 10, marginBottom: 10 }}>
+        <Link
+          id={"details" + props.index}
+          to={"/details/" + props.index}
+        ></Link>
+        <Link
+          id={"jobdetails" + props.index}
+          to={"/jobDetails/" + props.index}
+        ></Link>
         <Grid container direction="row">
           <Grid item md={2} xs={2}>
             <img src={Avatar} style={{ width: 50, height: 50 }}></img>
           </Grid>
-          <Grid item md={8} xs={8}>
+          <Grid item md={7} xs={7}>
             <Grid container direction="row" style={{ marginLeft: 5 }}>
               <p
                 style={{
@@ -86,18 +98,26 @@ export default function LoginPage() {
               <span style={{ fontSize: 10 }}>$25 / hr</span>
             </Grid>
           </Grid>
-          <Grid item md={2} xs={2}>
+          <Grid item md={3} xs={3}>
             <div
               style={{
-                background: "#e7f1f9",
+                background: props.item === "Accepted" ? "#e7f9e9" : "#e7f1f9",
                 fontSize: 10,
                 borderRadius: 10,
                 padding: 4,
                 textAlign: "center",
-                color: "#60a3d6",
+                color: props.item === "Accepted" ? "#23c739" : "#60a3d6",
+                cursor: "pointer",
+              }}
+              onClick={() => {
+                if (props.item === "Pending") {
+                  document.getElementById("details" + props.index).click();
+                } else if (props.item === "Job Started") {
+                  document.getElementById("jobdetails" + props.index).click();
+                }
               }}
             >
-              Pending
+              {props.item}
             </div>
           </Grid>
         </Grid>
@@ -278,8 +298,8 @@ export default function LoginPage() {
             alignItems="flex-start"
             style={{ height: "max-content" }}
           >
-            {[1, 3].map((item) => {
-              return <OfferCards></OfferCards>;
+            {["Accepted", "Job Started", "Pending"].map((item, index) => {
+              return <OfferCards index={index} item={item}></OfferCards>;
             })}
           </Grid>
         ) : (
@@ -290,8 +310,8 @@ export default function LoginPage() {
             alignItems="flex-start"
             style={{ height: "max-content" }}
           >
-            {[1, 3].map((item) => {
-              return <ContactCards></ContactCards>;
+            {[1, 3].map((item, index) => {
+              return <ContactCards index={index}></ContactCards>;
             })}
           </Grid>
         )}
