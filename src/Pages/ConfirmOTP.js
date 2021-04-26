@@ -5,6 +5,7 @@ import Drawer from "@material-ui/core/Drawer";
 import Verify from "../assets/verify.png";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import OtpInput from "react-otp-input";
+import { Link, withRouter } from "react-router-dom";
 const useStyles = makeStyles((theme) => ({
   input: {
     border: "none",
@@ -56,6 +57,7 @@ export default function LoginPage() {
 
   return (
     <div>
+      <Link id="homepage" to="/homepage"></Link>
       <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
         <Grid
           container
@@ -135,7 +137,13 @@ export default function LoginPage() {
             >
               Tap Continue to enter code
             </p>
-            <button className={classes.button} style={{ marginBottom: 40 }}>
+            <button
+              className={classes.button}
+              style={{ marginBottom: 40 }}
+              onClick={() => {
+                document.getElementById("homepage").click();
+              }}
+            >
               Continue
             </button>
           </Grid>
