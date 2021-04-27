@@ -255,6 +255,7 @@ export default function LoginPage(pros) {
           // background: "gray",
         }}
       >
+        <Link id={"requestAService/0"} to={"requestAService/0"}></Link>
         {/* <div style={{ width: "100%" }}></div> */}
         {activeTab === "NearBy" ? (
           <Map center={position} zoom={13} scrollWheelZoom={false}>
@@ -330,7 +331,7 @@ export default function LoginPage(pros) {
         <Drawer
           anchor={"bottom"}
           open={bottomState}
-          onClose={toggleDrawerBottom("bottom", false)}
+          onClose={() => toggleDrawerBottom("bottom", false)}
         >
           <Grid
             container
@@ -343,6 +344,9 @@ export default function LoginPage(pros) {
               className={classes.button}
               onClick={() => {
                 setBottomState(false);
+              }}
+              onClick={() => {
+                document.getElementById("requestAService/0").click();
               }}
             >
               Send Offer
