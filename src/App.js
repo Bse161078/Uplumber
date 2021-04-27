@@ -10,7 +10,9 @@ import Homepage from "./Pages/Homepage";
 import ProviderDetails from "./Pages/ProviderDetails";
 import JobDetails from "./Pages/JobDetailsPage";
 import ReviewsPage from "./Pages/ReviewsPage";
+import RequestAService from "./Pages/RequestAService";
 import "react-phone-number-input/style.css";
+import "react-calendar/dist/Calendar.css";
 
 // import "antd/dist/antd.css";
 import "./App.css";
@@ -27,14 +29,17 @@ export default function App() {
           path="/complete-profile"
           render={() => <CompleteProfile />}
         />
-
         <Route exact path="/confirm-otp" render={() => <ConfirmOTP />} />
         <Route exact path="/terms" render={() => <TermsAndConditions />} />
         <Route exact path="/homepage" render={() => <Homepage />} />
         <Route exact path="/details/:id" render={() => <ProviderDetails />} />
         <Route exact path="/jobDetails/:id" render={() => <JobDetails />} />
         <Route exact path="/reviews/:id" render={() => <ReviewsPage />} />
-
+        <Route
+          exact
+          path="/requestAService/:id"
+          render={() => <RequestAService />}
+        />
         <Route exact path="/" render={() => <LandingPage />} />
       </Switch>
     </BrowserRouter>

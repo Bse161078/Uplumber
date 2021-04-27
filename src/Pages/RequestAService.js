@@ -1,5 +1,16 @@
 import React, { useState } from "react";
-import { makeStyles, Grid, Paper } from "@material-ui/core";
+import {
+  makeStyles,
+  Grid,
+  TextField,
+  Radio,
+  RadioGroup,
+  FormControlLabel,
+  FormControl,
+  FormGroup,
+  Checkbox,
+  Badge,
+} from "@material-ui/core";
 import Drawer from "@material-ui/core/Drawer";
 import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
@@ -8,6 +19,14 @@ import Rating from "@material-ui/lab/Rating";
 import BathtubIcon from "@material-ui/icons/Bathtub";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Link, withRouter } from "react-router-dom";
+import DateRangeIcon from "@material-ui/icons/DateRange";
+import Autocomplete from "@material-ui/lab/Autocomplete";
+import Calendar from "react-calendar";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import CancelIcon from "@material-ui/icons/Cancel";
+import CameraAltIcon from "@material-ui/icons/CameraAlt";
+import AddCircleIcon from "@material-ui/icons/AddCircle";
+import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -16,9 +35,6 @@ const useStyles = makeStyles((theme) => ({
     width: "100%",
     height: 40,
     fontSize: 12,
-    // [theme.breakpoints.down("sm")]: {
-    //   height: "100%",
-    // },
   },
   label: {
     width: "100%",
@@ -43,25 +59,862 @@ const useStyles = makeStyles((theme) => ({
 }));
 function ProviderDetail(props) {
   const classes = useStyles();
-  const [value, setValue] = useState("");
-  const [markComplete, setMarkComplete] = useState(false);
-  const [typeConfirm, setTypeConfirm] = useState("text");
-
   const [state, setState] = React.useState(false);
   const [bottomState, setBottomState] = React.useState(false);
-  const [needModifications, setNeedModifications] = React.useState(false);
-  const [modification, setModification] = React.useState(false);
-  const [activeTab, setActiveTab] = React.useState("Contacts");
+  const [calendar, setCalendar] = React.useState(false);
+  const [value, setValue] = React.useState("female");
+  const [activeTab, setActiveTab] = React.useState("Problem");
+  const [image, setImage] = React.useState([]);
+
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  };
 
   const toggleDrawer = (anchor, open) => (event) => {
     setState(open);
   };
   const toggleDrawerBottom = (anchor, open) => (event) => {
     setBottomState(open);
-    setMarkComplete(true);
   };
   const position = [51.505, -0.09];
   console.log("THis is great", props);
+
+  const ProblemSection = () => {
+    return (
+      <Grid
+        container
+        direction="row"
+        justify="center"
+        style={{ padding: 20, height: "max-content" }}
+      >
+        <div
+          className={classes.input}
+          style={{ height: 50, paddingBottom: 35, marginBottom: 10 }}
+        >
+          <p className={classes.label}>Request Service on date *</p>
+          <input
+            className={classes.input}
+            style={{ border: "none", width: "90%" }}
+            type={"text"}
+          ></input>
+          <DateRangeIcon
+            style={{ color: "#1075c2" }}
+            onClick={() => {
+              setCalendar(true);
+            }}
+          ></DateRangeIcon>
+        </div>
+        <p className={classes.label}>Preffered Service Time *</p>
+        <Autocomplete
+          options={[
+            { title: "As soon as possible", year: 1994 },
+            { title: "As soon as possible", year: 1994 },
+          ]}
+          getOptionLabel={(option) => option.title}
+          style={{
+            // width: 300,
+            // marginLeft: 20,
+            // marginTop: 20,
+            // marginBottom: 20
+            border: "none",
+            width: "100%",
+          }}
+          renderInput={(params) => <TextField {...params} />}
+        />
+        <p className={classes.label}>What item is having problem *</p>
+        <Autocomplete
+          options={[
+            { title: "Dishwasher", year: 1994 },
+            { title: "Dishwasher", year: 1994 },
+          ]}
+          getOptionLabel={(option) => option.title}
+          style={{
+            // width: 300,
+            // marginLeft: 20,
+            // marginTop: 20,
+            // marginBottom: 20
+            border: "none",
+            width: "100%",
+          }}
+          renderInput={(params) => <TextField {...params} />}
+        />
+        <p className={classes.label}>What service do you need *</p>
+        <div
+          style={{
+            width: "100vw",
+            maxWidth: "100vw",
+            overflow: "scroll",
+            display: "flex",
+            height: 70,
+          }}
+        >
+          {["Repair", "Replace", "New Install"].map((value) => {
+            return (
+              <button
+                className={classes.button}
+                style={{
+                  height: 30,
+                  padding: 5,
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  marginRight: 10,
+                  minWidth: 80,
+                  fontSize: 11,
+                  width: "max-content",
+                }}
+              >
+                {value}
+              </button>
+            );
+          })}
+        </div>
+        <p className={classes.label}>Request Options</p>
+        <div
+          style={{
+            border: "1px solid #e9e9e9",
+            borderRadius: 20,
+            width: "100%",
+            padding: 10,
+            marginTop: 10,
+          }}
+        >
+          <FormControl component="fieldset">
+            <RadioGroup
+              aria-label="gender"
+              name="gender1"
+              value={value}
+              onChange={handleChange}
+            >
+              <FormControlLabel
+                value="female"
+                control={<Radio color="primary" />}
+                label="Auto accept 1st offer"
+              />
+              <FormControlLabel
+                value="male"
+                control={<Radio color="primary" />}
+                label="Open for multiple offers"
+              />
+            </RadioGroup>
+          </FormControl>
+        </div>
+        <p className={classes.label}>Any flood or water damage? *</p>
+        <div
+          style={{
+            width: "100vw",
+            borderBottom: "1px solid #e9e9e9",
+            display: "flex",
+            height: 70,
+          }}
+        >
+          <Grid item md={6} xs={6}>
+            <button
+              className={classes.button}
+              style={{
+                height: 30,
+                padding: 5,
+                paddingLeft: 10,
+                paddingRight: 10,
+                marginRight: 10,
+                minWidth: "95%",
+                fontSize: 11,
+                width: "max-content",
+              }}
+            >
+              Yes
+            </button>
+          </Grid>
+          <Grid item md={6} xs={6}>
+            <button
+              className={classes.button}
+              style={{
+                height: 30,
+                padding: 5,
+                paddingLeft: 10,
+                paddingRight: 10,
+                marginRight: 10,
+                minWidth: "95%",
+                fontSize: 11,
+                width: "max-content",
+                background: "#f2f2f2",
+                color: "black",
+              }}
+            >
+              No
+            </button>
+          </Grid>
+        </div>
+        <div
+          style={{
+            width: "100vw",
+
+            display: "flex",
+            height: 70,
+          }}
+        >
+          <Grid item md={8} xs={8}></Grid>
+          <Grid item md={4} xs={4}>
+            <button
+              className={classes.button}
+              style={{
+                height: 35,
+                padding: 5,
+                paddingLeft: 10,
+                paddingRight: 10,
+                marginRight: 10,
+                fontSize: 11,
+                borderRadius: 10,
+                width: "95%",
+              }}
+              onClick={() => {
+                setActiveTab("Looking For");
+              }}
+            >
+              Next
+            </button>
+          </Grid>
+        </div>
+      </Grid>
+    );
+  };
+  const LookingFor = () => {
+    return (
+      <Grid
+        container
+        direction="row"
+        justify="center"
+        style={{ padding: 20, height: "max-content" }}
+      >
+        <p style={{ textAlign: "justify" }}>
+          You indicated that you have water damage , water damage expert my also
+          contact you. You may change below.
+        </p>
+        <FormGroup row style={{ width: "100%" }}>
+          {[
+            "Plumbing Tecnician",
+            "Cooling and Heating Technician",
+            "Water and Flood Damage Specialist",
+            "Mould Specialist",
+            "Restoration Specialist",
+          ].map((item) => {
+            return (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    icon={<CheckCircleIcon style={{ color: "#efefef" }} />}
+                    checkedIcon={
+                      <CheckCircleIcon style={{ color: "#1075c2" }} />
+                    }
+                    name="checkedH"
+                  />
+                }
+                label={item}
+              />
+            );
+          })}
+        </FormGroup>
+        <div
+          style={{
+            width: "100vw",
+            borderBottom: "1px solid #e9e9e9",
+            display: "flex",
+            position: "absolute",
+            bottom: 0,
+            height: 70,
+          }}
+        >
+          <Grid item md={6} xs={6}>
+            <button
+              className={classes.button}
+              style={{
+                height: 35,
+                padding: 5,
+                paddingLeft: 10,
+                paddingRight: 10,
+                marginRight: 10,
+                fontSize: 11,
+                borderRadius: 10,
+                width: "95%",
+                background: "#f2f2f2",
+                color: "black",
+              }}
+              onClick={() => {
+                setActiveTab("Problem");
+              }}
+            >
+              Prev
+            </button>
+          </Grid>
+          <Grid item md={6} xs={6}>
+            <button
+              className={classes.button}
+              style={{
+                height: 35,
+                padding: 5,
+                paddingLeft: 10,
+                paddingRight: 10,
+                marginRight: 10,
+                fontSize: 11,
+                borderRadius: 10,
+                width: "95%",
+              }}
+              onClick={() => {
+                setActiveTab("Property");
+              }}
+            >
+              Next
+            </button>
+          </Grid>
+        </div>
+      </Grid>
+    );
+  };
+
+  const Property = () => {
+    return (
+      <Grid
+        container
+        direction="row"
+        justify="center"
+        style={{ padding: 20, height: "max-content" }}
+      >
+        <p className={classes.label}>Area *</p>
+        <Autocomplete
+          options={[
+            { title: "Kitchen", year: 1994 },
+            { title: "Kitchen", year: 1994 },
+          ]}
+          getOptionLabel={(option) => option.title}
+          style={{
+            // width: 300,
+            // marginLeft: 20,
+            // marginTop: 20,
+            // marginBottom: 20
+            border: "none",
+            width: "100%",
+          }}
+          renderInput={(params) => <TextField {...params} />}
+        />
+        <p className={classes.label}>Structure *</p>
+        <div
+          style={{
+            width: "100vw",
+            maxWidth: "100vw",
+          }}
+        >
+          {["Single Home", "APT/Conda Building", "Commercial", "Outdoor"].map(
+            (value) => {
+              return (
+                <button
+                  className={classes.button}
+                  style={{
+                    height: 30,
+                    padding: 5,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    marginRight: 10,
+                    minWidth: 80,
+                    fontSize: 11,
+                    width: "max-content",
+                  }}
+                >
+                  {value}
+                </button>
+              );
+            }
+          )}
+        </div>
+        <p className={classes.label}>Requestor Status *</p>
+        <div
+          style={{
+            width: "100vw",
+            display: "flex",
+            height: 70,
+          }}
+        >
+          {["Home Owner", "Property Manager", "Renter"].map((value) => {
+            return (
+              <button
+                className={classes.button}
+                style={{
+                  height: 30,
+                  padding: 5,
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  marginRight: 10,
+                  minWidth: 80,
+                  fontSize: 11,
+                  width: "max-content",
+                }}
+              >
+                {value}
+              </button>
+            );
+          })}
+        </div>
+        <div
+          style={{
+            width: "100vw",
+            borderBottom: "1px solid #e9e9e9",
+            display: "flex",
+            position: "absolute",
+            bottom: 0,
+            height: 70,
+          }}
+        >
+          <Grid item md={6} xs={6}>
+            <button
+              className={classes.button}
+              style={{
+                height: 35,
+                padding: 5,
+                paddingLeft: 10,
+                paddingRight: 10,
+                marginRight: 10,
+                fontSize: 11,
+                borderRadius: 10,
+                width: "95%",
+                background: "#f2f2f2",
+                color: "black",
+              }}
+              onClick={() => {
+                setActiveTab("Looking For");
+              }}
+            >
+              Prev
+            </button>
+          </Grid>
+          <Grid item md={6} xs={6}>
+            <button
+              className={classes.button}
+              style={{
+                height: 35,
+                padding: 5,
+                paddingLeft: 10,
+                paddingRight: 10,
+                marginRight: 10,
+                fontSize: 11,
+                borderRadius: 10,
+                width: "95%",
+              }}
+              onClick={() => {
+                setActiveTab("Description and Photo");
+              }}
+            >
+              Next
+            </button>
+          </Grid>
+        </div>
+      </Grid>
+    );
+  };
+
+  const handleFileChange = (e) => {
+    console.log("Thes are files", e.target.files);
+    var file = e.target.files;
+    var im = [];
+    for (var i = 0; i < e.target.files.length; i++) {
+      im.push(e.target.files[i]);
+    }
+    setImage(im);
+    console.log("This is iamge", im);
+  };
+  const DescriptionAndPhoto = () => {
+    return (
+      <Grid
+        container
+        direction="row"
+        justify="center"
+        style={{ padding: 20, height: "max-content" }}
+      >
+        <p style={{ textAlign: "justify" }}>
+          Briefly describe your problem, please do not input any sensitive
+          information here.
+        </p>
+        <textarea
+          className={classes.input}
+          style={{
+            resize: "none",
+            border: "1px solid #efefef",
+            borderRadius: 20,
+            height: 100,
+            padding: 10,
+          }}
+        ></textarea>
+        <p className={classes.label}>Add Photos</p>
+        <div style={{ width: "100%", marginTop: 20 }}>
+          <input
+            // required
+            type="file"
+            name="image"
+            id="images"
+            multiple
+            className="form-control"
+            // value={post.image.name}
+            style={{ display: "none" }}
+            onChange={handleFileChange}
+          />
+          <Grid container direction="row" alignItems="center">
+            {image.length > 1 &&
+              image.map((img) => {
+                return (
+                  <Badge
+                    badgeContent={
+                      <CancelIcon
+                        style={{ color: "red", marginLeft: -40 }}
+                        onClick={() => {
+                          var temp = [];
+                          image.map((im) => {
+                            console.log("This is imaeg", img.name, im.name);
+                            if (im.name != img.name) {
+                              temp.push(img);
+                            }
+                          });
+                          console.log("THis is ", temp);
+                          setImage(temp);
+                        }}
+                      ></CancelIcon>
+                    }
+                    color=""
+                  >
+                    <img
+                      src={URL.createObjectURL(img)}
+                      style={{
+                        width: 100,
+                        height: 100,
+                        borderRadius: 5,
+                        marginRight: 15,
+                      }}
+                    />
+                  </Badge>
+                );
+              })}
+            <Grid
+              style={{
+                width: 100,
+                height: 100,
+                background: "#efefef",
+                borderRadius: 5,
+              }}
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+              onClick={() => {
+                document.getElementById("images").click();
+              }}
+            >
+              <CameraAltIcon></CameraAltIcon>
+            </Grid>
+          </Grid>
+          <div
+            style={{
+              width: "100vw",
+              borderBottom: "1px solid #e9e9e9",
+              display: "flex",
+              position: "absolute",
+              bottom: 0,
+              height: 70,
+            }}
+          >
+            <Grid item md={6} xs={6}>
+              <button
+                className={classes.button}
+                style={{
+                  height: 35,
+                  padding: 5,
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  marginRight: 10,
+                  fontSize: 11,
+                  borderRadius: 10,
+                  width: "95%",
+                  background: "#f2f2f2",
+                  color: "black",
+                }}
+                onClick={() => {
+                  setActiveTab("Property");
+                }}
+              >
+                Prev
+              </button>
+            </Grid>
+            <Grid item md={6} xs={6}>
+              <button
+                className={classes.button}
+                style={{
+                  height: 35,
+                  padding: 5,
+                  paddingLeft: 10,
+                  paddingRight: 10,
+                  marginRight: 10,
+                  fontSize: 11,
+                  borderRadius: 10,
+                  width: "95%",
+                }}
+                onClick={() => {
+                  setActiveTab("Inssurance");
+                }}
+              >
+                Next
+              </button>
+            </Grid>
+          </div>
+        </div>
+      </Grid>
+    );
+  };
+
+  const Inssurance = () => {
+    return (
+      <Grid
+        container
+        direction="row"
+        justify="center"
+        style={{ padding: 20, height: "max-content" }}
+      >
+        <p className={classes.label}>Company *</p>
+        <Autocomplete
+          options={[
+            { title: "As soon as possible", year: 1994 },
+            { title: "As soon as possible", year: 1994 },
+          ]}
+          getOptionLabel={(option) => option.title}
+          style={{
+            // width: 300,
+            // marginLeft: 20,
+            // marginTop: 20,
+            // marginBottom: 20
+            border: "none",
+            width: "100%",
+          }}
+          renderInput={(params) => <TextField {...params} />}
+        />
+
+        <p className={classes.label}>Policy Number *</p>
+        <input className={classes.input} type={"text"}></input>
+
+        <div
+          className={classes.input}
+          style={{ height: 50, paddingBottom: 35, marginBottom: 10 }}
+        >
+          <p className={classes.label}>Request Service on date *</p>
+          <input
+            className={classes.input}
+            style={{ border: "none", width: "90%" }}
+            type={"text"}
+          ></input>
+          <DateRangeIcon
+            style={{ color: "#1075c2" }}
+            onClick={() => {
+              setCalendar(true);
+            }}
+          ></DateRangeIcon>
+        </div>
+
+        <div
+          className={classes.input}
+          style={{ height: 50, paddingBottom: 35, marginBottom: 10 }}
+        >
+          <p className={classes.label}>Deduction </p>
+          <input
+            className={classes.input}
+            style={{ border: "none", width: "80%" }}
+            type={"text"}
+          ></input>
+          <RemoveCircleIcon style={{ color: "#1075c2" }}></RemoveCircleIcon>
+          <AddCircleIcon style={{ color: "#1075c2" }}></AddCircleIcon>
+        </div>
+        <div
+          style={{
+            width: "100vw",
+            borderBottom: "1px solid #e9e9e9",
+            display: "flex",
+            position: "absolute",
+            bottom: 0,
+            height: 70,
+          }}
+        >
+          <Grid item md={6} xs={6}>
+            <button
+              className={classes.button}
+              style={{
+                height: 35,
+                padding: 5,
+                paddingLeft: 10,
+                paddingRight: 10,
+                marginRight: 10,
+                fontSize: 11,
+                borderRadius: 10,
+                width: "95%",
+                background: "#f2f2f2",
+                color: "black",
+              }}
+              onClick={() => {
+                setActiveTab("Description and Photo");
+              }}
+            >
+              Prev
+            </button>
+          </Grid>
+          <Grid item md={6} xs={6}>
+            <button
+              className={classes.button}
+              style={{
+                height: 35,
+                padding: 5,
+                paddingLeft: 10,
+                paddingRight: 10,
+                marginRight: 10,
+                fontSize: 11,
+                borderRadius: 10,
+                width: "95%",
+              }}
+              onClick={() => {
+                setActiveTab("Contact Details");
+              }}
+            >
+              Next
+            </button>
+          </Grid>
+        </div>
+      </Grid>
+    );
+  };
+  const ContactDetails = () => {
+    return (
+      <Grid
+        container
+        direction="row"
+        justify="center"
+        style={{ padding: 20, height: "max-content" }}
+      >
+        <p className={classes.label}>Name *</p>
+        <input className={classes.input} type={"text"}></input>
+
+        <p className={classes.label}>Phone number *</p>
+        <input className={classes.input} type={"text"}></input>
+        <p style={{ textAlign: "justify" }}>
+          Do you allow U-Plumber to contact you via mobile phone number (text)?
+          Please note this will help you get response from a plumber faster but
+          it may cost you an extra charge (from your phone provider)
+        </p>
+        <div
+          style={{
+            width: "100vw",
+            borderBottom: "1px solid #e9e9e9",
+            display: "flex",
+            height: 70,
+          }}
+        >
+          <Grid item md={6} xs={6}>
+            <button
+              className={classes.button}
+              style={{
+                height: 30,
+                padding: 5,
+                paddingLeft: 10,
+                paddingRight: 10,
+                marginRight: 10,
+                minWidth: "95%",
+                fontSize: 11,
+                width: "max-content",
+              }}
+            >
+              Yes
+            </button>
+          </Grid>
+          <Grid item md={6} xs={6}>
+            <button
+              className={classes.button}
+              style={{
+                height: 30,
+                padding: 5,
+                paddingLeft: 10,
+                paddingRight: 10,
+                marginRight: 10,
+                minWidth: "95%",
+                fontSize: 11,
+                width: "max-content",
+                background: "#f2f2f2",
+                color: "black",
+              }}
+            >
+              No
+            </button>
+          </Grid>
+        </div>
+        <p style={{ textAlign: "justify" }}>
+          Enter you email this will allow U Plumber or provider to contact you
+          via this email.
+        </p>
+        <p className={classes.label}>Email *</p>
+        <input className={classes.input} type={"text"}></input>
+        <p className={classes.label}>Address *</p>
+        <input className={classes.input} type={"text"}></input>
+        <p className={classes.label}>Unit/APT *</p>
+        <input className={classes.input} type={"text"}></input>
+        <p className={classes.label}>City *</p>
+        <input className={classes.input} type={"text"}></input>
+        <p className={classes.label}>State *</p>
+        <input className={classes.input} type={"text"}></input>
+        <p className={classes.label}>Zipcode *</p>
+        <input className={classes.input} type={"text"}></input>
+
+        <div
+          style={{
+            width: "100vw",
+            borderBottom: "1px solid #e9e9e9",
+            display: "flex",
+            position: "absolute",
+            bottom: 0,
+            height: 70,
+          }}
+        >
+          <Grid item md={6} xs={6}>
+            <button
+              className={classes.button}
+              style={{
+                height: 35,
+                padding: 5,
+                paddingLeft: 10,
+                paddingRight: 10,
+                marginRight: 10,
+                fontSize: 11,
+                borderRadius: 10,
+                width: "95%",
+                background: "#f2f2f2",
+                color: "black",
+              }}
+              onClick={() => {
+                setActiveTab("Inssurance");
+              }}
+            >
+              Prev
+            </button>
+          </Grid>
+          <Grid item md={6} xs={6}>
+            <button
+              className={classes.button}
+              style={{
+                height: 35,
+                padding: 5,
+                paddingLeft: 10,
+                paddingRight: 10,
+                marginRight: 10,
+                fontSize: 11,
+                borderRadius: 10,
+                width: "95%",
+              }}
+            >
+              Next
+            </button>
+          </Grid>
+        </div>
+      </Grid>
+    );
+  };
+
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
       <Link id="homepage" to="/homepage"></Link>
@@ -71,7 +924,7 @@ function ProviderDetail(props) {
           onSidebarDisplay={() => {
             setState(true);
           }}
-          heading={"Service Details"}
+          heading={"Request a Service"}
           leftIcon={
             <ArrowBackIosIcon
               style={{ cursor: "pointer" }}
@@ -93,242 +946,66 @@ function ProviderDetail(props) {
           maxHeight: "calc( 100vh - 100px )",
           minHeight: "calc( 100vh - 100px )",
           overflowY: "scroll",
+          height: "max-content",
         }}
       >
-        {modification ? (
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            spacing={1}
-            style={{
-              background: "#ff9100",
-              height: "max-content",
-              position: "absolute",
-            }}
-          >
-            {" "}
-            <p style={{ color: "white", width: "100%", textAlign: "center" }}>
-              Job in Modification
-            </p>
-          </Grid>
-        ) : markComplete ? (
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            spacing={1}
-            style={{
-              background: "#10c228",
-              height: "max-content",
-              position: "absolute",
-            }}
-          >
-            {" "}
-            <p style={{ color: "white", width: "100%", textAlign: "center" }}>
-              Job Completed
-            </p>
-          </Grid>
-        ) : (
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            spacing={1}
-            style={{
-              background: "#1075c2",
-              height: "max-content",
-              position: "absolute",
-            }}
-          >
-            {" "}
-            <p style={{ color: "white", width: "100%", textAlign: "center" }}>
-              Job Started
-            </p>
-          </Grid>
-        )}
-        <Grid
-          container
-          direction="row"
-          style={{
-            marginTop: 100,
-            height: 60,
-            paddingLeft: 15,
-            paddingRight: 15,
-          }}
-        >
-          <Grid item md={2} xs={2}>
-            <img
-              src={Avatar}
-              style={{
-                width: 50,
-                height: 50,
-                borderRadius: 100,
-              }}
-            ></img>
-          </Grid>
-          <Grid item md={8} xs={8}>
-            <Grid container direction="row">
-              <p
-                style={{
-                  width: "100%",
-                  margin: 0,
-                  fontWeight: 600,
-                }}
-              >
-                Jane Doe
-              </p>
-              <Rating value={5} style={{ fontSize: 10 }}></Rating>
-              <span style={{ fontSize: 10 }}>5.0(433) </span>
-              <div style={{ width: "100%" }}></div>
-              <span style={{ fontSize: 10 }}>$25 / hr</span>
-            </Grid>
-          </Grid>
-
+        <div style={{ width: "100%" }}>
           <div
-            style={{ width: "100%", border: "1px solid #f6f6f6", margin: 0 }}
-          ></div>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            style={{ paddingBottom: 5, paddingTop: 5 }}
+            style={{
+              width: "100vw",
+              maxWidth: "100vw",
+              overflow: "scroll",
+              display: "flex",
+              height: 70,
+            }}
           >
-            {" "}
-            <Grid item md={12} xs={12}>
-              <Grid container direction="row" alignItems="center">
-                <BathtubIcon></BathtubIcon>{" "}
-                <p
+            {[
+              "Problem",
+              "Looking For",
+              "Property",
+              "Description and Photo",
+              "Inssurance",
+              "Contact Details",
+            ].map((value) => {
+              return (
+                <button
+                  className={classes.button}
                   style={{
-                    fontWeight: "bold",
-                    fontSize: 18,
-                    marginLeft: 15,
-                    textAlign: "center",
+                    height: 30,
+                    padding: 5,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    marginLeft: 10,
+                    minWidth: 130,
+                    fontSize: 11,
+                    width: "max-content",
+                    background: activeTab === value ? "#1075c2" : "#f2f2f2",
+                    color: activeTab === value ? "white" : "black",
+                  }}
+                  onClick={() => {
+                    setActiveTab(value);
                   }}
                 >
-                  Bath Tub
-                </p>
-              </Grid>
-            </Grid>
-            <Grid item md={6} xs={6}>
-              <span style={{ color: "#60a3d6", fontSize: 10 }}>
-                Estimated Travel Time
-              </span>
-              <p style={{ fontSize: 10, margin: 0 }}>5 minutes</p>
-            </Grid>{" "}
-            <Grid item md={6} xs={6}>
-              <span style={{ color: "#60a3d6", fontSize: 10 }}>Service</span>
-              <p style={{ fontSize: 10, margin: 0 }}>Dishwasher</p>
-            </Grid>
-          </Grid>
-          <div
-            style={{ width: "100%", border: "1px solid #f6f6f6", margin: 0 }}
-          ></div>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            style={{ paddingBottom: 5, paddingTop: 5 }}
-          >
-            {" "}
-            <Grid item md={12} xs={12}>
-              <span style={{ color: "#60a3d6", fontSize: 10 }}>
-                Provider Phone
-              </span>
-              <p style={{ fontSize: 10, margin: 0 }}>12345678</p>
-            </Grid>{" "}
-            <Grid item md={12} xs={12}>
-              <span style={{ color: "#60a3d6", fontSize: 10 }}>
-                Provider Email
-              </span>
-              <p style={{ fontSize: 10, margin: 0 }}>test@example.com</p>
-            </Grid>
-          </Grid>
-          <div
-            style={{ width: "100%", border: "1px solid #f6f6f6", margin: 0 }}
-          ></div>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            style={{ paddingBottom: 5, paddingTop: 5 }}
-          >
-            {" "}
-            <Grid item md={6} xs={6}>
-              <span style={{ color: "#60a3d6", fontSize: 10 }}>
-                Estimated Work Hours
-              </span>
-              <p style={{ fontSize: 10, margin: 0 }}>3 hrs</p>
-            </Grid>{" "}
-            <Grid item md={6} xs={6}>
-              <span style={{ color: "#60a3d6", fontSize: 10 }}>
-                Estimated Completion Date
-              </span>
-              <p style={{ fontSize: 10, margin: 0 }}>April 6 , 2021</p>
-            </Grid>{" "}
-            <Grid item md={12} xs={12}>
-              <span style={{ color: "#60a3d6", fontSize: 10 }}>
-                Estimated Labour Cost
-              </span>
-              <p style={{ fontSize: 10, margin: 0 }}>$ 63.00</p>
-            </Grid>
-          </Grid>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            style={{ paddingBottom: 5, paddingTop: 5 }}
-          >
-            <button className={classes.button} style={{ marginTop: 10 }}>
-              <Grid
-                container
-                direction="row"
-                justify="center"
-                alignItems="center"
-              >
-                Accept New Completion Date
-              </Grid>
-            </button>
-            <button
-              className={classes.button}
-              style={{ marginTop: 10 }}
-              onClick={() => {
-                setBottomState(true);
-              }}
-            >
-              <Grid
-                container
-                direction="row"
-                justify="center"
-                alignItems="center"
-              >
-                Job Acceptance
-              </Grid>
-            </button>
-            <button
-              className={classes.button}
-              style={{
-                marginTop: 10,
-                background: "#efefef",
-                color: "black",
-                fontWeight: 600,
-              }}
-              onClick={() => {
-                setNeedModifications(true);
-              }}
-            >
-              <Grid
-                container
-                direction="row"
-                justify="center"
-                alignItems="center"
-              >
-                Need Modification
-              </Grid>
-            </button>
-          </Grid>
-        </Grid>
-        <div className="sideBar" style={{ background: "red" }}>
+                  {value}
+                </button>
+              );
+            })}
+          </div>
+          {activeTab === "Problem" ? (
+            <ProblemSection></ProblemSection>
+          ) : activeTab === "Looking For" ? (
+            <LookingFor></LookingFor>
+          ) : activeTab === "Property" ? (
+            <Property></Property>
+          ) : activeTab === "Description and Photo" ? (
+            <DescriptionAndPhoto></DescriptionAndPhoto>
+          ) : activeTab === "Inssurance" ? (
+            <Inssurance></Inssurance>
+          ) : (
+            <ContactDetails></ContactDetails>
+          )}
+        </div>
+        <div className="sideBar">
           <Drawer
             anchor={"left"}
             open={state}
@@ -374,7 +1051,6 @@ function ProviderDetail(props) {
               className={classes.button}
               onClick={() => {
                 setBottomState(false);
-                setMarkComplete(true);
               }}
             >
               Submit
@@ -384,9 +1060,10 @@ function ProviderDetail(props) {
 
         <Drawer
           anchor={"bottom"}
-          open={needModifications}
+          // open={needModifications}
+          open={calendar}
           onClose={() => {
-            setNeedModifications(false);
+            setCalendar(false);
           }}
         >
           <Grid
@@ -406,23 +1083,9 @@ function ProviderDetail(props) {
                 width: "100%",
               }}
             >
-              Need Modification
+              Select a Date
             </p>
-            <p className={classes.label}>Write Description</p>
-            <input
-              className={classes.input}
-              placeholder="Write Something"
-              style={{ border: "none" }}
-            ></input>
-            <button
-              className={classes.button}
-              onClick={() => {
-                setNeedModifications(false);
-                setModification(true);
-              }}
-            >
-              Submit
-            </button>
+            <Calendar></Calendar>
           </Grid>
         </Drawer>
       </Grid>
