@@ -11,6 +11,8 @@ import ProviderDetails from "./Pages/ProviderDetails";
 import JobDetails from "./Pages/JobDetailsPage";
 import ReviewsPage from "./Pages/ReviewsPage";
 import RequestAService from "./Pages/RequestAService";
+import SumittedRequest from "./Pages/SubmittedRequests";
+
 import "react-phone-number-input/style.css";
 import "react-calendar/dist/Calendar.css";
 
@@ -35,6 +37,11 @@ export default function App() {
         <Route exact path="/details/:id" render={() => <ProviderDetails />} />
         <Route exact path="/jobDetails/:id" render={() => <JobDetails />} />
         <Route exact path="/reviews/:id" render={() => <ReviewsPage />} />
+        <Route
+          exact
+          path="/sumittedRequest"
+          render={() => <SumittedRequest />}
+        />
         <Route
           exact
           path="/requestAService/:id"
