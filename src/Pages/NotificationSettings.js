@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { makeStyles, Grid } from "@material-ui/core";
+import { makeStyles, Grid, Switch } from "@material-ui/core";
 import Drawer from "@material-ui/core/Drawer";
 import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
@@ -9,13 +9,14 @@ import { Link, withRouter } from "react-router-dom";
 import Calendar from "react-calendar";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
-import FavoriteCard from "../Components/FavoriteCard";
+import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
+import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
 
 const useStyles = makeStyles((theme) => ({
   input: {
     border: "none",
     borderBottom: "1px solid #e9e9e9",
-    width: "100%",
+    width: "90%",
     height: 40,
     fontSize: 12,
   },
@@ -70,6 +71,8 @@ function ProviderDetail(props) {
   const [activeTab, setActiveTab] = React.useState("Problem");
   const [image, setImage] = React.useState([]);
 
+  const [type, setType] = useState("text");
+
   const handleChange = (event) => {
     setValue(event.target.value);
   };
@@ -85,7 +88,7 @@ function ProviderDetail(props) {
 
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
-      <Link id="homepage" to="/homepage"></Link>
+      <Link id="back" to="/settings"></Link>
       <Link id="reviews" to="/reviews/0"></Link>
       <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
         <Header
@@ -98,9 +101,9 @@ function ProviderDetail(props) {
               style={{ cursor: "pointer" }}
               onClick={() => {
                 if (activeTab === "Problem") {
-                  document.getElementById("homepage").click();
+                  document.getElementById("back").click();
                 } else {
-                  setActiveTab("Problem");
+                  setActiveTab("back");
                 }
               }}
             ></ArrowBackIosIcon>
@@ -122,23 +125,17 @@ function ProviderDetail(props) {
           background: activeTab === "Problem" ? "white" : "white",
         }}
       >
-        <div style={{ width: "100%" }}>
-          <div
-            style={{
-              width: "100vw",
-              maxWidth: "100vw",
-              overflow: "scroll",
-              display: "flex",
-              height: 70,
-              marginTop: -60,
-            }}
-          ></div>
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          style={{ width: "100%", height: "max-content" }}
+        >
           {[
-            { name: "Change Password", href: "/changePassword" },
-            { name: "Notification Settings", href: "/notificationSetting" },
-            { name: "Terms and Conditions", href: "/terms" },
-            { name: "Prvacy Policcy", href: "/terms" },
-            { name: "About", href: "/terms" },
+            { name: "Enable  Notifications", href: "/changePassword" },
+            { name: "Request Accepted", href: "/notificationSetting" },
+            { name: "Offer Recieved", href: "/terms" },
+            { name: "Feedback Reminders", href: "/terms" },
           ].map((item) => {
             return (
               <Grid
@@ -164,16 +161,23 @@ function ProviderDetail(props) {
                   </p>
                 </Grid>
                 <Grid item md={2} xs={2}>
-                  <ArrowForwardIosIcon
-                    onClick={() => {
-                      document.getElementById(item.href).click();
-                    }}
-                  ></ArrowForwardIosIcon>
+                  <Switch
+                    color="primary"
+                    // onClick={() => {
+                    //   document.getElementById(item.href).click();
+                    // }}
+                  ></Switch>
                 </Grid>
               </Grid>
             );
-          })}
-        </div>
+          })}{" "}
+          <button
+            className={classes.button}
+            style={{ position: "absolute", bottom: 10 }}
+          >
+            Save Changes
+          </button>
+        </Grid>
         <div className="sideBar">
           <Drawer
             anchor={"left"}

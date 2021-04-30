@@ -30,6 +30,91 @@ import CameraAltIcon from "@material-ui/icons/CameraAlt";
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import EditIcon from "@material-ui/icons/Edit";
+import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
+
+import AirConditioner from "../assets/problem/AirConditioner.png";
+import Bathtub from "../assets/problem/Bathtub.png";
+import Dishwasher from "../assets/problem/Dishwasher.png";
+import Drain from "../assets/problem/Drain.png";
+import Faucet from "../assets/problem/Faucet.png";
+import Fireplace from "../assets/problem/Fireplace.png";
+import GrarbageDisposal from "../assets/problem/GrarbageDisposal.png";
+import Pipe from "../assets/problem/Pipe.png";
+import Refrigerator from "../assets/problem/Refrigerator.png";
+import Sewage from "../assets/problem/Sewage.png";
+import Sink from "../assets/problem/Sink.png";
+import Thermostat from "../assets/problem/Thermostat.png";
+import Toilet from "../assets/problem/Toilet.png";
+import Washer from "../assets/problem/Washer.png";
+import WaterFilter from "../assets/problem/WaterFilter.png";
+import WaterHeater from "../assets/problem/WaterHeater.png";
+
+const items = [
+  {
+    image: AirConditioner,
+    name: "Air Conditioner",
+  },
+  {
+    image: Bathtub,
+    name: "Bathtub",
+  },
+  {
+    image: Dishwasher,
+    name: "Dishwasher",
+  },
+  {
+    image: Drain,
+    name: "Drain",
+  },
+  {
+    image: Faucet,
+    name: "Faucet",
+  },
+  {
+    image: Fireplace,
+    name: "Fireplace",
+  },
+  {
+    image: GrarbageDisposal,
+    name: "GrarbageDisposal",
+  },
+  {
+    image: Pipe,
+    name: "Pipe",
+  },
+  {
+    image: Refrigerator,
+    name: "Refrigerator",
+  },
+  {
+    image: Sewage,
+    name: "Sewage",
+  },
+  {
+    image: Sink,
+    name: "Sink",
+  },
+  {
+    image: Thermostat,
+    name: "Thermostat",
+  },
+  {
+    image: Toilet,
+    name: "Toilet",
+  },
+  {
+    image: Washer,
+    name: "Washer",
+  },
+  {
+    image: WaterFilter,
+    name: "WaterFilter",
+  },
+  {
+    image: WaterHeater,
+    name: "WaterHeater",
+  },
+];
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -84,8 +169,11 @@ function ProviderDetail(props) {
   const [state, setState] = React.useState(false);
   const [bottomState, setBottomState] = React.useState(false);
   const [calendar, setCalendar] = React.useState(false);
-  const [postRequest, setPostRequest] = React.useState(true);
-  const [value, setValue] = React.useState("female");
+  const [prfferedTime, setPrefferedTime] = React.useState(false);
+  const [postRequest, setPostRequest] = React.useState(false);
+  const [value, setValue] = React.useState("As soon as possible");
+  const [itemName, setItemName] = React.useState("Air Conditioner");
+  const [item, setItem] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState("Problem");
   const [image, setImage] = React.useState([]);
 
@@ -127,8 +215,8 @@ function ProviderDetail(props) {
             }}
           ></DateRangeIcon>
         </div>
-        <p className={classes.label}>Preffered Service Time *</p>
-        <Autocomplete
+
+        {/* <Autocomplete
           options={[
             { title: "As soon as possible", year: 1994 },
             { title: "As soon as possible", year: 1994 },
@@ -143,8 +231,29 @@ function ProviderDetail(props) {
             width: "100%",
           }}
           renderInput={(params) => <TextField {...params} />}
-        />
-        <p className={classes.label}>What item is having problem *</p>
+        /> */}
+        <div
+          className={classes.input}
+          style={{ height: 50, paddingBottom: 35, marginBottom: 10 }}
+        >
+          <p className={classes.label}>Preffered Service Time *</p>
+          <input
+            className={classes.input}
+            style={{ border: "none", width: "90%" }}
+            type={"text"}
+            onFocus={() => {
+              setPrefferedTime(true);
+            }}
+            value={value}
+          ></input>
+          <ArrowDropDownIcon
+            style={{ color: "#1075c2" }}
+            onClick={() => {
+              setPrefferedTime(true);
+            }}
+          ></ArrowDropDownIcon>
+        </div>
+        {/* <p className={classes.label}>What item is having problem *</p>
         <Autocomplete
           options={[
             { title: "Dishwasher", year: 1994 },
@@ -160,7 +269,28 @@ function ProviderDetail(props) {
             width: "100%",
           }}
           renderInput={(params) => <TextField {...params} />}
-        />
+        /> */}
+        <div
+          className={classes.input}
+          style={{ height: 50, paddingBottom: 35, marginBottom: 10 }}
+        >
+          <p className={classes.label}>Preffered Service Time *</p>
+          <input
+            className={classes.input}
+            style={{ border: "none", width: "90%" }}
+            type={"text"}
+            onFocus={() => {
+              setItem(true);
+            }}
+            value={itemName}
+          ></input>
+          <ArrowDropDownIcon
+            style={{ color: "#1075c2" }}
+            onClick={() => {
+              setItem(true);
+            }}
+          ></ArrowDropDownIcon>
+        </div>
         <p className={classes.label}>What service do you need *</p>
         <div
           style={{
@@ -1367,6 +1497,147 @@ function ProviderDetail(props) {
               Select a Date
             </p>
             <Calendar></Calendar>
+          </Grid>
+        </Drawer>
+
+        <Drawer
+          anchor={"bottom"}
+          // open={needModifications}
+          open={prfferedTime}
+          onClose={() => {
+            setPrefferedTime(false);
+          }}
+        >
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            // alignItems="center"
+            style={{ height: "max-content", paddingLeft: 20, paddingRight: 20 }}
+          >
+            {" "}
+            <p
+              style={{
+                fontWeight: "bold",
+                fontSize: 18,
+
+                textAlign: "center",
+                width: "100%",
+              }}
+            >
+              Select preffered time
+            </p>
+            <FormControl component="fieldset">
+              <RadioGroup
+                aria-label="gender"
+                name="gender1"
+                value={value}
+                onChange={handleChange}
+              >
+                {[
+                  "As soon as possible",
+                  "Early Morning ( 6am to 8am)",
+                  "Early Morning ( 8am to 12pm)",
+                  "Afternoon ( 12pm to 3pm)",
+                  "Late Afternoon ( 3pm to 5pm)",
+                  "Evening ( 5pm to 7pm)",
+                  "Late Evening ( 7pm to 9pm)",
+                ].map((item) => {
+                  return (
+                    <FormControlLabel
+                      value={item}
+                      control={<Radio color="primary" />}
+                      label={item}
+                    />
+                  );
+                })}
+              </RadioGroup>
+            </FormControl>
+            <button
+              className={classes.button}
+              onClick={() => {
+                setBottomState(false);
+              }}
+              onClick={() => {
+                setPrefferedTime(false);
+              }}
+            >
+              Done
+            </button>
+          </Grid>
+        </Drawer>
+
+        <Drawer
+          anchor={"bottom"}
+          // open={needModifications}
+          open={item}
+          onClose={() => {
+            setItem(false);
+          }}
+        >
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            // alignItems="center"
+            style={{ height: "max-content", paddingLeft: 20, paddingRight: 20 }}
+          >
+            {" "}
+            <p
+              style={{
+                fontWeight: "bold",
+                fontSize: 18,
+
+                textAlign: "center",
+                width: "100%",
+              }}
+            >
+              What item is having a problem?
+            </p>
+            <div style={{ height: 400, maxHeight: 400, overflow: "scroll" }}>
+              <Grid container direction="row">
+                {items.map((stuff) => {
+                  return (
+                    <Grid item md={4} xs={4}>
+                      <Grid
+                        container
+                        direction="column"
+                        alignItems="center"
+                        style={{ marginBottom: 20 }}
+                        onClick={
+                          ()=>{
+                            setItemName(stuff.name)
+                          }
+                        }
+                      >
+                        <img style={{ width: "70%" }} src={stuff.image}></img>
+                        <p
+                          style={{
+                            width: "100%",
+                            textAlign: "center",
+                            fontSize: 12,
+                            fontWeight: 600,
+                          }}
+                        >
+                          {stuff.name}
+                        </p>
+                      </Grid>
+                    </Grid>
+                  );
+                })}
+              </Grid>
+            </div>
+            <button
+              className={classes.button}
+              onClick={() => {
+                setBottomState(false);
+              }}
+              onClick={() => {
+                setPrefferedTime(false);
+              }}
+            >
+              Done
+            </button>
           </Grid>
         </Drawer>
 

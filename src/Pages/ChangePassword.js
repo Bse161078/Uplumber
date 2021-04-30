@@ -9,13 +9,14 @@ import { Link, withRouter } from "react-router-dom";
 import Calendar from "react-calendar";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
-import FavoriteCard from "../Components/FavoriteCard";
+import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
+import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
 
 const useStyles = makeStyles((theme) => ({
   input: {
     border: "none",
     borderBottom: "1px solid #e9e9e9",
-    width: "100%",
+    width: "90%",
     height: 40,
     fontSize: 12,
   },
@@ -70,6 +71,8 @@ function ProviderDetail(props) {
   const [activeTab, setActiveTab] = React.useState("Problem");
   const [image, setImage] = React.useState([]);
 
+  const [type, setType] = useState("text");
+
   const handleChange = (event) => {
     setValue(event.target.value);
   };
@@ -85,7 +88,7 @@ function ProviderDetail(props) {
 
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
-      <Link id="homepage" to="/homepage"></Link>
+      <Link id="back" to="/settings"></Link>
       <Link id="reviews" to="/reviews/0"></Link>
       <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
         <Header
@@ -98,9 +101,9 @@ function ProviderDetail(props) {
               style={{ cursor: "pointer" }}
               onClick={() => {
                 if (activeTab === "Problem") {
-                  document.getElementById("homepage").click();
+                  document.getElementById("back").click();
                 } else {
-                  setActiveTab("Problem");
+                  setActiveTab("back");
                 }
               }}
             ></ArrowBackIosIcon>
@@ -122,58 +125,93 @@ function ProviderDetail(props) {
           background: activeTab === "Problem" ? "white" : "white",
         }}
       >
-        <div style={{ width: "100%" }}>
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          style={{ width: "100%", height: "max-content" }}
+        >
           <div
-            style={{
-              width: "100vw",
-              maxWidth: "100vw",
-              overflow: "scroll",
-              display: "flex",
-              height: 70,
-              marginTop: -60,
-            }}
-          ></div>
-          {[
-            { name: "Change Password", href: "/changePassword" },
-            { name: "Notification Settings", href: "/notificationSetting" },
-            { name: "Terms and Conditions", href: "/terms" },
-            { name: "Prvacy Policcy", href: "/terms" },
-            { name: "About", href: "/terms" },
-          ].map((item) => {
-            return (
-              <Grid
-                container
-                direction="row"
-                style={{
-                  background: "white",
-                  height: 50,
-                  borderBottom: "1px solid #e9e9e9",
-                  cursor: "pointer",
+            className={classes.input}
+            style={{ height: 70, marginTop: 10, paddingBottom: 10 }}
+          >
+            <p className={classes.label}>Current Password</p>
+            <input
+              className={classes.input}
+              style={{ border: "none" }}
+              type={type}
+            ></input>
+            {type === "text" ? (
+              <VisibilityOffOutlinedIcon
+                className={classes.icon}
+                onClick={() => {
+                  setType("password");
                 }}
-                alignItems="center"
-              >
-                <Link to={item.href} id={item.href}></Link>
-                <Grid item md={10} xs={10}>
-                  <p
-                    style={{ margin: 0, marginLeft: 20, fontWeight: "600" }}
-                    onClick={() => {
-                      document.getElementById(item.href).click();
-                    }}
-                  >
-                    {item.name}
-                  </p>
-                </Grid>
-                <Grid item md={2} xs={2}>
-                  <ArrowForwardIosIcon
-                    onClick={() => {
-                      document.getElementById(item.href).click();
-                    }}
-                  ></ArrowForwardIosIcon>
-                </Grid>
-              </Grid>
-            );
-          })}
-        </div>
+              ></VisibilityOffOutlinedIcon>
+            ) : (
+              <VisibilityOutlinedIcon
+                className={classes.icon}
+                onClick={() => {
+                  setType("text");
+                }}
+              ></VisibilityOutlinedIcon>
+            )}
+          </div>
+          <div
+            className={classes.input}
+            style={{ height: 70, marginTop: 10, paddingBottom: 10 }}
+          >
+            <p className={classes.label}>New Password</p>
+            <input
+              className={classes.input}
+              style={{ border: "none" }}
+              type={type}
+            ></input>
+            {type === "text" ? (
+              <VisibilityOffOutlinedIcon
+                className={classes.icon}
+                onClick={() => {
+                  setType("password");
+                }}
+              ></VisibilityOffOutlinedIcon>
+            ) : (
+              <VisibilityOutlinedIcon
+                className={classes.icon}
+                onClick={() => {
+                  setType("text");
+                }}
+              ></VisibilityOutlinedIcon>
+            )}
+          </div>
+
+          <div
+            className={classes.input}
+            style={{ height: 70, marginTop: 10, paddingBottom: 10 }}
+          >
+            <p className={classes.label}>Confirm New Password</p>
+            <input
+              className={classes.input}
+              style={{ border: "none" }}
+              type={type}
+            ></input>
+            {type === "text" ? (
+              <VisibilityOffOutlinedIcon
+                className={classes.icon}
+                onClick={() => {
+                  setType("password");
+                }}
+              ></VisibilityOffOutlinedIcon>
+            ) : (
+              <VisibilityOutlinedIcon
+                className={classes.icon}
+                onClick={() => {
+                  setType("text");
+                }}
+              ></VisibilityOutlinedIcon>
+            )}
+          </div>
+          <button className={classes.button}>Save Changes</button>
+        </Grid>
         <div className="sideBar">
           <Drawer
             anchor={"left"}

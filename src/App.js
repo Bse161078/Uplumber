@@ -15,6 +15,8 @@ import SumittedRequest from "./Pages/SubmittedRequests";
 import History from "./Pages/History";
 import FavoritePlumbers from "./Pages/FavoritePlumbers";
 import SettingsPage from "./Pages/SettingsPage";
+import ChangePassword from "./Pages/ChangePassword";
+import NotificationSettings from "./Pages/NotificationSettings";
 
 import "react-phone-number-input/style.css";
 import "react-calendar/dist/Calendar.css";
@@ -53,6 +55,12 @@ export default function App() {
         <Route exact path="/history" render={() => <History />} />
         <Route exact path="/favorite" render={() => <FavoritePlumbers />} />
         <Route exact path="/settings" render={() => <SettingsPage />} />
+        <Route exact path="/changePassword" render={() => <ChangePassword />} />
+        <Route
+          exact
+          path="/notificationSetting"
+          render={() => <NotificationSettings />}
+        />
 
         <Route exact path="/" render={() => <LandingPage />} />
       </Switch>
