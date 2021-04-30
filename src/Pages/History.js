@@ -25,12 +25,7 @@ import DateRangeIcon from "@material-ui/icons/DateRange";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Calendar from "react-calendar";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import CancelIcon from "@material-ui/icons/Cancel";
-import CameraAltIcon from "@material-ui/icons/CameraAlt";
-import AddCircleIcon from "@material-ui/icons/AddCircle";
-import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
-import EditIcon from "@material-ui/icons/Edit";
-
+import ReviewCard from "../Components/ReviewCard";
 const useStyles = makeStyles((theme) => ({
   input: {
     border: "none",
@@ -77,6 +72,7 @@ const useStyles = makeStyles((theme) => ({
     height: 100,
     borderRadius: 5,
     marginRight: 15,
+    marginTop: 5,
   },
 }));
 function ProviderDetail(props) {
@@ -138,12 +134,12 @@ function ProviderDetail(props) {
           <Grid item md={3} xs={3}>
             <div
               style={{
-                background: props.item === "Accepted" ? "#e7f9e9" : "#e7f1f9",
+                background: props.item === "Accepted" ? "#60a3d6" : "#60a3d6",
                 fontSize: 10,
                 borderRadius: 10,
                 padding: 4,
                 textAlign: "center",
-                color: props.item === "Accepted" ? "#23c739" : "#60a3d6",
+                color: props.item === "Accepted" ? "white" : "white",
                 cursor: "pointer",
               }}
               onClick={() => {
@@ -174,28 +170,7 @@ function ProviderDetail(props) {
             <img src={Refrigertors} className={classes.image}></img>
           </Grid>
           <Grid item md={8} xs={8}></Grid>
-          <Grid item md={3} xs={3}>
-            <div
-              style={{
-                background: "red",
-                fontSize: 10,
-                borderRadius: 10,
-                padding: 4,
-                textAlign: "center",
-                color: "white",
-                cursor: "pointer",
-              }}
-              // onClick={() => {
-              //   if (props.item === "Pending") {
-              //     document.getElementById("details" + props.index).click();
-              //   } else if (props.item === "Job Started") {
-              //     document.getElementById("jobdetails" + props.index).click();
-              //   }
-              // }}
-            >
-              Cancel
-            </div>
-          </Grid>
+          <Grid item md={3} xs={3}></Grid>
         </Grid>
       </Paper>
     );
@@ -219,243 +194,162 @@ function ProviderDetail(props) {
       <Grid
         container
         direction="row"
-        justify="center"
-        style={{ padding: 10, height: "max-content", marginTop: -60 }}
+        style={{
+          marginTop: -50,
+          height: 60,
+          paddingLeft: 15,
+          paddingRight: 15,
+        }}
       >
-        <div
-          style={{
-            width: "100%",
-
-            background: "white",
-            borderRadius: 20,
-            padding: 10,
-          }}
-        >
+        <Grid item md={2} xs={2}>
+          <img
+            src={Avatar}
+            style={{
+              width: 50,
+              height: 50,
+              borderRadius: 100,
+            }}
+          ></img>
+        </Grid>
+        <Grid item md={8} xs={8}>
           <Grid container direction="row">
-            <Grid item md={11} xs={11}>
-              {" "}
-              <p className={classes.heading}>Problem</p>
-            </Grid>
-            <Grid item md={1} xs={1}>
-              {/* <EditIcon
-                className={classes.icon}
-                onClick={() => {
-                  setActiveTab("Problem");
-                }}
-              ></EditIcon> */}
-            </Grid>
+            <p
+              style={{
+                width: "100%",
+                margin: 0,
+                fontWeight: 600,
+              }}
+            >
+              Jane Doe
+            </p>
+            <Rating value={5} style={{ fontSize: 10 }}></Rating>
+            <span style={{ fontSize: 10 }}>5.0(433) </span>
+            <div style={{ width: "100%" }}></div>
+            <span style={{ fontSize: 10 }}>$25 / hr</span>
           </Grid>
-          <p className={classes.label}>Request Service on date *</p>
-          <p className={classes.labelBlack}>March 23,2021 </p>
-          <p className={classes.label}>Preffered service time *</p>
-          <p className={classes.labelBlack}>As soon as possible</p>
-
-          <p className={classes.label}>What item is having problem?</p>
-          <p className={classes.labelBlack}>Dishwasher</p>
-
-          <p className={classes.label}>What service do you need ? *</p>
-          <p className={classes.labelBlack}>Repair</p>
-
-          <p className={classes.label}>Request Option *</p>
-          <p className={classes.labelBlack}>Auto accept first offer</p>
-
-          <p className={classes.label}>Any flood of water damage? *</p>
-          <p className={classes.labelBlack}>Yes</p>
-        </div>
+        </Grid>
 
         <div
-          style={{
-            width: "100%",
-
-            background: "white",
-            borderRadius: 20,
-            padding: 10,
-            marginTop: 20,
-          }}
+          style={{ width: "100%", border: "1px solid #f6f6f6", margin: 0 }}
+        ></div>
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          style={{ paddingBottom: 5, paddingTop: 5 }}
         >
-          <Grid container direction="row">
-            <Grid item md={11} xs={11}>
-              {" "}
-              <p className={classes.heading}>Looking For</p>
-            </Grid>
-            <Grid item md={1} xs={1}>
-              {/* <EditIcon
-                className={classes.icon}
-                onClick={() => {
-                  setActiveTab("Looking For");
+          <p
+            style={{
+              fontWeight: "bold",
+              fontSize: 18,
+              marginLeft: 15,
+              width: "100%",
+            }}
+          >
+            Your Review
+          </p>
+          <ReviewCard width="100%"></ReviewCard>
+          <Grid item md={12} xs={12}>
+            <Grid container direction="row" alignItems="center">
+              <BathtubIcon></BathtubIcon>{" "}
+              <p
+                style={{
+                  fontWeight: "bold",
+                  fontSize: 18,
+                  marginLeft: 15,
+                  textAlign: "center",
                 }}
-              ></EditIcon> */}
+              >
+                Bath Tub
+              </p>
             </Grid>
           </Grid>
-          <FormGroup row style={{ width: "100%" }}>
-            {["Plumbing Tecnician", "Mould Specialist"].map((item) => {
-              return (
-                <FormControlLabel
-                  checked={true}
-                  control={
-                    <Checkbox
-                      icon={<CheckCircleIcon style={{ color: "#efefef" }} />}
-                      checkedIcon={
-                        <CheckCircleIcon style={{ color: "#1075c2" }} />
-                      }
-                      name="checkedH"
-                    />
-                  }
-                  label={item}
-                />
-              );
-            })}
-          </FormGroup>
-        </div>
-
+          <Grid item md={6} xs={6}>
+            <span style={{ color: "#60a3d6", fontSize: 10 }}>
+              Estimated Travel Time
+            </span>
+            <p style={{ fontSize: 10, margin: 0 }}>5 minutes</p>
+          </Grid>{" "}
+          <Grid item md={6} xs={6}>
+            <span style={{ color: "#60a3d6", fontSize: 10 }}>Service</span>
+            <p style={{ fontSize: 10, margin: 0 }}>Dishwasher</p>
+          </Grid>
+        </Grid>
         <div
-          style={{
-            width: "100%",
-
-            background: "white",
-            borderRadius: 20,
-            padding: 10,
-            marginTop: 20,
-          }}
+          style={{ width: "100%", border: "1px solid #f6f6f6", margin: 0 }}
+        ></div>
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          style={{ paddingBottom: 5, paddingTop: 5 }}
         >
-          <Grid container direction="row">
-            <Grid item md={11} xs={11}>
-              {" "}
-              <p className={classes.heading}>Property</p>
-            </Grid>
-            <Grid item md={1} xs={1}>
-              {/* <EditIcon
-                className={classes.icon}
-                onClick={() => {
-                  setActiveTab("Property");
-                }}
-              ></EditIcon> */}
-            </Grid>
+          {" "}
+          <Grid item md={12} xs={12}>
+            <span style={{ color: "#60a3d6", fontSize: 10 }}>
+              Provider Phone
+            </span>
+            <p style={{ fontSize: 10, margin: 0 }}>12345678</p>
+          </Grid>{" "}
+          <Grid item md={12} xs={12}>
+            <span style={{ color: "#60a3d6", fontSize: 10 }}>
+              Provider Email
+            </span>
+            <p style={{ fontSize: 10, margin: 0 }}>test@example.com</p>
           </Grid>
-          <p className={classes.label}>Area *</p>
-          <p className={classes.labelBlack}>Kitchen </p>
-          <p className={classes.label}>Structure</p>
-          <p className={classes.labelBlack}>Single Home</p>
-
-          <p className={classes.label}>Requestor Status</p>
-          <p className={classes.labelBlack}>House Owner</p>
-        </div>
-
+        </Grid>
         <div
-          style={{
-            width: "100%",
-
-            background: "white",
-            borderRadius: 20,
-            padding: 10,
-            marginTop: 20,
-          }}
+          style={{ width: "100%", border: "1px solid #f6f6f6", margin: 0 }}
+        ></div>
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          style={{ paddingBottom: 5, paddingTop: 5 }}
         >
-          <Grid container direction="row">
-            <Grid item md={11} xs={11}>
-              {" "}
-              <p className={classes.heading}>Description and Photo</p>
-            </Grid>
-            <Grid item md={1} xs={1}>
-              {/* <EditIcon
-                className={classes.icon}
-                onClick={() => {
-                  setActiveTab("Description and Photo");
-                }}
-              ></EditIcon> */}
-            </Grid>
+          {" "}
+          <Grid item md={6} xs={6}>
+            <span style={{ color: "#60a3d6", fontSize: 10 }}>
+              Estimated Work Hours
+            </span>
+            <p style={{ fontSize: 10, margin: 0 }}>3 hrs</p>
+          </Grid>{" "}
+          <Grid item md={6} xs={6}>
+            <span style={{ color: "#60a3d6", fontSize: 10 }}>
+              Estimated Completion Date
+            </span>
+            <p style={{ fontSize: 10, margin: 0 }}>April 6 , 2021</p>
+          </Grid>{" "}
+          <Grid item md={12} xs={12}>
+            <span style={{ color: "#60a3d6", fontSize: 10 }}>
+              Estimated Labour Cost
+            </span>
+            <p style={{ fontSize: 10, margin: 0 }}>$ 63.00</p>
           </Grid>
-          <p className={classes.label}>problem Description *</p>
-          <p className={classes.labelBlack}>Leaking and flooding everywhere </p>
-          <p className={classes.label}>Photos</p>
-          <img src={Refrigertors} className={classes.image}></img>
-        </div>
-
-        <div
-          style={{
-            width: "100%",
-
-            background: "white",
-            borderRadius: 20,
-            padding: 10,
-            marginTop: 20,
-          }}
+        </Grid>
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          style={{ paddingBottom: 5, paddingTop: 5 }}
         >
-          <Grid container direction="row">
-            <Grid item md={11} xs={11}>
-              {" "}
-              <p className={classes.heading}>Inssurance</p>
+          <button
+            className={classes.button}
+            style={{ marginTop: 10 }}
+            onClick={() => {
+              // setBottomState(true);
+            }}
+          >
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              alignItems="center"
+            >
+              Make Copy
             </Grid>
-            <Grid item md={1} xs={1}>
-              {/* <EditIcon
-                className={classes.icon}
-                onClick={() => {
-                  setActiveTab("Inssurance");
-                }}
-              ></EditIcon> */}
-            </Grid>
-          </Grid>
-          <p className={classes.label}>Company *</p>
-          <p className={classes.labelBlack}>State Farm </p>
-          <p className={classes.label}>Poliicy Number</p>
-          <p className={classes.labelBlack}>2554667 </p>
-          <p className={classes.label}>Expiry Date</p>
-          <p className={classes.labelBlack}>Mar27 , 2021 </p>
-          <p className={classes.label}>Deduction</p>
-          <p className={classes.labelBlack}>2500 </p>
-        </div>
-
-        <div
-          style={{
-            width: "100%",
-
-            background: "white",
-            borderRadius: 20,
-            padding: 10,
-            marginTop: 20,
-          }}
-        >
-          <Grid container direction="row">
-            <Grid item md={11} xs={11}>
-              {" "}
-              <p className={classes.heading}>Contact Details</p>
-            </Grid>
-            <Grid item md={1} xs={1}>
-              {/* <EditIcon
-                className={classes.icon}
-                onClick={() => {
-                  setActiveTab("Contact Details");
-                }}
-              ></EditIcon> */}
-            </Grid>
-          </Grid>
-          <p className={classes.label}>Name *</p>
-          <p className={classes.labelBlack}>Lisa Farri </p>
-          <p className={classes.label}>Phone *</p>
-          <p className={classes.labelBlack}>1232554667 </p>
-          <p className={classes.label}>Allow U plumber to contact you</p>
-          <p className={classes.labelBlack}>Yes </p>
-          <p className={classes.label}>Email * </p>
-          <p className={classes.labelBlack}>utis@gmail.com </p>
-          <p className={classes.label}>Address * </p>
-          <p className={classes.labelBlack}>2701 lockere starte </p>
-          <p className={classes.label}>Unit / APT * </p>
-          <p className={classes.labelBlack}>23 </p>
-          <p className={classes.label}>Cityt * </p>
-          <p className={classes.labelBlack}>Islamabad </p>
-          <p className={classes.label}>State * </p>
-          <p className={classes.labelBlack}>California </p>
-          <p className={classes.label}>Zipcode * </p>
-          <p className={classes.labelBlack}>92010 </p>
-        </div>
-        <button
-          className={classes.button}
-          onClick={() => {
-            // document.getElementById("requestAService/0").click();
-          }}
-        >
-          Submit Requests
-        </button>
+          </button>
+        </Grid>
       </Grid>
     );
   };
@@ -469,17 +363,15 @@ function ProviderDetail(props) {
           onSidebarDisplay={() => {
             setState(true);
           }}
-          heading={
-            activeTab != "Detail" ? "Submitted Requests" : "Request Details"
-          }
+          heading={activeTab != "Detail" ? "History" : "Request Details"}
           leftIcon={
             <ArrowBackIosIcon
               style={{ cursor: "pointer" }}
               onClick={() => {
-                if (activeTab != "ReviewRequest") {
+                if (activeTab === "Problem") {
                   document.getElementById("homepage").click();
                 } else {
-                  setActiveTab("Contact Details");
+                  setActiveTab("Problem");
                 }
               }}
             ></ArrowBackIosIcon>
@@ -498,7 +390,7 @@ function ProviderDetail(props) {
           minHeight: "calc( 100vh - 100px )",
           overflowY: "scroll",
           height: "max-content",
-          background: "#f2f2f2",
+          background: activeTab === "Problem" ? "#f2f2f2" : "white",
         }}
       >
         <div style={{ width: "100%" }}>

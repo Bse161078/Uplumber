@@ -1,6 +1,7 @@
 import React from "react";
 import { Grid } from "@material-ui/core";
 import Avatar from "../assets/avatar.png";
+import { Link, withRouter } from "react-router-dom";
 
 export default function Sidebar() {
   return (
@@ -29,26 +30,33 @@ export default function Sidebar() {
       </Grid>
       <div>
         {[
-          "Home",
-          "New Request",
-          "History",
-          "Notifications",
-          "Favourite Plumbers",
-          "Help",
-          "Settings",
-          "Profile",
+          { name: "Home", href: "/homepage" },
+          { name: "New Request", href: "/homepage" },
+          { name: "History", href: "/history" },
+          { name: "Notifications", href: "/homepage" },
+          { name: "Favourite Plumbers", href: "/favorite" },
+          { name: "Help", href: "/homepage" },
+          { name: "Settings", href: "/settings" },
+          { name: "Profile", href: "/homepage" },
         ].map((item) => {
           return (
-            <p
-              style={{
-                margin: 0,
-                marginLeft: 15,
-                fontWeight: 500,
-                marginTop: 30,
-              }}
-            >
-              {item}
-            </p>
+            <div>
+              <Link id={item.href} to={item.href}></Link>
+              <p
+                style={{
+                  margin: 0,
+                  marginLeft: 15,
+                  fontWeight: 500,
+                  marginTop: 30,
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  document.getElementById(item.href).click();
+                }}
+              >
+                {item.name}
+              </p>
+            </div>
           );
         })}
         <p
@@ -57,6 +65,7 @@ export default function Sidebar() {
             marginLeft: 15,
             fontWeight: 500,
             marginTop: 100,
+            cursor: "pointer",
           }}
         >
           Logout

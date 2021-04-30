@@ -12,6 +12,9 @@ import JobDetails from "./Pages/JobDetailsPage";
 import ReviewsPage from "./Pages/ReviewsPage";
 import RequestAService from "./Pages/RequestAService";
 import SumittedRequest from "./Pages/SubmittedRequests";
+import History from "./Pages/History";
+import FavoritePlumbers from "./Pages/FavoritePlumbers";
+import SettingsPage from "./Pages/SettingsPage";
 
 import "react-phone-number-input/style.css";
 import "react-calendar/dist/Calendar.css";
@@ -47,6 +50,10 @@ export default function App() {
           path="/requestAService/:id"
           render={() => <RequestAService />}
         />
+        <Route exact path="/history" render={() => <History />} />
+        <Route exact path="/favorite" render={() => <FavoritePlumbers />} />
+        <Route exact path="/settings" render={() => <SettingsPage />} />
+
         <Route exact path="/" render={() => <LandingPage />} />
       </Switch>
     </BrowserRouter>
