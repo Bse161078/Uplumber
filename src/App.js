@@ -17,6 +17,9 @@ import FavoritePlumbers from "./Pages/FavoritePlumbers";
 import SettingsPage from "./Pages/SettingsPage";
 import ChangePassword from "./Pages/ChangePassword";
 import NotificationSettings from "./Pages/NotificationSettings";
+import Notifications from "./Pages/Notifications";
+import ShowRoute from "./Pages/ShowRoute";
+import UserProfile from "./Pages/UserProfile";
 
 import "react-phone-number-input/style.css";
 import "react-calendar/dist/Calendar.css";
@@ -29,7 +32,6 @@ export default function App() {
     <BrowserRouter>
       <Switch>
         <Route exact path="/login" render={() => <LoginPage />} />
-
         <Route exact path="/create-account" render={() => <CreateAccount />} />
         <Route
           exact
@@ -56,12 +58,15 @@ export default function App() {
         <Route exact path="/favorite" render={() => <FavoritePlumbers />} />
         <Route exact path="/settings" render={() => <SettingsPage />} />
         <Route exact path="/changePassword" render={() => <ChangePassword />} />
+        <Route exact path="/notifications" render={() => <Notifications />} />
+        <Route exact path="/show-route" render={() => <ShowRoute />} />
         <Route
           exact
           path="/notificationSetting"
           render={() => <NotificationSettings />}
         />
-
+        <Route exact path="/userProfile" render={() => <UserProfile />} />
+        UserProfile
         <Route exact path="/" render={() => <LandingPage />} />
       </Switch>
     </BrowserRouter>

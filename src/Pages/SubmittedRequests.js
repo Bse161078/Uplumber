@@ -441,7 +441,7 @@ function ProviderDetail(props) {
           <p className={classes.labelBlack}>2701 lockere starte </p>
           <p className={classes.label}>Unit / APT * </p>
           <p className={classes.labelBlack}>23 </p>
-          <p className={classes.label}>Cityt * </p>
+          <p className={classes.label}>City * </p>
           <p className={classes.labelBlack}>Islamabad </p>
           <p className={classes.label}>State * </p>
           <p className={classes.labelBlack}>California </p>
