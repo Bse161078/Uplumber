@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { makeStyles, Grid, Paper } from "@material-ui/core";
+import { makeStyles, Grid, Paper, Switch, withStyles } from "@material-ui/core";
 import Drawer from "@material-ui/core/Drawer";
 import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
@@ -46,21 +46,70 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 20,
   },
 }));
+const IOSSwitch = withStyles((theme) => ({
+  root: {
+    width: 42,
+    height: 26,
+    padding: 0,
+    margin: theme.spacing(1),
+  },
+  switchBase: {
+    padding: 1,
+    "&$checked": {
+      transform: "translateX(16px)",
+      color: theme.palette.common.white,
+      "& + $track": {
+        backgroundColor: theme.palette.grey[50],
+        opacity: 1,
+        border: `2px solid #1075c2`,
+      },
+    },
+    "&$focusVisible $thumb": {
+      color: "#1075c2",
+      border: `2px solid #1075c2`,
+    },
+  },
+  thumb: {
+    width: 24,
+    height: 24,
+    color: "#1075c2",
+  },
+  track: {
+    borderRadius: 26 / 2,
+    border: `2px solid #1075c2`,
+    backgroundColor: theme.palette.grey[50],
+    opacity: 1,
+    transition: theme.transitions.create(["background-color", "border"]),
+  },
+  checked: {},
+  focusVisible: {},
+}))(({ classes, ...props }) => {
+  return (
+    <Switch
+      focusVisibleClassName={classes.focusVisible}
+      disableRipple
+      classes={{
+        root: classes.root,
+        switchBase: classes.switchBase,
+        thumb: classes.thumb,
+        track: classes.track,
+        checked: classes.checked,
+      }}
+      {...props}
+    />
+  );
+});
 export default function LoginPage(pros) {
   const classes = useStyles();
-  const [value, setValue] = useState("");
-  const [OTP, setOTP] = useState("");
-  const [typeConfirm, setTypeConfirm] = useState("text");
 
   const [state, setState] = React.useState(false);
-  const [bottomState, setBottomState] = React.useState(false);
+  const [bottomState, setBottomState] = React.useState(true);
+  const [online, setOnline] = React.useState(true);
   const [activeTab, setActiveTab] = React.useState("NearBy");
+  const [activeServiceTab, setActiveServiceTab] = React.useState("Problem");
 
   const toggleDrawer = (anchor, open) => (event) => {
     setState(open);
-  };
-  const toggleDrawerBottom = (anchor, open) => (event) => {
-    setBottomState(open);
   };
   const position = [51.505, -0.09];
 
@@ -265,12 +314,7 @@ export default function LoginPage(pros) {
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <Marker
-              position={position}
-              onclick={() => {
-                setBottomState(true);
-              }}
-            >
+            <Marker position={position}>
               <Popup style={{ width: 120 }}>
                 <Grid container direction="row" justify="center">
                   <img src={Avatar} style={{ width: 40, height: 40 }}></img>
@@ -330,32 +374,154 @@ export default function LoginPage(pros) {
             </div>
           </Drawer>
         </div>
-        <Drawer
-          anchor={"bottom"}
-          open={bottomState}
-          onClose={() => toggleDrawerBottom("bottom", false)}
+
+        <Paper
+          style={{
+            width: "100%",
+            position: "absolute",
+            zIndex: 1000,
+            bottom: 0,
+            borderRadius: 40,
+          }}
+          onClick={() => {
+            setBottomState(!bottomState);
+          }}
         >
           <Grid
             container
             direction="row"
             justify="center"
             // alignItems="center"
-            style={{ height: 120 }}
+            style={{
+              height: bottomState == true ? 400 : 200,
+              width: "100%",
+              padding: 20,
+            }}
           >
-            <button
-              className={classes.button}
-              onClick={() => {
-                setBottomState(false);
-              }}
-              onClick={() => {
-                document.getElementById("requestAService/0").click();
-              }}
-            >
-              Send Offer
-            </button>
-          </Grid>
-        </Drawer>
+            <Grid item md={8} xs={8}>
+              <p
+                style={{
+                  margin: 0,
+                  fontWeight: "bold",
+                  fontSize: 28,
+                }}
+              >
+                Hi Jhon
+              </p>
+              <p
+                style={{
+                  margin: 0,
+                  fontWeight: 500,
+                  fontSize: 16,
+                  width: "80%",
+                }}
+              >
+                Get a service request by area or job type
+              </p>
+            </Grid>
+            <Grid item md={4} xs={4}>
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+                style={{ height: 50 }}
+              >
+                <p style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>
+                  {online ? "Online" : "Offline"}
+                </p>
+                {/* IOSSwitch */}
+                <Switch
+                  color="#1075c2"
+                  checked={online}
+                  onChange={() => {
+                    setOnline(!online);
+                  }}
+                  style={{ color: "#1075c2" }}
+                ></Switch>
+              </Grid>
+            </Grid>{" "}
+            {bottomState === true && (
+              <Grid
+                container
+                direction="row"
+                alignItems="center"
+                style={{ height: 50, marginTop: -115 }}
+              >
+                <p
+                  className={classes.label}
+                  style={{ color: "black", fontSize: 16, fontWeight: 600 }}
+                >
+                  Service Area
+                </p>
+                {bottomState == true &&
+                  ["Problem", "Looking For"].map((value) => {
+                    return (
+                      <button
+                        className={classes.button}
+                        style={{
+                          height: 30,
+                          padding: 5,
+                          paddingLeft: 10,
+                          paddingRight: 10,
+                          marginLeft: 10,
+                          minWidth: 80,
+                          fontSize: 11,
+                          width: "max-content",
+                          background:
+                            activeServiceTab === value ? "#1075c2" : "#f2f2f2",
+                          color: activeServiceTab === value ? "white" : "black",
+                        }}
+                        onClick={() => {
+                          setActiveServiceTab(value);
+                        }}
+                      >
+                        {value}
+                      </button>
+                    );
+                  })}
+                <p
+                  className={classes.label}
+                  style={{
+                    color: "black",
+                    fontSize: 16,
+                    fontWeight: 600,
+                    marginTop: 10,
+                  }}
+                >
+                  Job Type
+                </p>
+                {bottomState == true &&
+                  ["Repair", "Replace", "New Install"].map((value, index) => {
+                    return (
+                      <button
+                        className={classes.button}
+                        style={{
+                          height: 30,
+                          padding: 5,
+                          paddingLeft: 10,
+                          paddingRight: 10,
+                          marginLeft: 10,
+                          minWidth: 80,
+                          fontSize: 11,
+                          width: "max-content",
+                          background: index != 2 ? "#1075c2" : "#f2f2f2",
+                          color: index != 2 ? "white" : "black",
+                        }}
+                        onClick={() => {
+                          setActiveServiceTab(value);
+                        }}
+                      >
+                        {value}
+                      </button>
+                    );
+                  })}
+              </Grid>
+            )}
+          </Grid>{" "}
+        </Paper>
         <Paper
+          elevation={10}
           style={{
             height: 60,
             background: "white",
@@ -363,6 +529,7 @@ export default function LoginPage(pros) {
             zIndex: 100000000,
             bottom: 0,
             width: "100vw",
+            // borderTop: "1px solid gray",
           }}
         >
           <Grid

@@ -15,6 +15,7 @@ const useStyles = makeStyles((theme) => ({
     height: 45,
     cursor: "pointer",
     marginTop: 20,
+    fontWeight: 500,
   },
   topDiv: {
     height: "50vh",
@@ -53,6 +54,7 @@ export default function LandingPage() {
       }}
     >
       <Link id="signup" to="/create-account"></Link>
+      <Link id="login" to="/login"></Link>
       <Grid
         container
         direction="row"
@@ -75,11 +77,22 @@ export default function LandingPage() {
           className={classes.button}
           style={{ marginTop: 200 }}
           onClick={() => {
+            document.getElementById("login").click();
+          }}
+        >
+          <Grid container direction="row" justify="center" alignItems="center">
+            Login To Provider Account
+          </Grid>
+        </button>{" "}
+        <button
+          className={classes.button}
+          style={{ background: "white", color: "black" }}
+          onClick={() => {
             document.getElementById("signup").click();
           }}
         >
           <Grid container direction="row" justify="center" alignItems="center">
-            Start Exploring <ArrowRightAltIcon></ArrowRightAltIcon>
+            Create Provider Account
           </Grid>
         </button>
         <p style={{ width: "80%", textAlign: "center" }}>
