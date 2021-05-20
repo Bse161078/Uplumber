@@ -20,7 +20,7 @@ import NotificationSettings from "./Pages/NotificationSettings";
 import Notifications from "./Pages/Notifications";
 import ShowRoute from "./Pages/ShowRoute";
 import UserProfile from "./Pages/UserProfile";
-
+import "react-toastify/dist/ReactToastify.css";
 import "react-phone-number-input/style.css";
 import "react-calendar/dist/Calendar.css";
 

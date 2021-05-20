@@ -103,7 +103,7 @@ export default function LoginPage(pros) {
   const classes = useStyles();
 
   const [state, setState] = React.useState(false);
-  const [bottomState, setBottomState] = React.useState(true);
+  const [bottomState, setBottomState] = React.useState(false);
   const [online, setOnline] = React.useState(true);
   const [activeTab, setActiveTab] = React.useState("NearBy");
   const [activeServiceTab, setActiveServiceTab] = React.useState("Problem");

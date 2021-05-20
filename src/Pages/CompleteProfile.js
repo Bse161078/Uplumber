@@ -5,6 +5,7 @@ import PhoneInput from "react-phone-number-input";
 import Drawer from "@material-ui/core/Drawer";
 import Camera from "../assets/camera.PNG";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import { Countries, states } from "../Data/Data";
 const useStyles = makeStyles((theme) => ({
   input: {
     border: "none",
@@ -37,10 +38,46 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function LoginPage() {
   const classes = useStyles();
+  var upload = "";
   const [value, setValue] = useState("");
   const [typeConfirm, setTypeConfirm] = useState("text");
+  const [verify, setVerify] = React.useState(false);
+  const [profileImage, setProfileImage] = useState(null);
+  const [firstName, setFirstName] = useState(localStorage.getItem("firstName"));
+  const [lastName, setLastName] = useState(localStorage.getItem("lastName"));
+  const [phoneNumber, setPhoneNumber] = useState(
+    localStorage.getItem("phoneNumber")
+  );
+  const [address, setAddress] = useState(localStorage.getItem("address"));
+  const [unit, setUnit] = useState(localStorage.getItem("unit"));
+  const [city, setCity] = useState(localStorage.getItem("city"));
+  const [state, setState] = useState(localStorage.getItem("state"));
+  const [zipcode, setZipcode] = useState(localStorage.getItem("zipcode"));
+  const [country, setCountry] = useState(localStorage.getItem("country"));
+  const [latitude, setLatitude] = useState(localStorage.getItem("latitude"));
+  const [longitude, setLongitude] = useState(localStorage.getItem("longitude"));
 
-  const [state, setState] = React.useState(false);
+  //   {
+  //     "profileImage": "https://image.shutterstock.com/image-vector/profile-placeholder-image-gray-silhouette-260nw-1153673752.jpg",
+  //     "firstName": "Faraz",
+  //     "lastName": "Hassan",
+  //     "phoneNumber": 923060052374,
+  //     "address": "Example address",
+  //     "unit": "Example unit",
+  //     "city": "Example city",
+  //     "verify": "Example verify",
+  //     "zipcode": 44000,
+  //     "country": "Example country",
+  //     "latitude": 1.099232,
+  //     "longitude": 2.33332,
+  //     "email": "faraz@gmail.com"
+  // }
+  const handleChange = (e) => {
+    console.log(e.target.files[0]);
+    setProfileImage(e.target.files[0]);
+    localStorage.setItem("profileImage", e.target.files[0]);
+    // setFilename(e.target.files[0].name);
+  };
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (
@@ -50,11 +87,20 @@ export default function LoginPage() {
       return;
     }
 
-    setState(open);
+    setVerify(open);
   };
 
   return (
     <div>
+      <input
+        onChange={handleChange}
+        type="file"
+        // id="icon-button-file"
+        style={{ visibility: "hidden", position: "absolute" }}
+        ref={(ref) => {
+          upload = ref;
+        }}
+      />
       <Link id="signup" to="/confirm-otp"></Link>
       <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
         <Grid
@@ -83,8 +129,11 @@ export default function LoginPage() {
         style={{ marginTop: 30, padding: 20 }}
       >
         <img
-          src={Camera}
-          style={{ borderRadius: "50%", marginBottom: 10 }}
+          src={profileImage ? URL.createObjectURL(profileImage) : Camera}
+          onClick={() => {
+            upload.click();
+          }}
+          style={{ borderRadius: "50%", marginBottom: 10, height: 100 }}
         ></img>
         <div style={{ width: "100%" }}></div>
         <Grid itemd md={6} xs={6}>
@@ -92,7 +141,15 @@ export default function LoginPage() {
           <p className={classes.label} style={{ width: "90%" }}>
             First Name
           </p>
-          <input className={classes.input} style={{ width: "90%" }}></input>
+          <input
+            className={classes.input}
+            style={{ width: "90%" }}
+            value={firstName}
+            onChange={(e) => {
+              setFirstName(e.target.value);
+              localStorage.setItem("firstName", e.target.value);
+            }}
+          ></input>
         </Grid>
         <Grid item md={6} xs={6}>
           <Grid container direction="row" justify="flex-end">
@@ -100,7 +157,15 @@ export default function LoginPage() {
             <p className={classes.label} style={{ width: "90%" }}>
               Last Name
             </p>
-            <input className={classes.input} style={{ width: "90%" }}></input>
+            <input
+              className={classes.input}
+              style={{ width: "90%" }}
+              value={lastName}
+              onChange={(e) => {
+                setLastName(e.target.value);
+                localStorage.setItem("lastName", e.target.value);
+              }}
+            ></input>
           </Grid>
         </Grid>
         <p
@@ -112,33 +177,59 @@ export default function LoginPage() {
         <PhoneInput
           // className={classes.input}
           placeholder="Enter phone number"
-          value={value}
+          value={phoneNumber}
           onChange={(e) => {
             console.log(e);
-            setValue(e);
+            setPhoneNumber(e);
+            localStorage.setItem("phoneNumber", e);
           }}
         />
         <div className={classes.input} style={{ height: 10 }}></div>
         <p className={classes.label} style={{ marginTop: 10 }}>
           Address
         </p>
-        <input className={classes.input}></input>
+        <input
+          className={classes.input}
+          value={address}
+          onChange={(e) => {
+            setAddress(e.target.value);
+            localStorage.setItem("address", e.target.value);
+          }}
+        ></input>
         <p className={classes.label} style={{ marginTop: 10 }}>
           Unit/ Apt
         </p>
-        <input className={classes.input}></input>
+        <input
+          className={classes.input}
+          value={unit}
+          onChange={(e) => {
+            setUnit(e.target.value);
+            localStorage.setItem("unit", e.target.value);
+          }}
+        ></input>
         <p className={classes.label} style={{ marginTop: 10 }}>
           City
         </p>
-        <input className={classes.input}></input>
+        <input
+          className={classes.input}
+          value={city}
+          onChange={(e) => {
+            setCity(e.target.value);
+            localStorage.setItem("city", e.target.value);
+          }}
+        ></input>
         <p className={classes.label} style={{ marginTop: 10 }}>
-          State
+          Country
         </p>
         <Autocomplete
-          options={[
-            { title: "All Activity", year: 1994 },
-            { title: "Some Activity", year: 1994 },
-          ]}
+          options={Countries}
+          onChange={(event, values) => {
+            if (values) {
+              console.log("This is co", values.title);
+              setCountry(value.title);
+              localStorage.setItem("country", values.title);
+            }
+          }}
           getOptionLabel={(option) => option.title}
           style={{
             // width: 300,
@@ -148,21 +239,33 @@ export default function LoginPage() {
             border: "none",
             width: "100%",
           }}
-          renderInput={(params) => <TextField {...params} />}
+          renderInput={(params) => (
+            <TextField label={country ? country : ""} {...params} />
+          )}
         />
         <p className={classes.label} style={{ marginTop: 10 }}>
           Zipcode
         </p>
-        <input className={classes.input}></input>
+        <input
+          className={classes.input}
+          value={zipcode}
+          onChange={(e) => {
+            setZipcode(e.target.value);
+            localStorage.setItem("zipcode", e.target.value);
+          }}
+        ></input>
         <p className={classes.label} style={{ marginTop: 10 }}>
           State
         </p>
         <Autocomplete
-          options={[
-            { title: "All Activity", year: 1994 },
-            { title: "Some Activity", year: 1994 },
-          ]}
+          options={states}
           getOptionLabel={(option) => option.title}
+          onChange={(event, values) => {
+            if (values) {
+              setState(value.title);
+              localStorage.setItem("state", values.title);
+            }
+          }}
           style={{
             // width: 300,
             // marginLeft: 20,
@@ -171,19 +274,21 @@ export default function LoginPage() {
             border: "none",
             width: "100%",
           }}
-          renderInput={(params) => <TextField {...params} />}
+          renderInput={(params) => (
+            <TextField label={state ? state : ""} {...params} />
+          )}
         />
         <button
           className={classes.button}
           onClick={() => {
-            setState(true);
+            setVerify(true);
           }}
         >
           Continue
         </button>
         <Drawer
           anchor={"bottom"}
-          open={state}
+          open={verify}
           onClose={toggleDrawer("bottom", false)}
         >
           <p style={{ fontWeight: 600, fontSize: 26, textAlign: "center" }}>

@@ -65,7 +65,7 @@ export default function LandingPage() {
       </Grid>
       <Grid
         container
-        direction="column"
+        direction="row"
         justify="center"
         alignItems="center"
         className={classes.bottomDiv}
@@ -81,7 +81,7 @@ export default function LandingPage() {
           }}
         >
           <Grid container direction="row" justify="center" alignItems="center">
-            Login To Provider Account
+            Start Exploring <ArrowRightAltIcon></ArrowRightAltIcon>
           </Grid>
         </button>{" "}
         <button
@@ -92,11 +92,11 @@ export default function LandingPage() {
           }}
         >
           <Grid container direction="row" justify="center" alignItems="center">
-            Create Provider Account
+            Signup
           </Grid>
         </button>
         <p style={{ width: "80%", textAlign: "center" }}>
-          By continuing you agreeto our{" "}
+          By continuing you agree to our{" "}
           <span style={{ fontWeight: "bold" }}>Terms and conditions</span> and{" "}
           <span style={{ fontWeight: "bold" }}>Privay Policy</span>
         </p>
