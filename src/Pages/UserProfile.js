@@ -1,13 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { makeStyles, Grid, TextField } from "@material-ui/core";
+import {
+  makeStyles,
+  Grid,
+  TextField,
+  Backdrop,
+  CircularProgress,
+} from "@material-ui/core";
 import PhoneInput from "react-phone-number-input";
-import Drawer from "@material-ui/core/Drawer";
-import Camera from "../assets/camera.PNG";
 import Header from "../Components/Header";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import Avatar from "../assets/profile.png";
+import { MyProfile } from "../ApiHelper";
+import { ToastContainer, toast } from "react-toastify";
+import { Countries, states } from "../Data/Data";
+
 const useStyles = makeStyles((theme) => ({
   input: {
     border: "none",
@@ -37,24 +45,40 @@ const useStyles = makeStyles((theme) => ({
     height: 45,
     marginTop: 20,
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
 }));
-export default function LoginPage() {
+export default function UserProfile() {
+  const [openLoader, setOpenLoader] = useState(false);
   const classes = useStyles();
   const [value, setValue] = useState("");
-  const [typeConfirm, setTypeConfirm] = useState("text");
 
-  const [state, setState] = React.useState(false);
+  const [profileImage, setProfileImage] = useState(
+    localStorage.getItem("profileImage1")
+  );
+  const [firstName, setFirstName] = useState(
+    localStorage.getItem("firstName1")
+  );
 
-  const toggleDrawer = (anchor, open) => (event) => {
-    if (
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
+  const [email, setEmail] = useState(localStorage.getItem("firstName1"));
+  const [lastName, setLastName] = useState(localStorage.getItem("lastName1"));
+  const [phoneNumber, setPhoneNumber] = useState(
+    localStorage.getItem("phoneNumber1")
+  );
+  const [address, setAddress] = useState(localStorage.getItem("address1"));
+  const [unit, setUnit] = useState(localStorage.getItem("unit1"));
+  const [city, setCity] = useState(localStorage.getItem("city1"));
+  const [state, setState] = useState(localStorage.getItem("state1"));
+  const [zipcode, setZipcode] = useState(localStorage.getItem("zipcode1"));
+  const [country, setCountry] = useState(localStorage.getItem("country1"));
+  const [latitude, setLatitude] = useState(localStorage.getItem("latitude1"));
+  const [longitude, setLongitude] = useState(
+    localStorage.getItem("longitude1")
+  );
 
-    setState(open);
-  };
+  const [edit, setEdit] = React.useState(false);
 
   const EditProfile = () => {
     return (
@@ -65,7 +89,7 @@ export default function LoginPage() {
         style={{ marginTop: 30, padding: 20 }}
       >
         <img
-          src={Avatar}
+          src={profileImage}
           style={{
             borderRadius: "50%",
             marginBottom: 10,
@@ -79,7 +103,14 @@ export default function LoginPage() {
           <p className={classes.label} style={{ width: "90%" }}>
             First Name
           </p>
-          <input className={classes.input} style={{ width: "90%" }}></input>
+          <input
+            className={classes.input}
+            style={{ width: "90%" }}
+            value={firstName}
+            onClick={(e) => {
+              setFirstName(e.target.value);
+            }}
+          ></input>
         </Grid>
         <Grid item md={6} xs={6}>
           <Grid container direction="row" justify="flex-end">
@@ -87,7 +118,14 @@ export default function LoginPage() {
             <p className={classes.label} style={{ width: "90%" }}>
               Last Name
             </p>
-            <input className={classes.input} style={{ width: "90%" }}></input>
+            <input
+              className={classes.input}
+              style={{ width: "90%" }}
+              value={lastName}
+              onClick={(e) => {
+                setFirstName(e.target.value);
+              }}
+            ></input>
           </Grid>
         </Grid>
         <p
@@ -99,34 +137,55 @@ export default function LoginPage() {
         <PhoneInput
           // className={classes.input}
           placeholder="Enter phone number"
-          value={value}
+          value={phoneNumber}
           onChange={(e) => {
             console.log(e);
-            setValue(e);
+            setPhoneNumber(e);
           }}
         />
         <div className={classes.input} style={{ height: 10 }}></div>
         <p className={classes.label} style={{ marginTop: 10 }}>
           Address
         </p>
-        <input className={classes.input}></input>
+        <input
+          className={classes.input}
+          value={address}
+          onClick={(e) => {
+            setAddress(e.target.value);
+          }}
+        ></input>
         <p className={classes.label} style={{ marginTop: 10 }}>
           Unit/ Apt
         </p>
-        <input className={classes.input}></input>
+        <input
+          className={classes.input}
+          value={unit}
+          onClick={(e) => {
+            setUnit(e.target.value);
+          }}
+        ></input>
         <p className={classes.label} style={{ marginTop: 10 }}>
           City
         </p>
-        <input className={classes.input}></input>
+        <input
+          className={classes.input}
+          value={city}
+          onClick={(e) => {
+            setCity(e.target.value);
+          }}
+        ></input>
         <p className={classes.label} style={{ marginTop: 10 }}>
           State
         </p>
         <Autocomplete
-          options={[
-            { title: "All Activity", year: 1994 },
-            { title: "Some Activity", year: 1994 },
-          ]}
+          options={states}
           getOptionLabel={(option) => option.title}
+          onChange={(event, values) => {
+            if (values) {
+              setState(value.title);
+              localStorage.setItem("state", values.title);
+            }
+          }}
           style={{
             // width: 300,
             // marginLeft: 20,
@@ -135,20 +194,32 @@ export default function LoginPage() {
             border: "none",
             width: "100%",
           }}
-          renderInput={(params) => <TextField {...params} />}
+          renderInput={(params) => (
+            <TextField label={state ? state : ""} {...params} />
+          )}
         />
         <p className={classes.label} style={{ marginTop: 10 }}>
           Zipcode
         </p>
-        <input className={classes.input}></input>
+        <input
+          className={classes.input}
+          value={zipcode}
+          onClick={(e) => {
+            setZipcode(e.target.value);
+          }}
+        ></input>
         <p className={classes.label} style={{ marginTop: 10 }}>
-          State
+          Country
         </p>
         <Autocomplete
-          options={[
-            { title: "All Activity", year: 1994 },
-            { title: "Some Activity", year: 1994 },
-          ]}
+          options={Countries}
+          onChange={(event, values) => {
+            if (values) {
+              console.log("This is co", values.title);
+              setCountry(value.title);
+              localStorage.setItem("country", values.title);
+            }
+          }}
           getOptionLabel={(option) => option.title}
           style={{
             // width: 300,
@@ -158,12 +229,14 @@ export default function LoginPage() {
             border: "none",
             width: "100%",
           }}
-          renderInput={(params) => <TextField {...params} />}
+          renderInput={(params) => (
+            <TextField label={country ? country : ""} {...params} />
+          )}
         />
         <button
           className={classes.button}
           onClick={() => {
-            setState(false);
+            setEdit(false);
           }}
         >
           Save
@@ -180,7 +253,7 @@ export default function LoginPage() {
         style={{ marginTop: 30, padding: 20 }}
       >
         <img
-          src={Avatar}
+          src={profileImage}
           style={{
             borderRadius: "50%",
             marginBottom: 10,
@@ -190,10 +263,38 @@ export default function LoginPage() {
         ></img>{" "}
         <div style={{ width: "100%" }}></div>
         <Grid item md={12} xs={12}>
+          <Grid container direction="row" justify="center">
+            <p
+              style={{
+                textAlign: "center",
+                fontSize: 22,
+                margin: 5,
+                fontWeight: "bold",
+              }}
+            >
+              {firstName + " " + lastName}
+            </p>
+            <p
+              style={{
+                textAlign: "center",
+                fontSize: 16,
+                margin: 5,
+                width: "100%",
+                color: "#b2b2b2",
+                margin: 0,
+              }}
+            >
+              {email}
+            </p>
+          </Grid>
+        </Grid>{" "}
+        <div style={{ width: "100%" }}></div>
+        <div className={classes.input} style={{ height: 10 }}></div>
+        <Grid item md={12} xs={12}>
           <span style={{ color: "#60a3d6" }} className={classes.label}>
             Phone Number
           </span>
-          <p style={{ fontSize: 12, margin: 5 }}>+123456789</p>
+          <p style={{ fontSize: 12, margin: 5 }}>{phoneNumber}</p>
         </Grid>
         <div style={{ width: "100%" }}></div>
         <div className={classes.input} style={{ height: 10 }}></div>
@@ -201,42 +302,42 @@ export default function LoginPage() {
           <span style={{ color: "#60a3d6" }} className={classes.label}>
             Address
           </span>
-          <p style={{ fontSize: 12, margin: 5 }}>New York</p>
+          <p style={{ fontSize: 12, margin: 5 }}>{address}</p>
         </Grid>
         <Grid item md={6} xs={6}>
           <span style={{ color: "#60a3d6" }} className={classes.label}>
             Unit /APT
           </span>
-          <p style={{ fontSize: 12, margin: 5 }}>123456</p>
+          <p style={{ fontSize: 12, margin: 5 }}>{unit}</p>
         </Grid>
         <Grid item md={6} xs={6}>
           <span style={{ color: "#60a3d6" }} className={classes.label}>
             City
           </span>
-          <p style={{ fontSize: 12, margin: 0 }}>New York</p>
+          <p style={{ fontSize: 12, margin: 0 }}>{city}</p>
         </Grid>
         <Grid item md={6} xs={6}>
           <span style={{ color: "#60a3d6" }} className={classes.label}>
             State
           </span>
-          <p style={{ fontSize: 12, margin: 5 }}>Albama</p>
+          <p style={{ fontSize: 12, margin: 5 }}>{state}</p>
         </Grid>
         <Grid item md={6} xs={6}>
           <span style={{ color: "#60a3d6" }} className={classes.label}>
             Zipcode
           </span>
-          <p style={{ fontSize: 12, margin: 5 }}>12345</p>
+          <p style={{ fontSize: 12, margin: 5 }}>{zipcode}</p>
         </Grid>
         <Grid item md={12} xs={12}>
           <span style={{ color: "#60a3d6" }} className={classes.label}>
             Country
           </span>
-          <p style={{ fontSize: 12, margin: 5 }}>USA</p>
+          <p style={{ fontSize: 12, margin: 5 }}>{country}</p>
         </Grid>
         <button
           className={classes.button}
           onClick={() => {
-            setState(true);
+            setEdit(true);
           }}
         >
           Edit
@@ -245,14 +346,66 @@ export default function LoginPage() {
     );
   };
 
+  const getMyProfile = () => {
+    setOpenLoader(true);
+    MyProfile().then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          console.log(res.data.data);
+          var user = res.data.data;
+          setFirstName(user.firstName);
+          setLastName(user.lastName);
+          setPhoneNumber("+" + user.phoneNumber);
+          setAddress(user.address);
+          setCity(user.city);
+          setState(user.state);
+          setUnit(user.unit);
+          setZipcode(user.zipcode);
+          setCountry(user.country);
+          setLongitude(user.longitude);
+          setLatitude(user.latitude);
+          setEmail(user.email);
+          setProfileImage(user.profileImage);
+
+          // setAllProviders(res.data.Providers);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
+  useEffect(() => {
+    getMyProfile();
+  }, []);
+
+  const notify = (data) => toast(data);
   return (
     <div>
+      <Backdrop className={classes.backdrop} open={openLoader}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Link id="homepage" to="/homepage"></Link>
       <Link id="reviews" to="/reviews/0"></Link>
       <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
         <Header
           onSidebarDisplay={() => {
-            setState(true);
+            setEdit(true);
           }}
           heading={"User Profile"}
           leftIcon={
@@ -265,7 +418,7 @@ export default function LoginPage() {
           }
           rightIcon={<div></div>}
         ></Header>{" "}
-        {state ? <EditProfile></EditProfile> : <Profile></Profile>}
+        {edit ? <EditProfile></EditProfile> : <Profile></Profile>}
       </div>
     </div>
   );

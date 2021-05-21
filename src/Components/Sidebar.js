@@ -33,11 +33,11 @@ export default function Sidebar() {
           { name: "Home", href: "/homepage" },
           { name: "New Request", href: "/homepage" },
           { name: "History", href: "/history" },
-          { name: "Notifications", href: "/homepage" },
+          { name: "Notifications", href: "/notifications" },
           { name: "Favourite Plumbers", href: "/favorite" },
           { name: "Help", href: "/homepage" },
           { name: "Settings", href: "/settings" },
-          { name: "Profile", href: "/homepage" },
+          { name: "Profile", href: "/userProfile" },
         ].map((item) => {
           return (
             <div>

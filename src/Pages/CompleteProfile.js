@@ -1,11 +1,21 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { makeStyles, Grid, TextField } from "@material-ui/core";
+import {
+  makeStyles,
+  Grid,
+  TextField,
+  Backdrop,
+  CircularProgress,
+} from "@material-ui/core";
 import PhoneInput from "react-phone-number-input";
 import Drawer from "@material-ui/core/Drawer";
 import Camera from "../assets/camera.PNG";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { Countries, states } from "../Data/Data";
+import { CompleteProfile } from "../ApiHelper";
+import { ToastContainer, toast } from "react-toastify";
+var validator = require("email-validator");
+
 const useStyles = makeStyles((theme) => ({
   input: {
     border: "none",
@@ -35,6 +45,10 @@ const useStyles = makeStyles((theme) => ({
     height: 45,
     marginTop: 20,
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
 }));
 export default function LoginPage() {
   const classes = useStyles();
@@ -56,6 +70,7 @@ export default function LoginPage() {
   const [country, setCountry] = useState(localStorage.getItem("country"));
   const [latitude, setLatitude] = useState(localStorage.getItem("latitude"));
   const [longitude, setLongitude] = useState(localStorage.getItem("longitude"));
+  const [openLoader, setOpenLoader] = useState(false);
 
   //   {
   //     "profileImage": "https://image.shutterstock.com/image-vector/profile-placeholder-image-gray-silhouette-260nw-1153673752.jpg",
@@ -89,9 +104,23 @@ export default function LoginPage() {
 
     setVerify(open);
   };
-
+  const notify = (data) => toast(data);
   return (
     <div>
+      <Backdrop className={classes.backdrop} open={openLoader}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <input
         onChange={handleChange}
         type="file"
@@ -101,7 +130,7 @@ export default function LoginPage() {
           upload = ref;
         }}
       />
-      <Link id="signup" to="/confirm-otp"></Link>
+      <Link id="home" to="/confirm-otp"></Link>
       <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
         <Grid
           container
@@ -280,9 +309,53 @@ export default function LoginPage() {
         />
         <button
           className={classes.button}
-          onClick={() => {
-            setVerify(true);
-          }}
+          // onClick={() => {
+          //   setVerify(true);
+          // }}
+          onClick={
+            () => {
+              // if (!validator.validate(email)) {
+              //   console.log("This is an email", email);
+              //   notify("Please Enter a valid Email");
+              // } else if (password === "") {
+              //   notify("Please Enter a password");
+              // } else {
+              setOpenLoader(true);
+              var data = {
+                profileImage:
+                  "https://image.shutterstock.com/image-vector/profile-placeholder-image-gray-silhouette-260nw-1153673752.jpg",
+                firstName: firstName,
+                lastName: lastName,
+                phoneNumber: phoneNumber,
+                address: address,
+                unit: unit,
+                city: city,
+                state: state,
+                zipcode: zipcode,
+                country: country,
+                latitude: 1.099232,
+                longitude: 2.33332,
+                email: localStorage.getItem("email"),
+              };
+              console.log("This is great", data);
+              CompleteProfile(data).then(
+                (res) => {
+                  if (res.statusText === "OK" || res.statusText === "Created") {
+                    setOpenLoader(false);
+                    console.log(res);
+                    setVerify(true);
+                  }
+                },
+                (error) => {
+                  notify("Something went wrong!");
+                  setOpenLoader(false);
+                  console.log("This is response", error);
+                }
+              );
+            }
+            // document.getElementById("complete").click();
+          }
+          // }
         >
           Continue
         </button>

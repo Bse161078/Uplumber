@@ -1,5 +1,11 @@
-import React, { useState } from "react";
-import { makeStyles, Grid, Paper } from "@material-ui/core";
+import React, { useState, useEffect } from "react";
+import {
+  makeStyles,
+  Grid,
+  TextField,
+  Backdrop,
+  CircularProgress,
+} from "@material-ui/core";
 import Drawer from "@material-ui/core/Drawer";
 import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
@@ -8,6 +14,8 @@ import Rating from "@material-ui/lab/Rating";
 import BathtubIcon from "@material-ui/icons/Bathtub";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Link, withRouter } from "react-router-dom";
+import { CustomerNotifications } from "../ApiHelper";
+import { ToastContainer, toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -40,30 +48,68 @@ const useStyles = makeStyles((theme) => ({
     height: 45,
     marginTop: 20,
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
 }));
 function ProviderDetail(props) {
   const classes = useStyles();
-  const [value, setValue] = useState("");
-  const [markComplete, setMarkComplete] = useState(false);
-  const [typeConfirm, setTypeConfirm] = useState("text");
-
+  const [allNotifications, setAllNotifications] = useState("");
   const [state, setState] = React.useState(false);
   const [bottomState, setBottomState] = React.useState(false);
   const [needModifications, setNeedModifications] = React.useState(false);
   const [modification, setModification] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState("Contacts");
+  const [openLoader, setOpenLoader] = useState(false);
 
   const toggleDrawer = (anchor, open) => (event) => {
     setState(open);
   };
   const toggleDrawerBottom = (anchor, open) => (event) => {
     setBottomState(open);
-    setMarkComplete(true);
   };
   const position = [51.505, -0.09];
   console.log("THis is great", props);
+
+  const getAllNotifications = () => {
+    setOpenLoader(true);
+    CustomerNotifications().then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          console.log("This is res notification", res.data);
+          setAllNotifications(res.data.Customers);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
+  useEffect(() => {
+    getAllNotifications();
+  }, []);
+  const notify = (data) => toast(data);
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
+      <Backdrop className={classes.backdrop} open={openLoader}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Link id="homepage" to="/homepage"></Link>
       <Link id="reviews" to="/reviews/0"></Link>
       <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
@@ -108,45 +154,48 @@ function ProviderDetail(props) {
           </Drawer>
         </div>
         <div>
-          {[1, 2, 3, 4, 5, 6, 2, 2, 9, 10, 11, 12, 13, 14].map((item) => {
-            return (
-              <Grid
-                container
-                direction="row"
-                style={{
-                  paddingInlineEnd: 10,
-                  paddingInlineStart: 10,
-                  paddingTop: 10,
-                  borderBottom: "1px solid #f1f1f1",
-                  height: "max-content",
-                  background: item === 2 ? "#e2f2ff" : "white",
-                }}
-              >
-                <Grid item md={2} xs={2}>
-                  <img src={Avatar} style={{ width: 50, height: 50 }}></img>
-                </Grid>
-                <Grid item md={9} xs={9}>
-                  <Grid container direction="row" style={{ marginLeft: 5 }}>
-                    <p
-                      style={{
-                        width: "100%",
-                        margin: 0,
-                        fontWeight: 600,
-                        fontSize: 14,
-                        textAlign: "justify",
-                      }}
-                    >
-                      Thanks for sharing your feedback with us this will help us
-                      imroving the app
-                    </p>
-                    <span style={{ fontSize: 10, color: "gray" }}>
-                      3 minutes ago
-                    </span>
+          {allNotifications &&
+            allNotifications.map((item) => {
+              return (
+                <Grid
+                  container
+                  direction="row"
+                  style={{
+                    paddingInlineEnd: 10,
+                    paddingInlineStart: 10,
+                    paddingTop: 10,
+                    borderBottom: "1px solid #f1f1f1",
+                    height: "max-content",
+                    background: item === 2 ? "#e2f2ff" : "white",
+                  }}
+                >
+                  <Grid item md={2} xs={2}>
+                    <img
+                      src={item.image}
+                      style={{ width: 50, height: 50, borderRadius: "50%" }}
+                    ></img>
+                  </Grid>
+                  <Grid item md={9} xs={9}>
+                    <Grid container direction="row" style={{ marginLeft: 5 }}>
+                      <p
+                        style={{
+                          width: "100%",
+                          margin: 0,
+                          fontWeight: 600,
+                          fontSize: 14,
+                          textAlign: "justify",
+                        }}
+                      >
+                        {item.notificationText}
+                      </p>
+                      <span style={{ fontSize: 10, color: "gray" }}>
+                        3 minutes ago
+                      </span>
+                    </Grid>
                   </Grid>
                 </Grid>
-              </Grid>
-            );
-          })}
+              );
+            })}
         </div>
 
         <Drawer
@@ -184,7 +233,6 @@ function ProviderDetail(props) {
               className={classes.button}
               onClick={() => {
                 setBottomState(false);
-                setMarkComplete(true);
               }}
             >
               Submit

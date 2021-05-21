@@ -1,5 +1,13 @@
-import React, { useState } from "react";
-import { makeStyles, Grid, Paper, Switch, withStyles } from "@material-ui/core";
+import React, { useState, useEffect } from "react";
+import {
+  makeStyles,
+  Grid,
+  Paper,
+  Switch,
+  withStyles,
+  Backdrop,
+  CircularProgress,
+} from "@material-ui/core";
 import Drawer from "@material-ui/core/Drawer";
 import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
@@ -9,12 +17,13 @@ import ExploreIcon from "@material-ui/icons/Explore";
 import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import PersonIcon from "@material-ui/icons/Person";
 import { Map, TileLayer, Marker, Popup } from "react-leaflet";
-import L from "leaflet";
 import "leaflet-routing-machine";
 import { Link } from "react-router-dom";
 import FavoriteBorderOutlinedIcon from "@material-ui/icons/FavoriteBorderOutlined";
 import PhoneEnabledIcon from "@material-ui/icons/PhoneEnabled";
 import MessageIcon from "@material-ui/icons/Message";
+import { AllProviders } from "../ApiHelper";
+import { ToastContainer, toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -44,6 +53,10 @@ const useStyles = makeStyles((theme) => ({
     background: "#1075c2",
     height: 45,
     marginTop: 20,
+  },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
   },
 }));
 const IOSSwitch = withStyles((theme) => ({
@@ -99,7 +112,7 @@ const IOSSwitch = withStyles((theme) => ({
     />
   );
 });
-export default function LoginPage(pros) {
+export default function HomePage(pros) {
   const classes = useStyles();
 
   const [state, setState] = React.useState(false);
@@ -107,6 +120,8 @@ export default function LoginPage(pros) {
   const [online, setOnline] = React.useState(true);
   const [activeTab, setActiveTab] = React.useState("NearBy");
   const [activeServiceTab, setActiveServiceTab] = React.useState("Problem");
+  const [openLoader, setOpenLoader] = useState(false);
+  const [allProviders, setAllProviders] = useState(null);
 
   const toggleDrawer = (anchor, open) => (event) => {
     setState(open);
@@ -283,8 +298,44 @@ export default function LoginPage(pros) {
     );
   };
 
+  const getAllProviders = () => {
+    setOpenLoader(true);
+    AllProviders().then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          console.log(res.data.Providers);
+          setAllProviders(res.data.Providers);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
+  useEffect(() => {
+    getAllProviders();
+  }, []);
+  const notify = (data) => toast(data);
   return (
     <div style={{ background: "#f2f2f2" }}>
+      <Backdrop className={classes.backdrop} open={openLoader}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
         <Header
           onSidebarDisplay={() => {
@@ -309,33 +360,50 @@ export default function LoginPage(pros) {
         <Link id={"requestAService/0"} to={"requestAService/0"}></Link>
         {/* <div style={{ width: "100%" }}></div> */}
         {activeTab === "NearBy" ? (
-          <Map center={position} zoom={13} scrollWheelZoom={false}>
+          <Map
+            center={
+              allProviders && [
+                allProviders[0].latitude,
+                allProviders[0].longitude,
+              ]
+            }
+            zoom={4}
+            scrollWheelZoom={true}
+          >
             <TileLayer
               attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             />
-            <Marker position={position}>
-              <Popup style={{ width: 120 }}>
-                <Grid container direction="row" justify="center">
-                  <img src={Avatar} style={{ width: 40, height: 40 }}></img>
-                  <p
-                    style={{
-                      width: "100%",
-                      textAlign: "center",
-                      margin: 0,
-                      fontWeight: 600,
-                    }}
-                  >
-                    Jane Doe
-                  </p>
-                  <Grid container direction="row">
-                    <Rating value={5} style={{ fontSize: 10 }}></Rating>
-                    <span style={{ fontSize: 10 }}>5.0(433) </span>
-                  </Grid>
-                  <span style={{ fontSize: 10 }}>$25 / hr</span>
-                </Grid>
-              </Popup>
-            </Marker>
+            {allProviders &&
+              allProviders.map((item) => {
+                return (
+                  <Marker position={[item.latitude, item.longitude]}>
+                    <Popup style={{ width: 120 }}>
+                      <Grid container direction="row" justify="center">
+                        <img
+                          src={item.profileImage}
+                          style={{ width: 40, height: 40, borderRadius: "50%" }}
+                        ></img>
+                        <p
+                          style={{
+                            width: "100%",
+                            textAlign: "center",
+                            margin: 0,
+                            fontWeight: 600,
+                          }}
+                        >
+                          {item.firstName + " " + item.lastName}
+                        </p>
+                        <Grid container direction="row">
+                          <Rating value={5} style={{ fontSize: 10 }}></Rating>
+                          <span style={{ fontSize: 10 }}>5.0(433) </span>
+                        </Grid>
+                        <span style={{ fontSize: 10 }}>$25 / hr</span>
+                      </Grid>
+                    </Popup>
+                  </Marker>
+                );
+              })}
           </Map>
         ) : activeTab === "Offers" ? (
           <Grid
