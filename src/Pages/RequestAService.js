@@ -25,8 +25,7 @@ import DateRangeIcon from "@material-ui/icons/DateRange";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Calendar from "react-calendar";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import CancelIcon from "@material-ui/icons/Cancel";
-import CameraAltIcon from "@material-ui/icons/CameraAlt";
+
 import AddCircleIcon from "@material-ui/icons/AddCircle";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import EditIcon from "@material-ui/icons/Edit";
@@ -48,6 +47,9 @@ import Toilet from "../assets/problem/Toilet.png";
 import Washer from "../assets/problem/Washer.png";
 import WaterFilter from "../assets/problem/WaterFilter.png";
 import WaterHeater from "../assets/problem/WaterHeater.png";
+
+import ContactDetails from "../Components/RequestService/ContactDetails";
+import DescriptionAndPhoto from "../Components/RequestService/DescriptionAndPhoto";
 
 const items = [
   {
@@ -197,6 +199,15 @@ function ProviderDetail(props) {
     policyNumber: JSON.parse(localStorage.getItem("policyNumber")) || "",
     expiryDate: JSON.parse(localStorage.getItem("expiryDate")) || "",
     deduction: JSON.parse(localStorage.getItem("deduction")) || "",
+    userName: "",
+    userPhone: "",
+    allowContact: "",
+    userEmail: "",
+    userAddress: "",
+    userUnit: "",
+    userCity: "",
+    userState: "",
+    userZipCode: "",
   });
   // setRequestData({ ...requestData, [event.target.id]: event.target.value });
   const handleChange = (event) => {
@@ -770,151 +781,151 @@ function ProviderDetail(props) {
     setRequestData({ ...requestData, image: im });
     console.log("This is iamge", im);
   };
-  const DescriptionAndPhoto = () => {
-    return (
-      <Grid
-        container
-        direction="row"
-        justify="center"
-        style={{ padding: 20, height: "max-content" }}
-      >
-        <p style={{ textAlign: "justify" }}>
-          Briefly describe your problem, please do not input any sensitive
-          information here.
-        </p>
-        <textarea
-          className={classes.input}
-          style={{
-            resize: "none",
-            border: "1px solid #efefef",
-            borderRadius: 20,
-            height: 100,
-            padding: 10,
-          }}
-          // value={requestData.description}
-          onChange={(e) => {
-            localStorage.setItem("description", e.target.value);
-            // setRequestData({ ...requestData, description: e.target.value });
-          }}
-        ></textarea>
-        <p className={classes.label}>Add Photos</p>
-        <div style={{ width: "100%", marginTop: 20 }}>
-          <input
-            // required
-            type="file"
-            name="image"
-            id="images"
-            multiple
-            className="form-control"
-            // value={post.image.name}
-            style={{ display: "none" }}
-            onChange={handleFileChange}
-          />
-          <Grid container direction="row" alignItems="center">
-            {requestData.image.length > 1 &&
-              requestData.image.map((img) => {
-                return (
-                  <Badge
-                    badgeContent={
-                      <CancelIcon
-                        style={{ color: "red", marginLeft: -40 }}
-                        onClick={() => {
-                          var temp = [];
-                          requestData.image.map((data) => {
-                            console.log("This is imaeg", img.name, data.name);
-                            if (data.name != img.name) {
-                              temp.push(data);
-                            }
-                          });
-                          console.log("THis is ", temp);
-                          setRequestData({ ...requestData, image: temp });
-                        }}
-                      ></CancelIcon>
-                    }
-                    color=""
-                  >
-                    <img
-                      src={URL.createObjectURL(img)}
-                      className={classes.image}
-                    />
-                  </Badge>
-                );
-              })}
-            <Grid
-              style={{
-                width: 100,
-                height: 100,
-                background: "#efefef",
-                borderRadius: 5,
-              }}
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-              onClick={() => {
-                document.getElementById("images").click();
-              }}
-            >
-              <CameraAltIcon></CameraAltIcon>
-            </Grid>
-          </Grid>
-          <div
-            style={{
-              width: "100vw",
-              borderBottom: "1px solid #e9e9e9",
-              display: "flex",
-              position: "absolute",
-              bottom: 0,
-              height: 70,
-            }}
-          >
-            <Grid item md={6} xs={6}>
-              <button
-                className={classes.button}
-                style={{
-                  height: 35,
-                  padding: 5,
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                  marginRight: 10,
-                  fontSize: 11,
-                  borderRadius: 10,
-                  width: "95%",
-                  background: "#f2f2f2",
-                  color: "black",
-                }}
-                onClick={() => {
-                  setActiveTab("Property");
-                }}
-              >
-                Prev
-              </button>
-            </Grid>
-            <Grid item md={6} xs={6}>
-              <button
-                className={classes.button}
-                style={{
-                  height: 35,
-                  padding: 5,
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                  marginRight: 10,
-                  fontSize: 11,
-                  borderRadius: 10,
-                  width: "95%",
-                }}
-                onClick={() => {
-                  setActiveTab("Inssurance");
-                }}
-              >
-                Next
-              </button>
-            </Grid>
-          </div>
-        </div>
-      </Grid>
-    );
-  };
+  // const DescriptionAndPhoto = () => {
+  //   return (
+  //     <Grid
+  //       container
+  //       direction="row"
+  //       justify="center"
+  //       style={{ padding: 20, height: "max-content" }}
+  //     >
+  //       <p style={{ textAlign: "justify" }}>
+  //         Briefly describe your problem, please do not input any sensitive
+  //         information here.
+  //       </p>
+  //       <textarea
+  //         className={classes.input}
+  //         style={{
+  //           resize: "none",
+  //           border: "1px solid #efefef",
+  //           borderRadius: 20,
+  //           height: 100,
+  //           padding: 10,
+  //         }}
+  //         // value={requestData.description}
+  //         onChange={(e) => {
+  //           localStorage.setItem("description", e.target.value);
+  //           // setRequestData({ ...requestData, description: e.target.value });
+  //         }}
+  //       ></textarea>
+  //       <p className={classes.label}>Add Photos</p>
+  //       <div style={{ width: "100%", marginTop: 20 }}>
+  //         <input
+  //           // required
+  //           type="file"
+  //           name="image"
+  //           id="images"
+  //           multiple
+  //           className="form-control"
+  //           // value={post.image.name}
+  //           style={{ display: "none" }}
+  //           onChange={handleFileChange}
+  //         />
+  //         <Grid container direction="row" alignItems="center">
+  //           {requestData.image.length > 1 &&
+  //             requestData.image.map((img) => {
+  //               return (
+  //                 <Badge
+  //                   badgeContent={
+  //                     <CancelIcon
+  //                       style={{ color: "red", marginLeft: -40 }}
+  //                       onClick={() => {
+  //                         var temp = [];
+  //                         requestData.image.map((data) => {
+  //                           console.log("This is imaeg", img.name, data.name);
+  //                           if (data.name != img.name) {
+  //                             temp.push(data);
+  //                           }
+  //                         });
+  //                         console.log("THis is ", temp);
+  //                         setRequestData({ ...requestData, image: temp });
+  //                       }}
+  //                     ></CancelIcon>
+  //                   }
+  //                   color=""
+  //                 >
+  //                   <img
+  //                     src={URL.createObjectURL(img)}
+  //                     className={classes.image}
+  //                   />
+  //                 </Badge>
+  //               );
+  //             })}
+  //           <Grid
+  //             style={{
+  //               width: 100,
+  //               height: 100,
+  //               background: "#efefef",
+  //               borderRadius: 5,
+  //             }}
+  //             container
+  //             direction="row"
+  //             justify="center"
+  //             alignItems="center"
+  //             onClick={() => {
+  //               document.getElementById("images").click();
+  //             }}
+  //           >
+  //             <CameraAltIcon></CameraAltIcon>
+  //           </Grid>
+  //         </Grid>
+  //         <div
+  //           style={{
+  //             width: "100vw",
+  //             borderBottom: "1px solid #e9e9e9",
+  //             display: "flex",
+  //             position: "absolute",
+  //             bottom: 0,
+  //             height: 70,
+  //           }}
+  //         >
+  //           <Grid item md={6} xs={6}>
+  //             <button
+  //               className={classes.button}
+  //               style={{
+  //                 height: 35,
+  //                 padding: 5,
+  //                 paddingLeft: 10,
+  //                 paddingRight: 10,
+  //                 marginRight: 10,
+  //                 fontSize: 11,
+  //                 borderRadius: 10,
+  //                 width: "95%",
+  //                 background: "#f2f2f2",
+  //                 color: "black",
+  //               }}
+  //               onClick={() => {
+  //                 setActiveTab("Property");
+  //               }}
+  //             >
+  //               Prev
+  //             </button>
+  //           </Grid>
+  //           <Grid item md={6} xs={6}>
+  //             <button
+  //               className={classes.button}
+  //               style={{
+  //                 height: 35,
+  //                 padding: 5,
+  //                 paddingLeft: 10,
+  //                 paddingRight: 10,
+  //                 marginRight: 10,
+  //                 fontSize: 11,
+  //                 borderRadius: 10,
+  //                 width: "95%",
+  //               }}
+  //               onClick={() => {
+  //                 setActiveTab("Inssurance");
+  //               }}
+  //             >
+  //               Next
+  //             </button>
+  //           </Grid>
+  //         </div>
+  //       </div>
+  //     </Grid>
+  //   );
+  // };
 
   const Inssurance = () => {
     return (
@@ -1052,142 +1063,6 @@ function ProviderDetail(props) {
       </Grid>
     );
   };
-  const ContactDetails = () => {
-    return (
-      <Grid
-        container
-        direction="row"
-        justify="center"
-        style={{ padding: 20, height: "max-content" }}
-      >
-        <p className={classes.label}>Name *</p>
-        <input className={classes.input} type={"text"}></input>
-
-        <p className={classes.label}>Phone number *</p>
-        <input className={classes.input} type={"text"}></input>
-        <p style={{ textAlign: "justify" }}>
-          Do you allow U-Plumber to contact you via mobile phone number (text)?
-          Please note this will help you get response from a plumber faster but
-          it may cost you an extra charge (from your phone provider)
-        </p>
-        <div
-          style={{
-            width: "100vw",
-            borderBottom: "1px solid #e9e9e9",
-            display: "flex",
-            height: 70,
-          }}
-        >
-          <Grid item md={6} xs={6}>
-            <button
-              className={classes.button}
-              style={{
-                height: 30,
-                padding: 5,
-                paddingLeft: 10,
-                paddingRight: 10,
-                marginRight: 10,
-                minWidth: "95%",
-                fontSize: 11,
-                width: "max-content",
-              }}
-            >
-              Yes
-            </button>
-          </Grid>
-          <Grid item md={6} xs={6}>
-            <button
-              className={classes.button}
-              style={{
-                height: 30,
-                padding: 5,
-                paddingLeft: 10,
-                paddingRight: 10,
-                marginRight: 10,
-                minWidth: "95%",
-                fontSize: 11,
-                width: "max-content",
-                background: "#f2f2f2",
-                color: "black",
-              }}
-            >
-              No
-            </button>
-          </Grid>
-        </div>
-        <p style={{ textAlign: "justify" }}>
-          Enter you email this will allow U Plumber or provider to contact you
-          via this email.
-        </p>
-        <p className={classes.label}>Email *</p>
-        <input className={classes.input} type={"text"}></input>
-        <p className={classes.label}>Address *</p>
-        <input className={classes.input} type={"text"}></input>
-        <p className={classes.label}>Unit/APT *</p>
-        <input className={classes.input} type={"text"}></input>
-        <p className={classes.label}>City *</p>
-        <input className={classes.input} type={"text"}></input>
-        <p className={classes.label}>State *</p>
-        <input className={classes.input} type={"text"}></input>
-        <p className={classes.label}>Zipcode *</p>
-        <input className={classes.input} type={"text"}></input>
-
-        <div
-          style={{
-            width: "100vw",
-            borderBottom: "1px solid #e9e9e9",
-            display: "flex",
-            position: "absolute",
-            bottom: 0,
-            height: 70,
-          }}
-        >
-          <Grid item md={6} xs={6}>
-            <button
-              className={classes.button}
-              style={{
-                height: 35,
-                padding: 5,
-                paddingLeft: 10,
-                paddingRight: 10,
-                marginRight: 10,
-                fontSize: 11,
-                borderRadius: 10,
-                width: "95%",
-                background: "#f2f2f2",
-                color: "black",
-              }}
-              onClick={() => {
-                setActiveTab("Inssurance");
-              }}
-            >
-              Prev
-            </button>
-          </Grid>
-          <Grid item md={6} xs={6}>
-            <button
-              className={classes.button}
-              style={{
-                height: 35,
-                padding: 5,
-                paddingLeft: 10,
-                paddingRight: 10,
-                marginRight: 10,
-                fontSize: 11,
-                borderRadius: 10,
-                width: "95%",
-              }}
-              onClick={() => {
-                setActiveTab("ReviewRequest");
-              }}
-            >
-              Continue
-            </button>
-          </Grid>
-        </div>
-      </Grid>
-    );
-  };
 
   const ReviewRequest = () => {
     return (
@@ -1221,21 +1096,21 @@ function ProviderDetail(props) {
             </Grid>
           </Grid>
           <p className={classes.label}>Request Service on date *</p>
-          <p className={classes.labelBlack}>March 23,2021 </p>
+          <p className={classes.labelBlack}>{requestData.requestDate} </p>
           <p className={classes.label}>Preffered service time *</p>
-          <p className={classes.labelBlack}>As soon as possible</p>
+          <p className={classes.labelBlack}>{requestData.prfferedTime}</p>
 
           <p className={classes.label}>What item is having problem?</p>
-          <p className={classes.labelBlack}>Dishwasher</p>
+          <p className={classes.labelBlack}>{requestData.itemName}</p>
 
           <p className={classes.label}>What service do you need ? *</p>
-          <p className={classes.labelBlack}>Repair</p>
+          <p className={classes.labelBlack}>{requestData.serviceType}</p>
 
           <p className={classes.label}>Request Option *</p>
-          <p className={classes.labelBlack}>Auto accept first offer</p>
+          <p className={classes.labelBlack}>{requestData.requestOption}</p>
 
           <p className={classes.label}>Any flood of water damage? *</p>
-          <p className={classes.labelBlack}>Yes</p>
+          <p className={classes.labelBlack}>{requestData.waterDamage}</p>
         </div>
 
         <div
@@ -1263,7 +1138,7 @@ function ProviderDetail(props) {
             </Grid>
           </Grid>
           <FormGroup row style={{ width: "100%" }}>
-            {["Plumbing Tecnician", "Mould Specialist"].map((item) => {
+            {requestData.lookingFor.map((item) => {
               return (
                 <FormControlLabel
                   checked={true}
@@ -1308,12 +1183,12 @@ function ProviderDetail(props) {
             </Grid>
           </Grid>
           <p className={classes.label}>Area *</p>
-          <p className={classes.labelBlack}>Kitchen </p>
+          <p className={classes.labelBlack}>{requestData.area} </p>
           <p className={classes.label}>Structure</p>
-          <p className={classes.labelBlack}>Single Home</p>
+          <p className={classes.labelBlack}>{requestData.area}</p>
 
           <p className={classes.label}>Requestor Status</p>
-          <p className={classes.labelBlack}>House Owner</p>
+          <p className={classes.labelBlack}>{requestData.requestorStatus}</p>
         </div>
 
         <div
@@ -1341,9 +1216,16 @@ function ProviderDetail(props) {
             </Grid>
           </Grid>
           <p className={classes.label}>problem Description *</p>
-          <p className={classes.labelBlack}>Leaking and flooding everywhere </p>
+          <p className={classes.labelBlack}>
+            {localStorage.getItem("description")}{" "}
+          </p>
           <p className={classes.label}>Photos</p>
-          <img src={Refrigertors} className={classes.image}></img>
+          {requestData.image.length > 1 &&
+            requestData.image.map((img) => {
+              return (
+                <img src={URL.createObjectURL(img)} className={classes.image} />
+              );
+            })}
         </div>
 
         <div
@@ -1371,13 +1253,13 @@ function ProviderDetail(props) {
             </Grid>
           </Grid>
           <p className={classes.label}>Company *</p>
-          <p className={classes.labelBlack}>State Farm </p>
-          <p className={classes.label}>Poliicy Number</p>
-          <p className={classes.labelBlack}>2554667 </p>
+          <p className={classes.labelBlack}>{requestData.company} </p>
+          <p className={classes.label}>Policy Number</p>
+          <p className={classes.labelBlack}>{requestData.policyNumber} </p>
           <p className={classes.label}>Expiry Date</p>
-          <p className={classes.labelBlack}>Mar27 , 2021 </p>
+          <p className={classes.labelBlack}>{requestData.expiryDate} </p>
           <p className={classes.label}>Deduction</p>
-          <p className={classes.labelBlack}>2500 </p>
+          <p className={classes.labelBlack}>{requestData.deduction} </p>
         </div>
 
         <div
@@ -1405,23 +1287,23 @@ function ProviderDetail(props) {
             </Grid>
           </Grid>
           <p className={classes.label}>Name *</p>
-          <p className={classes.labelBlack}>Lisa Farri </p>
+          <p className={classes.labelBlack}> {requestData.userName}</p>
           <p className={classes.label}>Phone *</p>
-          <p className={classes.labelBlack}>1232554667 </p>
+          <p className={classes.labelBlack}>{requestData.userPhone} </p>
           <p className={classes.label}>Allow U plumber to contact you</p>
-          <p className={classes.labelBlack}>Yes </p>
+          <p className={classes.labelBlack}>{requestData.allowContact} </p>
           <p className={classes.label}>Email * </p>
-          <p className={classes.labelBlack}>utis@gmail.com </p>
+          <p className={classes.labelBlack}>{requestData.userEmail} </p>
           <p className={classes.label}>Address * </p>
-          <p className={classes.labelBlack}>2701 lockere starte </p>
+          <p className={classes.labelBlack}>{requestData.userAddress} </p>
           <p className={classes.label}>Unit / APT * </p>
-          <p className={classes.labelBlack}>23 </p>
-          <p className={classes.label}>Cityt * </p>
-          <p className={classes.labelBlack}>Islamabad </p>
+          <p className={classes.labelBlack}>{requestData.userUnit} </p>
+          <p className={classes.label}>City * </p>
+          <p className={classes.labelBlack}>{requestData.userCity} </p>
           <p className={classes.label}>State * </p>
-          <p className={classes.labelBlack}>California </p>
+          <p className={classes.labelBlack}>{requestData.userState} </p>
           <p className={classes.label}>Zipcode * </p>
-          <p className={classes.labelBlack}>92010 </p>
+          <p className={classes.labelBlack}>{requestData.userZipCode} </p>
         </div>
         <button
           className={classes.button}
@@ -1530,11 +1412,36 @@ function ProviderDetail(props) {
           ) : activeTab === "Property" ? (
             <Property></Property>
           ) : activeTab === "Description and Photo" ? (
-            <DescriptionAndPhoto></DescriptionAndPhoto>
+            <DescriptionAndPhoto
+              setRequestData={(field, value) => {
+                setRequestData({ ...requestData, [field]: value });
+                console.log("THis is the request Data", requestData);
+              }}
+              image={requestData.image}
+              description={requestData.description}
+              setActiveTab={(tab) => {
+                setActiveTab(tab);
+              }}
+            ></DescriptionAndPhoto>
           ) : activeTab === "Inssurance" ? (
             <Inssurance></Inssurance>
           ) : activeTab === "Contact Details" ? (
-            <ContactDetails></ContactDetails>
+            <ContactDetails
+              userName={requestData.userName}
+              userPhone={requestData.userPhone}
+              userAddress={requestData.userAddress}
+              userCity={requestData.userCity}
+              userEmail={requestData.userEmail}
+              userZipCode={requestData.userZipCode}
+              setRequestData={(field, value) => {
+                console.log("This is field", field);
+                setRequestData({ ...requestData, [field]: value });
+                console.log("THis is the request Data", requestData);
+              }}
+              setActiveTab={(tab) => {
+                setActiveTab(tab);
+              }}
+            ></ContactDetails>
           ) : (
             <ReviewRequest></ReviewRequest>
           )}
