@@ -84,7 +84,7 @@ function ProviderDetail(props) {
     setBottomState(open);
   };
   const position = [51.505, -0.09];
-  console.log("THis is great", props);
+  //console.log("THis is great", props);
 
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>

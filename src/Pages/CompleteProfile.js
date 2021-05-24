@@ -337,7 +337,7 @@ export default function LoginPage() {
                 longitude: 2.33332,
                 email: localStorage.getItem("email"),
               };
-              console.log("This is great", data);
+              // console.log("This is great", data);
               CompleteProfile(data).then(
                 (res) => {
                   if (res.statusText === "OK" || res.statusText === "Created") {

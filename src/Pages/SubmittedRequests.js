@@ -100,7 +100,7 @@ function ProviderDetail(props) {
     setBottomState(open);
   };
   const position = [51.505, -0.09];
-  console.log("THis is great", props);
+  //console.log("THis is great", props);
   const OfferCards = (props) => {
     var type = props.item;
     if (props.item === "Job Started") {

@@ -452,7 +452,7 @@ export default function HomePage(pros) {
             borderRadius: 40,
           }}
           onClick={() => {
-            setBottomState(!bottomState);
+            // setBottomState(!bottomState);
           }}
         >
           <Grid
@@ -466,126 +466,26 @@ export default function HomePage(pros) {
               padding: 20,
             }}
           >
-            <Grid item md={8} xs={8}>
-              <p
-                style={{
-                  margin: 0,
-                  fontWeight: "bold",
-                  fontSize: 28,
-                }}
-              >
-                Hi Jhon
-              </p>
-              <p
-                style={{
-                  margin: 0,
-                  fontWeight: 500,
-                  fontSize: 16,
-                  width: "80%",
-                }}
-              >
-                Get a service request by area or job type
-              </p>
-            </Grid>
-            <Grid item md={4} xs={4}>
-              <Grid
-                container
-                direction="row"
-                justify="center"
-                alignItems="center"
-                style={{ height: 50 }}
-              >
-                <p style={{ fontSize: 16, fontWeight: 600, margin: 0 }}>
-                  {online ? "Online" : "Offline"}
-                </p>
-                {/* IOSSwitch */}
-                <Switch
-                  color="#1075c2"
-                  checked={online}
-                  onChange={() => {
-                    setOnline(!online);
-                  }}
-                  style={{ color: "#1075c2" }}
-                ></Switch>
-              </Grid>
-            </Grid>{" "}
-            {bottomState === true && (
-              <Grid
-                container
-                direction="row"
-                alignItems="center"
-                style={{ height: 50, marginTop: -115 }}
-              >
-                <p
-                  className={classes.label}
-                  style={{ color: "black", fontSize: 16, fontWeight: 600 }}
-                >
-                  Service Area
-                </p>
-                {bottomState == true &&
-                  ["Problem", "Looking For"].map((value) => {
-                    return (
-                      <button
-                        className={classes.button}
-                        style={{
-                          height: 30,
-                          padding: 5,
-                          paddingLeft: 10,
-                          paddingRight: 10,
-                          marginLeft: 10,
-                          minWidth: 80,
-                          fontSize: 11,
-                          width: "max-content",
-                          background:
-                            activeServiceTab === value ? "#1075c2" : "#f2f2f2",
-                          color: activeServiceTab === value ? "white" : "black",
-                        }}
-                        onClick={() => {
-                          setActiveServiceTab(value);
-                        }}
-                      >
-                        {value}
-                      </button>
-                    );
-                  })}
-                <p
-                  className={classes.label}
-                  style={{
-                    color: "black",
-                    fontSize: 16,
-                    fontWeight: 600,
-                    marginTop: 10,
-                  }}
-                >
-                  Job Type
-                </p>
-                {bottomState == true &&
-                  ["Repair", "Replace", "New Install"].map((value, index) => {
-                    return (
-                      <button
-                        className={classes.button}
-                        style={{
-                          height: 30,
-                          padding: 5,
-                          paddingLeft: 10,
-                          paddingRight: 10,
-                          marginLeft: 10,
-                          minWidth: 80,
-                          fontSize: 11,
-                          width: "max-content",
-                          background: index != 2 ? "#1075c2" : "#f2f2f2",
-                          color: index != 2 ? "white" : "black",
-                        }}
-                        onClick={() => {
-                          setActiveServiceTab(value);
-                        }}
-                      >
-                        {value}
-                      </button>
-                    );
-                  })}
-              </Grid>
-            )}
+            <button
+              className={classes.button}
+              style={{
+                height: 50,
+                padding: 5,
+                paddingLeft: 10,
+                paddingRight: 10,
+                marginLeft: 10,
+                minWidth: "90%",
+                fontSize: 11,
+                width: "max-content",
+                background: "#1075c2",
+                color: "white",
+              }}
+              onClick={() => {
+                document.getElementById("requestAService/0").click();
+              }}
+            >
+              Request A Service
+            </button>
           </Grid>{" "}
         </Paper>
         <Paper

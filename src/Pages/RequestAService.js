@@ -16,7 +16,7 @@ import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
 import Avatar from "../assets/profile.png";
 import Refrigertors from "../assets/refrigertors.png";
-
+import moment from "moment";
 import Rating from "@material-ui/lab/Rating";
 import BathtubIcon from "@material-ui/icons/Bathtub";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
@@ -176,7 +176,10 @@ function ProviderDetail(props) {
   const [item, setItem] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState("Problem");
   const [image, setImage] = React.useState([]);
-
+  const [requestData, setRequestData] = useState({
+    requestDate: new Date(),
+  });
+  // setRequestData({ ...requestData, [event.target.id]: event.target.value });
   const handleChange = (event) => {
     setValue(event.target.value);
   };
@@ -188,7 +191,7 @@ function ProviderDetail(props) {
     setBottomState(open);
   };
   const position = [51.505, -0.09];
-  console.log("THis is great", props);
+  //console.log("THis is great", props);
 
   const ProblemSection = () => {
     return (
@@ -205,6 +208,10 @@ function ProviderDetail(props) {
           <p className={classes.label}>Request Service on date *</p>
           <input
             className={classes.input}
+            onFocus={() => {
+              setCalendar(true);
+            }}
+            value={requestData.requestDate}
             style={{ border: "none", width: "90%" }}
             type={"text"}
           ></input>
@@ -1496,7 +1503,14 @@ function ProviderDetail(props) {
             >
               Select a Date
             </p>
-            <Calendar></Calendar>
+            <Calendar
+              onChange={(e) => {
+                console.log(
+                  "This is the day",
+                  moment(e).format("MMMM Do YYYY, h:mm:ss a")
+                );
+              }}
+            ></Calendar>
           </Grid>
         </Drawer>
 
@@ -1604,11 +1618,9 @@ function ProviderDetail(props) {
                         direction="column"
                         alignItems="center"
                         style={{ marginBottom: 20 }}
-                        onClick={
-                          ()=>{
-                            setItemName(stuff.name)
-                          }
-                        }
+                        onClick={() => {
+                          setItemName(stuff.name);
+                        }}
                       >
                         <img style={{ width: "70%" }} src={stuff.image}></img>
                         <p
