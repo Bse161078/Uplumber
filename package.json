@@ -13,6 +13,7 @@
     "email-validator": "^2.0.4",
     "leaflet": "^1.6.0",
     "leaflet-routing-machine": "^3.2.12",
+    "moment": "^2.29.1",
     "otp-input-react": "^0.2.4",
     "react": "^17.0.2",
     "react-calendar": "^3.4.0",

@@ -173,11 +173,30 @@ function ProviderDetail(props) {
   const [postRequest, setPostRequest] = React.useState(false);
   const [value, setValue] = React.useState("As soon as possible");
   const [itemName, setItemName] = React.useState("Air Conditioner");
+  const [calendarType, setCalendarType] = React.useState("");
   const [item, setItem] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState("Problem");
   const [image, setImage] = React.useState([]);
   const [requestData, setRequestData] = useState({
-    requestDate: new Date(),
+    requestDate: moment(new Date()).format("MMMM Do YYYY"),
+    prfferedTime: localStorage.getItem("prfferedTime") || "As soon a possible",
+    itemName: localStorage.getItem("itemName") || "Air Conditioner",
+    serviceType: localStorage.getItem("serviceType") || "Repair",
+    requestOption:
+      localStorage.getItem("requestOption") || "Auto accept 1st offer",
+    waterDamage: localStorage.getItem("waterDamage") || "Yes",
+    lookingFor: localStorage.getItem("waterDamage")
+      ? JSON.parse(localStorage.getItem("lookingFor"))
+      : [],
+    area: JSON.parse(localStorage.getItem("area")) || "",
+    structure: JSON.parse(localStorage.getItem("structure")) || "",
+    requestorStatus: JSON.parse(localStorage.getItem("requestorStatus")) || "",
+    description: localStorage.getItem("description"),
+    image: [],
+    company: JSON.parse(localStorage.getItem("company")) || "",
+    policyNumber: JSON.parse(localStorage.getItem("policyNumber")) || "",
+    expiryDate: JSON.parse(localStorage.getItem("expiryDate")) || "",
+    deduction: JSON.parse(localStorage.getItem("deduction")) || "",
   });
   // setRequestData({ ...requestData, [event.target.id]: event.target.value });
   const handleChange = (event) => {
@@ -251,7 +270,7 @@ function ProviderDetail(props) {
             onFocus={() => {
               setPrefferedTime(true);
             }}
-            value={value}
+            value={requestData.prfferedTime}
           ></input>
           <ArrowDropDownIcon
             style={{ color: "#1075c2" }}
@@ -281,7 +300,7 @@ function ProviderDetail(props) {
           className={classes.input}
           style={{ height: 50, paddingBottom: 35, marginBottom: 10 }}
         >
-          <p className={classes.label}>Preffered Service Time *</p>
+          <p className={classes.label}>Service Item *</p>
           <input
             className={classes.input}
             style={{ border: "none", width: "90%" }}
@@ -289,7 +308,7 @@ function ProviderDetail(props) {
             onFocus={() => {
               setItem(true);
             }}
-            value={itemName}
+            value={requestData.itemName}
           ></input>
           <ArrowDropDownIcon
             style={{ color: "#1075c2" }}
@@ -321,6 +340,15 @@ function ProviderDetail(props) {
                   minWidth: 80,
                   fontSize: 11,
                   width: "max-content",
+                  background:
+                    requestData.serviceType === value ? "#1075c2" : "#f2f2f2",
+                  color: requestData.serviceType === value ? "white" : "black",
+                }}
+                onClick={(e) => {
+                  setRequestData({
+                    ...requestData,
+                    serviceType: value,
+                  });
                 }}
               >
                 {value}
@@ -342,16 +370,21 @@ function ProviderDetail(props) {
             <RadioGroup
               aria-label="gender"
               name="gender1"
-              value={value}
-              onChange={handleChange}
+              value={requestData.requestOption}
+              onChange={(e) => {
+                setRequestData({
+                  ...requestData,
+                  requestOption: e.target.value,
+                });
+              }}
             >
               <FormControlLabel
-                value="female"
+                value="Auto accept 1st offer"
                 control={<Radio color="primary" />}
                 label="Auto accept 1st offer"
               />
               <FormControlLabel
-                value="male"
+                value="Open for multiple offers"
                 control={<Radio color="primary" />}
                 label="Open for multiple offers"
               />
@@ -379,6 +412,15 @@ function ProviderDetail(props) {
                 minWidth: "95%",
                 fontSize: 11,
                 width: "max-content",
+                background:
+                  requestData.waterDamage === "Yes" ? "#1075c2" : "#f2f2f2",
+                color: requestData.waterDamage === "Yes" ? "white" : "black",
+              }}
+              onClick={() => {
+                setRequestData({
+                  ...requestData,
+                  waterDamage: "Yes",
+                });
               }}
             >
               Yes
@@ -398,6 +440,15 @@ function ProviderDetail(props) {
                 width: "max-content",
                 background: "#f2f2f2",
                 color: "black",
+                background:
+                  requestData.waterDamage === "No" ? "#1075c2" : "#f2f2f2",
+                color: requestData.waterDamage === "No" ? "white" : "black",
+              }}
+              onClick={() => {
+                setRequestData({
+                  ...requestData,
+                  waterDamage: "No",
+                });
               }}
             >
               No
@@ -461,10 +512,27 @@ function ProviderDetail(props) {
               <FormControlLabel
                 control={
                   <Checkbox
+                    onClick={() => {
+                      if (requestData.lookingFor.includes(item)) {
+                        var temp = [];
+                        requestData.lookingFor.map((data) => {
+                          if (data !== item) {
+                            temp.push(data);
+                          }
+                        });
+                        setRequestData({ ...requestData, lookingFor: temp });
+                      } else {
+                        var temp = requestData.lookingFor;
+                        temp.push(item);
+                        console.log("This is item", item);
+                        setRequestData({ ...requestData, lookingFor: temp });
+                      }
+                    }}
                     icon={<CheckCircleIcon style={{ color: "#efefef" }} />}
                     checkedIcon={
                       <CheckCircleIcon style={{ color: "#1075c2" }} />
                     }
+                    checked={requestData.lookingFor.includes(item)}
                     name="checkedH"
                   />
                 }
@@ -544,6 +612,11 @@ function ProviderDetail(props) {
             { title: "Kitchen", year: 1994 },
             { title: "Kitchen", year: 1994 },
           ]}
+          onChange={(event, values) => {
+            if (values) {
+              setRequestData({ ...requestData, area: values.title });
+            }
+          }}
           getOptionLabel={(option) => option.title}
           style={{
             // width: 300,
@@ -553,7 +626,9 @@ function ProviderDetail(props) {
             border: "none",
             width: "100%",
           }}
-          renderInput={(params) => <TextField {...params} />}
+          renderInput={(params) => (
+            <TextField label={requestData.area} {...params} />
+          )}
         />
         <p className={classes.label}>Structure *</p>
         <div
@@ -576,6 +651,12 @@ function ProviderDetail(props) {
                     minWidth: 80,
                     fontSize: 11,
                     width: "max-content",
+                    background:
+                      requestData.structure === value ? "#1075c2" : "#f2f2f2",
+                    color: requestData.structure === value ? "white" : "black",
+                  }}
+                  onClick={() => {
+                    setRequestData({ ...requestData, structure: value });
                   }}
                 >
                   {value}
@@ -605,6 +686,15 @@ function ProviderDetail(props) {
                   minWidth: 80,
                   fontSize: 11,
                   width: "max-content",
+                  background:
+                    requestData.requestorStatus === value
+                      ? "#1075c2"
+                      : "#f2f2f2",
+                  color:
+                    requestData.requestorStatus === value ? "white" : "black",
+                }}
+                onClick={() => {
+                  setRequestData({ ...requestData, requestorStatus: value });
                 }}
               >
                 {value}
@@ -677,6 +767,7 @@ function ProviderDetail(props) {
       im.push(e.target.files[i]);
     }
     setImage(im);
+    setRequestData({ ...requestData, image: im });
     console.log("This is iamge", im);
   };
   const DescriptionAndPhoto = () => {
@@ -700,6 +791,11 @@ function ProviderDetail(props) {
             height: 100,
             padding: 10,
           }}
+          // value={requestData.description}
+          onChange={(e) => {
+            localStorage.setItem("description", e.target.value);
+            // setRequestData({ ...requestData, description: e.target.value });
+          }}
         ></textarea>
         <p className={classes.label}>Add Photos</p>
         <div style={{ width: "100%", marginTop: 20 }}>
@@ -715,8 +811,8 @@ function ProviderDetail(props) {
             onChange={handleFileChange}
           />
           <Grid container direction="row" alignItems="center">
-            {image.length > 1 &&
-              image.map((img) => {
+            {requestData.image.length > 1 &&
+              requestData.image.map((img) => {
                 return (
                   <Badge
                     badgeContent={
@@ -724,14 +820,14 @@ function ProviderDetail(props) {
                         style={{ color: "red", marginLeft: -40 }}
                         onClick={() => {
                           var temp = [];
-                          image.map((im) => {
-                            console.log("This is imaeg", img.name, im.name);
-                            if (im.name != img.name) {
-                              temp.push(img);
+                          requestData.image.map((data) => {
+                            console.log("This is imaeg", img.name, data.name);
+                            if (data.name != img.name) {
+                              temp.push(data);
                             }
                           });
                           console.log("THis is ", temp);
-                          setImage(temp);
+                          setRequestData({ ...requestData, image: temp });
                         }}
                       ></CancelIcon>
                     }
@@ -843,25 +939,42 @@ function ProviderDetail(props) {
             border: "none",
             width: "100%",
           }}
-          renderInput={(params) => <TextField {...params} />}
+          onChange={(event, values) => {
+            if (values) {
+              setRequestData({ ...requestData, company: values.title });
+            }
+          }}
+          renderInput={(params) => (
+            <TextField label={requestData.company} {...params} />
+          )}
         />
 
         <p className={classes.label}>Policy Number *</p>
-        <input className={classes.input} type={"text"}></input>
+        <input
+          className={classes.input}
+          type={"text"}
+          // value={requestData.policyNumber}
+          onChange={(e) => {
+            // setRequestData({ ...requestData, policyNumber: e.target.value });
+            localStorage.setItem("policyNumber", e.target.value);
+          }}
+        ></input>
 
         <div
           className={classes.input}
           style={{ height: 50, paddingBottom: 35, marginBottom: 10 }}
         >
-          <p className={classes.label}>Request Service on date *</p>
+          <p className={classes.label}>Expiry Date *</p>
           <input
             className={classes.input}
             style={{ border: "none", width: "90%" }}
             type={"text"}
+            value={requestData.expiryDate}
           ></input>
           <DateRangeIcon
             style={{ color: "#1075c2" }}
             onClick={() => {
+              setCalendarType("expiryDate");
               setCalendar(true);
             }}
           ></DateRangeIcon>
@@ -876,9 +989,12 @@ function ProviderDetail(props) {
             className={classes.input}
             style={{ border: "none", width: "80%" }}
             type={"text"}
+            onChange={(e) => {
+              localStorage.setItem("Deduction", e.target.value);
+            }}
           ></input>
-          <RemoveCircleIcon style={{ color: "#1075c2" }}></RemoveCircleIcon>
-          <AddCircleIcon style={{ color: "#1075c2" }}></AddCircleIcon>
+          {/* <RemoveCircleIcon style={{ color: "#1075c2" }}></RemoveCircleIcon>
+          <AddCircleIcon style={{ color: "#1075c2" }}></AddCircleIcon> */}
         </div>
         <div
           style={{
@@ -1505,10 +1621,19 @@ function ProviderDetail(props) {
             </p>
             <Calendar
               onChange={(e) => {
-                console.log(
-                  "This is the day",
-                  moment(e).format("MMMM Do YYYY, h:mm:ss a")
-                );
+                if (calendarType === "expiryDate") {
+                  setRequestData({
+                    ...requestData,
+                    expiryDate: moment(e).format("MMMM Do YYYY"),
+                  });
+                  setCalendar(false);
+                } else {
+                  setRequestData({
+                    ...requestData,
+                    requestDate: moment(e).format("MMMM Do YYYY"),
+                  });
+                  setCalendar(false);
+                }
               }}
             ></Calendar>
           </Grid>
@@ -1545,8 +1670,13 @@ function ProviderDetail(props) {
               <RadioGroup
                 aria-label="gender"
                 name="gender1"
-                value={value}
-                onChange={handleChange}
+                value={requestData.prfferedTime}
+                onChange={(e) => {
+                  setRequestData({
+                    ...requestData,
+                    prfferedTime: e.target.value,
+                  });
+                }}
               >
                 {[
                   "As soon as possible",
@@ -1619,7 +1749,11 @@ function ProviderDetail(props) {
                         alignItems="center"
                         style={{ marginBottom: 20 }}
                         onClick={() => {
-                          setItemName(stuff.name);
+                          setRequestData({
+                            ...requestData,
+                            itemName: stuff.name,
+                          });
+                          setItem(false);
                         }}
                       >
                         <img style={{ width: "70%" }} src={stuff.image}></img>
