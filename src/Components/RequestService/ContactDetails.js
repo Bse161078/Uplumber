@@ -51,6 +51,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 const ContactDetails = (props) => {
   const classes = useStyles();
+  console.log("THis is  props for contact details", props);
   return (
     <Grid
       container

@@ -130,7 +130,7 @@ export default function LoginPage() {
           upload = ref;
         }}
       />
-      <Link id="home" to="/confirm-otp"></Link>
+      <Link id="confirmOtp" to="/confirm-otp"></Link>
       <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
         <Grid
           container
@@ -342,6 +342,8 @@ export default function LoginPage() {
                 (res) => {
                   if (res.statusText === "OK" || res.statusText === "Created") {
                     setOpenLoader(false);
+
+                    localStorage.setItem("id", res.data.id);
                     console.log(res);
                     setVerify(true);
                   }
@@ -383,7 +385,7 @@ export default function LoginPage() {
               className={classes.button}
               style={{ marginBottom: 40 }}
               onClick={() => {
-                document.getElementById("signup").click();
+                document.getElementById("confirmOtp").click();
               }}
             >
               Continue

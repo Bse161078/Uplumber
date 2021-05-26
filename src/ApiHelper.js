@@ -44,19 +44,16 @@ export const Login = (postData) => {
 };
 
 export const CompleteProfile = (postData) => {
-  let headers = new Headers();
-  console.log("This is token", `Bearer ${localStorage.getItem("token")}`);
-  headers.append("Content-Type", "application/json");
-  headers.append("Authorization", `Bearer ${localStorage.getItem("token")}`);
+  var data = JSON.stringify(postData);
+
   var config = {
     method: "post",
-    url: URL + "customerprofile",
+    url: "http://54.176.48.215:8080/api/customerprofile",
     headers: {
-      Authorization:
-        "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYwYTc0Y2Q0NGYxY2JlNTgzNzZhYmZkYSIsImlhdCI6MTYyMTU5MTgyOSwiZXhwIjoxNjI0MTgzODI5fQ.cr7nlG6VYPu3oCecG7R-7u35BpK65TglSAlQ2Ykdtoc",
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
     },
-    data: postData,
+    data: data,
   };
 
   return axios(config);
@@ -78,9 +75,9 @@ export const AllProviders = () => {
   var config = {
     method: "get",
     url: "http://54.176.48.215:8080/api/providerprofile",
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
+    // headers: {
+    //   Authorization: `Bearer ${localStorage.getItem("token")}`,
+    // },
   };
 
   return axios(config);
@@ -95,6 +92,126 @@ export const MyProfile = () => {
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
+  };
+
+  return axios(config);
+};
+
+export const PostARequest = () => {
+  var config = {
+    method: "post",
+    url: "http://54.176.48.215:8080/api/customerservicerequest",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  };
+
+  return axios(config);
+};
+
+export const CustomerSericeUpdateProblem = (postData) => {
+  var data = JSON.stringify(postData);
+
+  var config = {
+    method: "put",
+    url:
+      "http://54.176.48.215:8080/api/customerservicerequest/update/problem/" +
+      localStorage.getItem("requestId"),
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+
+  return axios(config);
+};
+
+export const CustomerSericeUpdateLookingfor = (postData) => {
+  var data = JSON.stringify(postData);
+
+  var config = {
+    method: "put",
+    url:
+      "http://54.176.48.215:8080/api/customerservicerequest/update/lookingfor/" +
+      localStorage.getItem("requestId"),
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+
+  return axios(config);
+};
+
+export const CustomerSericeUpdateProperty = (postData) => {
+  var data = JSON.stringify(postData);
+
+  var config = {
+    method: "put",
+    url:
+      "http://54.176.48.215:8080/api/customerservicerequest/update/property/" +
+      localStorage.getItem("requestId"),
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+
+  return axios(config);
+};
+
+export const CustomerSericeUpdateDescriptionAndPhoto = (postData) => {
+  var data = JSON.stringify(postData);
+
+  var config = {
+    method: "put",
+    url:
+      "http://54.176.48.215:8080/api/customerservicerequest/update/descriptionandphoto/" +
+      localStorage.getItem("requestId"),
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+
+  return axios(config);
+};
+
+export const CustomerSericeUpdateInssurance = (postData) => {
+  var data = JSON.stringify(postData);
+
+  var config = {
+    method: "put",
+    url:
+      "http://54.176.48.215:8080/api/customerservicerequest/update/insurance/" +
+      localStorage.getItem("requestId"),
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+
+  return axios(config);
+};
+
+export const CustomerSericeUpdateContactDetails = (postData) => {
+  var data = JSON.stringify(postData);
+
+  var config = {
+    method: "put",
+    url:
+      "http://54.176.48.215:8080/api/customerservicerequest/update/insurance/" +
+      localStorage.getItem("requestId"),
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
   };
 
   return axios(config);

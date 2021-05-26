@@ -55,6 +55,8 @@ export default function LandingPage() {
     >
       <Link id="signup" to="/create-account"></Link>
       <Link id="login" to="/login"></Link>
+      <Link id="home" to="/homepage"></Link>
+
       <Grid
         container
         direction="row"
@@ -77,24 +79,24 @@ export default function LandingPage() {
           className={classes.button}
           style={{ marginTop: 200 }}
           onClick={() => {
-            document.getElementById("login").click();
+            document.getElementById("home").click();
           }}
         >
           <Grid container direction="row" justify="center" alignItems="center">
             Start Exploring <ArrowRightAltIcon></ArrowRightAltIcon>
           </Grid>
         </button>{" "}
-        <button
+        {/* <button
           className={classes.button}
           style={{ background: "white", color: "black" }}
           onClick={() => {
-            document.getElementById("signup").click();
+            document.getElementById("login").click();
           }}
         >
           <Grid container direction="row" justify="center" alignItems="center">
             Signup
           </Grid>
-        </button>
+        </button> */}
         <p style={{ width: "80%", textAlign: "center" }}>
           By continuing you agree to our{" "}
           <span style={{ fontWeight: "bold" }}>Terms and conditions</span> and{" "}

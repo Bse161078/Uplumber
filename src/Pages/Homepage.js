@@ -22,7 +22,7 @@ import { Link } from "react-router-dom";
 import FavoriteBorderOutlinedIcon from "@material-ui/icons/FavoriteBorderOutlined";
 import PhoneEnabledIcon from "@material-ui/icons/PhoneEnabled";
 import MessageIcon from "@material-ui/icons/Message";
-import { AllProviders } from "../ApiHelper";
+import { AllProviders, PostARequest } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
@@ -316,6 +316,25 @@ export default function HomePage(pros) {
     );
   };
 
+  const postMyRequest = () => {
+    setOpenLoader(true);
+    PostARequest().then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          console.log(res.data);
+          localStorage.setItem("requestId", res.data._id);
+          document.getElementById("requestAService/0").click();
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
   useEffect(() => {
     getAllProviders();
   }, []);
@@ -481,7 +500,8 @@ export default function HomePage(pros) {
                 color: "white",
               }}
               onClick={() => {
-                document.getElementById("requestAService/0").click();
+                postMyRequest();
+                //
               }}
             >
               Request A Service

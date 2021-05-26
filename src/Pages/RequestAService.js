@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   makeStyles,
   Grid,
@@ -9,13 +9,12 @@ import {
   FormControl,
   FormGroup,
   Checkbox,
-  Badge,
+  CircularProgress,
+  Backdrop,
 } from "@material-ui/core";
 import Drawer from "@material-ui/core/Drawer";
 import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
-import Avatar from "../assets/profile.png";
-import Refrigertors from "../assets/refrigertors.png";
 import moment from "moment";
 import Rating from "@material-ui/lab/Rating";
 import BathtubIcon from "@material-ui/icons/Bathtub";
@@ -47,9 +46,19 @@ import Toilet from "../assets/problem/Toilet.png";
 import Washer from "../assets/problem/Washer.png";
 import WaterFilter from "../assets/problem/WaterFilter.png";
 import WaterHeater from "../assets/problem/WaterHeater.png";
+import { ToastContainer, toast } from "react-toastify";
 
 import ContactDetails from "../Components/RequestService/ContactDetails";
 import DescriptionAndPhoto from "../Components/RequestService/DescriptionAndPhoto";
+import {
+  CustomerSericeUpdateProblem,
+  CustomerSericeUpdateLookingfor,
+  CustomerSericeUpdateProperty,
+  CustomerSericeUpdateDescriptionAndPhoto,
+  CustomerSericeUpdateInssurance,
+  MyProfile,
+  CustomerSericeUpdateContactDetails,
+} from "../ApiHelper";
 
 const items = [
   {
@@ -165,6 +174,10 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: 5,
     marginRight: 15,
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
 }));
 function ProviderDetail(props) {
   const classes = useStyles();
@@ -175,6 +188,7 @@ function ProviderDetail(props) {
   const [postRequest, setPostRequest] = React.useState(false);
   const [value, setValue] = React.useState("As soon as possible");
   const [itemName, setItemName] = React.useState("Air Conditioner");
+  const [openLoader, setOpenLoader] = useState(false);
   const [calendarType, setCalendarType] = React.useState("");
   const [item, setItem] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState("Problem");
@@ -187,9 +201,10 @@ function ProviderDetail(props) {
     requestOption:
       localStorage.getItem("requestOption") || "Auto accept 1st offer",
     waterDamage: localStorage.getItem("waterDamage") || "Yes",
-    lookingFor: localStorage.getItem("waterDamage")
-      ? JSON.parse(localStorage.getItem("lookingFor"))
-      : [],
+    lookingFor:
+      localStorage.getItem("lookingFor") != null
+        ? JSON.parse(localStorage.getItem("lookingFor"))
+        : [],
     area: JSON.parse(localStorage.getItem("area")) || "",
     structure: JSON.parse(localStorage.getItem("structure")) || "",
     requestorStatus: JSON.parse(localStorage.getItem("requestorStatus")) || "",
@@ -201,7 +216,7 @@ function ProviderDetail(props) {
     deduction: JSON.parse(localStorage.getItem("deduction")) || "",
     userName: "",
     userPhone: "",
-    allowContact: "",
+    allowContact: "yes",
     userEmail: "",
     userAddress: "",
     userUnit: "",
@@ -209,6 +224,11 @@ function ProviderDetail(props) {
     userState: "",
     userZipCode: "",
   });
+
+  useEffect(() => {
+    getMyProfile();
+  }, []);
+  console.log("This is request data", requestData);
   // setRequestData({ ...requestData, [event.target.id]: event.target.value });
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -222,6 +242,202 @@ function ProviderDetail(props) {
   };
   const position = [51.505, -0.09];
   //console.log("THis is great", props);
+
+  const updateCustomerProblem = () => {
+    setOpenLoader(true);
+    var data = {
+      serviceDate: requestData.requestDate,
+      serviceTime: requestData.prfferedTime,
+      problemItem: requestData.itemName,
+      serviceName: requestData.serviceType,
+      requestMany:
+        requestData.requestOption === "Auto accept 1st offer" ? false : true,
+      anyFloorOrWaterDamage: requestData.waterDamage === "yes" ? true : false,
+      serviceCode: requestData.serviceType,
+    };
+    CustomerSericeUpdateProblem(data).then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          console.log(res);
+          setActiveTab("Looking For");
+          notify(res.data.message);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
+  const updateCustomerLookingFor = () => {
+    setOpenLoader(true);
+    var data = {
+      lookingFor: requestData.lookingFor,
+    };
+    CustomerSericeUpdateLookingfor(data).then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          console.log(res);
+          setActiveTab("Property");
+          notify(res.data.message);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
+  const updateCustomerProperty = () => {
+    setOpenLoader(true);
+    var data = {
+      area: requestData.area,
+      structure: requestData.structure,
+      requesterStatus: requestData.requestorStatus,
+    };
+    CustomerSericeUpdateProperty(data).then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          console.log(res);
+          notify(res.data.message);
+          setActiveTab("Description and Photo");
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
+  const updateCustomerPropertyDescriptionAndProperty = (tab) => {
+    setOpenLoader(true);
+    var data = {
+      description: requestData.description,
+      photos: [
+        "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
+        "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
+      ],
+    };
+    CustomerSericeUpdateDescriptionAndPhoto(data).then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          notify(res.data.message);
+          console.log(res);
+          setActiveTab(tab);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
+  const getMyProfile = () => {
+    setOpenLoader(true);
+    MyProfile().then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          console.log(res.data.data);
+          var user = res.data.data;
+
+          // setUnit(user.unit);
+          // setCountry(user.country);
+          // setLongitude(user.longitude);
+          // setLatitude(user.latitude);
+          // setEmail(user.email);
+          // setProfileImage(user.profileImage);
+
+          setRequestData({
+            ...requestData,
+            userName: user.firstName + " " + user.lastName,
+            userPhone: "+" + user.phoneNumber,
+            userEmail: user.email,
+            userAddress: user.address,
+            userCity: user.city,
+            userState: user.state,
+            userZipCode: user.zipcode,
+            userUnit: user.unit,
+            userState: user.state,
+          });
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
+  const updateCustomerPropertyInssurance = (tab) => {
+    setOpenLoader(true);
+    var data = {
+      company: requestData.company,
+      policyNumber: requestData.policyNumber,
+      expiryDate: requestData.expiryDate,
+      deduction: requestData.deduction,
+    };
+    CustomerSericeUpdateInssurance(data).then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          notify(res.data.message);
+          console.log(res);
+          setActiveTab("Contact Details");
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
+  const updateCustomerContactDetails = (tab) => {
+    setOpenLoader(true);
+    var data = {
+      name: requestData.userName,
+      phone: requestData.userPhone,
+      allowSms: true,
+      email: requestData.userEmail,
+      address: requestData.userAddress,
+      latitude: 112.0988,
+      longitude: 133.4444,
+      unit: requestData.userUnit,
+      city: requestData.userCity,
+      state: requestData.userState,
+      zipCode: requestData.userZipCode,
+    };
+    CustomerSericeUpdateContactDetails(data).then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          notify(res.data.message);
+          console.log(res);
+          setActiveTab(tab);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
 
   const ProblemSection = () => {
     return (
@@ -253,22 +469,6 @@ function ProviderDetail(props) {
           ></DateRangeIcon>
         </div>
 
-        {/* <Autocomplete
-          options={[
-            { title: "As soon as possible", year: 1994 },
-            { title: "As soon as possible", year: 1994 },
-          ]}
-          getOptionLabel={(option) => option.title}
-          style={{
-            // width: 300,
-            // marginLeft: 20,
-            // marginTop: 20,
-            // marginBottom: 20
-            border: "none",
-            width: "100%",
-          }}
-          renderInput={(params) => <TextField {...params} />}
-        /> */}
         <div
           className={classes.input}
           style={{ height: 50, paddingBottom: 35, marginBottom: 10 }}
@@ -290,23 +490,7 @@ function ProviderDetail(props) {
             }}
           ></ArrowDropDownIcon>
         </div>
-        {/* <p className={classes.label}>What item is having problem *</p>
-        <Autocomplete
-          options={[
-            { title: "Dishwasher", year: 1994 },
-            { title: "Dishwasher", year: 1994 },
-          ]}
-          getOptionLabel={(option) => option.title}
-          style={{
-            // width: 300,
-            // marginLeft: 20,
-            // marginTop: 20,
-            // marginBottom: 20
-            border: "none",
-            width: "100%",
-          }}
-          renderInput={(params) => <TextField {...params} />}
-        /> */}
+
         <div
           className={classes.input}
           style={{ height: 50, paddingBottom: 35, marginBottom: 10 }}
@@ -387,6 +571,7 @@ function ProviderDetail(props) {
                   ...requestData,
                   requestOption: e.target.value,
                 });
+                localStorage.setItem("requestOption", e.target.value);
               }}
             >
               <FormControlLabel
@@ -489,7 +674,8 @@ function ProviderDetail(props) {
                 width: "95%",
               }}
               onClick={() => {
-                setActiveTab("Looking For");
+                updateCustomerProblem();
+                //
               }}
             >
               Next
@@ -532,11 +718,19 @@ function ProviderDetail(props) {
                           }
                         });
                         setRequestData({ ...requestData, lookingFor: temp });
+                        localStorage.setItem(
+                          "lookingFor",
+                          JSON.stringify(temp)
+                        );
                       } else {
                         var temp = requestData.lookingFor;
                         temp.push(item);
                         console.log("This is item", item);
                         setRequestData({ ...requestData, lookingFor: temp });
+                        localStorage.setItem(
+                          "lookingFor",
+                          JSON.stringify(temp)
+                        );
                       }
                     }}
                     icon={<CheckCircleIcon style={{ color: "#efefef" }} />}
@@ -598,7 +792,7 @@ function ProviderDetail(props) {
                 width: "95%",
               }}
               onClick={() => {
-                setActiveTab("Property");
+                updateCustomerLookingFor();
               }}
             >
               Next
@@ -626,6 +820,7 @@ function ProviderDetail(props) {
           onChange={(event, values) => {
             if (values) {
               setRequestData({ ...requestData, area: values.title });
+              localStorage.setItem("area", values.title);
             }
           }}
           getOptionLabel={(option) => option.title}
@@ -668,6 +863,7 @@ function ProviderDetail(props) {
                   }}
                   onClick={() => {
                     setRequestData({ ...requestData, structure: value });
+                    localStorage.setItem("structure", value);
                   }}
                 >
                   {value}
@@ -706,6 +902,7 @@ function ProviderDetail(props) {
                 }}
                 onClick={() => {
                   setRequestData({ ...requestData, requestorStatus: value });
+                  localStorage.setItem("requestorStatus", value);
                 }}
               >
                 {value}
@@ -759,7 +956,7 @@ function ProviderDetail(props) {
                 width: "95%",
               }}
               onClick={() => {
-                setActiveTab("Description and Photo");
+                updateCustomerProperty();
               }}
             >
               Next
@@ -769,163 +966,6 @@ function ProviderDetail(props) {
       </Grid>
     );
   };
-
-  const handleFileChange = (e) => {
-    console.log("Thes are files", e.target.files);
-    var file = e.target.files;
-    var im = [];
-    for (var i = 0; i < e.target.files.length; i++) {
-      im.push(e.target.files[i]);
-    }
-    setImage(im);
-    setRequestData({ ...requestData, image: im });
-    console.log("This is iamge", im);
-  };
-  // const DescriptionAndPhoto = () => {
-  //   return (
-  //     <Grid
-  //       container
-  //       direction="row"
-  //       justify="center"
-  //       style={{ padding: 20, height: "max-content" }}
-  //     >
-  //       <p style={{ textAlign: "justify" }}>
-  //         Briefly describe your problem, please do not input any sensitive
-  //         information here.
-  //       </p>
-  //       <textarea
-  //         className={classes.input}
-  //         style={{
-  //           resize: "none",
-  //           border: "1px solid #efefef",
-  //           borderRadius: 20,
-  //           height: 100,
-  //           padding: 10,
-  //         }}
-  //         // value={requestData.description}
-  //         onChange={(e) => {
-  //           localStorage.setItem("description", e.target.value);
-  //           // setRequestData({ ...requestData, description: e.target.value });
-  //         }}
-  //       ></textarea>
-  //       <p className={classes.label}>Add Photos</p>
-  //       <div style={{ width: "100%", marginTop: 20 }}>
-  //         <input
-  //           // required
-  //           type="file"
-  //           name="image"
-  //           id="images"
-  //           multiple
-  //           className="form-control"
-  //           // value={post.image.name}
-  //           style={{ display: "none" }}
-  //           onChange={handleFileChange}
-  //         />
-  //         <Grid container direction="row" alignItems="center">
-  //           {requestData.image.length > 1 &&
-  //             requestData.image.map((img) => {
-  //               return (
-  //                 <Badge
-  //                   badgeContent={
-  //                     <CancelIcon
-  //                       style={{ color: "red", marginLeft: -40 }}
-  //                       onClick={() => {
-  //                         var temp = [];
-  //                         requestData.image.map((data) => {
-  //                           console.log("This is imaeg", img.name, data.name);
-  //                           if (data.name != img.name) {
-  //                             temp.push(data);
-  //                           }
-  //                         });
-  //                         console.log("THis is ", temp);
-  //                         setRequestData({ ...requestData, image: temp });
-  //                       }}
-  //                     ></CancelIcon>
-  //                   }
-  //                   color=""
-  //                 >
-  //                   <img
-  //                     src={URL.createObjectURL(img)}
-  //                     className={classes.image}
-  //                   />
-  //                 </Badge>
-  //               );
-  //             })}
-  //           <Grid
-  //             style={{
-  //               width: 100,
-  //               height: 100,
-  //               background: "#efefef",
-  //               borderRadius: 5,
-  //             }}
-  //             container
-  //             direction="row"
-  //             justify="center"
-  //             alignItems="center"
-  //             onClick={() => {
-  //               document.getElementById("images").click();
-  //             }}
-  //           >
-  //             <CameraAltIcon></CameraAltIcon>
-  //           </Grid>
-  //         </Grid>
-  //         <div
-  //           style={{
-  //             width: "100vw",
-  //             borderBottom: "1px solid #e9e9e9",
-  //             display: "flex",
-  //             position: "absolute",
-  //             bottom: 0,
-  //             height: 70,
-  //           }}
-  //         >
-  //           <Grid item md={6} xs={6}>
-  //             <button
-  //               className={classes.button}
-  //               style={{
-  //                 height: 35,
-  //                 padding: 5,
-  //                 paddingLeft: 10,
-  //                 paddingRight: 10,
-  //                 marginRight: 10,
-  //                 fontSize: 11,
-  //                 borderRadius: 10,
-  //                 width: "95%",
-  //                 background: "#f2f2f2",
-  //                 color: "black",
-  //               }}
-  //               onClick={() => {
-  //                 setActiveTab("Property");
-  //               }}
-  //             >
-  //               Prev
-  //             </button>
-  //           </Grid>
-  //           <Grid item md={6} xs={6}>
-  //             <button
-  //               className={classes.button}
-  //               style={{
-  //                 height: 35,
-  //                 padding: 5,
-  //                 paddingLeft: 10,
-  //                 paddingRight: 10,
-  //                 marginRight: 10,
-  //                 fontSize: 11,
-  //                 borderRadius: 10,
-  //                 width: "95%",
-  //               }}
-  //               onClick={() => {
-  //                 setActiveTab("Inssurance");
-  //               }}
-  //             >
-  //               Next
-  //             </button>
-  //           </Grid>
-  //         </div>
-  //       </div>
-  //     </Grid>
-  //   );
-  // };
 
   const Inssurance = () => {
     return (
@@ -1053,7 +1093,7 @@ function ProviderDetail(props) {
                 width: "95%",
               }}
               onClick={() => {
-                setActiveTab("Contact Details");
+                updateCustomerPropertyInssurance();
               }}
             >
               Next
@@ -1305,10 +1345,11 @@ function ProviderDetail(props) {
           <p className={classes.label}>Zipcode * </p>
           <p className={classes.labelBlack}>{requestData.userZipCode} </p>
         </div>
+        <Link id="homepage" to="/homepage"></Link>
         <button
           className={classes.button}
           onClick={() => {
-            // document.getElementById("requestAService/0").click();
+            document.getElementById("homepage").click();
           }}
         >
           Submit Requests
@@ -1316,12 +1357,24 @@ function ProviderDetail(props) {
       </Grid>
     );
   };
-
+  const notify = (data) => toast(data);
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
-      <Link id="homepage" to="/homepage"></Link>
       <Link id="sumittedRequest" to="/sumittedRequest"></Link>
-
+      <Backdrop className={classes.backdrop} open={openLoader}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Link id="reviews" to="/reviews/0"></Link>
       <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
         <Header
@@ -1420,7 +1473,7 @@ function ProviderDetail(props) {
               image={requestData.image}
               description={requestData.description}
               setActiveTab={(tab) => {
-                setActiveTab(tab);
+                updateCustomerPropertyDescriptionAndProperty(tab);
               }}
             ></DescriptionAndPhoto>
           ) : activeTab === "Inssurance" ? (
@@ -1433,13 +1486,15 @@ function ProviderDetail(props) {
               userCity={requestData.userCity}
               userEmail={requestData.userEmail}
               userZipCode={requestData.userZipCode}
+              userUnit={requestData.userUnit}
+              userState={requestData.userState}
               setRequestData={(field, value) => {
                 console.log("This is field", field);
                 setRequestData({ ...requestData, [field]: value });
                 console.log("THis is the request Data", requestData);
               }}
               setActiveTab={(tab) => {
-                setActiveTab(tab);
+                updateCustomerContactDetails(tab);
               }}
             ></ContactDetails>
           ) : (
