@@ -205,8 +205,50 @@ export const CustomerSericeUpdateContactDetails = (postData) => {
   var config = {
     method: "put",
     url:
-      "http://54.176.48.215:8080/api/customerservicerequest/update/insurance/" +
+      "http://54.176.48.215:8080/api/customerservicerequest/update/contactdetails/" +
       localStorage.getItem("requestId"),
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+
+  return axios(config);
+};
+
+export const GetAllRequests = () => {
+  var config = {
+    method: "get",
+    url:
+      "http://54.176.48.215:8080/api/customerservicerequest/customer/" +
+      localStorage.getItem("id"),
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  };
+
+  return axios(config);
+};
+
+export const GetAllOffers = () => {
+  var config = {
+    method: "get",
+    url: "http://54.176.48.215:8080/api/customeroffer",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  };
+
+  return axios(config);
+};
+
+export const UpdateCustomerProfile = (postData) => {
+  var data = JSON.stringify(postData);
+
+  var config = {
+    method: "put",
+    url: "http://54.176.48.215:8080/api/customerprofile/updatecustomer",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",

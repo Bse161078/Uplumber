@@ -22,7 +22,12 @@ import { Link } from "react-router-dom";
 import FavoriteBorderOutlinedIcon from "@material-ui/icons/FavoriteBorderOutlined";
 import PhoneEnabledIcon from "@material-ui/icons/PhoneEnabled";
 import MessageIcon from "@material-ui/icons/Message";
-import { AllProviders, PostARequest } from "../ApiHelper";
+import {
+  AllProviders,
+  PostARequest,
+  GetAllRequests,
+  GetAllOffers,
+} from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
@@ -122,30 +127,35 @@ export default function HomePage(pros) {
   const [activeServiceTab, setActiveServiceTab] = React.useState("Problem");
   const [openLoader, setOpenLoader] = useState(false);
   const [allProviders, setAllProviders] = useState(null);
+  const [allOffers, setAllOffers] = useState(null);
 
   const toggleDrawer = (anchor, open) => (event) => {
     setState(open);
   };
   const position = [51.505, -0.09];
-
+  console.log("This isid", localStorage.getItem("id"));
   const OfferCards = (props) => {
     var type = props.item;
-    if (props.item === "Job Started") {
+    if (props.item.isAccepted === true) {
       type = "jobStarted";
     }
+
     return (
       <Paper style={{ width: "90%", padding: 10, marginBottom: 10 }}>
         <Link
-          id={"details" + props.index}
-          to={"/details/" + props.index}
+          id={"details" + props.item._id}
+          to={"/details/" + props.item._id}
         ></Link>
         <Link
-          id={"jobdetails" + props.index}
-          to={"/jobDetails/" + props.index}
+          id={"jobdetails" + props.item._id}
+          to={"/jobDetails/" + props.item._id}
         ></Link>
         <Grid container direction="row">
           <Grid item md={2} xs={2}>
-            <img src={Avatar} style={{ width: 50, height: 50 }}></img>
+            <img
+              src={props.item.providerImage}
+              style={{ width: 50, height: 50, borderRadius: "50%" }}
+            ></img>
           </Grid>
           <Grid item md={7} xs={7}>
             <Grid container direction="row" style={{ marginLeft: 5 }}>
@@ -156,34 +166,44 @@ export default function HomePage(pros) {
                   fontWeight: 600,
                 }}
               >
-                Jane Doe
+                {props.item.providerName}
               </p>
-              <Rating value={5} style={{ fontSize: 10 }}></Rating>
-              <span style={{ fontSize: 10 }}>5.0(433) </span>
+              <Rating
+                value={props.item.providerRating}
+                style={{ fontSize: 10 }}
+              ></Rating>
+              <span style={{ fontSize: 10 }}>
+                {props.item.providerRating}({props.item.providerReviews}){" "}
+              </span>
               <div style={{ width: "100%" }}></div>
-              <span style={{ fontSize: 10 }}>$25 / hr</span>
+              <span style={{ fontSize: 10 }}>
+                ${props.item.pricePerHour} / hr
+              </span>
             </Grid>
           </Grid>
           <Grid item md={3} xs={3}>
             <div
               style={{
-                background: props.item === "Accepted" ? "#e7f9e9" : "#e7f1f9",
+                background:
+                  props.item.status === "Pending" ? "#e7f9e9" : "#e7f1f9",
                 fontSize: 10,
                 borderRadius: 10,
                 padding: 4,
                 textAlign: "center",
-                color: props.item === "Accepted" ? "#23c739" : "#60a3d6",
+                color: props.item.status === "Pending" ? "#23c739" : "#60a3d6",
                 cursor: "pointer",
               }}
               onClick={() => {
-                if (props.item === "Pending") {
-                  document.getElementById("details" + props.index).click();
-                } else if (props.item === "Job Started") {
-                  document.getElementById("jobdetails" + props.index).click();
+                if (props.item.isAccepted === false) {
+                  document.getElementById("details" + props.item._id).click();
+                } else if (props.item.isAccepted === true) {
+                  document
+                    .getElementById("jobdetails" + props.item._id)
+                    .click();
                 }
               }}
             >
-              {props.item}
+              {props.item.status}
             </div>
           </Grid>
         </Grid>
@@ -191,11 +211,11 @@ export default function HomePage(pros) {
         <Grid container direction="row" justify="center">
           <Grid item md={6} xs={6}>
             <span style={{ color: "#60a3d6", fontSize: 10 }}>Date</span>
-            <p style={{ fontSize: 10, margin: 0 }}>March 23 , 2021</p>
+            <p style={{ fontSize: 10, margin: 0 }}>{props.item.serviceDate}</p>
           </Grid>
           <Grid item md={6} xs={6}>
             <span style={{ color: "#60a3d6", fontSize: 10 }}>Item</span>
-            <p style={{ fontSize: 10, margin: 0 }}>Dishwasher</p>
+            <p style={{ fontSize: 10, margin: 0 }}> {props.item.itemName}</p>
           </Grid>
         </Grid>
       </Paper>
@@ -298,6 +318,25 @@ export default function HomePage(pros) {
     );
   };
 
+  const getAllMyOffers = () => {
+    setOpenLoader(true);
+    GetAllOffers().then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          // notify(res.data.message);
+          console.log("These are customer offeres", res.data);
+          setAllOffers(res.data.Customers);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
   const getAllProviders = () => {
     setOpenLoader(true);
     AllProviders().then(
@@ -337,6 +376,7 @@ export default function HomePage(pros) {
 
   useEffect(() => {
     getAllProviders();
+    getAllMyOffers();
   }, []);
   const notify = (data) => toast(data);
   return (
@@ -370,8 +410,8 @@ export default function HomePage(pros) {
         justify="center"
         style={{
           marginTop: activeTab === "NearBy" ? 0 : 30,
-          maxHeight: "calc( 100vh - 100px )",
-          minHeight: "calc( 100vh - 100px )",
+          maxHeight: "calc( 100vh - 150px )",
+          minHeight: "calc( 100vh - 150px )",
           overflowY: "scroll",
           // background: "gray",
         }}
@@ -432,9 +472,10 @@ export default function HomePage(pros) {
             alignItems="flex-start"
             style={{ height: "max-content" }}
           >
-            {["Accepted", "Job Started", "Pending"].map((item, index) => {
-              return <OfferCards index={index} item={item}></OfferCards>;
-            })}
+            {allOffers &&
+              allOffers.map((item, index) => {
+                return <OfferCards index={index} item={item}></OfferCards>;
+              })}
           </Grid>
         ) : (
           <Grid
@@ -480,7 +521,7 @@ export default function HomePage(pros) {
             justify="center"
             // alignItems="center"
             style={{
-              height: bottomState == true ? 400 : 200,
+              height: bottomState == true ? 300 : 150,
               width: "100%",
               padding: 20,
             }}

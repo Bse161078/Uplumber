@@ -205,15 +205,15 @@ function ProviderDetail(props) {
       localStorage.getItem("lookingFor") != null
         ? JSON.parse(localStorage.getItem("lookingFor"))
         : [],
-    area: JSON.parse(localStorage.getItem("area")) || "",
-    structure: JSON.parse(localStorage.getItem("structure")) || "",
-    requestorStatus: JSON.parse(localStorage.getItem("requestorStatus")) || "",
+    area: localStorage.getItem("area") || "",
+    structure: localStorage.getItem("structure") || "",
+    requestorStatus: localStorage.getItem("requestorStatus") || "",
     description: localStorage.getItem("description"),
     image: [],
-    company: JSON.parse(localStorage.getItem("company")) || "",
-    policyNumber: JSON.parse(localStorage.getItem("policyNumber")) || "",
-    expiryDate: JSON.parse(localStorage.getItem("expiryDate")) || "",
-    deduction: JSON.parse(localStorage.getItem("deduction")) || "",
+    company: localStorage.getItem("company") || "",
+    policyNumber: localStorage.getItem("policyNumber") || "",
+    expiryDate: localStorage.getItem("expiryDate") || "",
+    deduction: localStorage.getItem("deduction") || "",
     userName: "",
     userPhone: "",
     allowContact: "yes",
@@ -228,7 +228,7 @@ function ProviderDetail(props) {
   useEffect(() => {
     getMyProfile();
   }, []);
-  console.log("This is request data", requestData);
+  // console.log("This is request data", requestData);
   // setRequestData({ ...requestData, [event.target.id]: event.target.value });
   const handleChange = (event) => {
     setValue(event.target.value);

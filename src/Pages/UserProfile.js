@@ -12,9 +12,10 @@ import Header from "../Components/Header";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import Avatar from "../assets/profile.png";
-import { MyProfile } from "../ApiHelper";
+import { MyProfile, UpdateCustomerProfile } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 import { Countries, states } from "../Data/Data";
+import EditProfile from "./EditProfile";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -77,173 +78,219 @@ export default function UserProfile() {
   const [longitude, setLongitude] = useState(
     localStorage.getItem("longitude1")
   );
-
-  const [edit, setEdit] = React.useState(false);
-
-  const EditProfile = () => {
-    return (
-      <Grid
-        container
-        direction="row"
-        justify="center"
-        style={{ marginTop: 30, padding: 20 }}
-      >
-        <img
-          src={profileImage}
-          style={{
-            borderRadius: "50%",
-            marginBottom: 10,
-            width: 120,
-            height: 120,
-          }}
-        ></img>
-        <div style={{ width: "100%" }}></div>
-        <Grid itemd md={6} xs={6}>
-          {" "}
-          <p className={classes.label} style={{ width: "90%" }}>
-            First Name
-          </p>
-          <input
-            className={classes.input}
-            style={{ width: "90%" }}
-            value={firstName}
-            onClick={(e) => {
-              setFirstName(e.target.value);
-            }}
-          ></input>
-        </Grid>
-        <Grid item md={6} xs={6}>
-          <Grid container direction="row" justify="flex-end">
-            {" "}
-            <p className={classes.label} style={{ width: "90%" }}>
-              Last Name
-            </p>
-            <input
-              className={classes.input}
-              style={{ width: "90%" }}
-              value={lastName}
-              onClick={(e) => {
-                setFirstName(e.target.value);
-              }}
-            ></input>
-          </Grid>
-        </Grid>
-        <p
-          className={classes.label}
-          style={{ marginTop: 20, marginBottom: 20 }}
-        >
-          Phone Number
-        </p>
-        <PhoneInput
-          // className={classes.input}
-          placeholder="Enter phone number"
-          value={phoneNumber}
-          onChange={(e) => {
-            console.log(e);
-            setPhoneNumber(e);
-          }}
-        />
-        <div className={classes.input} style={{ height: 10 }}></div>
-        <p className={classes.label} style={{ marginTop: 10 }}>
-          Address
-        </p>
-        <input
-          className={classes.input}
-          value={address}
-          onClick={(e) => {
-            setAddress(e.target.value);
-          }}
-        ></input>
-        <p className={classes.label} style={{ marginTop: 10 }}>
-          Unit/ Apt
-        </p>
-        <input
-          className={classes.input}
-          value={unit}
-          onClick={(e) => {
-            setUnit(e.target.value);
-          }}
-        ></input>
-        <p className={classes.label} style={{ marginTop: 10 }}>
-          City
-        </p>
-        <input
-          className={classes.input}
-          value={city}
-          onClick={(e) => {
-            setCity(e.target.value);
-          }}
-        ></input>
-        <p className={classes.label} style={{ marginTop: 10 }}>
-          State
-        </p>
-        <Autocomplete
-          options={states}
-          getOptionLabel={(option) => option.title}
-          onChange={(event, values) => {
-            if (values) {
-              setState(value.title);
-              localStorage.setItem("state", values.title);
-            }
-          }}
-          style={{
-            // width: 300,
-            // marginLeft: 20,
-            // marginTop: 20,
-            // marginBottom: 20
-            border: "none",
-            width: "100%",
-          }}
-          renderInput={(params) => (
-            <TextField label={state ? state : ""} {...params} />
-          )}
-        />
-        <p className={classes.label} style={{ marginTop: 10 }}>
-          Zipcode
-        </p>
-        <input
-          className={classes.input}
-          value={zipcode}
-          onClick={(e) => {
-            setZipcode(e.target.value);
-          }}
-        ></input>
-        <p className={classes.label} style={{ marginTop: 10 }}>
-          Country
-        </p>
-        <Autocomplete
-          options={Countries}
-          onChange={(event, values) => {
-            if (values) {
-              console.log("This is co", values.title);
-              setCountry(value.title);
-              localStorage.setItem("country", values.title);
-            }
-          }}
-          getOptionLabel={(option) => option.title}
-          style={{
-            // width: 300,
-            // marginLeft: 20,
-            // marginTop: 20,
-            // marginBottom: 20
-            border: "none",
-            width: "100%",
-          }}
-          renderInput={(params) => (
-            <TextField label={country ? country : ""} {...params} />
-          )}
-        />
-        <button
-          className={classes.button}
-          onClick={() => {
-            setEdit(false);
-          }}
-        >
-          Save
-        </button>
-      </Grid>
+  const updateMyProfile = () => {
+    var data = {
+      profileImage:
+        "https://image.shutterstock.com/image-vector/profile-placeholder-image-gray-silhouette-260nw-1153673752.jpg",
+      firstName: firstName,
+      lastName: lastName,
+      phoneNumber: 923060052374,
+      address: address,
+      unit: unit,
+      city: city,
+      state: state,
+      zipcode: 44000,
+      latitude: 1.099232,
+      longitude: 2.33332,
+      country: country,
+    };
+    setOpenLoader(true);
+    UpdateCustomerProfile(data).then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          console.log(res.data.data);
+          var user = res.data.data;
+          setFirstName(user.firstName);
+          setLastName(user.lastName);
+          setPhoneNumber("+" + user.phoneNumber);
+          setAddress(user.address);
+          setCity(user.city);
+          setState(user.state);
+          setUnit(user.unit);
+          setZipcode(user.zipcode);
+          setCountry(user.country);
+          setLongitude(user.longitude);
+          setLatitude(user.latitude);
+          setEmail(user.email);
+          setProfileImage(user.profileImage);
+          setEdit(false);
+          // setAllProviders(res.data.Providers);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
     );
   };
+  const [edit, setEdit] = React.useState(false);
+
+  // const EditProfile = () => {
+  //   return (
+  //     <Grid
+  //       container
+  //       direction="row"
+  //       justify="center"
+  //       style={{ marginTop: 30, padding: 20 }}
+  //     >
+  //       <img
+  //         src={profileImage}
+  //         style={{
+  //           borderRadius: "50%",
+  //           marginBottom: 10,
+  //           width: 120,
+  //           height: 120,
+  //         }}
+  //       ></img>
+  //       <div style={{ width: "100%" }}></div>
+  //       <Grid itemd md={6} xs={6}>
+  //         {" "}
+  //         <p className={classes.label} style={{ width: "90%" }}>
+  //           First Name
+  //         </p>
+  //         <input
+  //           className={classes.input}
+  //           style={{ width: "90%" }}
+  //           value={firstName}
+  //           onChange={(e) => {
+  //             setFirstName(e.target.value);
+  //           }}
+  //         ></input>
+  //       </Grid>
+  //       <Grid item md={6} xs={6}>
+  //         <Grid container direction="row" justify="flex-end">
+  //           {" "}
+  //           <p className={classes.label} style={{ width: "90%" }}>
+  //             Last Name
+  //           </p>
+  //           <input
+  //             className={classes.input}
+  //             style={{ width: "90%" }}
+  //             value={lastName}
+  //             onChange={(e) => {
+  //               setLastName(e.target.value);
+  //             }}
+  //           ></input>
+  //         </Grid>
+  //       </Grid>
+  //       <p
+  //         className={classes.label}
+  //         style={{ marginTop: 20, marginBottom: 20 }}
+  //       >
+  //         Phone Number
+  //       </p>
+  //       <PhoneInput
+  //         // className={classes.input}
+  //         placeholder="Enter phone number"
+  //         value={phoneNumber}
+  //         onChange={(e) => {
+  //           console.log(e);
+  //           setPhoneNumber(e);
+  //         }}
+  //       />
+  //       <div className={classes.input} style={{ height: 10 }}></div>
+  //       <p className={classes.label} style={{ marginTop: 10 }}>
+  //         Address
+  //       </p>
+  //       <input
+  //         className={classes.input}
+  //         value={address}
+  //         onChange={(e) => {
+  //           setAddress(e.target.value);
+  //         }}
+  //       ></input>
+  //       <p className={classes.label} style={{ marginTop: 10 }}>
+  //         Unit/ Apt
+  //       </p>
+  //       <input
+  //         className={classes.input}
+  //         value={unit}
+  //         onChange={(e) => {
+  //           setUnit(e.target.value);
+  //         }}
+  //       ></input>
+  //       <p className={classes.label} style={{ marginTop: 10 }}>
+  //         City
+  //       </p>
+  //       <input
+  //         className={classes.input}
+  //         value={city}
+  //         onChange={(e) => {
+  //           setCity(e.target.value);
+  //         }}
+  //       ></input>
+  //       <p className={classes.label} style={{ marginTop: 10 }}>
+  //         State
+  //       </p>
+  //       <Autocomplete
+  //         options={states}
+  //         getOptionLabel={(option) => option.title}
+  //         onChange={(event, values) => {
+  //           if (values) {
+  //             setState(value.title);
+  //             localStorage.setItem("state1", values.title);
+  //           }
+  //         }}
+  //         style={{
+  //           // width: 300,
+  //           // marginLeft: 20,
+  //           // marginTop: 20,
+  //           // marginBottom: 20
+  //           border: "none",
+  //           width: "100%",
+  //         }}
+  //         renderInput={(params) => (
+  //           <TextField label={state ? state : ""} {...params} />
+  //         )}
+  //       />
+  //       <p className={classes.label} style={{ marginTop: 10 }}>
+  //         Zipcode
+  //       </p>
+  //       <input
+  //         className={classes.input}
+  //         value={zipcode}
+  //         onChange={(e) => {
+  //           setZipcode(e.target.value);
+  //         }}
+  //       ></input>
+  //       <p className={classes.label} style={{ marginTop: 10 }}>
+  //         Country
+  //       </p>
+  //       <Autocomplete
+  //         options={Countries}
+  //         onChange={(event, values) => {
+  //           if (values) {
+  //             console.log("This is co", values.title);
+  //             setCountry(value.title);
+  //             localStorage.setItem("country1", values.title);
+  //           }
+  //         }}
+  //         getOptionLabel={(option) => option.title}
+  //         style={{
+  //           // width: 300,
+  //           // marginLeft: 20,
+  //           // marginTop: 20,
+  //           // marginBottom: 20
+  //           border: "none",
+  //           width: "100%",
+  //         }}
+  //         renderInput={(params) => (
+  //           <TextField label={country ? country : ""} {...params} />
+  //         )}
+  //       />
+  //       <button
+  //         className={classes.button}
+  //         onClick={() => {
+  //           updateMyProfile();
+  //         }}
+  //       >
+  //         Save
+  //       </button>
+  //     </Grid>
+  //   );
+  // };
   const Profile = () => {
     return (
       <Grid
@@ -418,7 +465,33 @@ export default function UserProfile() {
           }
           rightIcon={<div></div>}
         ></Header>{" "}
-        {edit ? <EditProfile></EditProfile> : <Profile></Profile>}
+        {edit ? (
+          <EditProfile
+            setEdit={setEdit}
+            profileImage={profileImage}
+            firstName={firstName}
+            setFirstName={setFirstName}
+            lastName={lastName}
+            setLastName={setLastName}
+            address={address}
+            setAddress={setAddress}
+            phoneNumber={phoneNumber}
+            setPhoneNumber={setPhoneNumber}
+            unit={unit}
+            setUnit={setUnit}
+            city={city}
+            setCity={setCity}
+            state={state}
+            setState={setState}
+            zipcode={zipcode}
+            setZipcode={setZipcode}
+            country={country}
+            setCountry={setCountry}
+            updateMyProfile={updateMyProfile}
+          ></EditProfile>
+        ) : (
+          <Profile></Profile>
+        )}
       </div>
     </div>
   );
