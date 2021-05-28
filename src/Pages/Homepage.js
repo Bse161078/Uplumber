@@ -20,6 +20,7 @@ import { Map, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet-routing-machine";
 import { Link } from "react-router-dom";
 import FavoriteBorderOutlinedIcon from "@material-ui/icons/FavoriteBorderOutlined";
+import FavoriteIcon from "@material-ui/icons/Favorite";
 import PhoneEnabledIcon from "@material-ui/icons/PhoneEnabled";
 import MessageIcon from "@material-ui/icons/Message";
 import {
@@ -27,6 +28,8 @@ import {
   PostARequest,
   GetAllRequests,
   GetAllOffers,
+  GetAllContacts,
+  addContactToFavorite,
 } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -128,12 +131,14 @@ export default function HomePage(pros) {
   const [openLoader, setOpenLoader] = useState(false);
   const [allProviders, setAllProviders] = useState(null);
   const [allOffers, setAllOffers] = useState(null);
+  const [allContacts, setAllContacts] = useState(null);
 
   const toggleDrawer = (anchor, open) => (event) => {
     setState(open);
   };
   const position = [51.505, -0.09];
   console.log("This isid", localStorage.getItem("id"));
+  console.log("This is token", localStorage.getItem("token"));
   const OfferCards = (props) => {
     var type = props.item;
     if (props.item.isAccepted === true) {
@@ -195,7 +200,9 @@ export default function HomePage(pros) {
               }}
               onClick={() => {
                 if (props.item.isAccepted === false) {
+                  console.log("This is the item", props.item);
                   document.getElementById("details" + props.item._id).click();
+                  localStorage.setItem("job", JSON.stringify(props.item));
                 } else if (props.item.isAccepted === true) {
                   document
                     .getElementById("jobdetails" + props.item._id)
@@ -222,12 +229,17 @@ export default function HomePage(pros) {
     );
   };
 
-  const ContactCards = () => {
+  const ContactCards = (props) => {
+    // console.log("This is item", props.item);
+    var user = props.item;
     return (
       <Paper style={{ width: "90%", padding: 10, marginBottom: 10 }}>
         <Grid container direction="row">
           <Grid item md={2} xs={2}>
-            <img src={Avatar} style={{ width: 50, height: 50 }}></img>
+            <img
+              src={user.providerImage}
+              style={{ width: 50, height: 50, borderRadius: "50%" }}
+            ></img>
           </Grid>
           <Grid item md={9} xs={9}>
             <Grid container direction="row" style={{ marginLeft: 5 }}>
@@ -238,12 +250,16 @@ export default function HomePage(pros) {
                   fontWeight: 600,
                 }}
               >
-                Jane Doe
+                {user.providerName}
               </p>
               <Rating value={5} style={{ fontSize: 10 }}></Rating>
-              <span style={{ fontSize: 10 }}>5.0(433) </span>
+              <span style={{ fontSize: 10 }}>
+                {user.providerRating}({user.providerReviews}){" "}
+              </span>
               <div style={{ width: "100%" }}></div>
-              <span style={{ fontSize: 10 }}>$25 / hr</span>
+              <span style={{ fontSize: 10 }}>
+                ${user.estimatedLabourCost} / hr
+              </span>
             </Grid>
           </Grid>
           <Grid item md={1} xs={1}>
@@ -257,6 +273,9 @@ export default function HomePage(pros) {
                 textAlign: "center",
                 color: "#60a3d6",
               }}
+              onClick={() => {
+                addToFavorite(user.providerId);
+              }}
             >
               <Grid
                 container
@@ -265,9 +284,13 @@ export default function HomePage(pros) {
                 justify="center"
                 style={{ height: 25 }}
               >
-                <FavoriteBorderOutlinedIcon
-                  style={{ fontSize: 20 }}
-                ></FavoriteBorderOutlinedIcon>
+                {user.isLike ? (
+                  <FavoriteIcon style={{ fontSize: 20 }}></FavoriteIcon>
+                ) : (
+                  <FavoriteBorderOutlinedIcon
+                    style={{ fontSize: 20 }}
+                  ></FavoriteBorderOutlinedIcon>
+                )}
               </Grid>
             </Paper>
           </Grid>
@@ -318,6 +341,24 @@ export default function HomePage(pros) {
     );
   };
 
+  const addToFavorite = (id) => {
+    setOpenLoader(true);
+    addContactToFavorite(id).then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          // notify(res.data.message);
+          console.log("This is the response of add to favorite", res.data);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
   const getAllMyOffers = () => {
     setOpenLoader(true);
     GetAllOffers().then(
@@ -327,6 +368,25 @@ export default function HomePage(pros) {
           // notify(res.data.message);
           console.log("These are customer offeres", res.data);
           setAllOffers(res.data.Customers);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
+  const getAllMyContacts = () => {
+    setOpenLoader(true);
+    GetAllContacts().then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          // notify(res.data.message);
+          console.log("These are customer contacts", res.data);
+          setAllContacts(res.data.Customers);
         }
       },
       (error) => {
@@ -377,6 +437,7 @@ export default function HomePage(pros) {
   useEffect(() => {
     getAllProviders();
     getAllMyOffers();
+    getAllMyContacts();
   }, []);
   const notify = (data) => toast(data);
   return (
@@ -485,9 +546,10 @@ export default function HomePage(pros) {
             alignItems="flex-start"
             style={{ height: "max-content" }}
           >
-            {[1, 3].map((item, index) => {
-              return <ContactCards index={index}></ContactCards>;
-            })}
+            {allContacts &&
+              allContacts.map((item, index) => {
+                return <ContactCards index={index} item={item}></ContactCards>;
+              })}
           </Grid>
         )}
 

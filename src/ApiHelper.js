@@ -258,3 +258,29 @@ export const UpdateCustomerProfile = (postData) => {
 
   return axios(config);
 };
+
+export const GetAllContacts = () => {
+  var config = {
+    method: "get",
+    url:
+      "http://54.176.48.215:8080/api/customercontact/customer/" +
+      localStorage.getItem("id"),
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  };
+
+  return axios(config);
+};
+
+export const addContactToFavorite = (id) => {
+  var config = {
+    method: "get",
+    url: "http://54.176.48.215:8080/api/customercontact/customer/like/" + id,
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  };
+
+  return axios(config);
+};

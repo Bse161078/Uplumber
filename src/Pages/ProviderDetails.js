@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles, Grid, Paper } from "@material-ui/core";
 import Drawer from "@material-ui/core/Drawer";
 import Sidebar from "../Components/Sidebar";
@@ -45,6 +45,7 @@ function ProviderDetail(props) {
   const classes = useStyles();
   const [value, setValue] = useState("");
   const [offerAccepted, setOfferAccepted] = useState(false);
+  const [jobData, setJobData] = useState(null);
   const [typeConfirm, setTypeConfirm] = useState("text");
 
   const [state, setState] = React.useState(false);
@@ -58,7 +59,13 @@ function ProviderDetail(props) {
     setBottomState(open);
   };
   const position = [51.505, -0.09];
-  //console.log("THis is great", props);
+
+  useEffect(() => {
+    if (localStorage.getItem("job")) {
+      setJobData(JSON.parse(localStorage.getItem("job")));
+    }
+  }, []);
+  console.log("This is the job", jobData);
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
       <Link id="homepage" to="/homepage"></Link>
@@ -183,154 +190,169 @@ function ProviderDetail(props) {
             </Grid>
           </Grid>
         )}
-        <Grid
-          container
-          direction="row"
-          justify="center"
-          style={{ height: "max-content" }}
-        >
-          <img
-            src={Avatar}
-            style={{
-              width: 125,
-              height: 125,
-              borderRadius: 100,
-              marginTop: 120,
-            }}
-          ></img>
-          <Grid container direction="row" justify="center">
-            <p
-              style={{
-                width: "100%",
-                textAlign: "center",
-                margin: 0,
-                fontWeight: 600,
-              }}
-            >
-              Jane Doe
-            </p>
-            <Rating value={5} style={{ fontSize: 10 }}></Rating>
-            <span style={{ fontSize: 10 }}>5.0(433) </span>
-            <div style={{ width: "100%" }}></div>
-            <span style={{ fontSize: 10 }}>$25 / hr</span>
-          </Grid>
-          <div
-            style={{ width: "100%", border: "1px solid #f6f6f6", margin: 20 }}
-          ></div>
+        {jobData && (
           <Grid
             container
             direction="row"
             justify="center"
-            style={{ padding: 20, paddingTop: 0 }}
+            style={{ height: "max-content" }}
           >
-            <Grid item md={6} xs={6}>
-              <span style={{ color: "#60a3d6", fontSize: 10 }}>Date</span>
-              <p style={{ fontSize: 10, margin: 0 }}>March 23 , 2021</p>
-            </Grid>
-            <Grid item md={6} xs={6}>
-              <span style={{ color: "#60a3d6", fontSize: 10 }}>Item</span>
-              <p style={{ fontSize: 10, margin: 0 }}>Dishwasher</p>
-            </Grid>
-            <Grid item md={6} xs={6}>
-              <span style={{ color: "#60a3d6", fontSize: 10 }}>
-                Estimated Distance
-              </span>
-              <p style={{ fontSize: 10, margin: 0 }}>5 miles</p>
-            </Grid>
-            <Grid item md={6} xs={6}>
-              <span style={{ color: "#60a3d6", fontSize: 10 }}>
-                Estimated Travel Time
-              </span>
-              <p style={{ fontSize: 10, margin: 0 }}>5 minutes</p>
-            </Grid>
-          </Grid>
-          <div
-            style={{ width: "100%", border: "1px solid #f6f6f6", margin: 20 }}
-          ></div>
-          <Grid container direction="row" justify="center">
-            <Grid item md={8} xs={8}>
-              {" "}
+            <img
+              src={jobData.providerImage}
+              style={{
+                width: 125,
+                height: 125,
+                borderRadius: 100,
+                marginTop: 120,
+              }}
+            ></img>
+            <Grid container direction="row" justify="center">
               <p
                 style={{
+                  width: "100%",
+                  textAlign: "center",
                   margin: 0,
-                  marginBottom: 10,
-                  marginLeft: 10,
                   fontWeight: 600,
                 }}
               >
-                Jane Doe
+                {jobData.providerName}
               </p>
+              <Rating
+                value={jobData.providerRating}
+                style={{ fontSize: 10 }}
+              ></Rating>
+              <span style={{ fontSize: 10 }}>
+                {jobData.providerRating}({jobData.providerReviews}){" "}
+              </span>
+              <div style={{ width: "100%" }}></div>
+              <span style={{ fontSize: 10 }}>${jobData.pricePerHour} / hr</span>
             </Grid>
-            <Grid item md={4} xs={4}>
-              <p
-                style={{
-                  margin: 0,
-                  marginBottom: 10,
-                  marginLeft: 10,
-                  fontWeight: 500,
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  document.getElementById("reviews").click();
-                }}
-              >
-                All Reviews
-              </p>
+            <div
+              style={{ width: "100%", border: "1px solid #f6f6f6", margin: 20 }}
+            ></div>
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              style={{ padding: 20, paddingTop: 0 }}
+            >
+              <Grid item md={6} xs={6}>
+                <span style={{ color: "#60a3d6", fontSize: 10 }}>Date</span>
+                <p style={{ fontSize: 10, margin: 0 }}>{jobData.serviceDate}</p>
+              </Grid>
+              <Grid item md={6} xs={6}>
+                <span style={{ color: "#60a3d6", fontSize: 10 }}>Item</span>
+                <p style={{ fontSize: 10, margin: 0 }}>{jobData.itemName}</p>
+              </Grid>
+              {/* estimatedDistance: "20 miles"
+​
+estimatedTravelTime: "20 minutes" */}
+              <Grid item md={6} xs={6}>
+                <span style={{ color: "#60a3d6", fontSize: 10 }}>
+                  Estimated Distance
+                </span>
+                <p style={{ fontSize: 10, margin: 0 }}>
+                  {jobData.estimatedDistance}
+                </p>
+              </Grid>
+              <Grid item md={6} xs={6}>
+                <span style={{ color: "#60a3d6", fontSize: 10 }}>
+                  Estimated Travel Time
+                </span>
+                <p style={{ fontSize: 10, margin: 0 }}>
+                  {jobData.estimatedTravelTime}
+                </p>
+              </Grid>
             </Grid>
-          </Grid>
-          <Grid container direction="row">
-            {[1, 2, 3].map((item) => {
-              return (
-                <Grid container direction="row" justify="center">
-                  {" "}
-                  <Paper
-                    style={{ width: "90%", marginBottom: 10, padding: 10 }}
-                  >
-                    <Grid container direction="row">
-                      <Grid item md={2} xs={2}>
-                        <img
-                          src={Avatar}
-                          style={{ width: 50, height: 50 }}
-                        ></img>
-                      </Grid>
-                      <Grid item md={8} xs={8}>
-                        <Grid
-                          container
-                          direction="row"
-                          style={{ marginLeft: 5 }}
-                        >
-                          <p
-                            style={{
-                              width: "100%",
-                              margin: 0,
-                              fontWeight: 600,
-                            }}
+            <div
+              style={{ width: "100%", border: "1px solid #f6f6f6", margin: 20 }}
+            ></div>
+            <Grid container direction="row" justify="center">
+              <Grid item md={8} xs={8}>
+                {" "}
+                <p
+                  style={{
+                    margin: 0,
+                    marginBottom: 10,
+                    marginLeft: 10,
+                    fontWeight: 600,
+                  }}
+                >
+                  {jobData.providerName}
+                </p>
+              </Grid>
+              <Grid item md={4} xs={4}>
+                <p
+                  style={{
+                    margin: 0,
+                    marginBottom: 10,
+                    marginLeft: 10,
+                    fontWeight: 500,
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    document.getElementById("reviews").click();
+                  }}
+                >
+                  All Reviews
+                </p>
+              </Grid>
+            </Grid>
+            <Grid container direction="row">
+              {[1, 2, 3].map((item) => {
+                return (
+                  <Grid container direction="row" justify="center">
+                    {" "}
+                    <Paper
+                      style={{ width: "90%", marginBottom: 10, padding: 10 }}
+                    >
+                      <Grid container direction="row">
+                        <Grid item md={2} xs={2}>
+                          <img
+                            src={Avatar}
+                            style={{ width: 50, height: 50 }}
+                          ></img>
+                        </Grid>
+                        <Grid item md={8} xs={8}>
+                          <Grid
+                            container
+                            direction="row"
+                            style={{ marginLeft: 5 }}
                           >
-                            Jane Doe
-                          </p>
-                          <Rating value={5} style={{ fontSize: 12 }}></Rating>
-                          <span style={{ fontSize: 12 }}>5.0(433) </span>
-                          <div style={{ width: "100%" }}></div>
-                          <span style={{ fontSize: 12 }}>$25 / hr</span>
-                          <span>
-                            Sed ut perspiciatis unde omnis iste natus error sit
-                            voluptatem accusantium doloremque laudantium, totam
-                            rem aperiam, eaque ipsa quae ab illo inventore
+                            <p
+                              style={{
+                                width: "100%",
+                                margin: 0,
+                                fontWeight: 600,
+                              }}
+                            >
+                              Jane Doe
+                            </p>
+                            <Rating value={5} style={{ fontSize: 12 }}></Rating>
+                            <span style={{ fontSize: 12 }}>5.0(433) </span>
+                            <div style={{ width: "100%" }}></div>
+                            <span style={{ fontSize: 12 }}>$25 / hr</span>
+                            <span>
+                              Sed ut perspiciatis unde omnis iste natus error
+                              sit voluptatem accusantium doloremque laudantium,
+                              totam rem aperiam, eaque ipsa quae ab illo
+                              inventore
+                            </span>
+                          </Grid>
+                        </Grid>
+                        <Grid item md={2} xs={2}>
+                          <span style={{ fontSize: 10, color: "gray" }}>
+                            $25 / hr
                           </span>
                         </Grid>
                       </Grid>
-                      <Grid item md={2} xs={2}>
-                        <span style={{ fontSize: 10, color: "gray" }}>
-                          $25 / hr
-                        </span>
-                      </Grid>
-                    </Grid>
-                  </Paper>
-                </Grid>
-              );
-            })}
+                    </Paper>
+                  </Grid>
+                );
+              })}
+            </Grid>
           </Grid>
-        </Grid>
+        )}
         <div className="sideBar" style={{ background: "red" }}>
           <Drawer
             anchor={"left"}
