@@ -978,8 +978,9 @@ function ProviderDetail(props) {
         <p className={classes.label}>Company *</p>
         <Autocomplete
           options={[
-            { title: "As soon as possible", year: 1994 },
-            { title: "As soon as possible", year: 1994 },
+            { title: "Uplumber", year: 1994 },
+            { title: "Plumber Company", year: 1994 },
+            { title: "Easy Plumber", year: 1994 },
           ]}
           getOptionLabel={(option) => option.title}
           style={{
