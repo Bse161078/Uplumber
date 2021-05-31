@@ -273,13 +273,70 @@ export const GetAllContacts = () => {
   return axios(config);
 };
 
-export const addContactToFavorite = (id) => {
+export const getAllFavorites = (id) => {
   var config = {
     method: "get",
-    url: "http://54.176.48.215:8080/api/customercontact/customer/like/" + id,
+    url:
+      "http://54.176.48.215:8080/api/customercontact/customer/like/" +
+      localStorage.getItem("id"),
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
+  };
+
+  return axios(config);
+};
+
+export const addContactToFavorite = (id, like) => {
+  console.log("This is islike", like);
+  var data = JSON.stringify({
+    isLike: like,
+  });
+
+  var config = {
+    method: "put",
+    url: "http://54.176.48.215:8080/api/customercontact/" + id,
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+
+  return axios(config);
+};
+
+export const acceptOffer = (id) => {
+  var data = JSON.stringify({
+    isAccepted: true,
+  });
+
+  var config = {
+    method: "put",
+    url: "http://54.176.48.215:8080/api/customeroffer/accept/" + id,
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+
+  return axios(config);
+};
+
+export const needModificationOffer = (id, text) => {
+  var data = JSON.stringify({
+    modificationText: text,
+  });
+
+  var config = {
+    method: "put",
+    url: "http://54.176.48.215:8080/api/customeroffer/needmodification/" + id,
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
   };
 
   return axios(config);

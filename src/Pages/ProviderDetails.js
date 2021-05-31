@@ -1,5 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { makeStyles, Grid, Paper } from "@material-ui/core";
+import {
+  makeStyles,
+  Grid,
+  Paper,
+  Backdrop,
+  CircularProgress,
+} from "@material-ui/core";
 import Drawer from "@material-ui/core/Drawer";
 import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
@@ -10,6 +16,8 @@ import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import PersonIcon from "@material-ui/icons/Person";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Link, withRouter } from "react-router-dom";
+import { acceptOffer } from "../ApiHelper";
+import { ToastContainer, toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -40,6 +48,10 @@ const useStyles = makeStyles((theme) => ({
     height: 45,
     marginTop: 20,
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
 }));
 function ProviderDetail(props) {
   const classes = useStyles();
@@ -47,10 +59,28 @@ function ProviderDetail(props) {
   const [offerAccepted, setOfferAccepted] = useState(false);
   const [jobData, setJobData] = useState(null);
   const [typeConfirm, setTypeConfirm] = useState("text");
-
+  const [openLoader, setOpenLoader] = useState(false);
   const [state, setState] = React.useState(false);
   const [bottomState, setBottomState] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState("Contacts");
+
+  const acceptTheOffer = () => {
+    setOpenLoader(true);
+    acceptOffer(jobData._id).then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          console.log("This is accepted", res.data);
+          setOfferAccepted(true);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
 
   const toggleDrawer = (anchor, open) => (event) => {
     setState(open);
@@ -66,8 +96,23 @@ function ProviderDetail(props) {
     }
   }, []);
   console.log("This is the job", jobData);
+  const notify = (data) => toast(data);
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
+      <Backdrop className={classes.backdrop} open={openLoader}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Link id="homepage" to="/homepage"></Link>
       <Link id="reviews" to="/reviews/0"></Link>
       <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
@@ -182,7 +227,7 @@ function ProviderDetail(props) {
                   fontSize: 12,
                 }}
                 onClick={() => {
-                  setOfferAccepted(true);
+                  acceptTheOffer();
                 }}
               >
                 Accept

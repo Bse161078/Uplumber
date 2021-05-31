@@ -190,12 +190,12 @@ export default function HomePage(pros) {
             <div
               style={{
                 background:
-                  props.item.status === "Pending" ? "#e7f9e9" : "#e7f1f9",
+                  props.item.isAccepted === true ? "#e7f9e9" : "#e7f1f9",
                 fontSize: 10,
                 borderRadius: 10,
                 padding: 4,
                 textAlign: "center",
-                color: props.item.status === "Pending" ? "#23c739" : "#60a3d6",
+                color: props.item.isAccepted === true ? "#23c739" : "#60a3d6",
                 cursor: "pointer",
               }}
               onClick={() => {
@@ -204,13 +204,14 @@ export default function HomePage(pros) {
                   document.getElementById("details" + props.item._id).click();
                   localStorage.setItem("job", JSON.stringify(props.item));
                 } else if (props.item.isAccepted === true) {
+                  localStorage.setItem("job", JSON.stringify(props.item));
                   document
                     .getElementById("jobdetails" + props.item._id)
                     .click();
                 }
               }}
             >
-              {props.item.status}
+              {props.item.isAccepted === false ? "Pending" : "Accepted"}
             </div>
           </Grid>
         </Grid>
@@ -274,7 +275,7 @@ export default function HomePage(pros) {
                 color: "#60a3d6",
               }}
               onClick={() => {
-                addToFavorite(user.providerId);
+                addToFavorite(user._id, !user.isLike);
               }}
             >
               <Grid
@@ -341,13 +342,14 @@ export default function HomePage(pros) {
     );
   };
 
-  const addToFavorite = (id) => {
+  const addToFavorite = (id, like) => {
     setOpenLoader(true);
-    addContactToFavorite(id).then(
+    addContactToFavorite(id, like).then(
       (res) => {
         if (res.statusText === "OK" || res.statusText === "Created") {
           setOpenLoader(false);
           // notify(res.data.message);
+          getAllMyContacts();
           console.log("This is the response of add to favorite", res.data);
         }
       },
@@ -436,8 +438,10 @@ export default function HomePage(pros) {
 
   useEffect(() => {
     getAllProviders();
-    getAllMyOffers();
-    getAllMyContacts();
+    if (localStorage.getItem("token")) {
+      getAllMyOffers();
+      getAllMyContacts();
+    }
   }, []);
   const notify = (data) => toast(data);
   return (

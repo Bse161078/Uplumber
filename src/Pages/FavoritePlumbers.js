@@ -1,5 +1,10 @@
-import React, { useState } from "react";
-import { makeStyles, Grid } from "@material-ui/core";
+import React, { useState, useEffect } from "react";
+import {
+  makeStyles,
+  Grid,
+  Backdrop,
+  CircularProgress,
+} from "@material-ui/core";
 import Drawer from "@material-ui/core/Drawer";
 import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
@@ -10,6 +15,8 @@ import Calendar from "react-calendar";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ReviewCard from "../Components/ReviewCard";
 import FavoriteCard from "../Components/FavoriteCard";
+import { getAllFavorites, addContactToFavorite } from "../ApiHelper";
+import { ToastContainer, toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -59,6 +66,10 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 15,
     marginTop: 5,
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
 }));
 function ProviderDetail(props) {
   const classes = useStyles();
@@ -68,6 +79,8 @@ function ProviderDetail(props) {
   const [postRequest, setPostRequest] = React.useState(false);
   const [value, setValue] = React.useState("female");
   const [activeTab, setActiveTab] = React.useState("Problem");
+  const [openLoader, setOpenLoader] = useState(false);
+  const [favorite, setFavorite] = useState(false);
   const [image, setImage] = React.useState([]);
 
   const handleChange = (event) => {
@@ -83,8 +96,47 @@ function ProviderDetail(props) {
   const position = [51.505, -0.09];
   // //console.log("THis is great", props);
 
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      getFavorite();
+    }
+  }, []);
+  const getFavorite = (id, like) => {
+    setOpenLoader(true);
+    getAllFavorites().then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          console.log("This is the response of add to favorite", res.data);
+          setFavorite(res.data.Customers);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
+  const notify = (data) => toast(data);
+
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
+      <Backdrop className={classes.backdrop} open={openLoader}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Link id="homepage" to="/homepage"></Link>
       <Link id="reviews" to="/reviews/0"></Link>
       <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
@@ -133,9 +185,10 @@ function ProviderDetail(props) {
               marginTop: -50,
             }}
           ></div>
-          {[1, 2, 3, 4, 5].map((item) => {
-            return <FavoriteCard></FavoriteCard>;
-          })}
+          {favorite &&
+            favorite.map((item) => {
+              return <FavoriteCard item={item}> </FavoriteCard>;
+            })}
         </div>
         <div className="sideBar">
           <Drawer

@@ -13,7 +13,10 @@ export default function ReviewCard(props) {
       >
         <Grid container direction="row">
           <Grid item md={2} xs={2}>
-            <img src={Avatar} style={{ width: 50, height: 50 }}></img>
+            <img
+              src={props.item.providerImage}
+              style={{ width: 50, height: 50 }}
+            ></img>
           </Grid>
           <Grid item md={9} xs={9}>
             <Grid container direction="row" style={{ marginLeft: 5 }}>
@@ -24,12 +27,21 @@ export default function ReviewCard(props) {
                   fontWeight: 600,
                 }}
               >
-                Jane Doe
+                {" "}
+                {props.item.providerName}
               </p>
-              <Rating value={5} style={{ fontSize: 12 }}></Rating>
-              <span style={{ fontSize: 12 }}>5.0(433) </span>
+              <Rating
+                value={props.item.providerRating}
+                style={{ fontSize: 12 }}
+              ></Rating>
+              <span style={{ fontSize: 12 }}>
+                {" "}
+                {props.item.providerRating}({props.item.providerReviews}){" "}
+              </span>
               <div style={{ width: "100%" }}></div>
-              <span style={{ fontSize: 12 }}>$25 / hr</span>
+              <span style={{ fontSize: 12 }}>
+                ${props.item.providerPricePerHour} / hr
+              </span>
             </Grid>
           </Grid>
           <Grid item md={1} xs={1}>
