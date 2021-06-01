@@ -341,3 +341,17 @@ export const needModificationOffer = (id, text) => {
 
   return axios(config);
 };
+
+export const getProviderReviews = (id) => {
+  var config = {
+    method: "get",
+    url:
+      "http://54.176.48.215:8080/api/providerratingandcomment/provider/" + id,
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+  };
+
+  return axios(config);
+};

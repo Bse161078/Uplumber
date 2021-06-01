@@ -101,6 +101,7 @@ function ProviderDetail(props) {
       }
     );
   };
+
   const notify = (data) => toast(data);
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
