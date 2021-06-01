@@ -15,7 +15,11 @@ import BathtubIcon from "@material-ui/icons/Bathtub";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Link, withRouter } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
-import { needModificationOffer } from "../ApiHelper";
+import {
+  needModificationOffer,
+  markOrderComplete,
+  setProviderReviews,
+} from "../ApiHelper";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -64,6 +68,8 @@ function ProviderDetail(props) {
   const [needModifications, setNeedModifications] = React.useState(false);
   const [modification, setModification] = React.useState(false);
   const [modificationText, setModificationText] = React.useState(false);
+  const [commentText, setCommentText] = React.useState("");
+  const [rating, setRating] = React.useState(null);
   const [activeTab, setActiveTab] = React.useState("Contacts");
   const [openLoader, setOpenLoader] = useState(false);
 
@@ -80,6 +86,9 @@ function ProviderDetail(props) {
   useEffect(() => {
     if (localStorage.getItem("job")) {
       setJobData(JSON.parse(localStorage.getItem("job")));
+      if (JSON.parse(localStorage.getItem("job")).isNeedModification) {
+        setModification(true);
+      }
     }
   }, []);
   console.log("This is the job", jobData);
@@ -90,8 +99,48 @@ function ProviderDetail(props) {
         if (res.statusText === "OK" || res.statusText === "Created") {
           setOpenLoader(false);
           console.log(res.data);
-          setNeedModifications(true);
+          setNeedModifications(false);
           setModification(true);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
+  const orderComplete = () => {
+    setOpenLoader(true);
+    markOrderComplete(jobData._id).then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          console.log(res.data);
+          setMarkComplete(true);
+          setBottomState(true);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+  const givereRating = () => {
+    setOpenLoader(true);
+    setProviderReviews(
+      jobData.customerId,
+      jobData.providerId,
+      rating,
+      commentText
+    ).then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          console.log("This is rating response", res.data);
         }
       },
       (error) => {
@@ -362,7 +411,7 @@ function ProviderDetail(props) {
                 className={classes.button}
                 style={{ marginTop: 10 }}
                 onClick={() => {
-                  setBottomState(true);
+                  orderComplete();
                 }}
               >
                 <Grid
@@ -433,18 +482,29 @@ function ProviderDetail(props) {
             >
               Rate and Review
             </p>
-            <Rating style={{ fontSize: 40 }}></Rating>
+            <Rating
+              style={{ fontSize: 40 }}
+              onChange={(e) => {
+                setRating(e.target.value);
+              }}
+            ></Rating>
             <p className={classes.label}>Write Something</p>
             <input
               className={classes.input}
               placeholder="Write Something"
               style={{ border: "none" }}
+              onChange={(e) => {
+                setCommentText(e.target.value);
+              }}
             ></input>
             <button
               className={classes.button}
               onClick={() => {
-                setBottomState(false);
-                setMarkComplete(true);
+                if (commentText != "" && rating != null) {
+                  givereRating();
+                } else {
+                  notify("Please add a comment and rating");
+                }
               }}
             >
               Submit

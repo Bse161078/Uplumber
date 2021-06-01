@@ -140,9 +140,15 @@ export default function HomePage(pros) {
   console.log("This isid", localStorage.getItem("id"));
   console.log("This is token", localStorage.getItem("token"));
   const OfferCards = (props) => {
-    var type = props.item;
+    var type = "";
     if (props.item.isAccepted === true) {
-      type = "jobStarted";
+      if (props.item.isNeedModification === true) {
+        type = "In Modification";
+      } else {
+        type = "Accepted";
+      }
+    } else {
+      type = "Pending";
     }
 
     return (
@@ -211,7 +217,7 @@ export default function HomePage(pros) {
                 }
               }}
             >
-              {props.item.isAccepted === false ? "Pending" : "Accepted"}
+              {type}
             </div>
           </Grid>
         </Grid>

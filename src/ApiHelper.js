@@ -326,12 +326,31 @@ export const acceptOffer = (id) => {
 
 export const needModificationOffer = (id, text) => {
   var data = JSON.stringify({
+    isNeedModification: true,
     modificationText: text,
   });
 
   var config = {
     method: "put",
-    url: "http://54.176.48.215:8080/api/customeroffer/needmodification/" + id,
+    url: "http://54.176.48.215:8080/api/customeroffer/" + id,
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+
+  return axios(config);
+};
+
+export const markOrderComplete = (id) => {
+  var data = JSON.stringify({
+    isOrderCompleted: true,
+  });
+
+  var config = {
+    method: "put",
+    url: "http://54.176.48.215:8080/api/customeroffer/" + id,
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
@@ -347,6 +366,26 @@ export const getProviderReviews = (id) => {
     method: "get",
     url:
       "http://54.176.48.215:8080/api/providerratingandcomment/provider/" + id,
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+  };
+
+  return axios(config);
+};
+
+export const setProviderReviews = (customerId, id, rating, comment) => {
+  var data = JSON.stringify({
+    providerId: id,
+    customerId: customerId,
+    rating: rating,
+    comment: comment,
+  });
+  console.log("This is dataa", data);
+  var config = {
+    method: "post",
+    url: "http://54.176.48.215:8080/api/providerratingandcomment",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
