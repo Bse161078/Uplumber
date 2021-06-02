@@ -253,38 +253,49 @@ function ProviderDetail(props) {
   //console.log("THis is great", props);
 
   const updateCustomerProblem = () => {
-    setOpenLoader(true);
-    var data = {
-      serviceDate: requestData.requestDate,
-      serviceTime: requestData.prfferedTime,
-      problemItem: requestData.itemName,
-      serviceName: requestData.serviceType,
-      requestMany:
-        requestData.requestOption === "Auto accept 1st offer" ? false : true,
-      anyFloorOrWaterDamage: requestData.waterDamage === "yes" ? true : false,
-      serviceCode: requestData.serviceType,
-    };
-    CustomerSericeUpdateProblem(data).then(
-      (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
-          setOpenLoader(false);
-          console.log(res);
+    if (
+      requestData.requestDate != "" &&
+      requestData.prfferedTime != "" &&
+      requestData.itemName != "" &&
+      requestData.serviceType != "" &&
+      requestData.anyFloorOrWaterDamage != "" &&
+      requestData.serviceType != ""
+    ) {
+      setOpenLoader(true);
+      var data = {
+        serviceDate: requestData.requestDate,
+        serviceTime: requestData.prfferedTime,
+        problemItem: requestData.itemName,
+        serviceName: requestData.serviceType,
+        requestMany:
+          requestData.requestOption === "Auto accept 1st offer" ? false : true,
+        anyFloorOrWaterDamage: requestData.waterDamage === "yes" ? true : false,
+        serviceCode: requestData.serviceType,
+      };
+      CustomerSericeUpdateProblem(data).then(
+        (res) => {
+          if (res.statusText === "OK" || res.statusText === "Created") {
+            setOpenLoader(false);
+            console.log(res);
 
-          if (requestData.waterDamage === "Yes") {
-            setActiveTab("Looking For");
-          } else {
-            setActiveTab("Property");
+            if (requestData.waterDamage === "Yes") {
+              setActiveTab("Looking For");
+            } else {
+              setActiveTab("Property");
+            }
+
+            notify(res.data.message);
           }
-
-          notify(res.data.message);
+        },
+        (error) => {
+          notify("Something went wrong!");
+          setOpenLoader(false);
+          console.log("This is response", error);
         }
-      },
-      (error) => {
-        notify("Something went wrong!");
-        setOpenLoader(false);
-        console.log("This is response", error);
-      }
-    );
+      );
+    } else {
+      notify("Please fill  all feilds!!");
+    }
   };
 
   const updateCustomerLookingFor = () => {
@@ -310,57 +321,69 @@ function ProviderDetail(props) {
   };
 
   const updateCustomerProperty = () => {
-    setOpenLoader(true);
-    var data = {
-      area: requestData.area,
-      structure: requestData.structure,
-      requesterStatus: requestData.requestorStatus,
-    };
-    CustomerSericeUpdateProperty(data).then(
-      (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
+    if (
+      requestData.area != "" &&
+      requestData.structure != "" &&
+      requestData.requestorStatus != ""
+    ) {
+      setOpenLoader(true);
+      var data = {
+        area: requestData.area,
+        structure: requestData.structure,
+        requesterStatus: requestData.requestorStatus,
+      };
+      CustomerSericeUpdateProperty(data).then(
+        (res) => {
+          if (res.statusText === "OK" || res.statusText === "Created") {
+            setOpenLoader(false);
+            console.log(res);
+            notify(res.data.message);
+            setActiveTab("Description and Photo");
+          }
+        },
+        (error) => {
+          notify("Something went wrong!");
           setOpenLoader(false);
-          console.log(res);
-          notify(res.data.message);
-          setActiveTab("Description and Photo");
+          console.log("This is response", error);
         }
-      },
-      (error) => {
-        notify("Something went wrong!");
-        setOpenLoader(false);
-        console.log("This is response", error);
-      }
-    );
+      );
+    } else {
+      notify("Please fill all fields!!");
+    }
   };
 
   const updateCustomerPropertyDescriptionAndProperty = (tab) => {
-    setOpenLoader(true);
-    var data = {
-      description: requestData.description,
-      photos: [
-        "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
-        "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
-      ],
-    };
-    CustomerSericeUpdateDescriptionAndPhoto(data).then(
-      (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
-          setOpenLoader(false);
-          notify(res.data.message);
-          console.log(res);
-          if (requestData.waterDamage === "Yes") {
-            setActiveTab(tab);
-          } else {
-            setActiveTab("Contact Details");
+    if (requestData.description != "") {
+      setOpenLoader(true);
+      var data = {
+        description: requestData.description,
+        photos: [
+          "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
+          "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
+        ],
+      };
+      CustomerSericeUpdateDescriptionAndPhoto(data).then(
+        (res) => {
+          if (res.statusText === "OK" || res.statusText === "Created") {
+            setOpenLoader(false);
+            notify(res.data.message);
+            console.log(res);
+            if (requestData.waterDamage === "Yes") {
+              setActiveTab(tab);
+            } else {
+              setActiveTab("Contact Details");
+            }
           }
+        },
+        (error) => {
+          notify("Something went wrong!");
+          setOpenLoader(false);
+          console.log("This is response", error);
         }
-      },
-      (error) => {
-        notify("Something went wrong!");
-        setOpenLoader(false);
-        console.log("This is response", error);
-      }
-    );
+      );
+    } else {
+      notify("Please add description!");
+    }
   };
 
   const getMyProfile = () => {
