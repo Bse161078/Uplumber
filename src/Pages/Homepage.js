@@ -141,7 +141,9 @@ export default function HomePage(pros) {
   console.log("This is token", localStorage.getItem("token"));
   const OfferCards = (props) => {
     var type = "";
-    if (props.item.isAccepted === true) {
+    if (props.item.isOrderCompleted) {
+      type = "Completed";
+    } else if (props.item.isAccepted === true) {
       if (props.item.isNeedModification === true) {
         type = "In Modification";
       } else {

@@ -86,7 +86,9 @@ function ProviderDetail(props) {
   useEffect(() => {
     if (localStorage.getItem("job")) {
       setJobData(JSON.parse(localStorage.getItem("job")));
-      if (JSON.parse(localStorage.getItem("job")).isNeedModification) {
+      if (JSON.parse(localStorage.getItem("job")).isOrderCompleted) {
+        setMarkComplete(true);
+      } else if (JSON.parse(localStorage.getItem("job")).isNeedModification) {
         setModification(true);
       }
     }

@@ -103,7 +103,7 @@ const DescriptionAndPhoto = (props) => {
           onChange={props.handleFileChange}
         />
         <Grid container direction="row" alignItems="center">
-          {props.image.length > 1 &&
+          {props.image.length > 0 &&
             props.image.map((img) => {
               return (
                 <Badge
@@ -112,7 +112,7 @@ const DescriptionAndPhoto = (props) => {
                       style={{ color: "red", marginLeft: -40 }}
                       onClick={() => {
                         var temp = [];
-                        props.requestData.image.map((data) => {
+                        props.image.map((data) => {
                           console.log("This is imaeg", img.name, data.name);
                           if (data.name != img.name) {
                             temp.push(data);

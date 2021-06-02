@@ -1,15 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   makeStyles,
   Grid,
-  TextField,
-  Radio,
-  RadioGroup,
-  FormControlLabel,
   Paper,
-  FormGroup,
-  Checkbox,
   Badge,
+  Switch,
+  withStyles,
+  Backdrop,
+  CircularProgress,
 } from "@material-ui/core";
 import Drawer from "@material-ui/core/Drawer";
 import Sidebar from "../Components/Sidebar";
@@ -21,11 +19,12 @@ import Rating from "@material-ui/lab/Rating";
 import BathtubIcon from "@material-ui/icons/Bathtub";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Link, withRouter } from "react-router-dom";
-import DateRangeIcon from "@material-ui/icons/DateRange";
-import Autocomplete from "@material-ui/lab/Autocomplete";
 import Calendar from "react-calendar";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ReviewCard from "../Components/ReviewCard";
+import { GetAllOffers } from "../ApiHelper";
+import { ToastContainer, toast } from "react-toastify";
+
 const useStyles = makeStyles((theme) => ({
   input: {
     border: "none",
@@ -74,6 +73,10 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 15,
     marginTop: 5,
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
 }));
 function ProviderDetail(props) {
   const classes = useStyles();
@@ -84,6 +87,8 @@ function ProviderDetail(props) {
   const [value, setValue] = React.useState("female");
   const [activeTab, setActiveTab] = React.useState("Problem");
   const [image, setImage] = React.useState([]);
+  const [openLoader, setOpenLoader] = useState(false);
+  const [allOffers, setAllOffers] = useState(null);
 
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -97,6 +102,26 @@ function ProviderDetail(props) {
   };
   const position = [51.505, -0.09];
   //console.log("THis is great", props);
+
+  const getAllMyOffers = () => {
+    setOpenLoader(true);
+    GetAllOffers().then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          // notify(res.data.message);
+          console.log("These are customer offeres", res.data);
+          setAllOffers(res.data.Customers);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
   const OfferCards = (props) => {
     var type = props.item;
     if (props.item === "Job Started") {
@@ -127,7 +152,7 @@ function ProviderDetail(props) {
                   fontWeight: 600,
                 }}
               >
-                Bath Tub <BathtubIcon></BathtubIcon>
+                {props.item.itemName} <BathtubIcon></BathtubIcon>
               </p>
             </Grid>
           </Grid>
@@ -150,7 +175,7 @@ function ProviderDetail(props) {
                 }
               }}
             >
-              {props.item}
+              {props.item.serviceName}
             </div>
           </Grid>
         </Grid>
@@ -160,12 +185,12 @@ function ProviderDetail(props) {
         <Grid container direction="row" justify="center">
           <Grid item md={12} xs={12}>
             <span style={{ color: "#60a3d6", fontSize: 10 }}>Date</span>
-            <p style={{ fontSize: 10, margin: 0 }}>March 23 , 2021</p>
+            <p style={{ fontSize: 10, margin: 0 }}>{props.item.serviceDate}</p>
           </Grid>
           <Grid item md={12} xs={12}>
             <span style={{ color: "#60a3d6", fontSize: 10 }}>Description</span>
             <p style={{ fontSize: 10, margin: 0 }}>
-              Leaking and flooding everywhere
+              {props.item.description || "No Description"}
             </p>
             <img src={Refrigertors} className={classes.image}></img>
           </Grid>
@@ -353,9 +378,28 @@ function ProviderDetail(props) {
       </Grid>
     );
   };
-
+  const notify = (data) => toast(data);
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      getAllMyOffers();
+    }
+  }, []);
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
+      <Backdrop className={classes.backdrop} open={openLoader}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Link id="homepage" to="/homepage"></Link>
       <Link id="reviews" to="/reviews/0"></Link>
       <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
@@ -402,12 +446,24 @@ function ProviderDetail(props) {
               display: "flex",
               height: 70,
             }}
-          ></div>
-          {activeTab === "Problem" ? (
-            <MyRequests></MyRequests>
-          ) : (
-            <ReviewRequest></ReviewRequest>
-          )}
+          ></div>{" "}
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            style={{
+              padding: 10,
+              height: "max-content",
+              marginTop: -60,
+            }}
+          >
+            {allOffers &&
+              allOffers.map((item, index) => {
+                if (item.isOrderCompleted) {
+                  return <OfferCards index={index} item={item}></OfferCards>;
+                }
+              })}
+          </Grid>
         </div>
         <div className="sideBar">
           <Drawer

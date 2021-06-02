@@ -390,6 +390,7 @@ export const setProviderReviews = (customerId, id, rating, comment) => {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
     },
+    data: data,
   };
 
   return axios(config);

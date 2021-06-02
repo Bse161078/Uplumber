@@ -200,11 +200,11 @@ function ProviderDetail(props) {
     serviceType: localStorage.getItem("serviceType") || "Repair",
     requestOption:
       localStorage.getItem("requestOption") || "Auto accept 1st offer",
-    waterDamage: localStorage.getItem("waterDamage") || "Yes",
+    waterDamage: localStorage.getItem("waterDamage") || "No",
     lookingFor:
       localStorage.getItem("lookingFor") != null
         ? JSON.parse(localStorage.getItem("lookingFor"))
-        : [],
+        : ["Plumbing Technician"],
     area: localStorage.getItem("area") || "",
     structure: localStorage.getItem("structure") || "",
     requestorStatus: localStorage.getItem("requestorStatus") || "",
@@ -234,6 +234,15 @@ function ProviderDetail(props) {
     setValue(event.target.value);
   };
 
+  const handleFileChange = (e) => {
+    console.log("THis is great", e.target.files);
+    var temp = [];
+    for (var i = 0; i < e.target.files.length; i++) {
+      temp.push(e.target.files[i]);
+    }
+    setRequestData({ ...requestData, ["image"]: temp });
+  };
+
   const toggleDrawer = (anchor, open) => (event) => {
     setState(open);
   };
@@ -260,7 +269,13 @@ function ProviderDetail(props) {
         if (res.statusText === "OK" || res.statusText === "Created") {
           setOpenLoader(false);
           console.log(res);
-          setActiveTab("Looking For");
+
+          if (requestData.waterDamage === "Yes") {
+            setActiveTab("Looking For");
+          } else {
+            setActiveTab("Property");
+          }
+
           notify(res.data.message);
         }
       },
@@ -333,7 +348,11 @@ function ProviderDetail(props) {
           setOpenLoader(false);
           notify(res.data.message);
           console.log(res);
-          setActiveTab(tab);
+          if (requestData.waterDamage === "Yes") {
+            setActiveTab(tab);
+          } else {
+            setActiveTab("Contact Details");
+          }
         }
       },
       (error) => {
@@ -1359,9 +1378,12 @@ function ProviderDetail(props) {
     );
   };
   const notify = (data) => toast(data);
+  console.log("This iserquest data", requestData);
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
       <Link id="sumittedRequest" to="/sumittedRequest"></Link>
+      <Link id="homepage" to="/homepage"></Link>
+
       <Backdrop className={classes.backdrop} open={openLoader}>
         <CircularProgress color="inherit" />
       </Backdrop>
@@ -1435,28 +1457,56 @@ function ProviderDetail(props) {
                 "Inssurance",
                 "Contact Details",
               ].map((value) => {
-                return (
-                  <button
-                    className={classes.button}
-                    style={{
-                      height: 30,
-                      padding: 5,
-                      paddingLeft: 10,
-                      paddingRight: 10,
-                      marginLeft: 10,
-                      minWidth: 130,
-                      fontSize: 11,
-                      width: "max-content",
-                      background: activeTab === value ? "#1075c2" : "#f2f2f2",
-                      color: activeTab === value ? "white" : "black",
-                    }}
-                    onClick={() => {
-                      setActiveTab(value);
-                    }}
-                  >
-                    {value}
-                  </button>
-                );
+                if (value === "Looking For" || value === "Inssurance") {
+                  if (requestData.waterDamage === "Yes") {
+                    return (
+                      <button
+                        className={classes.button}
+                        style={{
+                          height: 30,
+                          padding: 5,
+                          paddingLeft: 10,
+                          paddingRight: 10,
+                          marginLeft: 10,
+                          minWidth: 130,
+                          fontSize: 11,
+                          width: "max-content",
+                          background:
+                            activeTab === value ? "#1075c2" : "#f2f2f2",
+                          color: activeTab === value ? "white" : "black",
+                        }}
+                        onClick={() => {
+                          setActiveTab(value);
+                        }}
+                      >
+                        {value}
+                      </button>
+                    );
+                  }
+                } else {
+                  return (
+                    <button
+                      className={classes.button}
+                      style={{
+                        height: 30,
+                        padding: 5,
+                        paddingLeft: 10,
+                        paddingRight: 10,
+                        marginLeft: 10,
+                        minWidth: 130,
+                        fontSize: 11,
+                        width: "max-content",
+                        background: activeTab === value ? "#1075c2" : "#f2f2f2",
+                        color: activeTab === value ? "white" : "black",
+                      }}
+                      onClick={() => {
+                        setActiveTab(value);
+                      }}
+                    >
+                      {value}
+                    </button>
+                  );
+                }
               })}
           </div>
           {activeTab === "Problem" ? (
@@ -1467,6 +1517,7 @@ function ProviderDetail(props) {
             <Property></Property>
           ) : activeTab === "Description and Photo" ? (
             <DescriptionAndPhoto
+              handleFileChange={handleFileChange}
               setRequestData={(field, value) => {
                 setRequestData({ ...requestData, [field]: value });
                 console.log("THis is the request Data", requestData);
