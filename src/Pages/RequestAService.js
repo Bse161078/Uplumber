@@ -29,23 +29,6 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import EditIcon from "@material-ui/icons/Edit";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-
-import AirConditioner from "../assets/problem/AirConditioner.png";
-import Bathtub from "../assets/problem/Bathtub.png";
-import Dishwasher from "../assets/problem/Dishwasher.png";
-import Drain from "../assets/problem/Drain.png";
-import Faucet from "../assets/problem/Faucet.png";
-import Fireplace from "../assets/problem/Fireplace.png";
-import GrarbageDisposal from "../assets/problem/GrarbageDisposal.png";
-import Pipe from "../assets/problem/Pipe.png";
-import Refrigerator from "../assets/problem/Refrigerator.png";
-import Sewage from "../assets/problem/Sewage.png";
-import Sink from "../assets/problem/Sink.png";
-import Thermostat from "../assets/problem/Thermostat.png";
-import Toilet from "../assets/problem/Toilet.png";
-import Washer from "../assets/problem/Washer.png";
-import WaterFilter from "../assets/problem/WaterFilter.png";
-import WaterHeater from "../assets/problem/WaterHeater.png";
 import { ToastContainer, toast } from "react-toastify";
 
 import ContactDetails from "../Components/RequestService/ContactDetails";
@@ -58,74 +41,80 @@ import {
   CustomerSericeUpdateInssurance,
   MyProfile,
   CustomerSericeUpdateContactDetails,
+  GetAllInssuraceCompanies,
+  getAreas,
+  getHomeStructures,
+  getPrefferedTimings,
+  getLookingFor,
+  getItems,
 } from "../ApiHelper";
 
-const items = [
-  {
-    image: AirConditioner,
-    name: "Air Conditioner",
-  },
-  {
-    image: Bathtub,
-    name: "Bathtub",
-  },
-  {
-    image: Dishwasher,
-    name: "Dishwasher",
-  },
-  {
-    image: Drain,
-    name: "Drain",
-  },
-  {
-    image: Faucet,
-    name: "Faucet",
-  },
-  {
-    image: Fireplace,
-    name: "Fireplace",
-  },
-  {
-    image: GrarbageDisposal,
-    name: "GrarbageDisposal",
-  },
-  {
-    image: Pipe,
-    name: "Pipe",
-  },
-  {
-    image: Refrigerator,
-    name: "Refrigerator",
-  },
-  {
-    image: Sewage,
-    name: "Sewage",
-  },
-  {
-    image: Sink,
-    name: "Sink",
-  },
-  {
-    image: Thermostat,
-    name: "Thermostat",
-  },
-  {
-    image: Toilet,
-    name: "Toilet",
-  },
-  {
-    image: Washer,
-    name: "Washer",
-  },
-  {
-    image: WaterFilter,
-    name: "WaterFilter",
-  },
-  {
-    image: WaterHeater,
-    name: "WaterHeater",
-  },
-];
+// const items = [
+//   {
+//     image: AirConditioner,
+//     name: "Air Conditioner",
+//   },
+//   {
+//     image: Bathtub,
+//     name: "Bathtub",
+//   },
+//   {
+//     image: Dishwasher,
+//     name: "Dishwasher",
+//   },
+//   {
+//     image: Drain,
+//     name: "Drain",
+//   },
+//   {
+//     image: Faucet,
+//     name: "Faucet",
+//   },
+//   {
+//     image: Fireplace,
+//     name: "Fireplace",
+//   },
+//   {
+//     image: GrarbageDisposal,
+//     name: "GrarbageDisposal",
+//   },
+//   {
+//     image: Pipe,
+//     name: "Pipe",
+//   },
+//   {
+//     image: Refrigerator,
+//     name: "Refrigerator",
+//   },
+//   {
+//     image: Sewage,
+//     name: "Sewage",
+//   },
+//   {
+//     image: Sink,
+//     name: "Sink",
+//   },
+//   {
+//     image: Thermostat,
+//     name: "Thermostat",
+//   },
+//   {
+//     image: Toilet,
+//     name: "Toilet",
+//   },
+//   {
+//     image: Washer,
+//     name: "Washer",
+//   },
+//   {
+//     image: WaterFilter,
+//     name: "WaterFilter",
+//   },
+//   {
+//     image: WaterHeater,
+//     name: "WaterHeater",
+//   },
+// ];
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -186,6 +175,7 @@ function ProviderDetail(props) {
   const [calendar, setCalendar] = React.useState(false);
   const [prfferedTime, setPrefferedTime] = React.useState(false);
   const [postRequest, setPostRequest] = React.useState(false);
+  const [allAreas, setAllAreas] = React.useState(null);
   const [value, setValue] = React.useState("As soon as possible");
   const [itemName, setItemName] = React.useState("Air Conditioner");
   const [openLoader, setOpenLoader] = useState(false);
@@ -224,9 +214,23 @@ function ProviderDetail(props) {
     userState: "",
     userZipCode: "",
   });
+  const [prefferedTimeData, setPrefferedTimeData] = React.useState([]);
+  const [inssuranceCompaniesData, setInssuranceCompaniesData] = React.useState(
+    []
+  );
+  const [areasData, setAreasData] = React.useState([]);
+  const [structuresData, setStructuresData] = React.useState([]);
+  const [lookingForData, setLookingForData] = React.useState([]);
+  const [items, setItems] = React.useState([]);
 
   useEffect(() => {
     getMyProfile();
+    getInssuranceCompnies();
+    getAllLookingFor();
+    getAllAaeas();
+    getAllStructures();
+    getAllPrefferedTimings();
+    getAllItems();
   }, []);
   // console.log("This is request data", requestData);
   // setRequestData({ ...requestData, [event.target.id]: event.target.value });
@@ -424,6 +428,126 @@ function ProviderDetail(props) {
     );
   };
 
+  const getInssuranceCompnies = () => {
+    setOpenLoader(true);
+    GetAllInssuraceCompanies().then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          console.log("These are inssurace companies", res.data);
+          var temp = [];
+          res.data.Insurances.map((item) => {
+            temp.push({
+              title: item.Insurance,
+              value: item.Insurance,
+            });
+          });
+          setInssuranceCompaniesData(temp);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+  const getAllAaeas = () => {
+    setOpenLoader(true);
+    getAreas().then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          console.log("These are areas", res.data);
+          var temp = [];
+          res.data.Insurances.map((item) => {
+            temp.push({
+              title: item.Area,
+              value: item.Area,
+            });
+          });
+          setAreasData(temp);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+  const getAllLookingFor = () => {
+    setOpenLoader(true);
+    getLookingFor().then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          console.log("These are looking for", res.data);
+          setLookingForData(res.data.Insurances);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
+  const getAllItems = () => {
+    setOpenLoader(true);
+    getItems().then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          console.log("These are looking for", res.data);
+          setItems(res.data.Customers);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
+  const getAllStructures = () => {
+    setOpenLoader(true);
+    getHomeStructures().then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          console.log("These are structures", res.data.ServiceTime);
+          setStructuresData(res.data.ServiceTime);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
+  const getAllPrefferedTimings = () => {
+    setOpenLoader(true);
+    getPrefferedTimings().then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          console.log("These are preffered timings", res.data.ServiceTime);
+          setPrefferedTimeData(res.data.ServiceTime);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
   const updateCustomerPropertyInssurance = (tab) => {
     setOpenLoader(true);
     var data = {
@@ -450,35 +574,47 @@ function ProviderDetail(props) {
   };
 
   const updateCustomerContactDetails = (tab) => {
-    setOpenLoader(true);
-    var data = {
-      name: requestData.userName,
-      phone: requestData.userPhone,
-      allowSms: true,
-      email: requestData.userEmail,
-      address: requestData.userAddress,
-      latitude: 112.0988,
-      longitude: 133.4444,
-      unit: requestData.userUnit,
-      city: requestData.userCity,
-      state: requestData.userState,
-      zipCode: requestData.userZipCode,
-    };
-    CustomerSericeUpdateContactDetails(data).then(
-      (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
+    if (
+      requestData.userName != "" &&
+      requestData.userPhone != "" &&
+      requestData.userEmail != "" &&
+      requestData.userAddress != "" &&
+      requestData.userCity != "" &&
+      requestData.userState != "" &&
+      requestData.userZipCode != ""
+    ) {
+      setOpenLoader(true);
+      var data = {
+        name: requestData.userName,
+        phone: requestData.userPhone,
+        allowSms: true,
+        email: requestData.userEmail,
+        address: requestData.userAddress,
+        latitude: 112.0988,
+        longitude: 133.4444,
+        unit: requestData.userUnit,
+        city: requestData.userCity,
+        state: requestData.userState,
+        zipCode: requestData.userZipCode,
+      };
+      CustomerSericeUpdateContactDetails(data).then(
+        (res) => {
+          if (res.statusText === "OK" || res.statusText === "Created") {
+            setOpenLoader(false);
+            notify(res.data.message);
+            console.log(res);
+            setActiveTab(tab);
+          }
+        },
+        (error) => {
+          notify("Something went wrong!");
           setOpenLoader(false);
-          notify(res.data.message);
-          console.log(res);
-          setActiveTab(tab);
+          console.log("This is response", error);
         }
-      },
-      (error) => {
-        notify("Something went wrong!");
-        setOpenLoader(false);
-        console.log("This is response", error);
-      }
-    );
+      );
+    } else {
+      notify("Please provide all information!");
+    }
   };
 
   const ProblemSection = () => {
@@ -740,53 +876,49 @@ function ProviderDetail(props) {
           contact you. You may change below.
         </p>
         <FormGroup row style={{ width: "100%" }}>
-          {[
-            "Plumbing Tecnician",
-            "Cooling and Heating Technician",
-            "Water and Flood Damage Specialist",
-            "Mould Specialist",
-            "Restoration Specialist",
-          ].map((item) => {
-            return (
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    onClick={() => {
-                      if (requestData.lookingFor.includes(item)) {
-                        var temp = [];
-                        requestData.lookingFor.map((data) => {
-                          if (data !== item) {
-                            temp.push(data);
-                          }
-                        });
-                        setRequestData({ ...requestData, lookingFor: temp });
-                        localStorage.setItem(
-                          "lookingFor",
-                          JSON.stringify(temp)
-                        );
-                      } else {
-                        var temp = requestData.lookingFor;
-                        temp.push(item);
-                        console.log("This is item", item);
-                        setRequestData({ ...requestData, lookingFor: temp });
-                        localStorage.setItem(
-                          "lookingFor",
-                          JSON.stringify(temp)
-                        );
+          {lookingForData &&
+            lookingForData.map((item) => {
+              return (
+                <FormControlLabel
+                  style={{ width: "100%" }}
+                  control={
+                    <Checkbox
+                      onClick={() => {
+                        if (requestData.lookingFor.includes(item)) {
+                          var temp = [];
+                          requestData.lookingFor.map((data) => {
+                            if (data !== item.LookingFor) {
+                              temp.push(data);
+                            }
+                          });
+                          setRequestData({ ...requestData, lookingFor: temp });
+                          localStorage.setItem(
+                            "lookingFor",
+                            JSON.stringify(temp)
+                          );
+                        } else {
+                          var temp = requestData.lookingFor;
+                          temp.push(item.LookingFor);
+                          console.log("This is item", item.LookingFor);
+                          setRequestData({ ...requestData, lookingFor: temp });
+                          localStorage.setItem(
+                            "lookingFor",
+                            JSON.stringify(temp)
+                          );
+                        }
+                      }}
+                      icon={<CheckCircleIcon style={{ color: "#efefef" }} />}
+                      checkedIcon={
+                        <CheckCircleIcon style={{ color: "#1075c2" }} />
                       }
-                    }}
-                    icon={<CheckCircleIcon style={{ color: "#efefef" }} />}
-                    checkedIcon={
-                      <CheckCircleIcon style={{ color: "#1075c2" }} />
-                    }
-                    checked={requestData.lookingFor.includes(item)}
-                    name="checkedH"
-                  />
-                }
-                label={item}
-              />
-            );
-          })}
+                      checked={requestData.lookingFor.includes(item)}
+                      name="checkedH"
+                    />
+                  }
+                  label={item.LookingFor}
+                />
+              );
+            })}
         </FormGroup>
         <div
           style={{
@@ -854,30 +986,30 @@ function ProviderDetail(props) {
         style={{ padding: 20, height: "max-content" }}
       >
         <p className={classes.label}>Area *</p>
-        <Autocomplete
-          options={[
-            { title: "Kitchen", year: 1994 },
-            { title: "Kitchen", year: 1994 },
-          ]}
-          onChange={(event, values) => {
-            if (values) {
-              setRequestData({ ...requestData, area: values.title });
-              localStorage.setItem("area", values.title);
-            }
-          }}
-          getOptionLabel={(option) => option.title}
-          style={{
-            // width: 300,
-            // marginLeft: 20,
-            // marginTop: 20,
-            // marginBottom: 20
-            border: "none",
-            width: "100%",
-          }}
-          renderInput={(params) => (
-            <TextField label={requestData.area} {...params} />
-          )}
-        />
+        {areasData && (
+          <Autocomplete
+            options={areasData && areasData}
+            onChange={(event, values) => {
+              if (values) {
+                setRequestData({ ...requestData, area: values.title });
+                localStorage.setItem("area", values.title);
+              }
+            }}
+            getOptionLabel={(option) => option.title}
+            style={{
+              // width: 300,
+              // marginLeft: 20,
+              // marginTop: 20,
+              // marginBottom: 20
+              border: "none",
+              width: "100%",
+            }}
+            renderInput={(params) => (
+              <TextField label={requestData.area} {...params} />
+            )}
+          />
+        )}
+
         <p className={classes.label}>Structure *</p>
         <div
           style={{
@@ -885,8 +1017,8 @@ function ProviderDetail(props) {
             maxWidth: "100vw",
           }}
         >
-          {["Single Home", "APT/Conda Building", "Commercial", "Outdoor"].map(
-            (value) => {
+          {structuresData &&
+            structuresData.map((value) => {
               return (
                 <button
                   className={classes.button}
@@ -900,19 +1032,21 @@ function ProviderDetail(props) {
                     fontSize: 11,
                     width: "max-content",
                     background:
-                      requestData.structure === value ? "#1075c2" : "#f2f2f2",
-                    color: requestData.structure === value ? "white" : "black",
+                      requestData.structure === value.Name
+                        ? "#1075c2"
+                        : "#f2f2f2",
+                    color:
+                      requestData.structure === value.Name ? "white" : "black",
                   }}
                   onClick={() => {
-                    setRequestData({ ...requestData, structure: value });
-                    localStorage.setItem("structure", value);
+                    setRequestData({ ...requestData, structure: value.Name });
+                    localStorage.setItem("structure", value.Name);
                   }}
                 >
-                  {value}
+                  {value.Name}
                 </button>
               );
-            }
-          )}
+            })}
         </div>
         <p className={classes.label}>Requestor Status *</p>
         <div
@@ -1019,11 +1153,7 @@ function ProviderDetail(props) {
       >
         <p className={classes.label}>Company *</p>
         <Autocomplete
-          options={[
-            { title: "Uplumber", year: 1994 },
-            { title: "Plumber Company", year: 1994 },
-            { title: "Easy Plumber", year: 1994 },
-          ]}
+          options={inssuranceCompaniesData && inssuranceCompaniesData}
           getOptionLabel={(option) => option.title}
           style={{
             // width: 300,
@@ -1401,7 +1531,7 @@ function ProviderDetail(props) {
     );
   };
   const notify = (data) => toast(data);
-  console.log("This iserquest data", requestData);
+  // console.log("This iserquest data", requestData);
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
       <Link id="sumittedRequest" to="/sumittedRequest"></Link>
@@ -1715,23 +1845,16 @@ function ProviderDetail(props) {
                   });
                 }}
               >
-                {[
-                  "As soon as possible",
-                  "Early Morning ( 6am to 8am)",
-                  "Early Morning ( 8am to 12pm)",
-                  "Afternoon ( 12pm to 3pm)",
-                  "Late Afternoon ( 3pm to 5pm)",
-                  "Evening ( 5pm to 7pm)",
-                  "Late Evening ( 7pm to 9pm)",
-                ].map((item) => {
-                  return (
-                    <FormControlLabel
-                      value={item}
-                      control={<Radio color="primary" />}
-                      label={item}
-                    />
-                  );
-                })}
+                {prefferedTimeData &&
+                  prefferedTimeData.map((item) => {
+                    return (
+                      <FormControlLabel
+                        value={item.ServiceTime}
+                        control={<Radio color="primary" />}
+                        label={item.ServiceTime}
+                      />
+                    );
+                  })}
               </RadioGroup>
             </FormControl>
             <button
@@ -1777,37 +1900,38 @@ function ProviderDetail(props) {
             </p>
             <div style={{ height: 400, maxHeight: 400, overflow: "scroll" }}>
               <Grid container direction="row">
-                {items.map((stuff) => {
-                  return (
-                    <Grid item md={4} xs={4}>
-                      <Grid
-                        container
-                        direction="column"
-                        alignItems="center"
-                        style={{ marginBottom: 20 }}
-                        onClick={() => {
-                          setRequestData({
-                            ...requestData,
-                            itemName: stuff.name,
-                          });
-                          setItem(false);
-                        }}
-                      >
-                        <img style={{ width: "70%" }} src={stuff.image}></img>
-                        <p
-                          style={{
-                            width: "100%",
-                            textAlign: "center",
-                            fontSize: 12,
-                            fontWeight: 600,
+                {items &&
+                  items.map((stuff) => {
+                    return (
+                      <Grid item md={4} xs={4}>
+                        <Grid
+                          container
+                          direction="column"
+                          alignItems="center"
+                          style={{ marginBottom: 20 }}
+                          onClick={() => {
+                            setRequestData({
+                              ...requestData,
+                              itemName: stuff.Description,
+                            });
+                            setItem(false);
                           }}
                         >
-                          {stuff.name}
-                        </p>
+                          <img style={{ width: "70%" }} src={stuff.Image}></img>
+                          <p
+                            style={{
+                              width: "100%",
+                              textAlign: "center",
+                              fontSize: 12,
+                              fontWeight: 600,
+                            }}
+                          >
+                            {stuff.Description}
+                          </p>
+                        </Grid>
                       </Grid>
-                    </Grid>
-                  );
-                })}
+                    );
+                  })}
               </Grid>
             </div>
             <button

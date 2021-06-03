@@ -243,6 +243,78 @@ export const GetAllOffers = () => {
   return axios(config);
 };
 
+export const GetAllInssuraceCompanies = () => {
+  var config = {
+    method: "get",
+    url: "http://54.176.48.215:8080/api/insurances",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  };
+
+  return axios(config);
+};
+
+export const getPrefferedTimings = () => {
+  var config = {
+    method: "get",
+    url: "http://54.176.48.215:8080/api/prefferedtiming",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  };
+
+  return axios(config);
+};
+
+export const getHomeStructures = () => {
+  var config = {
+    method: "get",
+    url: "http://54.176.48.215:8080/api/structures",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  };
+
+  return axios(config);
+};
+
+export const getLookingFor = () => {
+  var config = {
+    method: "get",
+    url: "http://54.176.48.215:8080/api/lookingfor",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  };
+
+  return axios(config);
+};
+
+export const getAreas = () => {
+  var config = {
+    method: "get",
+    url: "http://54.176.48.215:8080/api/areas",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  };
+
+  return axios(config);
+};
+
+export const getItems = () => {
+  var config = {
+    method: "get",
+    url: "http://54.176.48.215:8080/api/services",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  };
+
+  return axios(config);
+};
+
 export const UpdateCustomerProfile = (postData) => {
   var data = JSON.stringify(postData);
 
