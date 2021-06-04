@@ -13,21 +13,33 @@ export default function Sidebar() {
         alignItems="center"
         style={{ marginTop: 50 }}
       >
-        <img
-          src={Avatar}
-          style={{ width: 80, height: 80, borderRadius: 25 }}
-        ></img>
+        {localStorage.getItem("userData") ? (
+          <img
+            src={JSON.parse(localStorage.getItem("userData")).profileImage}
+            style={{ width: 80, height: 80, borderRadius: 25 }}
+          ></img>
+        ) : (
+          <img
+            src={Avatar}
+            style={{ width: 80, height: 80, borderRadius: 25 }}
+          ></img>
+        )}
+
         {localStorage.getItem("token") != null ? (
-          <p
-            style={{
-              width: "100%",
-              textAlign: "center",
-              margin: 0,
-              fontWeight: 600,
-            }}
-          >
-            Jane Doe
-          </p>
+          localStorage.getItem("userData") && (
+            <p
+              style={{
+                width: "100%",
+                textAlign: "center",
+                margin: 0,
+                fontWeight: 600,
+              }}
+            >
+              {JSON.parse(localStorage.getItem("userData")).firstName +
+                " " +
+                JSON.parse(localStorage.getItem("userData")).lastName}
+            </p>
+          )
         ) : (
           <div style={{ width: "100%" }}>
             <Link id={"login"} to={"/login"}></Link>
@@ -104,7 +116,7 @@ export default function Sidebar() {
               margin: 0,
               marginLeft: 15,
               fontWeight: 500,
-              marginTop: 80,
+              marginTop: 50,
               cursor: "pointer",
             }}
             onClick={() => {
@@ -115,6 +127,7 @@ export default function Sidebar() {
           >
             Logout
           </p>
+          <div style={{ height: 100 }}></div>
         </div>
       )}
     </div>

@@ -47,74 +47,8 @@ import {
   getPrefferedTimings,
   getLookingFor,
   getItems,
+  getRequestorStatus,
 } from "../ApiHelper";
-
-// const items = [
-//   {
-//     image: AirConditioner,
-//     name: "Air Conditioner",
-//   },
-//   {
-//     image: Bathtub,
-//     name: "Bathtub",
-//   },
-//   {
-//     image: Dishwasher,
-//     name: "Dishwasher",
-//   },
-//   {
-//     image: Drain,
-//     name: "Drain",
-//   },
-//   {
-//     image: Faucet,
-//     name: "Faucet",
-//   },
-//   {
-//     image: Fireplace,
-//     name: "Fireplace",
-//   },
-//   {
-//     image: GrarbageDisposal,
-//     name: "GrarbageDisposal",
-//   },
-//   {
-//     image: Pipe,
-//     name: "Pipe",
-//   },
-//   {
-//     image: Refrigerator,
-//     name: "Refrigerator",
-//   },
-//   {
-//     image: Sewage,
-//     name: "Sewage",
-//   },
-//   {
-//     image: Sink,
-//     name: "Sink",
-//   },
-//   {
-//     image: Thermostat,
-//     name: "Thermostat",
-//   },
-//   {
-//     image: Toilet,
-//     name: "Toilet",
-//   },
-//   {
-//     image: Washer,
-//     name: "Washer",
-//   },
-//   {
-//     image: WaterFilter,
-//     name: "WaterFilter",
-//   },
-//   {
-//     image: WaterHeater,
-//     name: "WaterHeater",
-//   },
-// ];
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -222,6 +156,7 @@ function ProviderDetail(props) {
   const [structuresData, setStructuresData] = React.useState([]);
   const [lookingForData, setLookingForData] = React.useState([]);
   const [items, setItems] = React.useState([]);
+  const [requestorStatusData, setRequestorStatusData] = React.useState([]);
 
   useEffect(() => {
     getMyProfile();
@@ -231,6 +166,7 @@ function ProviderDetail(props) {
     getAllStructures();
     getAllPrefferedTimings();
     getAllItems();
+    getAllRequestorStatus();
   }, []);
   // console.log("This is request data", requestData);
   // setRequestData({ ...requestData, [event.target.id]: event.target.value });
@@ -502,6 +438,23 @@ function ProviderDetail(props) {
           setOpenLoader(false);
           console.log("These are looking for", res.data);
           setItems(res.data.Customers);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+  const getAllRequestorStatus = () => {
+    setOpenLoader(true);
+    getRequestorStatus().then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          console.log("These are looking for", res.data);
+          setRequestorStatusData(res.data.ServiceTime);
         }
       },
       (error) => {
@@ -1052,39 +1005,44 @@ function ProviderDetail(props) {
         <div
           style={{
             width: "100vw",
-            display: "flex",
-            height: 70,
+            maxWidth: "100vw",
           }}
         >
-          {["Home Owner", "Property Manager", "Renter"].map((value) => {
-            return (
-              <button
-                className={classes.button}
-                style={{
-                  height: 30,
-                  padding: 5,
-                  paddingLeft: 10,
-                  paddingRight: 10,
-                  marginRight: 10,
-                  minWidth: 80,
-                  fontSize: 11,
-                  width: "max-content",
-                  background:
-                    requestData.requestorStatus === value
-                      ? "#1075c2"
-                      : "#f2f2f2",
-                  color:
-                    requestData.requestorStatus === value ? "white" : "black",
-                }}
-                onClick={() => {
-                  setRequestData({ ...requestData, requestorStatus: value });
-                  localStorage.setItem("requestorStatus", value);
-                }}
-              >
-                {value}
-              </button>
-            );
-          })}
+          {requestorStatusData &&
+            requestorStatusData.map((value) => {
+              return (
+                <button
+                  className={classes.button}
+                  style={{
+                    height: 30,
+                    padding: 5,
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    marginRight: 10,
+                    minWidth: 80,
+                    fontSize: 11,
+                    width: "max-content",
+                    background:
+                      requestData.requestorStatus === value.Status
+                        ? "#1075c2"
+                        : "#f2f2f2",
+                    color:
+                      requestData.requestorStatus === value.Status
+                        ? "white"
+                        : "black",
+                  }}
+                  onClick={() => {
+                    setRequestData({
+                      ...requestData,
+                      requestorStatus: value.Status,
+                    });
+                    localStorage.setItem("requestorStatus", value.Status);
+                  }}
+                >
+                  {value.Status}
+                </button>
+              );
+            })}
         </div>
         <div
           style={{

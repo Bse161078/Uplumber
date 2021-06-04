@@ -267,6 +267,18 @@ export const getPrefferedTimings = () => {
   return axios(config);
 };
 
+export const getRequestorStatus = () => {
+  var config = {
+    method: "get",
+    url: "http://54.176.48.215:8080/api/requesterstatus",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  };
+
+  return axios(config);
+};
+
 export const getHomeStructures = () => {
   var config = {
     method: "get",
@@ -433,6 +445,60 @@ export const markOrderComplete = (id) => {
   return axios(config);
 };
 
+export const verifyPhone = () => {
+  var data = JSON.stringify({
+    isPhoneNumberVerify: true,
+  });
+
+  var config = {
+    method: "put",
+    url: "http://54.176.48.215:8080/api/customerprofile/updatecustomer",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+
+  return axios(config);
+};
+
+export const changePassword = (newPassword) => {
+  var data = JSON.stringify({
+    password: newPassword,
+    email: localStorage.getItem("email"),
+  });
+
+  var config = {
+    method: "put",
+    url: "http://54.176.48.215:8080/api/customers/resetpassword",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+
+  return axios(config);
+};
+
+export const enableNotification = (data) => {
+  console.log("This is the notification data", data);
+  var data = JSON.stringify(data);
+
+  var config = {
+    method: "put",
+    url: "http://54.176.48.215:8080/api/customerprofile/updateenablenotification",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+
+  return axios(config);
+};
+
 export const getProviderReviews = (id) => {
   var config = {
     method: "get",
@@ -458,6 +524,24 @@ export const setProviderReviews = (customerId, id, rating, comment) => {
   var config = {
     method: "post",
     url: "http://54.176.48.215:8080/api/providerratingandcomment",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+
+  return axios(config);
+};
+
+export const cancelAllOffers = (id) => {
+  var data = JSON.stringify({
+    serviceId: id,
+  });
+  console.log("This is dataa", data);
+  var config = {
+    method: "post",
+    url: "http://54.176.48.215:8080/api/customeroffer/cancellofers",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",

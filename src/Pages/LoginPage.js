@@ -199,7 +199,6 @@ export default function LoginPage() {
 
                     localStorage.setItem("email", email);
                     document.getElementById("home").click();
-                    notify("Account Created Succesfully!");
                   }
                 },
                 (error) => {

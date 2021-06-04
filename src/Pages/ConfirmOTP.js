@@ -6,6 +6,7 @@ import Verify from "../assets/verify.png";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import OtpInput from "react-otp-input";
 import { Link, withRouter } from "react-router-dom";
+import { verifyPhone } from "../ApiHelper";
 const useStyles = makeStyles((theme) => ({
   input: {
     border: "none",
@@ -36,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: 20,
   },
 }));
-export default function LoginPage() {
+export default function ConfirmOTP(props) {
   const classes = useStyles();
   const [value, setValue] = useState("");
   const [OTP, setOTP] = useState("");
@@ -53,6 +54,36 @@ export default function LoginPage() {
     }
 
     setState(open);
+  };
+  console.log("This is ", props.confirmResult);
+  const handleVerifyCode = () => {
+    // Request for OTP verification
+    try {
+      if (OTP.length == 6) {
+        props.confirmResult
+          .confirm(OTP)
+          .then((user) => {
+            verifyPhone().then(
+              (res) => {
+                if (res.statusText === "OK" || res.statusText === "Created") {
+                  document.getElementById("homepage").click();
+                }
+              },
+              (error) => {
+                props.notify("Something went wrong!");
+                props.setOpenLoader(false);
+                console.log("This is response", error);
+              }
+            );
+          })
+          .catch((error) => {
+            alert(error.message);
+            console.log(error);
+          });
+      } else {
+        alert("Please enter a 6 digit OTP code.");
+      }
+    } catch (e) {}
   };
 
   return (
@@ -86,7 +117,12 @@ export default function LoginPage() {
       >
         <img
           src={Verify}
-          style={{ borderRadius: "50%", marginBottom: 10, width: "50%" }}
+          style={{
+            borderRadius: "50%",
+            marginBottom: 10,
+            width: "50%",
+            height: 150,
+          }}
         ></img>
         <div style={{ width: "100%" }}></div>
         <p
@@ -112,7 +148,7 @@ export default function LoginPage() {
         <button
           className={classes.button}
           onClick={() => {
-            setState(true);
+            handleVerifyCode();
           }}
         >
           Verify
@@ -127,8 +163,8 @@ export default function LoginPage() {
           </p>
           <Grid container direction="row" justify="center">
             <p style={{ width: "90%", textAlign: "center", marginTop: 0 }}>
-              A 6 digit verification code has been send to you phone
-              "+1-234-567-89"
+              A 6 digit verification code has been send to you phone "
+              {props.phoneNumber}"
             </p>
 
             <p
@@ -137,13 +173,7 @@ export default function LoginPage() {
             >
               Tap Continue to enter code
             </p>
-            <button
-              className={classes.button}
-              style={{ marginBottom: 40 }}
-              onClick={() => {
-                document.getElementById("homepage").click();
-              }}
-            >
+            <button className={classes.button} style={{ marginBottom: 40 }}>
               Continue
             </button>
           </Grid>

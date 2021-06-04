@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import {
   makeStyles,
@@ -14,6 +14,9 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 import { Countries, states } from "../Data/Data";
 import { CompleteProfile } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
+import { connectFirebase } from "../Config/firebase";
+import ConfirmOtp from "./ConfirmOTP";
+import firebase from "firebase";
 var validator = require("email-validator");
 
 const useStyles = makeStyles((theme) => ({
@@ -51,12 +54,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export default function LoginPage() {
+  useEffect(() => {
+    connectFirebase();
+  }, []);
   const classes = useStyles();
   var upload = "";
   const [value, setValue] = useState("");
   const [typeConfirm, setTypeConfirm] = useState("text");
   const [verify, setVerify] = React.useState(false);
   const [profileImage, setProfileImage] = useState(null);
+  const [goToOtp, setGotoOtp] = useState();
+  const [confirmResult, setConfirmResult] = useState();
   const [firstName, setFirstName] = useState(localStorage.getItem("firstName"));
   const [lastName, setLastName] = useState(localStorage.getItem("lastName"));
   const [phoneNumber, setPhoneNumber] = useState(
@@ -71,6 +79,18 @@ export default function LoginPage() {
   const [latitude, setLatitude] = useState(localStorage.getItem("latitude"));
   const [longitude, setLongitude] = useState(localStorage.getItem("longitude"));
   const [openLoader, setOpenLoader] = useState(false);
+
+  const createRecapha = () => {
+    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+      "recaptcha-container",
+      {
+        size: "invisible",
+        callback: (response) => {
+          // reCAPTCHA solved, allow signInWithPhoneNumber.
+        },
+      }
+    );
+  };
 
   //   {
   //     "profileImage": "https://image.shutterstock.com/image-vector/profile-placeholder-image-gray-silhouette-260nw-1153673752.jpg",
@@ -105,7 +125,15 @@ export default function LoginPage() {
     setVerify(open);
   };
   const notify = (data) => toast(data);
-  return (
+
+  return goToOtp ? (
+    <ConfirmOtp
+      confirmResult={confirmResult}
+      phoneNumber={phoneNumber}
+      notify={notify}
+      setOpenLoader={setOpenLoader}
+    ></ConfirmOtp>
+  ) : (
     <div>
       <Backdrop className={classes.backdrop} open={openLoader}>
         <CircularProgress color="inherit" />
@@ -307,6 +335,7 @@ export default function LoginPage() {
             <TextField label={state ? state : ""} {...params} />
           )}
         />
+        <div id="recaptcha-container"></div>
         <button
           className={classes.button}
           // onClick={() => {
@@ -320,7 +349,7 @@ export default function LoginPage() {
               // } else if (password === "") {
               //   notify("Please Enter a password");
               // } else {
-              setOpenLoader(true);
+              // setOpenLoader(true);
               var data = {
                 profileImage:
                   "https://image.shutterstock.com/image-vector/profile-placeholder-image-gray-silhouette-260nw-1153673752.jpg",
@@ -344,6 +373,15 @@ export default function LoginPage() {
                     setOpenLoader(false);
 
                     localStorage.setItem("id", res.data.id);
+                    // Firebase.auth()
+                    //   .signInWithPhoneNumber("+923004210859", true)
+                    //   .then((confirmResult) => {
+                    //     console.log(confirmResult);
+                    //   })
+                    //   .catch((error) => {
+                    //     alert(error.message);
+                    //     console.log(error);
+                    //   });
                     console.log(res);
                     setVerify(true);
                   }
@@ -371,8 +409,8 @@ export default function LoginPage() {
           </p>
           <Grid container direction="row" justify="center">
             <p style={{ width: "90%", textAlign: "center", marginTop: 0 }}>
-              A 6 digit verification code has been send to you phone
-              "+1-234-567-89"
+              A 6 digit verification code has been send to you phone "
+              {phoneNumber}"
             </p>
 
             <p
@@ -385,7 +423,20 @@ export default function LoginPage() {
               className={classes.button}
               style={{ marginBottom: 40 }}
               onClick={() => {
-                document.getElementById("confirmOtp").click();
+                createRecapha();
+                const appVerifier = window.recaptchaVerifier;
+                firebase
+                  .auth()
+                  .signInWithPhoneNumber(phoneNumber, appVerifier)
+                  .then((result) => {
+                    console.log(result);
+                    setConfirmResult(result);
+                    setGotoOtp(true);
+                  })
+                  .catch((error) => {
+                    alert(error.message);
+                    console.log(error);
+                  });
               }}
             >
               Continue

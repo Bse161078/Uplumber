@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { makeStyles, Grid, Switch } from "@material-ui/core";
+import {
+  makeStyles,
+  Grid,
+  Switch,
+  Backdrop,
+  CircularProgress,
+} from "@material-ui/core";
 import Drawer from "@material-ui/core/Drawer";
 import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
@@ -11,6 +17,8 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
+import { enableNotification } from "../ApiHelper";
+import { ToastContainer, toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -60,8 +68,12 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 15,
     marginTop: 5,
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
 }));
-function ProviderDetail(props) {
+function NotificationSetting(props) {
   const classes = useStyles();
   const [state, setState] = React.useState(false);
   const [bottomState, setBottomState] = React.useState(false);
@@ -70,7 +82,7 @@ function ProviderDetail(props) {
   const [value, setValue] = React.useState("female");
   const [activeTab, setActiveTab] = React.useState("Problem");
   const [image, setImage] = React.useState([]);
-
+  const [openLoader, setOpenLoader] = useState(false);
   const [type, setType] = useState("text");
 
   const handleChange = (event) => {
@@ -85,9 +97,42 @@ function ProviderDetail(props) {
   };
   const position = [51.505, -0.09];
   //console.log("THis is great", props);
-
+  const enableMyNotifications = (data) => {
+    setOpenLoader(true);
+    enableNotification(data).then(
+      (res) => {
+        console.log("THis is res", res.data.data);
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          console.log("THis is res");
+          localStorage.setItem("userData", JSON.stringify(res.data.data));
+          setOpenLoader(false);
+          document.getElementById("back").click();
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+  const notify = (data) => toast(data);
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
+      <Backdrop className={classes.backdrop} open={openLoader}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Link id="back" to="/settings"></Link>
       <Link id="reviews" to="/reviews/0"></Link>
       <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
@@ -137,6 +182,40 @@ function ProviderDetail(props) {
             { name: "Offer Recieved", href: "/terms" },
             { name: "Feedback Reminders", href: "/terms" },
           ].map((item) => {
+            var checked = false;
+            if (item.name === "Enable  Notifications") {
+              console.log(
+                "This is grate",
+                JSON.parse(localStorage.getItem("userData")).enableNotification
+              );
+              if (
+                JSON.parse(localStorage.getItem("userData"))
+                  .enableNotification === true
+              ) {
+                checked = true;
+              }
+            } else if (item.name === "Feedback Reminders") {
+              if (
+                JSON.parse(localStorage.getItem("userData"))
+                  .feedbackReminders === true
+              ) {
+                checked = true;
+              }
+            } else if (item.name === "Request Accepted") {
+              if (
+                JSON.parse(localStorage.getItem("userData")).requestAccepted ===
+                true
+              ) {
+                checked = true;
+              }
+            } else if (item.name === "Offer Recieved") {
+              if (
+                JSON.parse(localStorage.getItem("userData")).offerReceived ===
+                true
+              ) {
+                checked = true;
+              }
+            }
             return (
               <Grid
                 container
@@ -151,18 +230,33 @@ function ProviderDetail(props) {
               >
                 <Link to={item.href} id={item.href}></Link>
                 <Grid item md={10} xs={10}>
-                  <p
-                    style={{ margin: 0, marginLeft: 20, fontWeight: "600" }}
-                    onClick={() => {
-                      document.getElementById(item.href).click();
-                    }}
-                  >
+                  <p style={{ margin: 0, marginLeft: 20, fontWeight: "600" }}>
                     {item.name}
                   </p>
                 </Grid>
                 <Grid item md={2} xs={2}>
                   <Switch
                     color="primary"
+                    onChange={(e) => {
+                      if (item.name === "Enable  Notifications") {
+                        enableMyNotifications({
+                          enableNotification: true,
+                        });
+                      } else if (item.name === "Feedback Reminders") {
+                        enableMyNotifications({
+                          feedbackReminders: true,
+                        });
+                      } else if (item.name === "Request Accepted") {
+                        enableMyNotifications({
+                          requestAccepted: true,
+                        });
+                      } else if (item.name === "Offer Recieved") {
+                        enableMyNotifications({
+                          offerReceived: true,
+                        });
+                      }
+                    }}
+                    checked={checked}
                     // onClick={() => {
                     //   document.getElementById(item.href).click();
                     // }}
@@ -330,4 +424,4 @@ function ProviderDetail(props) {
     </div>
   );
 }
-export default withRouter(ProviderDetail);
+export default withRouter(NotificationSetting);

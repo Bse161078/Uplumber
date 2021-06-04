@@ -62,7 +62,9 @@ function ProviderDetail(props) {
   const position = [51.505, -0.09];
   //console.log("THis is great", props);
   return (
-    <div style={{ background: "#f2f2f2", background: "white" }}>
+    <div
+      style={{ background: "#f2f2f2", background: "white", maxWidth: "100vw" }}
+    >
       <Link id="homepage" to="/homepage"></Link>
       <Link id="reviews" to="/reviews/0"></Link>
       <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>

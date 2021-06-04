@@ -96,6 +96,7 @@ function ProviderDetail(props) {
   const notify = (data) => toast(data);
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
+      <Link id={"route"} to={"/show-route"}></Link>
       <Backdrop className={classes.backdrop} open={openLoader}>
         <CircularProgress color="inherit" />
       </Backdrop>
@@ -167,6 +168,10 @@ function ProviderDetail(props) {
                     borderBottom: "1px solid #f1f1f1",
                     height: "max-content",
                     background: item === 2 ? "#e2f2ff" : "white",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    document.getElementById("route").click();
                   }}
                 >
                   <Grid item md={2} xs={2}>

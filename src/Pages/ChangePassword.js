@@ -1,5 +1,10 @@
 import React, { useState } from "react";
-import { makeStyles, Grid } from "@material-ui/core";
+import {
+  makeStyles,
+  Grid,
+  Backdrop,
+  CircularProgress,
+} from "@material-ui/core";
 import Drawer from "@material-ui/core/Drawer";
 import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
@@ -11,6 +16,9 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
+import { changePassword } from "../ApiHelper";
+
+import { ToastContainer, toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -60,6 +68,10 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 15,
     marginTop: 5,
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
 }));
 function ProviderDetail(props) {
   const classes = useStyles();
@@ -70,8 +82,12 @@ function ProviderDetail(props) {
   const [value, setValue] = React.useState("female");
   const [activeTab, setActiveTab] = React.useState("Problem");
   const [image, setImage] = React.useState([]);
+  const [newPassword, setNewPassword] = React.useState();
+  const [confirmNewPassword, setConfirmNewPassword] = React.useState();
+  const [openLoader, setOpenLoader] = useState(false);
 
-  const [type, setType] = useState("text");
+  const [type, setType] = useState("password");
+  const [typeConfirm, setTypeConfirm] = useState("password");
 
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -85,9 +101,23 @@ function ProviderDetail(props) {
   };
   const position = [51.505, -0.09];
   // //console.log("THis is great", props);
-
+  const notify = (data) => toast(data);
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
+      <Backdrop className={classes.backdrop} open={openLoader}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+      <ToastContainer
+        position="top-center"
+        autoClose={2000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       <Link id="back" to="/settings"></Link>
       <Link id="reviews" to="/reviews/0"></Link>
       <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
@@ -131,7 +161,7 @@ function ProviderDetail(props) {
           justify="center"
           style={{ width: "100%", height: "max-content" }}
         >
-          <div
+          {/* <div
             className={classes.input}
             style={{ height: 70, marginTop: 10, paddingBottom: 10 }}
           >
@@ -157,6 +187,7 @@ function ProviderDetail(props) {
               ></VisibilityOutlinedIcon>
             )}
           </div>
+          */}
           <div
             className={classes.input}
             style={{ height: 70, marginTop: 10, paddingBottom: 10 }}
@@ -166,6 +197,9 @@ function ProviderDetail(props) {
               className={classes.input}
               style={{ border: "none" }}
               type={type}
+              onChange={(e) => {
+                setNewPassword(e.target.value);
+              }}
             ></input>
             {type === "text" ? (
               <VisibilityOffOutlinedIcon
@@ -192,25 +226,57 @@ function ProviderDetail(props) {
             <input
               className={classes.input}
               style={{ border: "none" }}
-              type={type}
+              type={typeConfirm}
+              onChange={(e) => {
+                setConfirmNewPassword(e.target.value);
+              }}
             ></input>
-            {type === "text" ? (
+            {typeConfirm === "text" ? (
               <VisibilityOffOutlinedIcon
                 className={classes.icon}
                 onClick={() => {
-                  setType("password");
+                  setTypeConfirm("password");
                 }}
               ></VisibilityOffOutlinedIcon>
             ) : (
               <VisibilityOutlinedIcon
                 className={classes.icon}
                 onClick={() => {
-                  setType("text");
+                  setTypeConfirm("text");
                 }}
               ></VisibilityOutlinedIcon>
             )}
           </div>
-          <button className={classes.button}>Save Changes</button>
+          <button
+            className={classes.button}
+            onClick={() => {
+              if (newPassword === "") {
+                notify("Please enter password!!");
+              } else if (newPassword != confirmNewPassword) {
+                notify("Passwords dont matchs!!");
+              } else {
+                setOpenLoader(true);
+                changePassword(newPassword).then(
+                  (res) => {
+                    if (
+                      res.statusText === "OK" ||
+                      res.statusText === "Created"
+                    ) {
+                      setOpenLoader(false);
+                      document.getElementById("back").click();
+                    }
+                  },
+                  (error) => {
+                    notify("Something went wrong!");
+                    setOpenLoader(false);
+                    console.log("This is response", error);
+                  }
+                );
+              }
+            }}
+          >
+            Save Changes
+          </button>
         </Grid>
         <div className="sideBar">
           <Drawer

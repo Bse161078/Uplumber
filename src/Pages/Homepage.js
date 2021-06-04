@@ -30,6 +30,8 @@ import {
   GetAllOffers,
   GetAllContacts,
   addContactToFavorite,
+  cancelAllOffers,
+  MyProfile,
 } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -152,6 +154,9 @@ export default function HomePage(pros) {
     } else {
       type = "Pending";
     }
+    if (props.item.isServiceCancelled == true) {
+      type = "Cancelled";
+    }
 
     return (
       <Paper style={{ width: "90%", padding: 10, marginBottom: 10 }}>
@@ -170,7 +175,7 @@ export default function HomePage(pros) {
               style={{ width: 50, height: 50, borderRadius: "50%" }}
             ></img>
           </Grid>
-          <Grid item md={7} xs={7}>
+          <Grid item md={6} xs={6}>
             <Grid container direction="row" style={{ marginLeft: 5 }}>
               <p
                 style={{
@@ -194,7 +199,7 @@ export default function HomePage(pros) {
               </span>
             </Grid>
           </Grid>
-          <Grid item md={3} xs={3}>
+          <Grid item md={4} xs={4}>
             <div
               style={{
                 background:
@@ -221,6 +226,31 @@ export default function HomePage(pros) {
             >
               {type}
             </div>
+            {type != "Completed" && type != "Cancelled" && (
+              <div
+                style={{
+                  background: "red",
+                  fontSize: 10,
+                  borderRadius: 10,
+                  padding: 4,
+                  textAlign: "center",
+                  color: "white",
+                  cursor: "pointer",
+                  marginTop: 4,
+                }}
+                onClick={() => {
+                  if (type != "Completed" || type != "Cancelled") {
+                    cancleTheOffers(props.item.serviceId);
+                  } else if (type === "Completed") {
+                    notify("This order is already completed!!");
+                  } else if (type === "Cancelled") {
+                    notify("This order is already cancelled!!");
+                  }
+                }}
+              >
+                Cancel
+              </div>
+            )}
           </Grid>
         </Grid>
         <div style={{ width: "100%", border: "1px solid #f6f6f6" }}></div>
@@ -350,6 +380,43 @@ export default function HomePage(pros) {
     );
   };
 
+  const cancleTheOffers = (id) => {
+    setOpenLoader(true);
+    cancelAllOffers(id).then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          notify(res.data.message);
+          GetAllOffers();
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
+  const getMyProfile = () => {
+    setOpenLoader(true);
+    MyProfile().then(
+      (res) => {
+        if (res.statusText === "OK" || res.statusText === "Created") {
+          setOpenLoader(false);
+          console.log(res.data.data);
+          var user = res.data.data;
+          localStorage.setItem("userData", JSON.stringify(user));
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
   const addToFavorite = (id, like) => {
     setOpenLoader(true);
     addContactToFavorite(id, like).then(
@@ -449,9 +516,18 @@ export default function HomePage(pros) {
     if (localStorage.getItem("token")) {
       getAllMyOffers();
       getAllMyContacts();
+      getMyProfile();
     }
   }, []);
   const notify = (data) => toast(data);
+  if (allProviders) {
+    console.log(
+      "These are latlong",
+      allProviders[0].latitude,
+      allProviders[0].longitude
+    );
+  }
+
   return (
     <div style={{ background: "#f2f2f2" }}>
       <Backdrop className={classes.backdrop} open={openLoader}>
@@ -508,33 +584,39 @@ export default function HomePage(pros) {
             />
             {allProviders &&
               allProviders.map((item) => {
-                return (
-                  <Marker position={[item.latitude, item.longitude]}>
-                    <Popup style={{ width: 120 }}>
-                      <Grid container direction="row" justify="center">
-                        <img
-                          src={item.profileImage}
-                          style={{ width: 40, height: 40, borderRadius: "50%" }}
-                        ></img>
-                        <p
-                          style={{
-                            width: "100%",
-                            textAlign: "center",
-                            margin: 0,
-                            fontWeight: 600,
-                          }}
-                        >
-                          {item.firstName + " " + item.lastName}
-                        </p>
-                        <Grid container direction="row">
-                          <Rating value={5} style={{ fontSize: 10 }}></Rating>
-                          <span style={{ fontSize: 10 }}>5.0(433) </span>
+                if (item.latitude && item.longitude) {
+                  return (
+                    <Marker position={[item.latitude, item.longitude]}>
+                      <Popup style={{ width: 120 }}>
+                        <Grid container direction="row" justify="center">
+                          <img
+                            src={item.profileImage}
+                            style={{
+                              width: 40,
+                              height: 40,
+                              borderRadius: "50%",
+                            }}
+                          ></img>
+                          <p
+                            style={{
+                              width: "100%",
+                              textAlign: "center",
+                              margin: 0,
+                              fontWeight: 600,
+                            }}
+                          >
+                            {item.firstName + " " + item.lastName}
+                          </p>
+                          <Grid container direction="row">
+                            <Rating value={5} style={{ fontSize: 10 }}></Rating>
+                            <span style={{ fontSize: 10 }}>5.0(433) </span>
+                          </Grid>
+                          <span style={{ fontSize: 10 }}>$25 / hr</span>
                         </Grid>
-                        <span style={{ fontSize: 10 }}>$25 / hr</span>
-                      </Grid>
-                    </Popup>
-                  </Marker>
-                );
+                      </Popup>
+                    </Marker>
+                  );
+                }
               })}
           </Map>
         ) : activeTab === "Offers" ? (
