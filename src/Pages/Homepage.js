@@ -478,9 +478,10 @@ export default function HomePage(pros) {
     setOpenLoader(true);
     AllProviders().then(
       (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
+        console.log("This is res", res);
+        if (res.data.success) {
           setOpenLoader(false);
-          console.log(res.data.Providers);
+
           setAllProviders(res.data.Providers);
         }
       },
