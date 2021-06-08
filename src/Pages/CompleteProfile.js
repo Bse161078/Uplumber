@@ -133,6 +133,32 @@ export default function LoginPage() {
     return phoneNumber.match(/\d/g).length === 10;
   };
 
+  const sendFirebaseOTP = () => {
+    console.log("This is valid", validatePhoneNumber(phoneNumber));
+    setOpenLoader(true);
+    if (captchaCreated === false) {
+      createRecapha();
+    }
+
+    setCaptchaCreated(true);
+
+    const appVerifier = window.recaptchaVerifier;
+    firebase
+      .auth()
+      .signInWithPhoneNumber(phoneNumber, appVerifier)
+      .then((result) => {
+        console.log(result);
+        setConfirmResult(result);
+        setGotoOtp(true);
+        setOpenLoader(false);
+      })
+      .catch((error) => {
+        notify(error.code);
+        setOpenLoader(false);
+        console.log("This is the error", error);
+      });
+  };
+
   return goToOtp ? (
     <ConfirmOtp
       confirmResult={confirmResult}
@@ -373,6 +399,7 @@ export default function LoginPage() {
                 longitude: 2.33332,
                 email: localStorage.getItem("email"),
               };
+              setOpenLoader(true);
               // console.log("This is great", data);
               CompleteProfile(data).then(
                 (res) => {
@@ -388,7 +415,7 @@ export default function LoginPage() {
                     res.data.statusText === "Created" ||
                     res.data.statusText === "OK"
                   ) {
-                    setOpenLoader(true);
+                    setOpenLoader(false);
                     localStorage.setItem("id", res.data.id);
                     // Firebase.auth()
                     //   .signInWithPhoneNumber("+923004210859", true)
@@ -441,29 +468,7 @@ export default function LoginPage() {
               style={{ marginBottom: 40 }}
               onClick={() => {
                 // if (validatePhoneNumber(phoneNumber)) {
-                console.log("This is valid", validatePhoneNumber(phoneNumber));
-                setOpenLoader(true);
-                if (captchaCreated === false) {
-                  createRecapha();
-                }
-
-                setCaptchaCreated(true);
-
-                const appVerifier = window.recaptchaVerifier;
-                firebase
-                  .auth()
-                  .signInWithPhoneNumber(phoneNumber, appVerifier)
-                  .then((result) => {
-                    console.log(result);
-                    setConfirmResult(result);
-                    setGotoOtp(true);
-                    setCaptchaCreated(false);
-                  })
-                  .catch((error) => {
-                    notify(error.code);
-                    setCaptchaCreated(false);
-                    console.log("This is the error", error);
-                  });
+                sendFirebaseOTP();
                 // } else {
                 //   notify("Please use a valid phonenumber!");
                 // }
