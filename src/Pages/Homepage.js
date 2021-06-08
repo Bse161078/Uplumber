@@ -711,7 +711,7 @@ export default function HomePage(pros) {
             height: 60,
             background: "white",
             position: "absolute",
-            zIndex: 100000000,
+            zIndex: 999,
             bottom: 0,
             width: "100vw",
             // borderTop: "1px solid gray",
