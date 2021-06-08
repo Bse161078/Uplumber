@@ -242,6 +242,7 @@ export default function LoginPage() {
               };
               Signup(data).then(
                 (res) => {
+                  console.log("This is signup res", res);
                   if (
                     res.data.success ||
                     res.status === 200 ||
@@ -255,7 +256,7 @@ export default function LoginPage() {
                     res.data.statusText === "OK"
                   ) {
                     setOpenLoader(false);
-                    console.log(res);
+
                     localStorage.setItem("token", res.data.token);
                     localStorage.setItem("id", res.data._id);
                     localStorage.setItem("email", email);
