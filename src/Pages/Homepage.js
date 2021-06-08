@@ -386,6 +386,8 @@ export default function HomePage(pros) {
       (res) => {
         if (
           res.data.success ||
+          res.statusText === "OK" ||
+          res.statusText === "Created" ||
           res.data.statusText === "OK" ||
           res.data.statusText === "Created" ||
           res.data.statusText === "OK"
@@ -409,6 +411,8 @@ export default function HomePage(pros) {
       (res) => {
         if (
           res.data.success ||
+          res.statusText === "OK" ||
+          res.statusText === "Created" ||
           res.data.statusText === "OK" ||
           res.data.statusText === "Created" ||
           res.data.statusText === "OK"
@@ -433,6 +437,8 @@ export default function HomePage(pros) {
       (res) => {
         if (
           res.data.success ||
+          res.statusText === "OK" ||
+          res.statusText === "Created" ||
           res.data.statusText === "OK" ||
           res.data.statusText === "Created" ||
           res.data.statusText === "OK"
@@ -457,6 +463,8 @@ export default function HomePage(pros) {
       (res) => {
         if (
           res.data.success ||
+          res.statusText === "OK" ||
+          res.statusText === "Created" ||
           res.data.statusText === "OK" ||
           res.data.statusText === "Created" ||
           res.data.statusText === "OK"
@@ -481,6 +489,8 @@ export default function HomePage(pros) {
       (res) => {
         if (
           res.data.success ||
+          res.statusText === "OK" ||
+          res.statusText === "Created" ||
           res.data.statusText === "OK" ||
           res.data.statusText === "Created" ||
           res.data.statusText === "OK"
@@ -505,6 +515,8 @@ export default function HomePage(pros) {
       (res) => {
         if (
           res.data.success ||
+          res.statusText === "OK" ||
+          res.statusText === "Created" ||
           res.data.statusText === "OK" ||
           res.data.statusText === "Created" ||
           res.data.statusText === "OK"
@@ -528,6 +540,8 @@ export default function HomePage(pros) {
       (res) => {
         if (
           res.data.success ||
+          res.statusText === "OK" ||
+          res.statusText === "Created" ||
           res.data.statusText === "OK" ||
           res.data.statusText === "Created" ||
           res.data.statusText === "OK"
