@@ -1,6 +1,6 @@
 import axios from "axios";
 
-var URL = "http://54.176.48.215:8080/api/";
+var URL = "https://u-plumber.net/api/";
 
 export const getAllSubjects = () => {
   return axios({
@@ -48,7 +48,7 @@ export const CompleteProfile = (postData) => {
 
   var config = {
     method: "post",
-    url: "http://54.176.48.215:8080/api/customerprofile",
+    url: "https://u-plumber.net/api/customerprofile",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
@@ -62,7 +62,7 @@ export const CompleteProfile = (postData) => {
 export const CustomerNotifications = () => {
   var config = {
     method: "get",
-    url: "http://54.176.48.215:8080/api/customernotification",
+    url: "https://u-plumber.net/api/customernotification",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
@@ -74,7 +74,7 @@ export const CustomerNotifications = () => {
 export const AllProviders = () => {
   var config = {
     method: "get",
-    url: "http://54.176.48.215:8080/api/providerprofile",
+    url: "https://u-plumber.net/api/providerprofile",
     // headers: {
     //   Authorization: `Bearer ${localStorage.getItem("token")}`,
     // },
@@ -87,8 +87,7 @@ export const MyProfile = () => {
   var config = {
     method: "get",
     url:
-      "http://54.176.48.215:8080/api/customerprofile/" +
-      localStorage.getItem("id"),
+      "https://u-plumber.net/api/customerprofile/" + localStorage.getItem("id"),
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
@@ -100,7 +99,7 @@ export const MyProfile = () => {
 export const PostARequest = () => {
   var config = {
     method: "post",
-    url: "http://54.176.48.215:8080/api/customerservicerequest",
+    url: "https://u-plumber.net/api/customerservicerequest",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
@@ -115,7 +114,7 @@ export const CustomerSericeUpdateProblem = (postData) => {
   var config = {
     method: "put",
     url:
-      "http://54.176.48.215:8080/api/customerservicerequest/update/problem/" +
+      "https://u-plumber.net/api/customerservicerequest/update/problem/" +
       localStorage.getItem("requestId"),
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -133,7 +132,7 @@ export const CustomerSericeUpdateLookingfor = (postData) => {
   var config = {
     method: "put",
     url:
-      "http://54.176.48.215:8080/api/customerservicerequest/update/lookingfor/" +
+      "https://u-plumber.net/api/customerservicerequest/update/lookingfor/" +
       localStorage.getItem("requestId"),
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -151,7 +150,7 @@ export const CustomerSericeUpdateProperty = (postData) => {
   var config = {
     method: "put",
     url:
-      "http://54.176.48.215:8080/api/customerservicerequest/update/property/" +
+      "https://u-plumber.net/api/customerservicerequest/update/property/" +
       localStorage.getItem("requestId"),
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -169,7 +168,7 @@ export const CustomerSericeUpdateDescriptionAndPhoto = (postData) => {
   var config = {
     method: "put",
     url:
-      "http://54.176.48.215:8080/api/customerservicerequest/update/descriptionandphoto/" +
+      "https://u-plumber.net/api/customerservicerequest/update/descriptionandphoto/" +
       localStorage.getItem("requestId"),
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -187,7 +186,7 @@ export const CustomerSericeUpdateInssurance = (postData) => {
   var config = {
     method: "put",
     url:
-      "http://54.176.48.215:8080/api/customerservicerequest/update/insurance/" +
+      "https://u-plumber.net/api/customerservicerequest/update/insurance/" +
       localStorage.getItem("requestId"),
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -205,7 +204,7 @@ export const CustomerSericeUpdateContactDetails = (postData) => {
   var config = {
     method: "put",
     url:
-      "http://54.176.48.215:8080/api/customerservicerequest/update/contactdetails/" +
+      "https://u-plumber.net/api/customerservicerequest/update/contactdetails/" +
       localStorage.getItem("requestId"),
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -221,7 +220,7 @@ export const GetAllRequests = () => {
   var config = {
     method: "get",
     url:
-      "http://54.176.48.215:8080/api/customerservicerequest/customer/" +
+      "https://u-plumber.net/api/customerservicerequest/customer/" +
       localStorage.getItem("id"),
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -234,7 +233,7 @@ export const GetAllRequests = () => {
 export const GetAllOffers = () => {
   var config = {
     method: "get",
-    url: "http://54.176.48.215:8080/api/customeroffer",
+    url: "https://u-plumber.net/api/customeroffer",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
@@ -246,7 +245,7 @@ export const GetAllOffers = () => {
 export const GetAllInssuraceCompanies = () => {
   var config = {
     method: "get",
-    url: "http://54.176.48.215:8080/api/insurances",
+    url: "https://u-plumber.net/api/insurances",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
@@ -258,7 +257,7 @@ export const GetAllInssuraceCompanies = () => {
 export const getPrefferedTimings = () => {
   var config = {
     method: "get",
-    url: "http://54.176.48.215:8080/api/prefferedtiming",
+    url: "https://u-plumber.net/api/prefferedtiming",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
@@ -270,7 +269,7 @@ export const getPrefferedTimings = () => {
 export const getRequestorStatus = () => {
   var config = {
     method: "get",
-    url: "http://54.176.48.215:8080/api/requesterstatus",
+    url: "https://u-plumber.net/api/requesterstatus",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
@@ -282,7 +281,7 @@ export const getRequestorStatus = () => {
 export const getHomeStructures = () => {
   var config = {
     method: "get",
-    url: "http://54.176.48.215:8080/api/structures",
+    url: "https://u-plumber.net/api/structures",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
@@ -294,7 +293,7 @@ export const getHomeStructures = () => {
 export const getLookingFor = () => {
   var config = {
     method: "get",
-    url: "http://54.176.48.215:8080/api/lookingfor",
+    url: "https://u-plumber.net/api/lookingfor",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
@@ -306,7 +305,7 @@ export const getLookingFor = () => {
 export const getAreas = () => {
   var config = {
     method: "get",
-    url: "http://54.176.48.215:8080/api/areas",
+    url: "https://u-plumber.net/api/areas",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
@@ -318,7 +317,7 @@ export const getAreas = () => {
 export const getItems = () => {
   var config = {
     method: "get",
-    url: "http://54.176.48.215:8080/api/services",
+    url: "https://u-plumber.net/api/services",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
@@ -332,7 +331,7 @@ export const UpdateCustomerProfile = (postData) => {
 
   var config = {
     method: "put",
-    url: "http://54.176.48.215:8080/api/customerprofile/updatecustomer",
+    url: "https://u-plumber.net/api/customerprofile/updatecustomer",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
@@ -347,7 +346,7 @@ export const GetAllContacts = () => {
   var config = {
     method: "get",
     url:
-      "http://54.176.48.215:8080/api/customercontact/customer/" +
+      "https://u-plumber.net/api/customercontact/customer/" +
       localStorage.getItem("id"),
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -361,7 +360,7 @@ export const getAllFavorites = (id) => {
   var config = {
     method: "get",
     url:
-      "http://54.176.48.215:8080/api/customercontact/customer/like/" +
+      "https://u-plumber.net/api/customercontact/customer/like/" +
       localStorage.getItem("id"),
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -379,7 +378,7 @@ export const addContactToFavorite = (id, like) => {
 
   var config = {
     method: "put",
-    url: "http://54.176.48.215:8080/api/customercontact/" + id,
+    url: "https://u-plumber.net/api/customercontact/" + id,
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
@@ -397,7 +396,7 @@ export const acceptOffer = (id) => {
 
   var config = {
     method: "put",
-    url: "http://54.176.48.215:8080/api/customeroffer/accept/" + id,
+    url: "https://u-plumber.net/api/customeroffer/accept/" + id,
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
@@ -416,7 +415,7 @@ export const needModificationOffer = (id, text) => {
 
   var config = {
     method: "put",
-    url: "http://54.176.48.215:8080/api/customeroffer/" + id,
+    url: "https://u-plumber.net/api/customeroffer/" + id,
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
@@ -434,7 +433,7 @@ export const markOrderComplete = (id) => {
 
   var config = {
     method: "put",
-    url: "http://54.176.48.215:8080/api/customeroffer/" + id,
+    url: "https://u-plumber.net/api/customeroffer/" + id,
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
@@ -452,7 +451,7 @@ export const verifyPhone = () => {
 
   var config = {
     method: "put",
-    url: "http://54.176.48.215:8080/api/customerprofile/updatecustomer",
+    url: "https://u-plumber.net/api/customerprofile/updatecustomer",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
@@ -471,7 +470,7 @@ export const changePassword = (newPassword) => {
 
   var config = {
     method: "put",
-    url: "http://54.176.48.215:8080/api/customers/resetpassword",
+    url: "https://u-plumber.net/api/customers/resetpassword",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
@@ -488,7 +487,7 @@ export const enableNotification = (data) => {
 
   var config = {
     method: "put",
-    url: "http://54.176.48.215:8080/api/customerprofile/updateenablenotification",
+    url: "https://u-plumber.net/api/customerprofile/updateenablenotification",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
@@ -502,8 +501,7 @@ export const enableNotification = (data) => {
 export const getProviderReviews = (id) => {
   var config = {
     method: "get",
-    url:
-      "http://54.176.48.215:8080/api/providerratingandcomment/provider/" + id,
+    url: "https://u-plumber.net/api/providerratingandcomment/provider/" + id,
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
@@ -523,7 +521,7 @@ export const setProviderReviews = (customerId, id, rating, comment) => {
   console.log("This is dataa", data);
   var config = {
     method: "post",
-    url: "http://54.176.48.215:8080/api/providerratingandcomment",
+    url: "https://u-plumber.net/api/providerratingandcomment",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
@@ -541,7 +539,7 @@ export const cancelAllOffers = (id) => {
   console.log("This is dataa", data);
   var config = {
     method: "post",
-    url: "http://54.176.48.215:8080/api/customeroffer/cancellofers",
+    url: "https://u-plumber.net/api/customeroffer/cancellofers",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
