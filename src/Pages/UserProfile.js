@@ -99,6 +99,10 @@ export default function UserProfile() {
       (res) => {
         if (
           res.data.success ||
+          res.status === 200 ||
+          res.status === 201 ||
+          res.status === 200 ||
+          res.statusText === 201 ||
           res.statusText === "OK" ||
           res.statusText === "Created" ||
           res.data.statusText === "OK" ||
@@ -406,6 +410,10 @@ export default function UserProfile() {
       (res) => {
         if (
           res.data.success ||
+          res.status === 200 ||
+          res.status === 201 ||
+          res.status === 200 ||
+          res.statusText === 201 ||
           res.statusText === "OK" ||
           res.statusText === "Created" ||
           res.data.statusText === "OK" ||

@@ -104,6 +104,10 @@ function NotificationSetting(props) {
         console.log("THis is res", res.data.data);
         if (
           res.data.success ||
+          res.status === 200 ||
+          res.status === 201 ||
+          res.status === 200 ||
+          res.statusText === 201 ||
           res.statusText === "OK" ||
           res.statusText === "Created" ||
           res.data.statusText === "OK" ||

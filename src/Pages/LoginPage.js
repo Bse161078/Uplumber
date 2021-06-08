@@ -192,7 +192,11 @@ export default function LoginPage() {
               Login(data).then(
                 (res) => {
                   console.log(res);
-                  if (res.data.success || res.statusText ==="OK" || res.statusText ==="Created") {
+                  if (
+                    res.data.success ||
+                    res.status === 200 ||
+                    res.status === 201
+                  ) {
                     setOpenLoader(false);
 
                     localStorage.setItem("token", res.data.token);
