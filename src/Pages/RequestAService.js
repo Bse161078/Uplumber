@@ -214,7 +214,7 @@ function ProviderDetail(props) {
       };
       CustomerSericeUpdateProblem(data).then(
         (res) => {
-          if (res.statusText === "OK" || res.statusText === "Created") {
+          if (res.data.success) {
             setOpenLoader(false);
             console.log(res);
 
@@ -245,7 +245,7 @@ function ProviderDetail(props) {
     };
     CustomerSericeUpdateLookingfor(data).then(
       (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
+        if (res.data.success) {
           setOpenLoader(false);
           console.log(res);
           setActiveTab("Property");
@@ -274,7 +274,7 @@ function ProviderDetail(props) {
       };
       CustomerSericeUpdateProperty(data).then(
         (res) => {
-          if (res.statusText === "OK" || res.statusText === "Created") {
+          if (res.data.success) {
             setOpenLoader(false);
             console.log(res);
             notify(res.data.message);
@@ -304,7 +304,7 @@ function ProviderDetail(props) {
       };
       CustomerSericeUpdateDescriptionAndPhoto(data).then(
         (res) => {
-          if (res.statusText === "OK" || res.statusText === "Created") {
+          if (res.data.success) {
             setOpenLoader(false);
             notify(res.data.message);
             console.log(res);
@@ -330,7 +330,7 @@ function ProviderDetail(props) {
     setOpenLoader(true);
     MyProfile().then(
       (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
+        if (res.data.success) {
           setOpenLoader(false);
           console.log(res.data.data);
           var user = res.data.data;
@@ -368,7 +368,7 @@ function ProviderDetail(props) {
     setOpenLoader(true);
     GetAllInssuraceCompanies().then(
       (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
+        if (res.data.success) {
           setOpenLoader(false);
           console.log("These are inssurace companies", res.data);
           var temp = [];
@@ -392,7 +392,7 @@ function ProviderDetail(props) {
     setOpenLoader(true);
     getAreas().then(
       (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
+        if (res.data.success) {
           setOpenLoader(false);
           console.log("These are areas", res.data);
           var temp = [];
@@ -416,7 +416,7 @@ function ProviderDetail(props) {
     setOpenLoader(true);
     getLookingFor().then(
       (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
+        if (res.data.success) {
           setOpenLoader(false);
           console.log("These are looking for", res.data);
           setLookingForData(res.data.Insurances);
@@ -434,7 +434,7 @@ function ProviderDetail(props) {
     setOpenLoader(true);
     getItems().then(
       (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
+        if (res.data.success) {
           setOpenLoader(false);
           console.log("These are looking for", res.data);
           setItems(res.data.Customers);
@@ -451,7 +451,7 @@ function ProviderDetail(props) {
     setOpenLoader(true);
     getRequestorStatus().then(
       (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
+        if (res.data.success) {
           setOpenLoader(false);
           console.log("These are looking for", res.data);
           setRequestorStatusData(res.data.ServiceTime);
@@ -469,7 +469,7 @@ function ProviderDetail(props) {
     setOpenLoader(true);
     getHomeStructures().then(
       (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
+        if (res.data.success) {
           setOpenLoader(false);
           console.log("These are structures", res.data.ServiceTime);
           setStructuresData(res.data.ServiceTime);
@@ -487,7 +487,7 @@ function ProviderDetail(props) {
     setOpenLoader(true);
     getPrefferedTimings().then(
       (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
+        if (res.data.success) {
           setOpenLoader(false);
           console.log("These are preffered timings", res.data.ServiceTime);
           setPrefferedTimeData(res.data.ServiceTime);
@@ -511,7 +511,7 @@ function ProviderDetail(props) {
     };
     CustomerSericeUpdateInssurance(data).then(
       (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
+        if (res.data.success) {
           setOpenLoader(false);
           notify(res.data.message);
           console.log(res);
@@ -552,7 +552,7 @@ function ProviderDetail(props) {
       };
       CustomerSericeUpdateContactDetails(data).then(
         (res) => {
-          if (res.statusText === "OK" || res.statusText === "Created") {
+          if (res.data.success) {
             setOpenLoader(false);
             notify(res.data.message);
             console.log(res);

@@ -107,7 +107,7 @@ function ProviderDetail(props) {
     setOpenLoader(true);
     GetAllOffers().then(
       (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
+        if (res.data.success) {
           setOpenLoader(false);
           // notify(res.data.message);
           console.log("These are customer offeres", res.data);

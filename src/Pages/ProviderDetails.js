@@ -69,7 +69,7 @@ function ProviderDetail(props) {
     setOpenLoader(true);
     acceptOffer(jobData._id).then(
       (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
+        if (res.data.success) {
           setOpenLoader(false);
           console.log("This is accepted", res.data);
           setOfferAccepted(true);
@@ -87,7 +87,7 @@ function ProviderDetail(props) {
     setOpenLoader(true);
     getProviderReviews(jobData.providerId).then(
       (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
+        if (res.data.success) {
           setOpenLoader(false);
           console.log(res.data);
           setReviews(res.data.Customer);

@@ -105,7 +105,7 @@ function ProviderDetail(props) {
     setOpenLoader(true);
     getAllFavorites().then(
       (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
+        if (res.data.success) {
           setOpenLoader(false);
           console.log("This is the response of add to favorite", res.data);
           setFavorite(res.data.Customers);

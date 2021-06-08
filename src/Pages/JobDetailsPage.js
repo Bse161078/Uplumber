@@ -98,7 +98,7 @@ function ProviderDetail(props) {
     setOpenLoader(true);
     needModificationOffer(jobData._id, modificationText).then(
       (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
+        if (res.data.success) {
           setOpenLoader(false);
           console.log(res.data);
           setNeedModifications(false);
@@ -117,7 +117,7 @@ function ProviderDetail(props) {
     setOpenLoader(true);
     markOrderComplete(jobData._id).then(
       (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
+        if (res.data.success) {
           setOpenLoader(false);
           console.log(res.data);
           setMarkComplete(true);
@@ -140,7 +140,7 @@ function ProviderDetail(props) {
       commentText
     ).then(
       (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
+        if (res.data.success) {
           setOpenLoader(false);
           console.log("This is rating response", res.data);
         }

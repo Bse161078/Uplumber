@@ -97,7 +97,7 @@ export default function UpdateUserProfile(props) {
     setOpenLoader(true);
     UpdateCustomerProfile(data).then(
       (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
+        if (res.data.success) {
           setOpenLoader(false);
           console.log(res.data.data);
           var user = res.data.data;
@@ -127,7 +127,7 @@ export default function UpdateUserProfile(props) {
     setOpenLoader(true);
     MyProfile().then(
       (res) => {
-        if (res.statusText === "OK" || res.statusText === "Created") {
+        if (res.data.success) {
           setOpenLoader(false);
           console.log(res.data.data);
           var user = res.data.data;
