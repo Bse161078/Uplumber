@@ -76,7 +76,12 @@ function ProviderDetail(props) {
     setOpenLoader(true);
     CustomerNotifications().then(
       (res) => {
-        if (res.data.success) {
+        if (
+          res.data.success ||
+          res.data.statusText === "OK" ||
+          res.data.statusText === "Created" ||
+          res.data.statusText === "OK"
+        ) {
           setOpenLoader(false);
           console.log("This is res notification", res.data);
           setAllNotifications(res.data.Customers);

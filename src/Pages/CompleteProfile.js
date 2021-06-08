@@ -369,7 +369,12 @@ export default function LoginPage() {
               // console.log("This is great", data);
               CompleteProfile(data).then(
                 (res) => {
-                  if (res.data.success) {
+                  if (
+                    res.data.success ||
+                    res.data.statusText === "OK" ||
+                    res.data.statusText === "Created" ||
+                    res.data.statusText === "OK"
+                  ) {
                     setOpenLoader(false);
 
                     localStorage.setItem("id", res.data.id);

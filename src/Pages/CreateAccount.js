@@ -242,7 +242,12 @@ export default function LoginPage() {
               };
               Signup(data).then(
                 (res) => {
-                  if (res.data.success) {
+                  if (
+                    res.data.success ||
+                    res.data.statusText === "OK" ||
+                    res.data.statusText === "Created" ||
+                    res.data.statusText === "OK"
+                  ) {
                     setOpenLoader(false);
                     console.log(res);
                     localStorage.setItem("token", res.data.token);

@@ -65,7 +65,12 @@ export default function ConfirmOTP(props) {
           .then((user) => {
             verifyPhone().then(
               (res) => {
-                if (res.data.success) {
+                if (
+                  res.data.success ||
+                  res.data.statusText === "OK" ||
+                  res.data.statusText === "Created" ||
+                  res.data.statusText === "OK"
+                ) {
                   document.getElementById("homepage").click();
                 }
               },

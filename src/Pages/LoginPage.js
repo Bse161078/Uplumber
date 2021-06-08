@@ -191,9 +191,10 @@ export default function LoginPage() {
               };
               Login(data).then(
                 (res) => {
-                  if (res.data.success) {
+                  console.log(res);
+                  if (res.data.success || res.data.statusText ==="OK" || res.data.statusText ==="Created") {
                     setOpenLoader(false);
-                    console.log(res);
+
                     localStorage.setItem("token", res.data.token);
                     localStorage.setItem("id", res.data._id);
 

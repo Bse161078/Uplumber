@@ -97,7 +97,12 @@ export default function UserProfile() {
     setOpenLoader(true);
     UpdateCustomerProfile(data).then(
       (res) => {
-        if (res.data.success) {
+        if (
+          res.data.success ||
+          res.data.statusText === "OK" ||
+          res.data.statusText === "Created" ||
+          res.data.statusText === "OK"
+        ) {
           setOpenLoader(false);
           console.log(res.data.data);
           var user = res.data.data;
@@ -397,7 +402,12 @@ export default function UserProfile() {
     setOpenLoader(true);
     MyProfile().then(
       (res) => {
-        if (res.data.success) {
+        if (
+          res.data.success ||
+          res.data.statusText === "OK" ||
+          res.data.statusText === "Created" ||
+          res.data.statusText === "OK"
+        ) {
           setOpenLoader(false);
           console.log(res.data.data);
           var user = res.data.data;

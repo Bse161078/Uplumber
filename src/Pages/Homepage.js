@@ -384,7 +384,12 @@ export default function HomePage(pros) {
     setOpenLoader(true);
     cancelAllOffers(id).then(
       (res) => {
-        if (res.data.success) {
+        if (
+          res.data.success ||
+          res.data.statusText === "OK" ||
+          res.data.statusText === "Created" ||
+          res.data.statusText === "OK"
+        ) {
           setOpenLoader(false);
           notify(res.data.message);
           GetAllOffers();
@@ -402,7 +407,12 @@ export default function HomePage(pros) {
     setOpenLoader(true);
     MyProfile().then(
       (res) => {
-        if (res.data.success) {
+        if (
+          res.data.success ||
+          res.data.statusText === "OK" ||
+          res.data.statusText === "Created" ||
+          res.data.statusText === "OK"
+        ) {
           setOpenLoader(false);
           console.log(res.data.data);
           var user = res.data.data;
@@ -421,7 +431,12 @@ export default function HomePage(pros) {
     setOpenLoader(true);
     addContactToFavorite(id, like).then(
       (res) => {
-        if (res.data.success) {
+        if (
+          res.data.success ||
+          res.data.statusText === "OK" ||
+          res.data.statusText === "Created" ||
+          res.data.statusText === "OK"
+        ) {
           setOpenLoader(false);
           // notify(res.data.message);
           getAllMyContacts();
@@ -440,7 +455,12 @@ export default function HomePage(pros) {
     setOpenLoader(true);
     GetAllOffers().then(
       (res) => {
-        if (res.data.success) {
+        if (
+          res.data.success ||
+          res.data.statusText === "OK" ||
+          res.data.statusText === "Created" ||
+          res.data.statusText === "OK"
+        ) {
           setOpenLoader(false);
           // notify(res.data.message);
           console.log("These are customer offeres", res.data);
@@ -459,7 +479,12 @@ export default function HomePage(pros) {
     setOpenLoader(true);
     GetAllContacts().then(
       (res) => {
-        if (res.data.success) {
+        if (
+          res.data.success ||
+          res.data.statusText === "OK" ||
+          res.data.statusText === "Created" ||
+          res.data.statusText === "OK"
+        ) {
           setOpenLoader(false);
           // notify(res.data.message);
           console.log("These are customer contacts", res.data);
@@ -478,7 +503,12 @@ export default function HomePage(pros) {
     setOpenLoader(true);
     AllProviders().then(
       (res) => {
-        if (res.data.success) {
+        if (
+          res.data.success ||
+          res.data.statusText === "OK" ||
+          res.data.statusText === "Created" ||
+          res.data.statusText === "OK"
+        ) {
           setOpenLoader(false);
           console.log(res.data.Providers);
           setAllProviders(res.data.Providers);
@@ -496,7 +526,12 @@ export default function HomePage(pros) {
     setOpenLoader(true);
     PostARequest().then(
       (res) => {
-        if (res.data.success) {
+        if (
+          res.data.success ||
+          res.data.statusText === "OK" ||
+          res.data.statusText === "Created" ||
+          res.data.statusText === "OK"
+        ) {
           setOpenLoader(false);
           console.log(res.data);
           localStorage.setItem("requestId", res.data._id);

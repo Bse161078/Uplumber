@@ -102,7 +102,12 @@ function NotificationSetting(props) {
     enableNotification(data).then(
       (res) => {
         console.log("THis is res", res.data.data);
-        if (res.data.success) {
+        if (
+          res.data.success ||
+          res.data.statusText === "OK" ||
+          res.data.statusText === "Created" ||
+          res.data.statusText === "OK"
+        ) {
           console.log("THis is res");
           localStorage.setItem("userData", JSON.stringify(res.data.data));
           setOpenLoader(false);
