@@ -78,6 +78,7 @@ export default function LoginPage() {
   const [country, setCountry] = useState(localStorage.getItem("country"));
   const [latitude, setLatitude] = useState(localStorage.getItem("latitude"));
   const [longitude, setLongitude] = useState(localStorage.getItem("longitude"));
+  const [captchaCreated, setCaptchaCreated] = useState(false);
   const [openLoader, setOpenLoader] = useState(false);
 
   const createRecapha = () => {
@@ -125,6 +126,12 @@ export default function LoginPage() {
     setVerify(open);
   };
   const notify = (data) => toast(data);
+
+  const validatePhoneNumber = (phoneNumber) => {
+    console.log("This is validating phonenumeer", phoneNumber);
+    var regexp = /^\+[0-9]?()[0-9](\s|\S)(\d[0-9]{8,16})$/;
+    return phoneNumber.match(/\d/g).length === 10;
+  };
 
   return goToOtp ? (
     <ConfirmOtp
@@ -381,8 +388,7 @@ export default function LoginPage() {
                     res.data.statusText === "Created" ||
                     res.data.statusText === "OK"
                   ) {
-                    setOpenLoader(false);
-
+                    setOpenLoader(true);
                     localStorage.setItem("id", res.data.id);
                     // Firebase.auth()
                     //   .signInWithPhoneNumber("+923004210859", true)
@@ -434,7 +440,15 @@ export default function LoginPage() {
               className={classes.button}
               style={{ marginBottom: 40 }}
               onClick={() => {
-                createRecapha();
+                // if (validatePhoneNumber(phoneNumber)) {
+                console.log("This is valid", validatePhoneNumber(phoneNumber));
+                setOpenLoader(true);
+                if (captchaCreated === false) {
+                  createRecapha();
+                }
+
+                setCaptchaCreated(true);
+
                 const appVerifier = window.recaptchaVerifier;
                 firebase
                   .auth()
@@ -443,11 +457,16 @@ export default function LoginPage() {
                     console.log(result);
                     setConfirmResult(result);
                     setGotoOtp(true);
+                    setCaptchaCreated(false);
                   })
                   .catch((error) => {
-                    alert(error.message);
-                    console.log(error);
+                    notify(error.code);
+                    setCaptchaCreated(false);
+                    console.log("This is the error", error);
                   });
+                // } else {
+                //   notify("Please use a valid phonenumber!");
+                // }
               }}
             >
               Continue
