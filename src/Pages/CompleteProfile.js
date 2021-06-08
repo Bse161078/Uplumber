@@ -140,9 +140,10 @@ export default function LoginPage() {
       createRecapha();
     }
 
-    setCaptchaCreated(true);
-
     const appVerifier = window.recaptchaVerifier;
+    if (appVerifier) {
+      setCaptchaCreated(true);
+    }
     firebase
       .auth()
       .signInWithPhoneNumber(phoneNumber, appVerifier)
