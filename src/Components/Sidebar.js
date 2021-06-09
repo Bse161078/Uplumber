@@ -84,6 +84,7 @@ export default function Sidebar() {
           {[
             { name: "Home", href: "/homepage" },
             { name: "New Request", href: "/homepage" },
+            { name: "My Requests", href: "/current-requests" },
             { name: "History", href: "/history" },
             { name: "Notifications", href: "/notifications" },
             { name: "Favourite Plumbers", href: "/favorite" },

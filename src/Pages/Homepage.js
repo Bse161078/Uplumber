@@ -134,6 +134,7 @@ export default function HomePage(pros) {
   const [allProviders, setAllProviders] = useState(null);
   const [allOffers, setAllOffers] = useState(null);
   const [allContacts, setAllContacts] = useState(null);
+  const [currentLocation, setCurrentLoction] = useState(null);
 
   const toggleDrawer = (anchor, open) => (event) => {
     setState(open);
@@ -226,7 +227,7 @@ export default function HomePage(pros) {
             >
               {type}
             </div>
-            {type != "Completed" && type != "Cancelled" && (
+            {type != "Completed" && type != "Cancelled" && type != "Accepted" && (
               <div
                 style={{
                   background: "red",
@@ -239,7 +240,11 @@ export default function HomePage(pros) {
                   marginTop: 4,
                 }}
                 onClick={() => {
-                  if (type != "Completed" || type != "Cancelled") {
+                  if (
+                    type != "Completed" &&
+                    type != "Cancelled" &&
+                    type != "Accepted"
+                  ) {
                     cancleTheOffers(props.item.serviceId);
                   } else if (type === "Completed") {
                     notify("This order is already completed!!");
@@ -587,9 +592,22 @@ export default function HomePage(pros) {
       }
     );
   };
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+    } else {
+      notify("User Denied location request!!");
+    }
+  };
+
+  const showPosition = (position) => {
+    console.log("This is the position", position.coords);
+    setCurrentLoction(position.coords);
+  };
 
   useEffect(() => {
     getAllProviders();
+    getLocation();
     if (localStorage.getItem("token")) {
       getAllMyOffers();
       getAllMyContacts();
@@ -647,10 +665,12 @@ export default function HomePage(pros) {
         {activeTab === "NearBy" ? (
           <Map
             center={
-              allProviders && [
-                allProviders[0].latitude,
-                allProviders[0].longitude,
-              ]
+              currentLocation
+                ? [currentLocation.latitude, currentLocation.longitude]
+                : allProviders && [
+                    allProviders[0].latitude,
+                    allProviders[0].longitude,
+                  ]
             }
             zoom={4}
             scrollWheelZoom={true}

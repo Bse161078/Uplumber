@@ -384,6 +384,7 @@ export default function LoginPage() {
               //   notify("Please Enter a password");
               // } else {
               // setOpenLoader(true);
+
               var data = {
                 profileImage:
                   "https://image.shutterstock.com/image-vector/profile-placeholder-image-gray-silhouette-260nw-1153673752.jpg",
@@ -404,6 +405,7 @@ export default function LoginPage() {
               // console.log("This is great", data);
               CompleteProfile(data).then(
                 (res) => {
+                  console.log(res);
                   if (
                     res.data.success ||
                     res.status === 200 ||
@@ -417,7 +419,7 @@ export default function LoginPage() {
                     res.data.statusText === "OK"
                   ) {
                     setOpenLoader(false);
-                    localStorage.setItem("id", res.data.id);
+                    localStorage.setItem("id", res.data.customerId);
                     // Firebase.auth()
                     //   .signInWithPhoneNumber("+923004210859", true)
                     //   .then((confirmResult) => {

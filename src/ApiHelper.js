@@ -233,7 +233,9 @@ export const GetAllRequests = () => {
 export const GetAllOffers = () => {
   var config = {
     method: "get",
-    url: "https://u-plumber.net/api/customeroffer",
+    url:
+      "https://u-plumber.net/api/customeroffer/customer/" +
+      localStorage.getItem("id"),
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },

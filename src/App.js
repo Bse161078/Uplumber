@@ -13,6 +13,7 @@ import ReviewsPage from "./Pages/ReviewsPage";
 import RequestAService from "./Pages/RequestAService";
 import SumittedRequest from "./Pages/SubmittedRequests";
 import History from "./Pages/History";
+import CurrentRequests from "./Pages/CurrentRequests";
 import FavoritePlumbers from "./Pages/FavoritePlumbers";
 import SettingsPage from "./Pages/SettingsPage";
 import ChangePassword from "./Pages/ChangePassword";
@@ -55,6 +56,11 @@ export default function App() {
           render={() => <RequestAService />}
         />
         <Route exact path="/history" render={() => <History />} />
+        <Route
+          exact
+          path="/current-requests"
+          render={() => <CurrentRequests />}
+        />
         <Route exact path="/favorite" render={() => <FavoritePlumbers />} />
         <Route exact path="/settings" render={() => <SettingsPage />} />
         <Route exact path="/changePassword" render={() => <ChangePassword />} />
