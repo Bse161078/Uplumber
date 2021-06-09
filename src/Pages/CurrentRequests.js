@@ -255,7 +255,9 @@ function ProviderDetail(props) {
         <Grid container direction="row" justify="center">
           <Grid item md={12} xs={12}>
             <span style={{ color: "#60a3d6", fontSize: 10 }}>Date</span>
-            <p style={{ fontSize: 10, margin: 0 }}>{props.item.serviceDate}</p>
+            <p style={{ fontSize: 10, margin: 0 }}>
+              {props.item.problem.serviceDate}
+            </p>
           </Grid>
           <Grid item md={12} xs={12}>
             <span style={{ color: "#60a3d6", fontSize: 10 }}>Description</span>
