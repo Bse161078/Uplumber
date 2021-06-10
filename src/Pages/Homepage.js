@@ -24,7 +24,7 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import PhoneEnabledIcon from "@material-ui/icons/PhoneEnabled";
 import MessageIcon from "@material-ui/icons/Message";
 import {
-  AllProviders,
+  AllProvidersByLocation,
   PostARequest,
   GetAllRequests,
   GetAllOffers,
@@ -534,9 +534,9 @@ export default function HomePage(pros) {
     );
   };
 
-  const getAllProviders = () => {
+  const getAllProvidersbyLocation = (lat, long, distance) => {
     setOpenLoader(true);
-    AllProviders().then(
+    AllProvidersByLocation(lat, long, distance).then(
       (res) => {
         if (
           res.data.success ||
@@ -551,8 +551,12 @@ export default function HomePage(pros) {
           res.data.statusText === "OK"
         ) {
           setOpenLoader(false);
-          console.log(res.data.Providers);
-          setAllProviders(res.data.Providers);
+          console.log("This is res", res);
+          if (res.data.data.length === 0) {
+            notify("No providers were found withing this radius!!");
+          } else {
+            setAllProviders(res.data.data);
+          }
         }
       },
       (error) => {
@@ -603,10 +607,14 @@ export default function HomePage(pros) {
   const showPosition = (position) => {
     console.log("This is the position", position.coords);
     setCurrentLoction(position.coords);
+    getAllProvidersbyLocation(
+      position.coords.latitude,
+      position.coords.longitude,
+      100000000000
+    );
   };
 
   useEffect(() => {
-    getAllProviders();
     getLocation();
     if (localStorage.getItem("token")) {
       getAllMyOffers();

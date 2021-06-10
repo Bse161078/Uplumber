@@ -19,7 +19,11 @@ import { Link, withRouter } from "react-router-dom";
 import Calendar from "react-calendar";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ReviewCard from "../Components/ReviewCard";
-import { GetAllRequests, cancelAllOffers } from "../ApiHelper";
+import {
+  GetAllRequests,
+  cancelAllOffers,
+  cancelTheRequest,
+} from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
@@ -100,9 +104,9 @@ function ProviderDetail(props) {
   const position = [51.505, -0.09];
   //console.log("THis is great", props);
 
-  const cancleTheOffers = (id) => {
+  const cancleTheRequst = (id) => {
     setOpenLoader(true);
-    cancelAllOffers(id).then(
+    cancelTheRequest(id).then(
       (res) => {
         if (
           res.data.success ||
@@ -218,7 +222,7 @@ function ProviderDetail(props) {
             >
               {props.item.problem.serviceName || "N/A"}
             </div>
-            {type != "Completed" && type != "Cancelled" && type != "Accepted" && (
+            {!props.item.isCancelled && (
               <div
                 style={{
                   background: "red",
@@ -231,16 +235,14 @@ function ProviderDetail(props) {
                   marginTop: 4,
                 }}
                 onClick={() => {
-                  if (
-                    type != "Completed" &&
-                    type != "Cancelled" &&
-                    type != "Accepted"
-                  ) {
-                    cancleTheOffers(props.item.serviceId);
-                  } else if (type === "Completed") {
-                    notify("This order is already completed!!");
-                  } else if (type === "Cancelled") {
-                    notify("This order is already cancelled!!");
+                  if (!props.item.isCancelled && !props.item.isAccepted) {
+                    cancleTheRequst(props.item._id);
+                  } else if (props.item.isAccepted) {
+                    notify(
+                      "You have already accepted an offer for this request!!"
+                    );
+                  } else if (props.item.isCancelled) {
+                    notify("This request is already cancelled!!");
                   }
                 }}
               >

@@ -141,9 +141,10 @@ export default function LoginPage() {
     }
 
     const appVerifier = window.recaptchaVerifier;
-    if (appVerifier) {
-      setCaptchaCreated(true);
-    }
+    // console.log("THis is appverifier", appVerifier);
+    // if (appVerifier) {
+    //   setCaptchaCreated(true);
+    // }
     firebase
       .auth()
       .signInWithPhoneNumber(phoneNumber, appVerifier)
@@ -430,7 +431,7 @@ export default function LoginPage() {
                     //     console.log(error);
                     //   });
                     console.log(res);
-                    setVerify(true);
+                    sendFirebaseOTP();
                   }
                 },
                 (error) => {

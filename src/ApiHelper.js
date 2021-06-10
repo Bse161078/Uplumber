@@ -83,6 +83,24 @@ export const AllProviders = () => {
   return axios(config);
 };
 
+export const AllProvidersByLocation = (lat, long, distance) => {
+  var config = {
+    method: "get",
+    url:
+      "https://u-plumber.net/api/customerprofile/allproviders/" +
+      lat +
+      "/" +
+      long +
+      "/" +
+      distance,
+    // headers: {
+    //   Authorization: `Bearer ${localStorage.getItem("token")}`,
+    // },
+  };
+
+  return axios(config);
+};
+
 export const MyProfile = () => {
   var config = {
     method: "get",
@@ -547,6 +565,24 @@ export const cancelAllOffers = (id) => {
       "Content-Type": "application/json",
     },
     data: data,
+  };
+
+  return axios(config);
+};
+
+export const cancelTheRequest = (id) => {
+  var data = JSON.stringify({
+    serviceId: id,
+  });
+  console.log("This is dataa", data);
+  var config = {
+    method: "post",
+    url: "https://u-plumber.net/api/customerservicerequest/cancelrequest/" + id,
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    // data: data,/
   };
 
   return axios(config);
