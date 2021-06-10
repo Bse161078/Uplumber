@@ -689,9 +689,10 @@ export default function HomePage(pros) {
             />
             {allProviders &&
               allProviders.map((item) => {
-                if (item.latitude && item.longitude) {
+                if (item.location) {
+                  console.log("It has location");
                   return (
-                    <Marker position={[item.latitude, item.longitude]}>
+                    <Marker position={[item.location[1], item.location[0]]}>
                       <Popup style={{ width: 120 }}>
                         <Grid container direction="row" justify="center">
                           <img
