@@ -38,14 +38,25 @@ export async function connectFirebase() {
   //   appId: "1:429670046919:web:054d12963db5ab7259b2e2",
   // };
 
-  var firebaseConfig = {
-    apiKey: "AIzaSyCN544TDH0yorLog8MeyX88S-ZWE_WlWPs",
-    authDomain: "findlocal-67828.firebaseapp.com",
-    projectId: "findlocal-67828",
-    storageBucket: "findlocal-67828.appspot.com",
-    messagingSenderId: "448032260439",
-    appId: "1:448032260439:web:2963c9ae7c8871403a7e12",
-    measurementId: "G-YHZW532X1W",
+  // var firebaseConfig = {
+  //   apiKey: "AIzaSyCN544TDH0yorLog8MeyX88S-ZWE_WlWPs",
+  //   authDomain: "findlocal-67828.firebaseapp.com",
+  //   projectId: "findlocal-67828",
+  //   storageBucket: "findlocal-67828.appspot.com",
+  //   messagingSenderId: "448032260439",
+  //   appId: "1:448032260439:web:2963c9ae7c8871403a7e12",
+  //   measurementId: "G-YHZW532X1W",
+  // };
+
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyAT7sXZZ3ivKw84CRIXQoRK895yaYEovjM",
+    authDomain: "uplumber-3f5cf.firebaseapp.com",
+    projectId: "uplumber-3f5cf",
+    storageBucket: "uplumber-3f5cf.appspot.com",
+    messagingSenderId: "417513041043",
+    appId: "1:417513041043:web:b8683b7f10c51a9a23b166",
+    measurementId: "G-0H83TW0W3M",
   };
 
   // Initialize Firebase
