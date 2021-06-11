@@ -114,7 +114,7 @@ const DescriptionAndPhoto = (props) => {
                         var temp = [];
                         props.image.map((data) => {
                           console.log("This is imaeg", img.name, data.name);
-                          if (data.name != img.name) {
+                          if (data != img) {
                             temp.push(data);
                           }
                         });
@@ -125,10 +125,7 @@ const DescriptionAndPhoto = (props) => {
                   }
                   color=""
                 >
-                  <img
-                    src={URL.createObjectURL(img)}
-                    className={classes.image}
-                  />
+                  <img src={img} className={classes.image} />
                 </Badge>
               );
             })}

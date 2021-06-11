@@ -80,8 +80,7 @@ export default function UserProfile() {
   );
   const updateMyProfile = () => {
     var data = {
-      profileImage:
-        "https://image.shutterstock.com/image-vector/profile-placeholder-image-gray-silhouette-260nw-1153673752.jpg",
+      profileImage: profileImage,
       firstName: firstName,
       lastName: lastName,
       phoneNumber: 923060052374,
@@ -136,6 +135,7 @@ export default function UserProfile() {
       }
     );
   };
+
   const [edit, setEdit] = React.useState(false);
 
   // const EditProfile = () => {
@@ -491,6 +491,7 @@ export default function UserProfile() {
           <EditProfile
             setEdit={setEdit}
             profileImage={profileImage}
+            setProfileImage={setProfileImage}
             firstName={firstName}
             setFirstName={setFirstName}
             lastName={lastName}

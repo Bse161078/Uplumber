@@ -134,7 +134,10 @@ export default function HomePage(pros) {
   const [allProviders, setAllProviders] = useState(null);
   const [allOffers, setAllOffers] = useState(null);
   const [allContacts, setAllContacts] = useState(null);
-  const [currentLocation, setCurrentLoction] = useState(null);
+  const [currentLocation, setCurrentLoction] = useState({
+    latitude: 32.2735231,
+    longitude: 72.2866629,
+  });
 
   const toggleDrawer = (anchor, open) => (event) => {
     setState(open);
@@ -599,9 +602,11 @@ export default function HomePage(pros) {
   const getLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(showPosition);
+      return true;
     } else {
-      notify("User Denied location request!!");
+      alert("App need your location work properly");
     }
+    return false;
   };
 
   const showPosition = (position) => {
@@ -616,6 +621,7 @@ export default function HomePage(pros) {
 
   useEffect(() => {
     getLocation();
+
     if (localStorage.getItem("token")) {
       getAllMyOffers();
       getAllMyContacts();

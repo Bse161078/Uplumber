@@ -12,7 +12,7 @@ import Drawer from "@material-ui/core/Drawer";
 import Camera from "../assets/camera.PNG";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { Countries, states } from "../Data/Data";
-import { CompleteProfile } from "../ApiHelper";
+import { CompleteProfile, uploadImage } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 import { connectFirebase } from "../Config/firebase";
 import ConfirmOtp from "./ConfirmOTP";
@@ -110,8 +110,8 @@ export default function LoginPage() {
   // }
   const handleChange = (e) => {
     console.log(e.target.files[0]);
-    setProfileImage(e.target.files[0]);
-    localStorage.setItem("profileImage", e.target.files[0]);
+    uploadMyImage(e.target.files[0]);
+
     // setFilename(e.target.files[0].name);
   };
 
@@ -131,6 +131,27 @@ export default function LoginPage() {
     console.log("This is validating phonenumeer", phoneNumber);
     var regexp = /^\+[0-9]?()[0-9](\s|\S)(\d[0-9]{8,16})$/;
     return phoneNumber.match(/\d/g).length === 10;
+  };
+
+  const uploadMyImage = (image) => {
+    setOpenLoader(true);
+    // console.log("This is great", data);
+    uploadImage(image).then(
+      (res) => {
+        console.log(res);
+        if (res.data.success || res.status === 200 || res.status === 201) {
+          setOpenLoader(false);
+          console.log("This is res of image upload", res);
+          setProfileImage(res.data);
+          localStorage.setItem("profileImage", res.data);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
   };
 
   const sendFirebaseOTP = () => {
@@ -221,11 +242,16 @@ export default function LoginPage() {
         style={{ marginTop: 30, padding: 20 }}
       >
         <img
-          src={profileImage ? URL.createObjectURL(profileImage) : Camera}
+          src={profileImage ? profileImage : Camera}
           onClick={() => {
             upload.click();
           }}
-          style={{ borderRadius: "50%", marginBottom: 10, height: 100 }}
+          style={{
+            borderRadius: "50%",
+            marginBottom: 10,
+            height: 100,
+            width: 100,
+          }}
         ></img>
         <div style={{ width: "100%" }}></div>
         <Grid itemd md={6} xs={6}>
@@ -311,6 +337,43 @@ export default function LoginPage() {
           }}
         ></input>
         <p className={classes.label} style={{ marginTop: 10 }}>
+          State
+        </p>
+        <Autocomplete
+          options={states}
+          getOptionLabel={(option) => option.title}
+          onChange={(event, values) => {
+            if (values) {
+              setState(value.title);
+              localStorage.setItem("state", values.title);
+            }
+          }}
+          style={{
+            // width: 300,
+            // marginLeft: 20,
+            // marginTop: 20,
+            // marginBottom: 20
+            border: "none",
+            width: "100%",
+          }}
+          renderInput={(params) => (
+            <TextField label={state ? state : ""} {...params} />
+          )}
+        />
+
+        <p className={classes.label} style={{ marginTop: 10 }}>
+          Zipcode
+        </p>
+        <input
+          className={classes.input}
+          value={zipcode}
+          onChange={(e) => {
+            setZipcode(e.target.value);
+            localStorage.setItem("zipcode", e.target.value);
+          }}
+        ></input>
+
+        <p className={classes.label} style={{ marginTop: 10 }}>
           Country
         </p>
         <Autocomplete
@@ -335,41 +398,7 @@ export default function LoginPage() {
             <TextField label={country ? country : ""} {...params} />
           )}
         />
-        <p className={classes.label} style={{ marginTop: 10 }}>
-          Zipcode
-        </p>
-        <input
-          className={classes.input}
-          value={zipcode}
-          onChange={(e) => {
-            setZipcode(e.target.value);
-            localStorage.setItem("zipcode", e.target.value);
-          }}
-        ></input>
-        <p className={classes.label} style={{ marginTop: 10 }}>
-          State
-        </p>
-        <Autocomplete
-          options={states}
-          getOptionLabel={(option) => option.title}
-          onChange={(event, values) => {
-            if (values) {
-              setState(value.title);
-              localStorage.setItem("state", values.title);
-            }
-          }}
-          style={{
-            // width: 300,
-            // marginLeft: 20,
-            // marginTop: 20,
-            // marginBottom: 20
-            border: "none",
-            width: "100%",
-          }}
-          renderInput={(params) => (
-            <TextField label={state ? state : ""} {...params} />
-          )}
-        />
+
         <div id="recaptcha-container"></div>
         <button
           className={classes.button}

@@ -48,6 +48,7 @@ import {
   getLookingFor,
   getItems,
   getRequestorStatus,
+  uploadImage,
 } from "../ApiHelper";
 
 const useStyles = makeStyles((theme) => ({
@@ -174,13 +175,43 @@ function ProviderDetail(props) {
     setValue(event.target.value);
   };
 
+  const uploadMyImage = async (files) => {
+    var temp = [];
+    setOpenLoader(true);
+    // console.log("This is great", data);
+    for (var i = 0; i < files.length; i++) {
+      uploadImage(files[i]).then(
+        (res) => {
+          console.log(res);
+          if (res.data.success || res.status === 200 || res.status === 201) {
+            console.log("This is res of image upload", res);
+            temp.push(res.data);
+            setRequestData({ ...requestData, ["image"]: temp });
+            // localStorage.setItem("profileImage", res.data);
+          }
+        },
+        (error) => {
+          notify("Something went wrong!");
+          setOpenLoader(false);
+          console.log("This is response", error);
+        }
+      );
+
+      setOpenLoader(false);
+
+      // temp.push();
+    }
+    // setRequestData({ ...requestData, ["image"]: temp });
+  };
   const handleFileChange = (e) => {
     console.log("THis is great", e.target.files);
     var temp = [];
-    for (var i = 0; i < e.target.files.length; i++) {
-      temp.push(e.target.files[i]);
-    }
-    setRequestData({ ...requestData, ["image"]: temp });
+    uploadMyImage(e.target.files);
+    // for (var i = 0; i < e.target.files.length; i++) {
+    //   uploadMyImage(e.target.files[i]);
+    //   // temp.push();
+    // }
+    // setRequestData({ ...requestData, ["image"]: temp });
   };
 
   const toggleDrawer = (anchor, open) => (event) => {
@@ -508,6 +539,10 @@ function ProviderDetail(props) {
           setOpenLoader(false);
           console.log("These are looking for", res.data);
           setLookingForData(res.data.Insurances);
+          setRequestData({
+            ...requestData,
+            lookingFor: [res.data.Insurances[0].LookingFor],
+          });
         }
       },
       (error) => {
@@ -522,18 +557,7 @@ function ProviderDetail(props) {
     setOpenLoader(true);
     getItems().then(
       (res) => {
-        if (
-          res.data.success ||
-          res.status === 200 ||
-          res.status === 201 ||
-          res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
-        ) {
+        if (res.data.success || res.status === 200 || res.status === 201) {
           setOpenLoader(false);
           console.log("These are looking for", res.data);
           setItems(res.data.Customers);
@@ -550,21 +574,14 @@ function ProviderDetail(props) {
     setOpenLoader(true);
     getRequestorStatus().then(
       (res) => {
-        if (
-          res.data.success ||
-          res.status === 200 ||
-          res.status === 201 ||
-          res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
-        ) {
+        if (res.data.success || res.status === 200 || res.status === 201) {
           setOpenLoader(false);
-          console.log("These are looking for", res.data);
+          console.log("These are reuestor Data", res.data);
           setRequestorStatusData(res.data.ServiceTime);
+          setRequestData({
+            ...requestData,
+            requestorStatus: res.data.ServiceTime[0].Status,
+          });
         }
       },
       (error) => {
@@ -970,6 +987,8 @@ function ProviderDetail(props) {
       </Grid>
     );
   };
+
+  console.log("This is item", requestData);
   const LookingFor = () => {
     return (
       <Grid
@@ -991,7 +1010,7 @@ function ProviderDetail(props) {
                   control={
                     <Checkbox
                       onClick={() => {
-                        if (requestData.lookingFor.includes(item)) {
+                        if (requestData.lookingFor.includes(item.LookingFor)) {
                           var temp = [];
                           requestData.lookingFor.map((data) => {
                             if (data !== item.LookingFor) {
@@ -1018,7 +1037,7 @@ function ProviderDetail(props) {
                       checkedIcon={
                         <CheckCircleIcon style={{ color: "#1075c2" }} />
                       }
-                      checked={requestData.lookingFor.includes(item)}
+                      checked={requestData.lookingFor.includes(item.LookingFor)}
                       name="checkedH"
                     />
                   }
@@ -1117,7 +1136,7 @@ function ProviderDetail(props) {
           />
         )}
 
-        <p className={classes.label}>Structure *</p>
+        <p className={classes.label}>Property *</p>
         <div
           style={{
             width: "100vw",
@@ -1547,9 +1566,7 @@ function ProviderDetail(props) {
           <p className={classes.label}>Photos</p>
           {requestData.image.length > 1 &&
             requestData.image.map((img) => {
-              return (
-                <img src={URL.createObjectURL(img)} className={classes.image} />
-              );
+              return <img src={img} className={classes.image} />;
             })}
         </div>
 

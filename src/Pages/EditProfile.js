@@ -12,7 +12,7 @@ import Header from "../Components/Header";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import Avatar from "../assets/profile.png";
-import { MyProfile, UpdateCustomerProfile } from "../ApiHelper";
+import { MyProfile, UpdateCustomerProfile, uploadImage } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 import { Countries, states } from "../Data/Data";
 
@@ -79,8 +79,7 @@ export default function UpdateUserProfile(props) {
   );
   const updateMyProfile = () => {
     var data = {
-      profileImage:
-        "https://image.shutterstock.com/image-vector/profile-placeholder-image-gray-silhouette-260nw-1153673752.jpg",
+      profileImage: profileImage,
       firstName: firstName,
       lastName: lastName,
       phoneNumber: phoneNumber,
@@ -93,25 +92,16 @@ export default function UpdateUserProfile(props) {
       longitude: 2.33332,
       country: country,
     };
-    console.log("THis is the data");
+    console.log("THis is the data", data);
     setOpenLoader(true);
     UpdateCustomerProfile(data).then(
       (res) => {
-        if (
-          res.data.success ||
-          res.status === 200 ||
-          res.status === 201 ||
-          res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
-        ) {
+        if (res.data.success || res.status === 200 || res.status === 201) {
           setOpenLoader(false);
           console.log(res.data.data);
           var user = res.data.data;
+          props.setFirstName(user.firstName);
+          props.setProfileImage(user.profileImage);
           props.setFirstName(user.firstName);
           props.setLastName(user.lastName);
           props.setPhoneNumber("+" + user.phoneNumber);
@@ -132,6 +122,28 @@ export default function UpdateUserProfile(props) {
       }
     );
   };
+
+  const uploadMyImage = (image) => {
+    setOpenLoader(true);
+    // console.log("This is great", data);
+    uploadImage(image).then(
+      (res) => {
+        console.log(res);
+        if (res.data.success || res.status === 200 || res.status === 201) {
+          setOpenLoader(false);
+          console.log("This is res of image upload", res);
+          setProfileImage(res.data);
+          // localStorage.setItem("profileImage", res.data);
+        }
+      },
+      (error) => {
+        notify("Something went wrong!");
+        setOpenLoader(false);
+        console.log("This is response", error);
+      }
+    );
+  };
+
   const [edit, setEdit] = React.useState(false);
 
   const getMyProfile = () => {
@@ -178,6 +190,11 @@ export default function UpdateUserProfile(props) {
     );
   };
 
+  const handleChange = (e) => {
+    console.log(e.target.files[0]);
+    uploadMyImage(e.target.files[0]);
+  };
+
   useEffect(() => {
     getMyProfile();
   }, []);
@@ -213,7 +230,17 @@ export default function UpdateUserProfile(props) {
             width: 120,
             height: 120,
           }}
+          onClick={() => {
+            document.getElementById("upload").click();
+          }}
         ></img>
+        <input
+          onChange={handleChange}
+          type="file"
+          // id="icon-button-file"
+          style={{ visibility: "hidden", position: "absolute" }}
+          id={"upload"}
+        />
         <div style={{ width: "100%" }}></div>
         <Grid itemd md={6} xs={6}>
           {" "}

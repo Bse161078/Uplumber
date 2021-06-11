@@ -587,3 +587,21 @@ export const cancelTheRequest = (id) => {
 
   return axios(config);
 };
+
+export const uploadImage = (image) => {
+  let formData = new FormData();
+
+  formData.append("image", image);
+  let headers = new Headers();
+  headers.append("Content-Type", "multipart/form-data");
+  var config = {
+    method: "post",
+    url: "https://u-plumber.net/api/upload",
+    headers: {
+      headers,
+    },
+    data: formData,
+  };
+
+  return axios(config);
+};
