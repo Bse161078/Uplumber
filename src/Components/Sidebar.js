@@ -3,7 +3,7 @@ import { Grid } from "@material-ui/core";
 import Avatar from "../assets/avatar.png";
 import { Link, withRouter } from "react-router-dom";
 
-export default function Sidebar() {
+export default function Sidebar(props) {
   return (
     <div>
       <Grid
@@ -16,7 +16,7 @@ export default function Sidebar() {
         {localStorage.getItem("userData") ? (
           <img
             src={JSON.parse(localStorage.getItem("userData")).profileImage}
-            style={{ width: 80, height: 80, borderRadius: 25 }}
+            style={{ width: 80, height: 80, borderRadius: 40 }}
           ></img>
         ) : (
           <img
@@ -104,7 +104,11 @@ export default function Sidebar() {
                     cursor: "pointer",
                   }}
                   onClick={() => {
-                    document.getElementById(item.href).click();
+                    if (item.name === "New Request") {
+                      props.postMyRequest();
+                    } else {
+                      document.getElementById(item.href).click();
+                    }
                   }}
                 >
                   {item.name}

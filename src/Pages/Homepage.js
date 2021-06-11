@@ -766,7 +766,7 @@ export default function HomePage(pros) {
             onClose={toggleDrawer("bottom", false)}
           >
             <div style={{ width: "60vw" }}>
-              <Sidebar></Sidebar>
+              <Sidebar postMyRequest={postMyRequest}></Sidebar>
             </div>
           </Drawer>
         </div>

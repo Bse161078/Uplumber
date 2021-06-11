@@ -149,6 +149,7 @@ function ProviderDetail(props) {
     userState: "",
     userZipCode: "",
   });
+
   const [prefferedTimeData, setPrefferedTimeData] = React.useState([]);
   const [inssuranceCompaniesData, setInssuranceCompaniesData] = React.useState(
     []
@@ -1651,6 +1652,16 @@ function ProviderDetail(props) {
         <button
           className={classes.button}
           onClick={() => {
+            localStorage.removeItem("itemName");
+            localStorage.removeItem("serviceType");
+            localStorage.removeItem("requestOption");
+            localStorage.removeItem("waterDamage");
+            localStorage.removeItem("lookingFor");
+            localStorage.removeItem("structure");
+            localStorage.removeItem("company");
+            localStorage.removeItem("policyNumber");
+            localStorage.removeItem("expiryDate");
+            localStorage.removeItem("deduction");
             document.getElementById("homepage").click();
           }}
         >
