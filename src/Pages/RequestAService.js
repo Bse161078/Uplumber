@@ -141,6 +141,7 @@ function ProviderDetail(props) {
     deduction: localStorage.getItem("deduction") || "",
     userName: "",
     userPhone: "",
+    allowSms: true,
     allowContact: "yes",
     userEmail: "",
     userAddress: "",
@@ -1829,6 +1830,7 @@ function ProviderDetail(props) {
               userPhone={requestData.userPhone}
               userAddress={requestData.userAddress}
               userCity={requestData.userCity}
+              allowSms={requestData.userCity}
               userEmail={requestData.userEmail}
               userZipCode={requestData.userZipCode}
               userUnit={requestData.userUnit}

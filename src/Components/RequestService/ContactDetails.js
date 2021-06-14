@@ -103,6 +103,11 @@ const ContactDetails = (props) => {
               minWidth: "95%",
               fontSize: 11,
               width: "max-content",
+              background: props.allowSms === true ? "#1075c2" : "#f2f2f2",
+              color: props.allowSms === true ? "white" : "black",
+            }}
+            onClick={(e) => {
+              props.setRequestData("allowSms", true);
             }}
           >
             Yes
@@ -120,8 +125,11 @@ const ContactDetails = (props) => {
               minWidth: "95%",
               fontSize: 11,
               width: "max-content",
-              background: "#f2f2f2",
-              color: "black",
+              background: props.allowSms === false ? "#1075c2" : "#f2f2f2",
+              color: props.allowSms === false ? "white" : "black",
+            }}
+            onClick={(e) => {
+              props.setRequestData("allowSms", false);
             }}
           >
             No
@@ -186,7 +194,7 @@ const ContactDetails = (props) => {
           props.setRequestData("userZipCode", e.target.value);
         }}
       ></input>
-
+      <div style={{ height: 80, width: "100%" }}></div>
       <div
         style={{
           width: "100vw",
