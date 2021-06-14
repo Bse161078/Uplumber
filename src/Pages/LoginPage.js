@@ -186,7 +186,7 @@ export default function LoginPage() {
             } else {
               setOpenLoader(true);
               var data = {
-                email: email,
+                email: email.toLowerCase(),
                 password: password,
               };
               Login(data).then(
