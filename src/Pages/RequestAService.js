@@ -118,6 +118,7 @@ function ProviderDetail(props) {
   const [item, setItem] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState("Problem");
   const [image, setImage] = React.useState([]);
+
   const [requestData, setRequestData] = useState({
     requestDate: moment(new Date()).format("MMMM Do YYYY"),
     prfferedTime: localStorage.getItem("prfferedTime") || "As soon a possible",
@@ -139,16 +140,19 @@ function ProviderDetail(props) {
     policyNumber: localStorage.getItem("policyNumber") || "",
     expiryDate: localStorage.getItem("expiryDate") || "",
     deduction: localStorage.getItem("deduction") || "",
-    userName: "",
-    userPhone: "",
+    userName:
+      JSON.parse(localStorage.getItem("userData")).firstName +
+      " " +
+      JSON.parse(localStorage.getItem("userData")).lastName,
+    userPhone: "+" + JSON.parse(localStorage.getItem("userData")).phoneNumber,
     allowSms: true,
     allowContact: "yes",
-    userEmail: "",
-    userAddress: "",
-    userUnit: "",
-    userCity: "",
-    userState: "",
-    userZipCode: "",
+    userEmail: JSON.parse(localStorage.getItem("userData")).email,
+    userAddress: JSON.parse(localStorage.getItem("userData")).address,
+    userUnit: JSON.parse(localStorage.getItem("userData")).unit,
+    userCity: JSON.parse(localStorage.getItem("userData")).city,
+    userState: JSON.parse(localStorage.getItem("userData")).state,
+    userZipCode: JSON.parse(localStorage.getItem("userData")).zipcode,
   });
 
   const [prefferedTimeData, setPrefferedTimeData] = React.useState([]);
@@ -162,7 +166,8 @@ function ProviderDetail(props) {
   const [requestorStatusData, setRequestorStatusData] = React.useState([]);
 
   useEffect(() => {
-    getMyProfile();
+    console.log("This si user", JSON.parse(localStorage.getItem("userData")));
+    // getMyProfile();
     getInssuranceCompnies();
     getAllLookingFor();
     getAllAaeas();
@@ -170,6 +175,19 @@ function ProviderDetail(props) {
     getAllPrefferedTimings();
     getAllItems();
     getAllRequestorStatus();
+
+    // setRequestData({
+    //   ...requestData,
+    //   userName: user.firstName + " " + user.lastName,
+    //   userPhone: "+" + user.phoneNumber,
+    //   userEmail: user.email,
+    //   userAddress: user.address,
+    //   userCity: user.city,
+    //   userState: user.state,
+    //   userZipCode: user.zipcode,
+    //   userUnit: user.unit,
+    //   userState: user.state,
+    // });
   }, []);
   // console.log("This is request data", requestData);
   // setRequestData({ ...requestData, [event.target.id]: event.target.value });
@@ -189,6 +207,7 @@ function ProviderDetail(props) {
             console.log("This is res of image upload", res);
             temp.push(res.data);
             setRequestData({ ...requestData, ["image"]: temp });
+            console.log("Thiss i the requset data", requestData);
             // localStorage.setItem("profileImage", res.data);
           }
         },
@@ -205,6 +224,9 @@ function ProviderDetail(props) {
     }
     // setRequestData({ ...requestData, ["image"]: temp });
   };
+
+  console.log("This is requesst data", requestData);
+
   const handleFileChange = (e) => {
     console.log("THis is great", e.target.files);
     var temp = [];
@@ -363,10 +385,7 @@ function ProviderDetail(props) {
       setOpenLoader(true);
       var data = {
         description: requestData.description,
-        photos: [
-          "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
-          "https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg",
-        ],
+        photos: requestData.image,
       };
       CustomerSericeUpdateDescriptionAndPhoto(data).then(
         (res) => {
@@ -420,7 +439,7 @@ function ProviderDetail(props) {
           res.data.statusText === "OK"
         ) {
           setOpenLoader(false);
-          console.log(res.data.data);
+          console.log("THis si my proifle", res.data.data);
           var user = res.data.data;
 
           // setUnit(user.unit);
@@ -433,19 +452,23 @@ function ProviderDetail(props) {
           setRequestData({
             ...requestData,
             userName: user.firstName + " " + user.lastName,
-            userPhone: "+" + user.phoneNumber,
-            userEmail: user.email,
-            userAddress: user.address,
-            userCity: user.city,
-            userState: user.state,
-            userZipCode: user.zipcode,
-            userUnit: user.unit,
-            userState: user.state,
           });
+          // setRequestData({
+          //   ...requestData,
+          //   userName: user.firstName + " " + user.lastName,
+          //   userPhone: "+" + user.phoneNumber,
+          //   userEmail: user.email,
+          //   userAddress: user.address,
+          //   userCity: user.city,
+          //   userState: user.state,
+          //   userZipCode: user.zipcode,
+          //   userUnit: user.unit,
+          //   userState: user.state,
+          // });
         }
       },
       (error) => {
-        notify("Something went wrong!");
+        notify("Something went wrong fetching profile!");
         setOpenLoader(false);
         console.log("This is response", error);
       }
@@ -1566,7 +1589,7 @@ function ProviderDetail(props) {
             {localStorage.getItem("description")}{" "}
           </p>
           <p className={classes.label}>Photos</p>
-          {requestData.image.length > 1 &&
+          {requestData.image.length > 0 &&
             requestData.image.map((img) => {
               return <img src={img} className={classes.image} />;
             })}
@@ -1650,6 +1673,7 @@ function ProviderDetail(props) {
           <p className={classes.labelBlack}>{requestData.userZipCode} </p>
         </div>
         <Link id="homepage" to="/homepage"></Link>
+        <Link id="current-requests" to="/current-requests"></Link>
         <button
           className={classes.button}
           onClick={() => {
@@ -1663,7 +1687,8 @@ function ProviderDetail(props) {
             localStorage.removeItem("policyNumber");
             localStorage.removeItem("expiryDate");
             localStorage.removeItem("deduction");
-            document.getElementById("homepage").click();
+
+            setPostRequest(true);
           }}
         >
           Submit Requests
@@ -2093,69 +2118,74 @@ function ProviderDetail(props) {
         <Drawer
           anchor={"bottom"}
           open={postRequest}
-          onClose={() => setPostRequest(false)}
+          onClose={() => {
+            setPostRequest(false);
+            document.getElementById("current-requests").click();
+          }}
         >
-          <Grid container direction="row" justify="center">
-            <CheckCircleIcon
-              style={{ marginTop: 20, fontSize: 50, color: "#1075c2" }}
-            ></CheckCircleIcon>
-          </Grid>
-          <p
-            style={{
-              fontWeight: "bold",
-              fontSize: 18,
-
-              textAlign: "center",
-              width: "100%",
-            }}
-          >
-            Thank you for your submission
-          </p>
-
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            // alignItems="center"
-            style={{ height: 120 }}
-          >
+          <div style={{ width: "100%", height: 300 }}>
+            <Grid container direction="row" justify="center">
+              <CheckCircleIcon
+                style={{ marginTop: 20, fontSize: 50, color: "#1075c2" }}
+              ></CheckCircleIcon>
+            </Grid>
             <p
               style={{
-                fontSize: 12,
+                fontWeight: "bold",
+                fontSize: 18,
+
                 textAlign: "center",
-                width: "90%",
+                width: "100%",
               }}
             >
-              Your service request has been submitted please wait for a request
-              from plumber.
+              Thank you for your submission
             </p>
-            <p
-              style={{
-                color: "#358acb",
-                textDecoration: "underline",
-                fontSize: 12,
-                textAlign: "center",
-                width: "90%",
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                document.getElementById("sumittedRequest").click();
-              }}
+
+            <Grid
+              container
+              direction="row"
+              justify="center"
+              // alignItems="center"
+              style={{ height: 120 }}
             >
-              View My Requests
-            </p>
-            <button
-              className={classes.button}
-              onClick={() => {
-                setBottomState(false);
-              }}
-              onClick={() => {
-                document.getElementById("homepage").click();
-              }}
-            >
-              Continue
-            </button>
-          </Grid>
+              <p
+                style={{
+                  fontSize: 12,
+                  textAlign: "center",
+                  width: "90%",
+                }}
+              >
+                Your service request has been submitted please wait for a
+                request from plumber.
+              </p>
+              <p
+                style={{
+                  color: "#358acb",
+                  textDecoration: "underline",
+                  fontSize: 12,
+                  textAlign: "center",
+                  width: "90%",
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  document.getElementById("sumittedRequest").click();
+                }}
+              >
+                View My Requests
+              </p>
+              <button
+                className={classes.button}
+                onClick={() => {
+                  setBottomState(false);
+                }}
+                onClick={() => {
+                  document.getElementById("current-requests").click();
+                }}
+              >
+                Continue
+              </button>
+            </Grid>
+          </div>
         </Drawer>
       </Grid>
     </div>

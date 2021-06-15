@@ -152,7 +152,7 @@ function ProviderDetail(props) {
           setOpenLoader(false);
           // notify(res.data.message);
           console.log(
-            "These are customer offeres",
+            "These are customer requsts",
             res.data.CustomerServiceRequests
           );
           setAllOffers(res.data.CustomerServiceRequests);

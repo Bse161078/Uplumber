@@ -152,7 +152,7 @@ const DescriptionAndPhoto = (props) => {
             width: "100vw",
             borderBottom: "1px solid #e9e9e9",
             display: "flex",
-            position: "absolute",
+            // position: "absolute",
             bottom: 0,
             height: 70,
           }}

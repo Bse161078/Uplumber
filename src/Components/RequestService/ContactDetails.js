@@ -194,13 +194,13 @@ const ContactDetails = (props) => {
           props.setRequestData("userZipCode", e.target.value);
         }}
       ></input>
-      <div style={{ height: 200, width: "100%" }}></div>
+      <div style={{ height: 50, width: "100%" }}></div>
       <div
         style={{
           width: "100vw",
           borderBottom: "1px solid #e9e9e9",
           display: "flex",
-          position: "absolute",
+          // position: "absolute",
           bottom: 0,
           height: 70,
         }}
