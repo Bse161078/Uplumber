@@ -149,7 +149,7 @@ const DescriptionAndPhoto = (props) => {
         </Grid>
         <div
           style={{
-            width: "100vw",
+            width: "95vw",
             borderBottom: "1px solid #e9e9e9",
             display: "flex",
             // position: "absolute",

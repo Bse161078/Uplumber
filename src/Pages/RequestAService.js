@@ -1246,7 +1246,7 @@ function ProviderDetail(props) {
           style={{
             width: "95vw",
             borderBottom: "1px solid #e9e9e9",
-            display: "flex",
+            // display: "flex",
             // position: "absolute",
             bottom: 0,
             height: 70,
