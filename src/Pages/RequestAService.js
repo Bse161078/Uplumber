@@ -1073,10 +1073,10 @@ function ProviderDetail(props) {
         </FormGroup>
         <div
           style={{
-            width: "100vw",
+            width: "95vw",
             borderBottom: "1px solid #e9e9e9",
             display: "flex",
-            position: "absolute",
+            // position: "absolute",
             bottom: 0,
             height: 70,
           }}
@@ -1244,10 +1244,10 @@ function ProviderDetail(props) {
         </div>
         <div
           style={{
-            width: "100vw",
+            width: "95vw",
             borderBottom: "1px solid #e9e9e9",
             display: "flex",
-            position: "absolute",
+            // position: "absolute",
             bottom: 0,
             height: 70,
           }}
@@ -1378,10 +1378,10 @@ function ProviderDetail(props) {
         </div>
         <div
           style={{
-            width: "100vw",
+            width: "95vw",
             borderBottom: "1px solid #e9e9e9",
             display: "flex",
-            position: "absolute",
+            // position: "absolute",
             bottom: 0,
             height: 70,
           }}
