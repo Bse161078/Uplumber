@@ -178,15 +178,16 @@ export default function LoginPage() {
           //   document.getElementById("signup").click();
           // }}
           onClick={() => {
-            if (!validator.validate(email)) {
-              console.log("This is an email", email);
+            var mail = email.replace(" ", "");
+            if (!validator.validate(mail)) {
+              console.log("This is an email", mail);
               notify("Please Enter a valid Email");
             } else if (password === "") {
               notify("Please Enter a password");
             } else {
               setOpenLoader(true);
               var data = {
-                email: email.toLowerCase(),
+                email: mail.toLowerCase(),
                 password: password,
               };
               Login(data).then(

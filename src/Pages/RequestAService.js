@@ -1830,7 +1830,7 @@ function ProviderDetail(props) {
               userPhone={requestData.userPhone}
               userAddress={requestData.userAddress}
               userCity={requestData.userCity}
-              allowSms={requestData.userCity}
+              allowSms={requestData.allowSms}
               userEmail={requestData.userEmail}
               userZipCode={requestData.userZipCode}
               userUnit={requestData.userUnit}
