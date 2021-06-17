@@ -28,6 +28,22 @@ export const Signup = (postData) => {
   return axios(config);
 };
 
+export const resetPassword = (postData) => {
+  console.log("This is great", postData);
+  let headers = new Headers();
+  headers.append("Content-Type", "multipart/form-data");
+  var config = {
+    method: "put",
+    url: "https://u-plumber.net/api/customers/resetpassword",
+    headers: {
+      headers,
+    },
+    data: postData,
+  };
+
+  return axios(config);
+};
+
 export const Login = (postData) => {
   let headers = new Headers();
   headers.append("Content-Type", "application/json");

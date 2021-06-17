@@ -11,7 +11,7 @@ import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Drawer from "@material-ui/core/Drawer";
-import { Login } from "../ApiHelper";
+import { Login, resetPassword } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 var validator = require("email-validator");
 const useStyles = makeStyles((theme) => ({
@@ -54,6 +54,10 @@ export default function LoginPage() {
   const [state, setState] = React.useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
+
   const [accept, setAccept] = useState(true);
   const [openLoader, setOpenLoader] = useState(false);
 
@@ -236,8 +240,73 @@ export default function LoginPage() {
             <p className={classes.label} style={{ fontSize: 14 }}>
               Email
             </p>
-            <input className={classes.input}></input>
-            <button className={classes.button} style={{ marginBottom: 40 }}>
+            <input
+              className={classes.input}
+              onChange={(e) => {
+                setNewEmail(e.target.value);
+              }}
+            ></input>
+
+            <p className={classes.label} style={{ fontSize: 14, marginTop: 5 }}>
+              New Password
+            </p>
+            <input
+              className={classes.input}
+              type="password"
+              onChange={(e) => {
+                setNewPassword(e.target.value);
+              }}
+            ></input>
+            <p className={classes.label} style={{ fontSize: 14, marginTop: 5 }}>
+              Confirm New Password
+            </p>
+            <input
+              className={classes.input}
+              type="password"
+              onChange={(e) => {
+                setConfirmNewPassword(e.target.value);
+              }}
+            ></input>
+            <button
+              className={classes.button}
+              style={{ marginBottom: 40 }}
+              onClick={() => {
+                if (!validator.validate(newEmail)) {
+                  console.log("THis is the email", newEmail);
+                  notify("Please Enter a valid Email");
+                } else if (newPassword === "") {
+                  notify("Please Enter a password");
+                } else if (newPassword != confirmNewPassword) {
+                  notify("Password do not match");
+                } else {
+                  setOpenLoader(true);
+                  var data = {
+                    email: newEmail,
+                    password: newPassword,
+                  };
+                  resetPassword(data).then(
+                    (res) => {
+                      console.log("This is signup res", res);
+                      if (
+                        res.data.success ||
+                        res.status === 200 ||
+                        res.status === 201
+                      ) {
+                        setOpenLoader(false);
+                        setState(false);
+                        notify("Password Changed Succesfully!");
+                      }
+                    },
+                    (error) => {
+                      notify("There was a problem changing password!");
+                      setOpenLoader(false);
+                      console.log("This is response", error);
+                    }
+                  );
+                }
+                // document.getElementById("complete").click();
+              }}
+            >
               Reset Password
             </button>
           </Grid>

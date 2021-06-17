@@ -571,33 +571,37 @@ export default function HomePage(pros) {
   };
 
   const postMyRequest = () => {
-    setOpenLoader(true);
-    PostARequest().then(
-      (res) => {
-        if (
-          res.data.success ||
-          res.status === 200 ||
-          res.status === 201 ||
-          res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
-        ) {
+    if (localStorage.getItem("token")) {
+      setOpenLoader(true);
+      PostARequest().then(
+        (res) => {
+          if (
+            res.data.success ||
+            res.status === 200 ||
+            res.status === 201 ||
+            res.status === 200 ||
+            res.statusText === 201 ||
+            res.statusText === "OK" ||
+            res.statusText === "Created" ||
+            res.data.statusText === "OK" ||
+            res.data.statusText === "Created" ||
+            res.data.statusText === "OK"
+          ) {
+            setOpenLoader(false);
+            console.log(res.data);
+            localStorage.setItem("requestId", res.data._id);
+            document.getElementById("requestAService/0").click();
+          }
+        },
+        (error) => {
+          notify("Something went wrong!");
           setOpenLoader(false);
-          console.log(res.data);
-          localStorage.setItem("requestId", res.data._id);
-          document.getElementById("requestAService/0").click();
+          console.log("This is response", error);
         }
-      },
-      (error) => {
-        notify("Something went wrong!");
-        setOpenLoader(false);
-        console.log("This is response", error);
-      }
-    );
+      );
+    } else {
+      notify("You need to login in ordere to post request!");
+    }
   };
   const getLocation = () => {
     if (navigator.geolocation) {
@@ -621,7 +625,6 @@ export default function HomePage(pros) {
 
   useEffect(() => {
     getLocation();
-
     if (localStorage.getItem("token")) {
       getAllMyOffers();
       getAllMyContacts();

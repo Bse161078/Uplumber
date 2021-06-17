@@ -1,5 +1,7 @@
 import React, { useState } from "react";
-import { makeStyles, Grid } from "@material-ui/core";
+import { makeStyles, Grid, TextField } from "@material-ui/core";
+import { Countries, states } from "../../Data/Data";
+import Autocomplete from "@material-ui/lab/Autocomplete";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -177,14 +179,36 @@ const ContactDetails = (props) => {
         }}
       ></input>
       <p className={classes.label}>State *</p>
-      <input
+      {/* <input
         className={classes.input}
         type={"text"}
         value={props.userState}
         onChange={(e) => {
           props.setRequestData("userState", e.target.value);
         }}
-      ></input>
+      ></input> */}
+
+      <Autocomplete
+        options={states}
+        getOptionLabel={(option) => option.title}
+        onChange={(e) => {
+          props.setRequestData("userState", e.target.value);
+        }}
+        style={{
+          // width: 300,
+          // marginLeft: 20,
+          // marginTop: 20,
+          // marginBottom: 20
+          border: "none",
+          width: "100%",
+        }}
+        renderInput={(params) => (
+          <TextField
+            label={props.userState ? props.userState : ""}
+            {...params}
+          />
+        )}
+      />
       <p className={classes.label}>Zipcode *</p>
       <input
         className={classes.input}
