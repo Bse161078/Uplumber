@@ -267,9 +267,9 @@ function ProviderDetail(props) {
                     }
                   },
                   (error) => {
-                    notify("Something went wrong!");
+                    notify(error.response.data.message);
                     setOpenLoader(false);
-                    console.log("This is response", error);
+                    console.log("This is response", error.response);
                   }
                 );
               }

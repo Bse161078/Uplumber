@@ -196,7 +196,7 @@ export default function LoginPage() {
               };
               Login(data).then(
                 (res) => {
-                  console.log(res);
+                  console.log("This is login res", res);
                   if (
                     res.data.success ||
                     res.status === 200 ||
@@ -212,9 +212,12 @@ export default function LoginPage() {
                   }
                 },
                 (error) => {
-                  notify("Something went wrong!");
+                  notify(error.response.data.message);
                   setOpenLoader(false);
-                  console.log("This is response", error);
+                  console.log(
+                    "This is response",
+                    error.response.response.message
+                  );
                 }
               );
             }
@@ -300,7 +303,7 @@ export default function LoginPage() {
                     (error) => {
                       notify("There was a problem changing password!");
                       setOpenLoader(false);
-                      console.log("This is response", error);
+                      console.log("This is response", error.response);
                     }
                   );
                 }
