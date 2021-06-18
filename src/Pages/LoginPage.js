@@ -274,8 +274,9 @@ export default function LoginPage() {
               className={classes.button}
               style={{ marginBottom: 40 }}
               onClick={() => {
-                if (!validator.validate(newEmail)) {
-                  console.log("THis is the email", newEmail);
+                var mail = newEmail.replace(" ", "");
+                if (!validator.validate(mail)) {
+                  console.log("THis is the email", mail);
                   notify("Please Enter a valid Email");
                 } else if (newPassword === "") {
                   notify("Please Enter a password");
@@ -284,7 +285,7 @@ export default function LoginPage() {
                 } else {
                   setOpenLoader(true);
                   var data = {
-                    email: newEmail,
+                    email: mail.toLowerCase(),
                     password: newPassword,
                   };
                   resetPassword(data).then(
@@ -301,7 +302,7 @@ export default function LoginPage() {
                       }
                     },
                     (error) => {
-                      notify("There was a problem changing password!");
+                      notify(error.response.data.message);
                       setOpenLoader(false);
                       console.log("This is response", error.response);
                     }

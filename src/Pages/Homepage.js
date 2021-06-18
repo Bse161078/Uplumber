@@ -689,7 +689,7 @@ export default function HomePage(pros) {
                     allProviders[0].longitude,
                   ]
             }
-            zoom={4}
+            zoom={12}
             scrollWheelZoom={true}
           >
             <TileLayer
