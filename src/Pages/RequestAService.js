@@ -1170,33 +1170,37 @@ function ProviderDetail(props) {
         >
           {structuresData &&
             structuresData.map((value) => {
-              return (
-                <button
-                  className={classes.button}
-                  style={{
-                    height: 30,
-                    padding: 5,
-                    paddingLeft: 10,
-                    paddingRight: 10,
-                    marginRight: 10,
-                    minWidth: 80,
-                    fontSize: 11,
-                    width: "max-content",
-                    background:
-                      requestData.structure === value.Name
-                        ? "#1075c2"
-                        : "#f2f2f2",
-                    color:
-                      requestData.structure === value.Name ? "white" : "black",
-                  }}
-                  onClick={() => {
-                    setRequestData({ ...requestData, structure: value.Name });
-                    localStorage.setItem("structure", value.Name);
-                  }}
-                >
-                  {value.Name}
-                </button>
-              );
+              if (value.Name != "") {
+                return (
+                  <button
+                    className={classes.button}
+                    style={{
+                      height: 30,
+                      padding: 5,
+                      paddingLeft: 10,
+                      paddingRight: 10,
+                      marginRight: 10,
+                      minWidth: 80,
+                      fontSize: 11,
+                      width: "max-content",
+                      background:
+                        requestData.structure === value.Name
+                          ? "#1075c2"
+                          : "#f2f2f2",
+                      color:
+                        requestData.structure === value.Name
+                          ? "white"
+                          : "black",
+                    }}
+                    onClick={() => {
+                      setRequestData({ ...requestData, structure: value.Name });
+                      localStorage.setItem("structure", value.Name);
+                    }}
+                  >
+                    {value.Name}
+                  </button>
+                );
+              }
             })}
         </div>
         <p className={classes.label}>Requestor Status *</p>

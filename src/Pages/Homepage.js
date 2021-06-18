@@ -16,13 +16,25 @@ import Rating from "@material-ui/lab/Rating";
 import ExploreIcon from "@material-ui/icons/Explore";
 import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import PersonIcon from "@material-ui/icons/Person";
-import { Map, TileLayer, Marker, Popup } from "react-leaflet";
+import {
+  Map,
+  TileLayer,
+  Marker,
+  Popup,
+  LayersControl,
+  MapContainer,
+} from "react-leaflet";
 import "leaflet-routing-machine";
 import { Link } from "react-router-dom";
 import FavoriteBorderOutlinedIcon from "@material-ui/icons/FavoriteBorderOutlined";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import PhoneEnabledIcon from "@material-ui/icons/PhoneEnabled";
 import MessageIcon from "@material-ui/icons/Message";
+import GoogleLayer, {
+  GOOGLE_LAYER_TYPES,
+  ADDITIONAL_GOOGLE_LAYERS,
+} from "react-leaflet-google-tile-layer";
+import ReactLeafletGoogleLayer from "react-leaflet-google-layer";
 import {
   AllProvidersByLocation,
   PostARequest,
@@ -127,7 +139,7 @@ export default function HomePage(pros) {
 
   const [state, setState] = React.useState(false);
   const [bottomState, setBottomState] = React.useState(false);
-  const [zoom, setZoom] = React.useState(4);
+  const [zoom, setZoom] = React.useState(null);
   const [online, setOnline] = React.useState(true);
   const [activeTab, setActiveTab] = React.useState("NearBy");
   const [activeServiceTab, setActiveServiceTab] = React.useState("Problem");
@@ -618,6 +630,39 @@ export default function HomePage(pros) {
     console.log("This is the position", position.coords);
     setCurrentLoction(position.coords);
     setZoom(12);
+    var zoomButton = document.getElementsByClassName("leaflet-control-zoom-in");
+    console.log("This is zoom button", zoomButton[0]);
+    if (zoomButton) {
+      setTimeout(() => {
+        zoomButton[0].click();
+        console.log("Clicked1");
+      }, 500);
+      setTimeout(() => {
+        zoomButton[0].click();
+        console.log("Clicked2");
+      }, 1000);
+      setTimeout(() => {
+        zoomButton[0].click();
+        console.log("Clicked3");
+      }, 1500);
+      setTimeout(() => {
+        zoomButton[0].click();
+        console.log("Clicked4");
+      }, 2000);
+      setTimeout(() => {
+        zoomButton[0].click();
+        console.log("Clicked4");
+      }, 2500);
+      setTimeout(() => {
+        zoomButton[0].click();
+        console.log("Clicked4");
+      }, 3000);
+      setTimeout(() => {
+        zoomButton[0].click();
+        console.log("Clicked4");
+      }, 3500);
+    }
+
     getAllProvidersbyLocation(
       position.coords.latitude,
       position.coords.longitude,
@@ -634,10 +679,12 @@ export default function HomePage(pros) {
     }
   }, []);
   const notify = (data) => toast(data);
-  if (allProviders) {
-    console.log("These are latlong", currentLocation);
-  }
-  console.log("These are latlong", currentLocation);
+  // if (allProviders) {
+  //   console.log("These are latlong", currentLocation);
+  // }
+  // console.log("These are latlong", currentLocation);
+  const { BaseLayer } = LayersControl;
+  console.log("THis is zoom", zoom);
   return (
     <div style={{ background: "#f2f2f2" }}>
       <Backdrop className={classes.backdrop} open={openLoader}>
@@ -678,56 +725,120 @@ export default function HomePage(pros) {
         <Link id={"requestAService/0"} to={"requestAService/0"}></Link>
         {/* <div style={{ width: "100%" }}></div> */}
         {activeTab === "NearBy" ? (
-          <Map
-            center={
-              currentLocation
-                ? [currentLocation.latitude, currentLocation.longitude]
-                : [32.2735252, 72.28668929999999]
-            }
-            zoom={zoom}
-            scrollWheelZoom={true}
-          >
-            <TileLayer
-              attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            />
-            {allProviders &&
-              allProviders.map((item) => {
-                if (item.location) {
-                  return (
-                    <Marker position={[item.location[1], item.location[0]]}>
-                      <Popup style={{ width: 120 }}>
-                        <Grid container direction="row" justify="center">
-                          <img
-                            src={item.profileImage}
-                            style={{
-                              width: 40,
-                              height: 40,
-                              borderRadius: "50%",
-                            }}
-                          ></img>
-                          <p
-                            style={{
-                              width: "100%",
-                              textAlign: "center",
-                              margin: 0,
-                              fontWeight: 600,
-                            }}
-                          >
-                            {item.firstName + " " + item.lastName}
-                          </p>
-                          <Grid container direction="row">
-                            <Rating value={5} style={{ fontSize: 10 }}></Rating>
-                            <span style={{ fontSize: 10 }}>5.0(433) </span>
+          zoom ? (
+            <MapContainer
+              center={
+                currentLocation
+                  ? [currentLocation.latitude, currentLocation.longitude]
+                  : [32.2735252, 72.28668929999999]
+              }
+              zoom={zoom}
+              scrollWheelZoom={true}
+            >
+              {/* <TileLayer url="http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}" /> */}
+
+              <ReactLeafletGoogleLayer
+                apiKey="AIzaSyA2mTVqK-uOK_Pbo0tTXyUtUP84cClbS9Q"
+                type={"roadmap"}
+              />
+              {allProviders &&
+                allProviders.map((item) => {
+                  if (item.location) {
+                    return (
+                      <Marker position={[item.location[1], item.location[0]]}>
+                        <Popup style={{ width: 120 }}>
+                          <Grid container direction="row" justify="center">
+                            <img
+                              src={item.profileImage}
+                              style={{
+                                width: 40,
+                                height: 40,
+                                borderRadius: "50%",
+                              }}
+                            ></img>
+                            <p
+                              style={{
+                                width: "100%",
+                                textAlign: "center",
+                                margin: 0,
+                                fontWeight: 600,
+                              }}
+                            >
+                              {item.firstName + " " + item.lastName}
+                            </p>
+                            <Grid container direction="row">
+                              <Rating
+                                value={5}
+                                style={{ fontSize: 10 }}
+                              ></Rating>
+                              <span style={{ fontSize: 10 }}>5.0(433) </span>
+                            </Grid>
+                            <span style={{ fontSize: 10 }}>$25 / hr</span>
                           </Grid>
-                          <span style={{ fontSize: 10 }}>$25 / hr</span>
-                        </Grid>
-                      </Popup>
-                    </Marker>
-                  );
-                }
-              })}
-          </Map>
+                        </Popup>
+                      </Marker>
+                    );
+                  }
+                })}
+            </MapContainer>
+          ) : (
+            <MapContainer
+              center={
+                currentLocation
+                  ? [currentLocation.latitude, currentLocation.longitude]
+                  : [32.2735252, 72.28668929999999]
+              }
+              zoom={4}
+              scrollWheelZoom={true}
+            >
+              {/* <TileLayer url="http://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}" /> */}
+
+              <ReactLeafletGoogleLayer
+                apiKey="AIzaSyA2mTVqK-uOK_Pbo0tTXyUtUP84cClbS9Q"
+                type={"roadmap"}
+                zoomAndPan
+              />
+              {allProviders &&
+                allProviders.map((item) => {
+                  if (item.location) {
+                    return (
+                      <Marker position={[item.location[1], item.location[0]]}>
+                        <Popup style={{ width: 120 }}>
+                          <Grid container direction="row" justify="center">
+                            <img
+                              src={item.profileImage}
+                              style={{
+                                width: 40,
+                                height: 40,
+                                borderRadius: "50%",
+                              }}
+                            ></img>
+                            <p
+                              style={{
+                                width: "100%",
+                                textAlign: "center",
+                                margin: 0,
+                                fontWeight: 600,
+                              }}
+                            >
+                              {item.firstName + " " + item.lastName}
+                            </p>
+                            <Grid container direction="row">
+                              <Rating
+                                value={5}
+                                style={{ fontSize: 10 }}
+                              ></Rating>
+                              <span style={{ fontSize: 10 }}>5.0(433) </span>
+                            </Grid>
+                            <span style={{ fontSize: 10 }}>$25 / hr</span>
+                          </Grid>
+                        </Popup>
+                      </Marker>
+                    );
+                  }
+                })}
+            </MapContainer>
+          )
         ) : activeTab === "Offers" ? (
           <Grid
             container
