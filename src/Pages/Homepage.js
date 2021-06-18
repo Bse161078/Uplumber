@@ -127,6 +127,7 @@ export default function HomePage(pros) {
 
   const [state, setState] = React.useState(false);
   const [bottomState, setBottomState] = React.useState(false);
+  const [zoom, setZoom] = React.useState(4);
   const [online, setOnline] = React.useState(true);
   const [activeTab, setActiveTab] = React.useState("NearBy");
   const [activeServiceTab, setActiveServiceTab] = React.useState("Problem");
@@ -616,6 +617,7 @@ export default function HomePage(pros) {
   const showPosition = (position) => {
     console.log("This is the position", position.coords);
     setCurrentLoction(position.coords);
+    setZoom(12);
     getAllProvidersbyLocation(
       position.coords.latitude,
       position.coords.longitude,
@@ -633,13 +635,9 @@ export default function HomePage(pros) {
   }, []);
   const notify = (data) => toast(data);
   if (allProviders) {
-    console.log(
-      "These are latlong",
-      allProviders[0].latitude,
-      allProviders[0].longitude
-    );
+    console.log("These are latlong", currentLocation);
   }
-
+  console.log("These are latlong", currentLocation);
   return (
     <div style={{ background: "#f2f2f2" }}>
       <Backdrop className={classes.backdrop} open={openLoader}>
@@ -684,12 +682,9 @@ export default function HomePage(pros) {
             center={
               currentLocation
                 ? [currentLocation.latitude, currentLocation.longitude]
-                : allProviders && [
-                    allProviders[0].latitude,
-                    allProviders[0].longitude,
-                  ]
+                : [32.2735252, 72.28668929999999]
             }
-            zoom={12}
+            zoom={zoom}
             scrollWheelZoom={true}
           >
             <TileLayer
@@ -699,7 +694,6 @@ export default function HomePage(pros) {
             {allProviders &&
               allProviders.map((item) => {
                 if (item.location) {
-                  console.log("It has location");
                   return (
                     <Marker position={[item.location[1], item.location[0]]}>
                       <Popup style={{ width: 120 }}>
