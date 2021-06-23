@@ -224,7 +224,7 @@ export default function LoginPage() {
         ) {
           setOpenLoader(false);
           console.log(res);
-          notify(res.data.message);
+          // notify(res.data.message);
           localStorage.removeItem("lookingFor");
         }
       },
@@ -258,7 +258,7 @@ export default function LoginPage() {
           ) {
             setOpenLoader(false);
             console.log(res);
-            notify(res.data.message);
+            // notify(res.data.message);
             localStorage.removeItem("area");
             localStorage.removeItem("structure");
             localStorage.removeItem("requestorStatus");
@@ -291,7 +291,7 @@ export default function LoginPage() {
             res.statusText === "Created"
           ) {
             setOpenLoader(false);
-            notify(res.data.message);
+            // notify(res.data.message);
             console.log(res);
             localStorage.removeItem("description");
             localStorage.removeItem("image");
@@ -326,7 +326,7 @@ export default function LoginPage() {
           res.statusText === "Created"
         ) {
           setOpenLoader(false);
-          notify(res.data.message);
+          // notify(res.data.message);
           console.log(res);
           localStorage.removeItem("company");
           localStorage.removeItem("policyNumber");
@@ -377,7 +377,7 @@ export default function LoginPage() {
             res.statusText === "OK"
           ) {
             setOpenLoader(false);
-            notify(res.data.message);
+            notify("Request has been submitted!");
             console.log(res);
             localStorage.removeItem("userName");
             localStorage.removeItem("userPhone");
