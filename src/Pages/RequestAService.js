@@ -1702,17 +1702,41 @@ function ProviderDetail(props) {
           onClick={() => {
             if (localStorage.getItem("id") && localStorage.getItem("token")) {
               // setPostRequest(true);
+              // postMyRequest();
+              // updateCustomerProblem();
+              // updateCustomerLookingFor();
+              // if (requestData.waterDamage === "Yes") {
+              //   updateCustomerProperty();
+              // }
+              // updateCustomerPropertyDescriptionAndProperty();
+              // if (requestData.waterDamage === "Yes") {
+              //   updateCustomerPropertyInssurance();
+              // }
+              // updateCustomerContactDetails();
               postMyRequest();
-              updateCustomerProblem();
-              updateCustomerLookingFor();
-              if (requestData.waterDamage === "Yes") {
-                updateCustomerProperty();
-              }
-              updateCustomerPropertyDescriptionAndProperty();
-              if (requestData.waterDamage === "Yes") {
-                updateCustomerPropertyInssurance();
-              }
-              updateCustomerContactDetails();
+              setTimeout(() => {
+                updateCustomerProblem();
+              }, 500);
+              setTimeout(() => {
+                if (requestData.waterDamage === "Yes") {
+                  updateCustomerProperty();
+                }
+              }, 500);
+              setTimeout(() => {
+                updateCustomerLookingFor();
+              }, 500);
+
+              setTimeout(() => {
+                updateCustomerPropertyDescriptionAndProperty();
+              }, 500);
+              setTimeout(() => {
+                if (requestData.waterDamage === "Yes") {
+                  updateCustomerPropertyInssurance();
+                }
+              }, 500);
+              setTimeout(() => {
+                updateCustomerContactDetails();
+              }, 500);
             } else {
               document.getElementById("create-account").click();
             }
