@@ -109,8 +109,9 @@ export default function LoginPage() {
 
   console.log("THis is reqeustor data on signup", requestData);
 
-  const postMyRequest = () => {
-    if (localStorage.getItem("token")) {
+  const postMyRequest = (id) => {
+    if (localStorage.getItem("token") || id) {
+      console.log("Posting a requeset");
       setOpenLoader(true);
       PostARequest().then(
         (res) => {
@@ -121,9 +122,30 @@ export default function LoginPage() {
             res.statusText === "Success" ||
             res.statusText === "Created"
           ) {
-            setOpenLoader(false);
             console.log(res.data);
             localStorage.setItem("requestId", res.data._id);
+            setTimeout(() => {
+              updateCustomerProblem();
+            }, 600);
+            setTimeout(() => {
+              updateCustomerLookingFor();
+            }, 800);
+            setTimeout(() => {
+              if (requestData.waterDamage === "Yes") {
+                updateCustomerProperty();
+              }
+            }, 900);
+            setTimeout(() => {
+              updateCustomerPropertyDescriptionAndProperty();
+            }, 1000);
+            setTimeout(() => {
+              if (requestData.waterDamage === "Yes") {
+                updateCustomerPropertyInssurance();
+              }
+            }, 1300);
+            setTimeout(() => {
+              updateCustomerContactDetails();
+            }, 1600);
           }
         },
         (error) => {
@@ -582,34 +604,11 @@ export default function LoginPage() {
                     res.data.statusText === "OK"
                   ) {
                     setOpenLoader(false);
-
+                    console.log("This is greate", res.data.token);
                     localStorage.setItem("token", res.data.token);
                     localStorage.setItem("id", res.data._id);
                     localStorage.setItem("email", email);
-                    postMyRequest();
-                    setTimeout(() => {
-                      updateCustomerProblem();
-                    }, 500);
-                    setTimeout(() => {
-                      if (requestData.waterDamage === "Yes") {
-                        updateCustomerProperty();
-                      }
-                    }, 500);
-                    setTimeout(() => {
-                      updateCustomerLookingFor();
-                    }, 500);
-
-                    setTimeout(() => {
-                      updateCustomerPropertyDescriptionAndProperty();
-                    }, 500);
-                    setTimeout(() => {
-                      if (requestData.waterDamage === "Yes") {
-                        updateCustomerPropertyInssurance();
-                      }
-                    }, 500);
-                    setTimeout(() => {
-                      updateCustomerContactDetails();
-                    }, 500);
+                    postMyRequest(res.data.token);
                   }
                 },
                 (error) => {

@@ -265,6 +265,28 @@ function ProviderDetail(props) {
             setOpenLoader(false);
             console.log(res.data);
             localStorage.setItem("requestId", res.data._id);
+            setTimeout(() => {
+              updateCustomerProblem();
+            }, 600);
+            setTimeout(() => {
+              updateCustomerLookingFor();
+            }, 800);
+            setTimeout(() => {
+              if (requestData.waterDamage === "Yes") {
+                updateCustomerProperty();
+              }
+            }, 900);
+            setTimeout(() => {
+              updateCustomerPropertyDescriptionAndProperty();
+            }, 1000);
+            setTimeout(() => {
+              if (requestData.waterDamage === "Yes") {
+                updateCustomerPropertyInssurance();
+              }
+            }, 1300);
+            setTimeout(() => {
+              updateCustomerContactDetails();
+            }, 1600);
           }
         },
         (error) => {
@@ -1703,40 +1725,31 @@ function ProviderDetail(props) {
             if (localStorage.getItem("id") && localStorage.getItem("token")) {
               // setPostRequest(true);
               // postMyRequest();
-              // updateCustomerProblem();
-              // updateCustomerLookingFor();
-              // if (requestData.waterDamage === "Yes") {
-              //   updateCustomerProperty();
-              // }
-              // updateCustomerPropertyDescriptionAndProperty();
-              // if (requestData.waterDamage === "Yes") {
-              //   updateCustomerPropertyInssurance();
-              // }
-              // updateCustomerContactDetails();
-              postMyRequest();
-              setTimeout(() => {
-                updateCustomerProblem();
-              }, 500);
-              setTimeout(() => {
-                if (requestData.waterDamage === "Yes") {
-                  updateCustomerProperty();
-                }
-              }, 500);
-              setTimeout(() => {
-                updateCustomerLookingFor();
-              }, 500);
 
-              setTimeout(() => {
-                updateCustomerPropertyDescriptionAndProperty();
-              }, 500);
-              setTimeout(() => {
-                if (requestData.waterDamage === "Yes") {
-                  updateCustomerPropertyInssurance();
-                }
-              }, 500);
-              setTimeout(() => {
-                updateCustomerContactDetails();
-              }, 500);
+              postMyRequest();
+              // setTimeout(() => {
+              //   updateCustomerProblem();
+              // }, 500);
+              // setTimeout(() => {
+              //   if (requestData.waterDamage === "Yes") {
+              //     updateCustomerProperty();
+              //   }
+              // }, 500);
+              // setTimeout(() => {
+              //   updateCustomerLookingFor();
+              // }, 500);
+
+              // setTimeout(() => {
+              //   updateCustomerPropertyDescriptionAndProperty();
+              // }, 500);
+              // setTimeout(() => {
+              //   if (requestData.waterDamage === "Yes") {
+              //     updateCustomerPropertyInssurance();
+              //   }
+              // }, 500);
+              // setTimeout(() => {
+              //   updateCustomerContactDetails();
+              // }, 500);
             } else {
               document.getElementById("create-account").click();
             }
