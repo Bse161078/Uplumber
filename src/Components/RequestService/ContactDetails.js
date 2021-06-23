@@ -68,6 +68,7 @@ const ContactDetails = (props) => {
         value={props.userName}
         onChange={(e) => {
           props.setRequestData("userName", e.target.value);
+          localStorage.setItem("userName", e.target.value);
         }}
       ></input>
 
@@ -78,6 +79,7 @@ const ContactDetails = (props) => {
         value={props.userPhone}
         onChange={(e) => {
           props.setRequestData("userPhone", e.target.value);
+          localStorage.setItem("userPhone", e.target.value);
         }}
       ></input>
       <p style={{ textAlign: "justify" }}>
@@ -110,6 +112,7 @@ const ContactDetails = (props) => {
             }}
             onClick={(e) => {
               props.setRequestData("allowSms", true);
+              localStorage.setItem("allowSms", true);
             }}
           >
             Yes
@@ -132,6 +135,7 @@ const ContactDetails = (props) => {
             }}
             onClick={(e) => {
               props.setRequestData("allowSms", false);
+              localStorage.setItem("allowSms", false);
             }}
           >
             No
@@ -149,6 +153,7 @@ const ContactDetails = (props) => {
         value={props.userEmail}
         onChange={(e) => {
           props.setRequestData("userEmail", e.target.value);
+          localStorage.setItem("userEmail", e.target.value);
         }}
       ></input>
       <p className={classes.label}>Address *</p>
@@ -158,6 +163,7 @@ const ContactDetails = (props) => {
         value={props.userAddress}
         onChange={(e) => {
           props.setRequestData("userAddress", e.target.value);
+          localStorage.setItem("userAddress", e.target.value);
         }}
       ></input>
       <p className={classes.label}>Unit/APT *</p>
@@ -167,6 +173,7 @@ const ContactDetails = (props) => {
         value={props.userUnit}
         onChange={(e) => {
           props.setRequestData("userUnit", e.target.value);
+          localStorage.setItem("userUnit", e.target.value);
         }}
       ></input>
       <p className={classes.label}>City *</p>
@@ -176,6 +183,7 @@ const ContactDetails = (props) => {
         value={props.userCity}
         onChange={(e) => {
           props.setRequestData("userCity", e.target.value);
+          localStorage.setItem("userCity", e.target.value);
         }}
       ></input>
       <p className={classes.label}>State *</p>
@@ -191,8 +199,11 @@ const ContactDetails = (props) => {
       <Autocomplete
         options={states}
         getOptionLabel={(option) => option.title}
-        onChange={(e) => {
-          props.setRequestData("userState", e.target.value);
+        onChange={(event, values) => {
+          if (values) {
+            props.setRequestData("userState", values.title);
+            localStorage.setItem("userState", values.title);
+          }
         }}
         style={{
           // width: 300,
@@ -216,6 +227,7 @@ const ContactDetails = (props) => {
         value={props.userZipCode}
         onChange={(e) => {
           props.setRequestData("userZipCode", e.target.value);
+          localStorage.setItem("userZipCode", e.target.value);
         }}
       ></input>
       <div style={{ height: 50, width: "100%" }}></div>

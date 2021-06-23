@@ -34,13 +34,14 @@ import { ToastContainer, toast } from "react-toastify";
 import ContactDetails from "../Components/RequestService/ContactDetails";
 import DescriptionAndPhoto from "../Components/RequestService/DescriptionAndPhoto";
 import {
+  PostARequest,
   CustomerSericeUpdateProblem,
   CustomerSericeUpdateLookingfor,
   CustomerSericeUpdateProperty,
   CustomerSericeUpdateDescriptionAndPhoto,
   CustomerSericeUpdateInssurance,
-  MyProfile,
   CustomerSericeUpdateContactDetails,
+  MyProfile,
   GetAllInssuraceCompanies,
   getAreas,
   getHomeStructures,
@@ -135,24 +136,25 @@ function ProviderDetail(props) {
     structure: localStorage.getItem("structure") || "",
     requestorStatus: localStorage.getItem("requestorStatus") || "",
     description: localStorage.getItem("description"),
-    image: [],
+    image: localStorage.getItem("image")
+      ? JSON.parse(localStorage.getItem("image"))
+      : [],
     company: localStorage.getItem("company") || "",
     policyNumber: localStorage.getItem("policyNumber") || "",
     expiryDate: localStorage.getItem("expiryDate") || "",
     deduction: localStorage.getItem("deduction") || "",
-    userName:
-      JSON.parse(localStorage.getItem("userData")).firstName +
-      " " +
-      JSON.parse(localStorage.getItem("userData")).lastName,
-    userPhone: "+" + JSON.parse(localStorage.getItem("userData")).phoneNumber,
-    allowSms: true,
+    userName: localStorage.getItem("userName"),
+    userPhone: "+" + localStorage.getItem("userPhone"),
+    allowSms: localStorage.getItem("allowSms")
+      ? JSON.parse(localStorage.getItem("allowSms"))
+      : true,
     allowContact: "yes",
-    userEmail: JSON.parse(localStorage.getItem("userData")).email,
-    userAddress: JSON.parse(localStorage.getItem("userData")).address,
-    userUnit: JSON.parse(localStorage.getItem("userData")).unit,
-    userCity: JSON.parse(localStorage.getItem("userData")).city,
-    userState: JSON.parse(localStorage.getItem("userData")).state,
-    userZipCode: JSON.parse(localStorage.getItem("userData")).zipcode,
+    userEmail: localStorage.getItem("userEmail"),
+    userAddress: localStorage.getItem("userAddress"),
+    userUnit: localStorage.getItem("userUnit"),
+    userCity: localStorage.getItem("userCity"),
+    userState: localStorage.getItem("userState"),
+    userZipCode: localStorage.getItem("userZipCode"),
   });
 
   const [prefferedTimeData, setPrefferedTimeData] = React.useState([]);
@@ -207,6 +209,7 @@ function ProviderDetail(props) {
             console.log("This is res of image upload", res);
             temp.push(res.data);
             setRequestData({ ...requestData, ["image"]: temp });
+            localStorage.setItem("image", JSON.stringify(temp));
             console.log("Thiss i the requset data", requestData);
             // localStorage.setItem("profileImage", res.data);
           }
@@ -247,6 +250,34 @@ function ProviderDetail(props) {
   const position = [51.505, -0.09];
   //console.log("THis is great", props);
 
+  const postMyRequest = () => {
+    if (localStorage.getItem("token")) {
+      setOpenLoader(true);
+      PostARequest().then(
+        (res) => {
+          if (
+            res.data.success ||
+            res.status === 200 ||
+            res.status === 201 ||
+            res.status === 200 ||
+            res.statusText === 201
+          ) {
+            setOpenLoader(false);
+            console.log(res.data);
+            localStorage.setItem("requestId", res.data._id);
+          }
+        },
+        (error) => {
+          notify(error.response.data.message);
+          setOpenLoader(false);
+          console.log("This is response", error.response);
+        }
+      );
+    } else {
+      notify("You need to login in ordere to post request!");
+    }
+  };
+
   const updateCustomerProblem = () => {
     if (
       requestData.requestDate != "" &&
@@ -274,22 +305,15 @@ function ProviderDetail(props) {
             res.status === 200 ||
             res.status === 201 ||
             res.status === 200 ||
-            res.statusText === 201 ||
-            res.statusText === "OK" ||
-            res.statusText === "Created" ||
-            res.data.statusText === "OK" ||
-            res.data.statusText === "Created" ||
-            res.data.statusText === "OK"
+            res.statusText === 201
           ) {
             setOpenLoader(false);
+            localStorage.removeItem("requestDate");
+            localStorage.removeItem("prfferedTime");
+            localStorage.removeItem("itemName");
+            localStorage.removeItem("serviceType");
+            localStorage.removeItem("requestOption");
             console.log(res);
-
-            if (requestData.waterDamage === "Yes") {
-              setActiveTab("Looking For");
-            } else {
-              setActiveTab("Property");
-            }
-
             notify(res.data.message);
           }
         },
@@ -316,17 +340,12 @@ function ProviderDetail(props) {
           res.status === 200 ||
           res.status === 201 ||
           res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
+          res.statusText === 201
         ) {
           setOpenLoader(false);
           console.log(res);
-          setActiveTab("Property");
           notify(res.data.message);
+          localStorage.removeItem("lookingFor");
         }
       },
       (error) => {
@@ -356,17 +375,14 @@ function ProviderDetail(props) {
             res.status === 200 ||
             res.status === 201 ||
             res.status === 200 ||
-            res.statusText === 201 ||
-            res.statusText === "OK" ||
-            res.statusText === "Created" ||
-            res.data.statusText === "OK" ||
-            res.data.statusText === "Created" ||
-            res.data.statusText === "OK"
+            res.statusText === 201
           ) {
             setOpenLoader(false);
             console.log(res);
             notify(res.data.message);
-            setActiveTab("Description and Photo");
+            localStorage.removeItem("area");
+            localStorage.removeItem("structure");
+            localStorage.removeItem("requestorStatus");
           }
         },
         (error) => {
@@ -394,21 +410,13 @@ function ProviderDetail(props) {
             res.status === 200 ||
             res.status === 201 ||
             res.status === 200 ||
-            res.statusText === 201 ||
-            res.statusText === "OK" ||
-            res.statusText === "Created" ||
-            res.data.statusText === "OK" ||
-            res.data.statusText === "Created" ||
-            res.data.statusText === "OK"
+            res.statusText === 201
           ) {
             setOpenLoader(false);
             notify(res.data.message);
             console.log(res);
-            if (requestData.waterDamage === "Yes") {
-              setActiveTab(tab);
-            } else {
-              setActiveTab("Contact Details");
-            }
+            localStorage.removeItem("description");
+            localStorage.removeItem("image");
           }
         },
         (error) => {
@@ -419,6 +427,100 @@ function ProviderDetail(props) {
       );
     } else {
       notify("Please add description!");
+    }
+  };
+
+  const updateCustomerPropertyInssurance = (tab) => {
+    setOpenLoader(true);
+    var data = {
+      company: requestData.company,
+      policyNumber: requestData.policyNumber,
+      expiryDate: requestData.expiryDate,
+      deduction: requestData.deduction,
+    };
+    CustomerSericeUpdateInssurance(data).then(
+      (res) => {
+        if (
+          res.data.success ||
+          res.status === 200 ||
+          res.status === 201 ||
+          res.status === 200 ||
+          res.statusText === 201
+        ) {
+          setOpenLoader(false);
+          notify(res.data.message);
+          console.log(res);
+          localStorage.removeItem("company");
+          localStorage.removeItem("policyNumber");
+          localStorage.removeItem("expiryDate");
+          localStorage.removeItem("deduction");
+        }
+      },
+      (error) => {
+        notify(error.response.data.message);
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+      }
+    );
+  };
+
+  const updateCustomerContactDetails = (tab) => {
+    if (
+      requestData.userName != "" &&
+      requestData.userPhone != "" &&
+      requestData.userEmail != "" &&
+      requestData.userAddress != "" &&
+      requestData.userCity != "" &&
+      requestData.userState != "" &&
+      requestData.userZipCode != ""
+    ) {
+      setOpenLoader(true);
+      var data = {
+        name: requestData.userName,
+        phone: requestData.userPhone,
+        allowSms: requestData.allowSms,
+        email: requestData.userEmail,
+        address: requestData.userAddress,
+        latitude: 112.0988,
+        longitude: 133.4444,
+        unit: requestData.userUnit,
+        city: requestData.userCity,
+        state: requestData.userState,
+        zipCode: requestData.userZipCode,
+      };
+      CustomerSericeUpdateContactDetails(data).then(
+        (res) => {
+          if (
+            res.data.success ||
+            res.status === 200 ||
+            res.status === 201 ||
+            res.status === 200 ||
+            res.statusText === 201 ||
+            res.statusText === "OK"
+          ) {
+            setOpenLoader(false);
+            notify(res.data.message);
+            console.log(res);
+            localStorage.removeItem("userName");
+            localStorage.removeItem("userPhone");
+            localStorage.removeItem("allowSms");
+            localStorage.removeItem("userEmail");
+            localStorage.removeItem("userAddress");
+            localStorage.removeItem("userUnit");
+            localStorage.removeItem("userCity");
+            localStorage.removeItem("userState");
+            localStorage.removeItem("userZipCode");
+            setPostRequest(true);
+          }
+        },
+        (error) => {
+          notify(error.response.data.message);
+          setOpenLoader(false);
+          console.log("This is response", error.response);
+        }
+      );
+    } else {
+      notify("Please provide all information!");
     }
   };
 
@@ -675,97 +777,6 @@ function ProviderDetail(props) {
     );
   };
 
-  const updateCustomerPropertyInssurance = (tab) => {
-    setOpenLoader(true);
-    var data = {
-      company: requestData.company,
-      policyNumber: requestData.policyNumber,
-      expiryDate: requestData.expiryDate,
-      deduction: requestData.deduction,
-    };
-    CustomerSericeUpdateInssurance(data).then(
-      (res) => {
-        if (
-          res.data.success ||
-          res.status === 200 ||
-          res.status === 201 ||
-          res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
-        ) {
-          setOpenLoader(false);
-          notify(res.data.message);
-          console.log(res);
-          setActiveTab("Contact Details");
-        }
-      },
-      (error) => {
-        notify(error.response.data.message);
-        setOpenLoader(false);
-        console.log("This is response", error.response);
-      }
-    );
-  };
-
-  const updateCustomerContactDetails = (tab) => {
-    if (
-      requestData.userName != "" &&
-      requestData.userPhone != "" &&
-      requestData.userEmail != "" &&
-      requestData.userAddress != "" &&
-      requestData.userCity != "" &&
-      requestData.userState != "" &&
-      requestData.userZipCode != ""
-    ) {
-      setOpenLoader(true);
-      var data = {
-        name: requestData.userName,
-        phone: requestData.userPhone,
-        allowSms: true,
-        email: requestData.userEmail,
-        address: requestData.userAddress,
-        latitude: 112.0988,
-        longitude: 133.4444,
-        unit: requestData.userUnit,
-        city: requestData.userCity,
-        state: requestData.userState,
-        zipCode: requestData.userZipCode,
-      };
-      CustomerSericeUpdateContactDetails(data).then(
-        (res) => {
-          if (
-            res.data.success ||
-            res.status === 200 ||
-            res.status === 201 ||
-            res.status === 200 ||
-            res.statusText === 201 ||
-            res.statusText === "OK" ||
-            res.statusText === "Created" ||
-            res.data.statusText === "OK" ||
-            res.data.statusText === "Created" ||
-            res.data.statusText === "OK"
-          ) {
-            setOpenLoader(false);
-            notify(res.data.message);
-            console.log(res);
-            setActiveTab(tab);
-          }
-        },
-        (error) => {
-          notify(error.response.data.message);
-          setOpenLoader(false);
-          console.log("This is response", error.response);
-        }
-      );
-    } else {
-      notify("Please provide all information!");
-    }
-  };
-
   const ProblemSection = () => {
     return (
       <Grid
@@ -1001,7 +1012,12 @@ function ProviderDetail(props) {
                 width: "95%",
               }}
               onClick={() => {
-                updateCustomerProblem();
+                // updateCustomerProblem();
+                if (requestData.waterDamage === "Yes") {
+                  setActiveTab("Looking For");
+                } else {
+                  setActiveTab("Property");
+                }
                 //
               }}
             >
@@ -1117,7 +1133,8 @@ function ProviderDetail(props) {
                 width: "95%",
               }}
               onClick={() => {
-                updateCustomerLookingFor();
+                // updateCustomerLookingFor();
+                setActiveTab("Property");
               }}
             >
               Next
@@ -1250,7 +1267,7 @@ function ProviderDetail(props) {
           style={{
             width: "95vw",
             borderBottom: "1px solid #e9e9e9",
-            // display: "flex",
+            display: "flex",
             // position: "absolute",
             bottom: 0,
             height: 70,
@@ -1292,7 +1309,8 @@ function ProviderDetail(props) {
                 width: "95%",
               }}
               onClick={() => {
-                updateCustomerProperty();
+                // updateCustomerProperty();
+                setActiveTab("Description and Photo");
               }}
             >
               Next
@@ -1426,7 +1444,8 @@ function ProviderDetail(props) {
                 width: "95%",
               }}
               onClick={() => {
-                updateCustomerPropertyInssurance();
+                // updateCustomerPropertyInssurance();
+                setActiveTab("Contact Details");
               }}
             >
               Next
@@ -1558,7 +1577,7 @@ function ProviderDetail(props) {
           <p className={classes.label}>Area *</p>
           <p className={classes.labelBlack}>{requestData.area} </p>
           <p className={classes.label}>Structure</p>
-          <p className={classes.labelBlack}>{requestData.area}</p>
+          <p className={classes.labelBlack}>{requestData.structure}</p>
 
           <p className={classes.label}>Requestor Status</p>
           <p className={classes.labelBlack}>{requestData.requestorStatus}</p>
@@ -1662,7 +1681,7 @@ function ProviderDetail(props) {
           <p className={classes.label}>Phone *</p>
           <p className={classes.labelBlack}>{requestData.userPhone} </p>
           <p className={classes.label}>Allow U plumber to contact you</p>
-          <p className={classes.labelBlack}>{requestData.allowContact} </p>
+          <p className={classes.labelBlack}>{requestData.allowSms} </p>
           <p className={classes.label}>Email * </p>
           <p className={classes.labelBlack}>{requestData.userEmail} </p>
           <p className={classes.label}>Address * </p>
@@ -1681,18 +1700,22 @@ function ProviderDetail(props) {
         <button
           className={classes.button}
           onClick={() => {
-            localStorage.removeItem("itemName");
-            localStorage.removeItem("serviceType");
-            localStorage.removeItem("requestOption");
-            localStorage.removeItem("waterDamage");
-            localStorage.removeItem("lookingFor");
-            localStorage.removeItem("structure");
-            localStorage.removeItem("company");
-            localStorage.removeItem("policyNumber");
-            localStorage.removeItem("expiryDate");
-            localStorage.removeItem("deduction");
-
-            setPostRequest(true);
+            if (localStorage.getItem("id") && localStorage.getItem("token")) {
+              // setPostRequest(true);
+              postMyRequest();
+              updateCustomerProblem();
+              updateCustomerLookingFor();
+              if (requestData.waterDamage === "Yes") {
+                updateCustomerProperty();
+              }
+              updateCustomerPropertyDescriptionAndProperty();
+              if (requestData.waterDamage === "Yes") {
+                updateCustomerPropertyInssurance();
+              }
+              updateCustomerContactDetails();
+            } else {
+              document.getElementById("create-account").click();
+            }
           }}
         >
           Submit Requests
@@ -1706,6 +1729,7 @@ function ProviderDetail(props) {
     <div style={{ background: "#f2f2f2", background: "white" }}>
       <Link id="sumittedRequest" to="/sumittedRequest"></Link>
       <Link id="homepage" to="/homepage"></Link>
+      <Link id="create-account" to="/create-account"></Link>
 
       <Backdrop className={classes.backdrop} open={openLoader}>
         <CircularProgress color="inherit" />
@@ -1848,7 +1872,12 @@ function ProviderDetail(props) {
               image={requestData.image}
               description={requestData.description}
               setActiveTab={(tab) => {
-                updateCustomerPropertyDescriptionAndProperty(tab);
+                if (requestData.waterDamage === "Yes") {
+                  setActiveTab(tab);
+                } else {
+                  setActiveTab("Contact Details");
+                }
+                // updateCustomerPropertyDescriptionAndProperty(tab);
               }}
             ></DescriptionAndPhoto>
           ) : activeTab === "Inssurance" ? (
@@ -1870,7 +1899,8 @@ function ProviderDetail(props) {
                 console.log("THis is the request Data", requestData);
               }}
               setActiveTab={(tab) => {
-                updateCustomerContactDetails(tab);
+                // updateCustomerContactDetails(tab);
+                setActiveTab(tab);
               }}
             ></ContactDetails>
           ) : (
