@@ -113,12 +113,7 @@ function ProviderDetail(props) {
           res.status === 200 ||
           res.status === 201 ||
           res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
+          res.statusText === 201
         ) {
           setOpenLoader(false);
           notify(res.data.message);
@@ -126,7 +121,10 @@ function ProviderDetail(props) {
         }
       },
       (error) => {
-        notify(error.response.data.message);
+        if (error.response) {
+          notify(error.response.data.message);
+        }
+
         setOpenLoader(false);
         console.log("This is response", error.response);
       }
@@ -142,12 +140,7 @@ function ProviderDetail(props) {
           res.status === 200 ||
           res.status === 201 ||
           res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
+          res.statusText === 201
         ) {
           setOpenLoader(false);
           // notify(res.data.message);
@@ -155,11 +148,17 @@ function ProviderDetail(props) {
             "These are customer requsts",
             res.data.CustomerServiceRequests
           );
+          localStorage.setItem(
+            "allMyRequests",
+            JSON.stringify(res.data.CustomerServiceRequests)
+          );
           setAllOffers(res.data.CustomerServiceRequests);
         }
       },
       (error) => {
-        notify(error.response.data.message);
+        if (error.response) {
+          notify(error.response.data.message);
+        }
         setOpenLoader(false);
         console.log("This is response", error.response);
       }
@@ -458,6 +457,10 @@ function ProviderDetail(props) {
   const notify = (data) => toast(data);
   useEffect(() => {
     if (localStorage.getItem("token")) {
+      if (localStorage.getItem("allMyRequests")) {
+        setAllOffers(JSON.parse(localStorage.getItem("allMyRequests")));
+      }
+
       getAllMyOffers();
     }
   }, []);

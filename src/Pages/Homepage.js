@@ -426,7 +426,9 @@ export default function HomePage(pros) {
         }
       },
       (error) => {
-        notify(error.response.data.message);
+        if (error.response) {
+          notify(error.response.data.message);
+        }
         setOpenLoader(false);
         console.log("This is response", error.response);
       }
@@ -441,13 +443,7 @@ export default function HomePage(pros) {
           res.data.success ||
           res.status === 200 ||
           res.status === 201 ||
-          res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
+          res.status === 200
         ) {
           setOpenLoader(false);
           console.log(res.data.data);
@@ -456,7 +452,9 @@ export default function HomePage(pros) {
         }
       },
       (error) => {
-        notify(error.response.data.message);
+        if (error.response) {
+          notify(error.response.data.message);
+        }
         setOpenLoader(false);
         console.log("This is response", error.response);
       }
@@ -486,7 +484,9 @@ export default function HomePage(pros) {
         }
       },
       (error) => {
-        notify(error.response.data.message);
+        if (error.response) {
+          notify(error.response.data.message);
+        }
         setOpenLoader(false);
         console.log("This is response", error.response);
       }
@@ -501,22 +501,19 @@ export default function HomePage(pros) {
           res.data.success ||
           res.status === 200 ||
           res.status === 201 ||
-          res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
+          res.status === 200
         ) {
-          setOpenLoader(false);
+          // setOpenLoader(true);
           // notify(res.data.message);
           console.log("These are customer offeres", res.data);
+          localStorage.setItem("allOffers", JSON.stringify(res.data.Customers));
           setAllOffers(res.data.Customers);
         }
       },
       (error) => {
-        notify(error.response.data.message);
+        if (error.response) {
+          notify(error.response.data.message);
+        }
         setOpenLoader(false);
         console.log("This is response", error.response);
       }
@@ -532,21 +529,22 @@ export default function HomePage(pros) {
           res.status === 200 ||
           res.status === 201 ||
           res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
+          res.statusText === 201
         ) {
-          setOpenLoader(false);
+          // setOpenLoader(false);
           // notify(res.data.message);
           console.log("These are customer contacts", res.data);
+          localStorage.setItem(
+            "allContacts",
+            JSON.stringify(res.data.Customers)
+          );
           setAllContacts(res.data.Customers);
         }
       },
       (error) => {
-        notify(error.response.data.message);
+        if (error.response) {
+          notify(error.response.data.message);
+        }
         setOpenLoader(false);
         console.log("This is response", error.response);
       }
@@ -561,25 +559,22 @@ export default function HomePage(pros) {
           res.data.success ||
           res.status === 200 ||
           res.status === 201 ||
-          res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
+          res.status === 200
         ) {
           setOpenLoader(false);
           console.log("This is res", res);
           if (res.data.data.length === 0) {
             notify("No providers were found withing this radius!!");
           } else {
+            localStorage.setItem("allProviders", JSON.stringify(res.data.data));
             setAllProviders(res.data.data);
           }
         }
       },
       (error) => {
-        notify(error.response.data.message);
+        if (error.response) {
+          notify(error.response.data.message);
+        }
         setOpenLoader(false);
         console.log("This is response", error.response);
       }
@@ -611,7 +606,10 @@ export default function HomePage(pros) {
     //       }
     //     },
     //     (error) => {
-    //       notify(error.response.data.message);
+    //           if(error.response)
+    // {
+    //   notify(error.response.data.message);
+    // }
     //       setOpenLoader(false);
     //       console.log("This is response", error.response);
     //     }
@@ -634,39 +632,6 @@ export default function HomePage(pros) {
     console.log("This is the position", position.coords);
     setCurrentLoction(position.coords);
     setZoom(12);
-    // var zoomButton = document.getElementsByClassName("leaflet-control-zoom-in");
-    // console.log("This is zoom button", zoomButton[0]);
-    // if (zoomButton) {
-    //   setTimeout(() => {
-    //     zoomButton[0].click();
-    //     console.log("Clicked1");
-    //   }, 500);
-    //   setTimeout(() => {
-    //     zoomButton[0].click();
-    //     console.log("Clicked2");
-    //   }, 1000);
-    //   setTimeout(() => {
-    //     zoomButton[0].click();
-    //     console.log("Clicked3");
-    //   }, 1500);
-    //   setTimeout(() => {
-    //     zoomButton[0].click();
-    //     console.log("Clicked4");
-    //   }, 2000);
-    //   setTimeout(() => {
-    //     zoomButton[0].click();
-    //     console.log("Clicked4");
-    //   }, 2500);
-    //   setTimeout(() => {
-    //     zoomButton[0].click();
-    //     console.log("Clicked4");
-    //   }, 3000);
-    //   setTimeout(() => {
-    //     zoomButton[0].click();
-    //     console.log("Clicked4");
-    //   }, 3500);
-    // }
-
     getAllProvidersbyLocation(
       position.coords.latitude,
       position.coords.longitude,
@@ -675,8 +640,18 @@ export default function HomePage(pros) {
   };
 
   useEffect(() => {
+    if (localStorage.getItem("allOffers")) {
+      setAllOffers(JSON.parse(localStorage.getItem("allOffers")));
+    }
+
     getLocation();
     if (localStorage.getItem("token")) {
+      if (localStorage.getItem("allProviders")) {
+        setAllProviders(JSON.parse(localStorage.getItem("allProviders")));
+      }
+      if (localStorage.getItem("allContacts")) {
+        setAllContacts(JSON.parse(localStorage.getItem("allContacts")));
+      }
       getAllMyOffers();
       getAllMyContacts();
       getMyProfile();

@@ -81,7 +81,10 @@ export default function ConfirmOTP(props) {
                 }
               },
               (error) => {
-                props.notify(error.response.data.message);
+                // props.if(error.response);
+                // {
+                //   notify(error.response.data.message);
+                // }
                 props.setOpenLoader(false);
                 console.log("This is response", error.response);
               }

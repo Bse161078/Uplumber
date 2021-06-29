@@ -149,7 +149,9 @@ export default function LoginPage() {
           }
         },
         (error) => {
-          notify(error.response.data.message);
+          if (error.response) {
+            notify(error.response.data.message);
+          }
           setOpenLoader(false);
           console.log("This is response", error.response);
         }
@@ -199,7 +201,9 @@ export default function LoginPage() {
           }
         },
         (error) => {
-          notify(error.response.data.message);
+          if (error.response) {
+            notify(error.response.data.message);
+          }
           setOpenLoader(false);
           console.log("This is response", error.response);
         }
@@ -229,7 +233,9 @@ export default function LoginPage() {
         }
       },
       (error) => {
-        notify(error.response.data.message);
+        if (error.response) {
+          notify(error.response.data.message);
+        }
         setOpenLoader(false);
         console.log("This is response", error.response);
       }
@@ -265,7 +271,9 @@ export default function LoginPage() {
           }
         },
         (error) => {
-          notify(error.response.data.message);
+          if (error.response) {
+            notify(error.response.data.message);
+          }
           setOpenLoader(false);
           console.log("This is response", error.response);
         }
@@ -298,7 +306,9 @@ export default function LoginPage() {
           }
         },
         (error) => {
-          notify(error.response.data.message);
+          if (error.response) {
+            notify(error.response.data.message);
+          }
           setOpenLoader(false);
           console.log("This is response", error.response);
         }
@@ -335,7 +345,9 @@ export default function LoginPage() {
         }
       },
       (error) => {
-        notify(error.response.data.message);
+        if (error.response) {
+          notify(error.response.data.message);
+        }
         setOpenLoader(false);
         console.log("This is response", error.response);
       }
@@ -392,7 +404,9 @@ export default function LoginPage() {
           }
         },
         (error) => {
-          notify(error.response.data.message);
+          if (error.response) {
+            notify(error.response.data.message);
+          }
           setOpenLoader(false);
           console.log("This is response", error.response);
         }
@@ -612,7 +626,9 @@ export default function LoginPage() {
                   }
                 },
                 (error) => {
-                  notify(error.response.data.message);
+                  if (error.response) {
+                    notify(error.response.data.message);
+                  }
                   setOpenLoader(false);
                   console.log("This is response", error.response.data.messag);
                 }

@@ -111,22 +111,19 @@ function ProviderDetail(props) {
           res.data.success ||
           res.status === 200 ||
           res.status === 201 ||
-          res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
+          res.status === 200
         ) {
           setOpenLoader(false);
           // notify(res.data.message);
           console.log("These are customer offeres", res.data);
+          localStorage.setItem("allOffers", JSON.stringify(res.data.Customers));
           setAllOffers(res.data.Customers);
         }
       },
       (error) => {
-        notify(error.response.data.message);
+        if (error.response) {
+          notify(error.response.data.message);
+        }
         setOpenLoader(false);
         console.log("This is response", error.response);
       }
@@ -392,6 +389,9 @@ function ProviderDetail(props) {
   const notify = (data) => toast(data);
   useEffect(() => {
     if (localStorage.getItem("token")) {
+      if (localStorage.getItem("allOffers")) {
+        setAllOffers(JSON.parse(localStorage.getItem("allOffers")));
+      }
       getAllMyOffers();
     }
   }, []);
