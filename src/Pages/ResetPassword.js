@@ -5,7 +5,6 @@ import {
   Backdrop,
   CircularProgress,
 } from "@material-ui/core";
-import { Link } from "react-router-dom";
 import LoginPic from "../assets/loginPic.png";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
@@ -13,6 +12,7 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Drawer from "@material-ui/core/Drawer";
 import { Login, resetPassword } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
+import { Link, withRouter } from "react-router-dom";
 var validator = require("email-validator");
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -48,7 +48,7 @@ const useStyles = makeStyles((theme) => ({
     color: "#fff",
   },
 }));
-export default function LoginPage() {
+function ResetPage() {
   const classes = useStyles();
   const [type, setType] = useState("password");
   const [state, setState] = React.useState(false);
@@ -116,7 +116,7 @@ export default function LoginPage() {
           className={classes.input}
           style={{ height: 50, marginTop: 50, paddingBottom: 10 }}
         >
-          <p className={classes.label}>Password</p>
+          <p className={classes.label}> New Password</p>
           <input
             className={classes.input}
             style={{ border: "none" }}
@@ -142,39 +142,35 @@ export default function LoginPage() {
             ></VisibilityOutlinedIcon>
           )}
         </div>
-        <div style={{ width: "90%", marginTop: 30 }}>
-          <Grid container direction="row">
-            <Grid item md={6} xs={6}>
-              <Grid container direction="row" alignItems="center">
-                <CheckCircleIcon
-                  onClick={() => {
-                    setAccept(!accept);
-                  }}
-                  style={{ fontSize: 18, color: accept ? "#1075c2" : "gray" }}
-                ></CheckCircleIcon>{" "}
-                <span style={{ fontSize: 13, fontWeight: 500, marginLeft: 10 }}>
-                  Remember me
-                </span>
-              </Grid>
-            </Grid>
-            <Grid item md={6} xs={6}>
-              <Grid container direction="row" justify="flex-end">
-                <span
-                  style={{
-                    fontSize: 13,
-                    fontWeight: 700,
-                    cursor: "pointer",
-                    color: "#1a7bbf",
-                  }}
-                  onClick={() => {
-                    setState(true);
-                  }}
-                >
-                  Forgot Password?
-                </span>
-              </Grid>
-            </Grid>
-          </Grid>
+        <div
+          className={classes.input}
+          style={{ height: 50, marginTop: 50, paddingBottom: 10 }}
+        >
+          <p className={classes.label}>Confirm New Password</p>
+          <input
+            className={classes.input}
+            style={{ border: "none" }}
+            type={type}
+            value={password}
+            onChange={(e) => {
+              setPassword(e.target.value);
+            }}
+          ></input>
+          {type === "text" ? (
+            <VisibilityOffOutlinedIcon
+              className={classes.icon}
+              onClick={() => {
+                setType("password");
+              }}
+            ></VisibilityOffOutlinedIcon>
+          ) : (
+            <VisibilityOutlinedIcon
+              className={classes.icon}
+              onClick={() => {
+                setType("text");
+              }}
+            ></VisibilityOutlinedIcon>
+          )}
         </div>
         <button
           className={classes.button}
@@ -182,51 +178,10 @@ export default function LoginPage() {
           //   document.getElementById("signup").click();
           // }}
           onClick={() => {
-            var mail = email.replace(" ", "");
-            if (!validator.validate(mail)) {
-              console.log("This is an email", mail);
-              notify("Please Enter a valid Email");
-            } else if (password === "") {
-              notify("Please Enter a password");
-            } else {
-              setOpenLoader(true);
-              var data = {
-                email: mail.toLowerCase(),
-                password: password,
-              };
-              Login(data).then(
-                (res) => {
-                  console.log("This is login res", res);
-                  if (
-                    res.data.success ||
-                    res.status === 200 ||
-                    res.status === 201
-                  ) {
-                    setOpenLoader(false);
-
-                    localStorage.setItem("token", res.data.token);
-                    localStorage.setItem("id", res.data._id);
-
-                    localStorage.setItem("email", email);
-                    document.getElementById("home").click();
-                  }
-                },
-                (error) => {
-                  if (error.response) {
-                    notify(error.response.data.message);
-                  }
-                  setOpenLoader(false);
-                  console.log(
-                    "This is response",
-                    error.response.response.message
-                  );
-                }
-              );
-            }
             // document.getElementById("complete").click();
           }}
         >
-          Log In
+          Reset
         </button>
         <Drawer
           anchor={"bottom"}
@@ -323,3 +278,4 @@ export default function LoginPage() {
     </div>
   );
 }
+export default withRouter(ResetPage);
