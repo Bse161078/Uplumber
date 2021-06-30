@@ -184,7 +184,16 @@ function ProviderDetail(props) {
                     cursor: "pointer",
                   }}
                   onClick={() => {
-                    document.getElementById("route").click();
+                    // document.getElementById("route").click();
+                    Notification.requestPermission().then((result) => {
+                      if (result === "granted") {
+                        const options = {
+                          body: item.notificationText,
+                          icon: item.image,
+                        };
+                        new Notification("Uplumber Notification", options);
+                      }
+                    });
                   }}
                 >
                   <Grid item md={2} xs={2}>

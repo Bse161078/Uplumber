@@ -19,6 +19,7 @@ import {
   needModificationOffer,
   markOrderComplete,
   setProviderReviews,
+  sendCustomerNotification,
 } from "../ApiHelper";
 
 const useStyles = makeStyles((theme) => ({
@@ -102,13 +103,7 @@ function ProviderDetail(props) {
           res.data.success ||
           res.status === 200 ||
           res.status === 201 ||
-          res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
+          res.status === 200
         ) {
           setOpenLoader(false);
           console.log(res.data);
@@ -126,6 +121,30 @@ function ProviderDetail(props) {
     );
   };
 
+  const requestLocation = () => {
+    setOpenLoader(true);
+    sendCustomerNotification(jobData.providerId, "Send Location").then(
+      (res) => {
+        if (
+          res.data.success ||
+          res.status === 200 ||
+          res.status === 201 ||
+          res.status === 200
+        ) {
+          console.log("Location requst", res.data);
+          setOpenLoader(false);
+          notify("Location Reques sent");
+        }
+      },
+      (error) => {
+        if (error.response) {
+          notify(error.response.data.message);
+        }
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+      }
+    );
+  };
   const orderComplete = () => {
     setOpenLoader(true);
     markOrderComplete(jobData._id).then(
@@ -464,6 +483,23 @@ function ProviderDetail(props) {
                   Job Acceptance
                 </Grid>
               </button>
+              <button
+                className={classes.button}
+                style={{ marginTop: 10 }}
+                onClick={() => {
+                  requestLocation();
+                }}
+              >
+                <Grid
+                  container
+                  direction="row"
+                  justify="center"
+                  alignItems="center"
+                >
+                  Request Location
+                </Grid>
+              </button>
+
               <button
                 className={classes.button}
                 style={{

@@ -428,6 +428,7 @@ export const addContactToFavorite = (id, like) => {
 export const acceptOffer = (id) => {
   var data = JSON.stringify({
     isAccepted: true,
+    status: "OfferAccepted",
   });
 
   var config = {
@@ -447,6 +448,7 @@ export const needModificationOffer = (id, text) => {
   var data = JSON.stringify({
     isNeedModification: true,
     modificationText: text,
+    status: "NeedModification",
   });
 
   var config = {
@@ -465,6 +467,7 @@ export const needModificationOffer = (id, text) => {
 export const markOrderComplete = (id) => {
   var data = JSON.stringify({
     isOrderCompleted: true,
+    status: "Completed",
   });
 
   var config = {
@@ -617,6 +620,45 @@ export const uploadImage = (image) => {
       headers,
     },
     data: formData,
+  };
+
+  return axios(config);
+};
+
+export const sendCustomerNotification = (id, notificationText) => {
+  var data = JSON.stringify({
+    customerId: localStorage.getItem("id"),
+    providerId: id,
+    notificationText: notificationText,
+  });
+  console.log("This is dataa", data);
+  var config = {
+    method: "post",
+    url: "https://u-plumber.net/api/customernotification",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+
+  return axios(config);
+};
+
+export const checkUser = (email, phone) => {
+  var data = JSON.stringify({
+    email: email,
+    phoneNumber: phone,
+  });
+  console.log("This is dataa", data);
+  var config = {
+    method: "post",
+    url: "https://u-plumber.net/api/customerprofile/checkuser",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
   };
 
   return axios(config);

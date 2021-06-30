@@ -580,7 +580,13 @@ export default function LoginPage() {
                   style={{ fontSize: 18, color: accept ? "#1075c2" : "gray" }}
                 ></CheckCircleIcon>{" "}
                 <span style={{ fontSize: 13, fontWeight: 500, marginLeft: 10 }}>
-                  Accept terms and conditions
+                  Accept{" "}
+                  <a
+                    href="https://www.u-plumber.com/terms"
+                    style={{ textDecoration: "none", color: "#1075c2" }}
+                  >
+                    terms and conditions
+                  </a>
                 </span>
               </Grid>
             </Grid>

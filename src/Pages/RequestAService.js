@@ -50,6 +50,7 @@ import {
   getItems,
   getRequestorStatus,
   uploadImage,
+  checkUser,
 } from "../ApiHelper";
 
 const useStyles = makeStyles((theme) => ({
@@ -562,6 +563,39 @@ function ProviderDetail(props) {
     }
   };
 
+  const checkThisUser = () => {
+    setOpenLoader(true);
+    checkUser(requestData.userEmail, requestData.userPhone).then(
+      (res) => {
+        if (
+          res.data.success ||
+          res.status === 200 ||
+          res.status === 201 ||
+          res.status === 200
+        ) {
+          setOpenLoader(false);
+          console.log("THis si my proifle", res.data);
+          if (res.data.message === "Customer exists") {
+            localStorage.setItem("requestAfterLogin", "true");
+            document.getElementById("login").click();
+          } else {
+            document.getElementById("create-account").click();
+          }
+        } else if (res.status === 404) {
+          if (res.data.message === "Customer not found") {
+            document.getElementById("create-account").click();
+          }
+        }
+      },
+      (error) => {
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+        if (error.response.data.message === "Customer not found") {
+          document.getElementById("create-account").click();
+        }
+      }
+    );
+  };
   const getMyProfile = () => {
     setOpenLoader(true);
     MyProfile().then(
@@ -570,13 +604,7 @@ function ProviderDetail(props) {
           res.data.success ||
           res.status === 200 ||
           res.status === 201 ||
-          res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
+          res.status === 200
         ) {
           setOpenLoader(false);
           console.log("THis si my proifle", res.data.data);
@@ -697,13 +725,7 @@ function ProviderDetail(props) {
           res.data.success ||
           res.status === 200 ||
           res.status === 201 ||
-          res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
+          res.status === 200
         ) {
           setOpenLoader(false);
           console.log("These are looking for", res.data);
@@ -775,13 +797,7 @@ function ProviderDetail(props) {
           res.data.success ||
           res.status === 200 ||
           res.status === 201 ||
-          res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
+          res.status === 200
         ) {
           setOpenLoader(false);
           console.log("These are structures", res.data.ServiceTime);
@@ -806,13 +822,7 @@ function ProviderDetail(props) {
           res.data.success ||
           res.status === 200 ||
           res.status === 201 ||
-          res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
+          res.status === 200
         ) {
           setOpenLoader(false);
           console.log("These are preffered timings", res.data.ServiceTime);
@@ -1781,7 +1791,8 @@ function ProviderDetail(props) {
               //   updateCustomerContactDetails();
               // }, 500);
             } else {
-              document.getElementById("create-account").click();
+              checkThisUser();
+              // document.getElementById("create-account").click();
             }
           }}
         >
@@ -1796,6 +1807,7 @@ function ProviderDetail(props) {
     <div style={{ background: "#f2f2f2", background: "white" }}>
       <Link id="sumittedRequest" to="/sumittedRequest"></Link>
       <Link id="homepage" to="/homepage"></Link>
+      <Link id="login" to="/login"></Link>
       <Link id="create-account" to="/create-account"></Link>
 
       <Backdrop className={classes.backdrop} open={openLoader}>

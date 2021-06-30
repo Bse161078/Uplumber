@@ -55,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function LoginPage() {
   useEffect(() => {
+    getLocation();
     connectFirebase();
   }, []);
   const classes = useStyles();
@@ -80,6 +81,23 @@ export default function LoginPage() {
   const [longitude, setLongitude] = useState(localStorage.getItem("longitude"));
   const [captchaCreated, setCaptchaCreated] = useState(false);
   const [openLoader, setOpenLoader] = useState(false);
+
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+      return true;
+    } else {
+      alert("App need your location work properly");
+    }
+    return false;
+  };
+
+  const showPosition = (position) => {
+    setLatitude(position.coords.latitude);
+    localStorage.setItem("latitude", position.coords.latitude);
+    setLongitude(position.coords.longitude);
+    localStorage.setItem("longitude", position.coords.longitude);
+  };
 
   const createRecapha = () => {
     window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
@@ -429,8 +447,8 @@ export default function LoginPage() {
                 state: state,
                 zipcode: zipcode,
                 country: country,
-                latitude: 1.099232,
-                longitude: 2.33332,
+                latitude: latitude,
+                longitude: longitude,
                 email: localStorage.getItem("email"),
               };
               setOpenLoader(true);

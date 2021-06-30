@@ -73,10 +73,30 @@ export default function UpdateUserProfile(props) {
   const [state, setState] = useState(localStorage.getItem("state1"));
   const [zipcode, setZipcode] = useState(localStorage.getItem("zipcode1"));
   const [country, setCountry] = useState(localStorage.getItem("country1"));
-  const [latitude, setLatitude] = useState(localStorage.getItem("latitude1"));
-  const [longitude, setLongitude] = useState(
-    localStorage.getItem("longitude1")
+  const [latitude, setLatitude] = useState(
+    localStorage.getItem("latitude1") || localStorage.getItem("latitude")
   );
+  const [longitude, setLongitude] = useState(
+    localStorage.getItem("longitude1") || localStorage.getItem("longitude")
+  );
+
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+      return true;
+    } else {
+      alert("App need your location work properly");
+    }
+    return false;
+  };
+
+  const showPosition = (position) => {
+    setLatitude(position.coords.latitude);
+    localStorage.setItem("latitude1", position.coords.latitude);
+    setLongitude(position.coords.longitude);
+    localStorage.setItem("longitude1", position.coords.longitude);
+  };
+
   const updateMyProfile = () => {
     var data = {
       profileImage: profileImage,
@@ -88,8 +108,8 @@ export default function UpdateUserProfile(props) {
       city: city,
       state: state,
       zipcode: zipcode,
-      latitude: 1.099232,
-      longitude: 2.33332,
+      latitude: latitude,
+      longitude: longitude,
       country: country,
     };
     console.log("THis is the data", data);
@@ -202,6 +222,7 @@ export default function UpdateUserProfile(props) {
   };
 
   useEffect(() => {
+    getLocation();
     getMyProfile();
   }, []);
 

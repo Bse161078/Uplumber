@@ -17,6 +17,7 @@ import CurrentRequests from "./Pages/CurrentRequests";
 import FavoritePlumbers from "./Pages/FavoritePlumbers";
 import SettingsPage from "./Pages/SettingsPage";
 import ChangePassword from "./Pages/ChangePassword";
+import ResetPassword from "./Pages/ResetPassword";
 import NotificationSettings from "./Pages/NotificationSettings";
 import Notifications from "./Pages/Notifications";
 import ShowRoute from "./Pages/ShowRoute";
@@ -54,6 +55,11 @@ export default function App() {
           exact
           path="/requestAService/:id"
           render={() => <RequestAService />}
+        />
+        <Route
+          exact
+          path="/ResetPassword/:id"
+          render={() => <ResetPassword />}
         />
         <Route exact path="/history" render={() => <History />} />
         <Route

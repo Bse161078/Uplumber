@@ -5,13 +5,24 @@ import {
   Backdrop,
   CircularProgress,
 } from "@material-ui/core";
+import moment from "moment";
 import { Link } from "react-router-dom";
 import LoginPic from "../assets/loginPic.png";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Drawer from "@material-ui/core/Drawer";
-import { Login, resetPassword } from "../ApiHelper";
+import {
+  Login,
+  resetPassword,
+  PostARequest,
+  CustomerSericeUpdateProblem,
+  CustomerSericeUpdateLookingfor,
+  CustomerSericeUpdateProperty,
+  CustomerSericeUpdateDescriptionAndPhoto,
+  CustomerSericeUpdateInssurance,
+  CustomerSericeUpdateContactDetails,
+} from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 var validator = require("email-validator");
 const useStyles = makeStyles((theme) => ({
@@ -58,6 +69,43 @@ export default function LoginPage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
+  const [requestData, setRequestData] = useState({
+    requestDate: moment(new Date()).format("MMMM Do YYYY"),
+    prfferedTime: localStorage.getItem("prfferedTime") || "As soon a possible",
+    itemName: localStorage.getItem("itemName") || "Air Conditioner",
+    serviceType: localStorage.getItem("serviceType") || "Repair",
+    requestOption:
+      localStorage.getItem("requestOption") || "Auto accept 1st offer",
+    waterDamage: localStorage.getItem("waterDamage") || "No",
+    lookingFor:
+      localStorage.getItem("lookingFor") != null
+        ? JSON.parse(localStorage.getItem("lookingFor"))
+        : ["Plumbing Technician"],
+    area: localStorage.getItem("area") || "",
+    structure: localStorage.getItem("structure") || "",
+    requestorStatus: localStorage.getItem("requestorStatus") || "",
+    description: localStorage.getItem("description"),
+    image: localStorage.getItem("image")
+      ? JSON.parse(localStorage.getItem("image"))
+      : [],
+    company: localStorage.getItem("company") || "",
+    policyNumber: localStorage.getItem("policyNumber") || "",
+    expiryDate: localStorage.getItem("expiryDate") || "",
+    deduction: localStorage.getItem("deduction") || "",
+    userName: localStorage.getItem("userName"),
+    userPhone: localStorage.getItem("userPhone"),
+    allowSms: localStorage.getItem("allowSms")
+      ? JSON.parse(localStorage.getItem("allowSms"))
+      : true,
+    allowContact: "yes",
+    userEmail: localStorage.getItem("userEmail"),
+    userAddress: localStorage.getItem("userAddress"),
+    userUnit: localStorage.getItem("userUnit"),
+    userCity: localStorage.getItem("userCity"),
+    userState: localStorage.getItem("userState"),
+    userZipCode: localStorage.getItem("userZipCode"),
+  });
+
   const [accept, setAccept] = useState(true);
   const [openLoader, setOpenLoader] = useState(false);
 
@@ -71,6 +119,315 @@ export default function LoginPage() {
 
     setState(open);
   };
+
+  const postMyRequest = (id) => {
+    if (localStorage.getItem("token") || id) {
+      console.log("Posting a requeset");
+      setOpenLoader(true);
+      PostARequest().then(
+        (res) => {
+          if (
+            res.data.success ||
+            res.status === 200 ||
+            res.status === 201 ||
+            res.statusText === "Success" ||
+            res.statusText === "Created"
+          ) {
+            console.log(res.data);
+            localStorage.setItem("requestId", res.data._id);
+            setTimeout(() => {
+              updateCustomerProblem();
+            }, 600);
+            setTimeout(() => {
+              updateCustomerLookingFor();
+            }, 800);
+            setTimeout(() => {
+              if (requestData.waterDamage === "Yes") {
+                updateCustomerProperty();
+              }
+            }, 900);
+            setTimeout(() => {
+              updateCustomerPropertyDescriptionAndProperty();
+            }, 1000);
+            setTimeout(() => {
+              if (requestData.waterDamage === "Yes") {
+                updateCustomerPropertyInssurance();
+              }
+            }, 1300);
+            setTimeout(() => {
+              updateCustomerContactDetails();
+            }, 1600);
+          }
+        },
+        (error) => {
+          if (error.response) {
+            notify(error.response.data.message);
+          }
+          setOpenLoader(false);
+          console.log("This is response", error.response);
+        }
+      );
+    } else {
+      notify("You need to login in ordere to post request!");
+    }
+  };
+
+  const updateCustomerProblem = () => {
+    if (
+      requestData.requestDate != "" &&
+      requestData.prfferedTime != "" &&
+      requestData.itemName != "" &&
+      requestData.serviceType != "" &&
+      requestData.anyFloorOrWaterDamage != "" &&
+      requestData.serviceType != ""
+    ) {
+      setOpenLoader(true);
+      var data = {
+        serviceDate: requestData.requestDate,
+        serviceTime: requestData.prfferedTime,
+        problemItem: requestData.itemName,
+        serviceName: requestData.serviceType,
+        requestMany:
+          requestData.requestOption === "Auto accept 1st offer" ? false : true,
+        anyFloorOrWaterDamage: requestData.waterDamage === "yes" ? true : false,
+        serviceCode: requestData.serviceType,
+      };
+      CustomerSericeUpdateProblem(data).then(
+        (res) => {
+          if (
+            res.data.success ||
+            res.status === 200 ||
+            res.status === 201 ||
+            res.statusText === "Success" ||
+            res.statusText === "Created"
+          ) {
+            setOpenLoader(false);
+            localStorage.removeItem("requestDate");
+            localStorage.removeItem("prfferedTime");
+            localStorage.removeItem("itemName");
+            localStorage.removeItem("serviceType");
+            localStorage.removeItem("requestOption");
+            console.log(res);
+            notify(res.data.message);
+          }
+        },
+        (error) => {
+          if (error.response) {
+            notify(error.response.data.message);
+          }
+          setOpenLoader(false);
+          console.log("This is response", error.response);
+        }
+      );
+    } else {
+      notify("Please fill  all feilds!!");
+    }
+  };
+
+  const updateCustomerLookingFor = () => {
+    setOpenLoader(true);
+    var data = {
+      lookingFor: requestData.lookingFor,
+    };
+    CustomerSericeUpdateLookingfor(data).then(
+      (res) => {
+        if (
+          res.status === 200 ||
+          res.status === 201 ||
+          res.statusText === "Success" ||
+          res.statusText === "Created"
+        ) {
+          setOpenLoader(false);
+          console.log(res);
+          // notify(res.data.message);
+          localStorage.removeItem("lookingFor");
+        }
+      },
+      (error) => {
+        if (error.response) {
+          notify(error.response.data.message);
+        }
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+      }
+    );
+  };
+
+  const updateCustomerProperty = () => {
+    if (
+      requestData.area != "" &&
+      requestData.structure != "" &&
+      requestData.requestorStatus != ""
+    ) {
+      setOpenLoader(true);
+      var data = {
+        area: requestData.area,
+        structure: requestData.structure,
+        requesterStatus: requestData.requestorStatus,
+      };
+      CustomerSericeUpdateProperty(data).then(
+        (res) => {
+          if (
+            res.status === 200 ||
+            res.status === 201 ||
+            res.statusText === "Success" ||
+            res.statusText === "Created"
+          ) {
+            setOpenLoader(false);
+            console.log(res);
+            // notify(res.data.message);
+            localStorage.removeItem("area");
+            localStorage.removeItem("structure");
+            localStorage.removeItem("requestorStatus");
+          }
+        },
+        (error) => {
+          if (error.response) {
+            notify(error.response.data.message);
+          }
+          setOpenLoader(false);
+          console.log("This is response", error.response);
+        }
+      );
+    } else {
+      notify("Please fill all fields!!");
+    }
+  };
+
+  const updateCustomerPropertyDescriptionAndProperty = (tab) => {
+    if (requestData.description != "") {
+      setOpenLoader(true);
+      var data = {
+        description: requestData.description,
+        photos: requestData.image,
+      };
+      CustomerSericeUpdateDescriptionAndPhoto(data).then(
+        (res) => {
+          if (
+            res.status === 200 ||
+            res.status === 201 ||
+            res.statusText === "Success" ||
+            res.statusText === "Created"
+          ) {
+            setOpenLoader(false);
+            // notify(res.data.message);
+            console.log(res);
+            localStorage.removeItem("description");
+            localStorage.removeItem("image");
+          }
+        },
+        (error) => {
+          if (error.response) {
+            notify(error.response.data.message);
+          }
+          setOpenLoader(false);
+          console.log("This is response", error.response);
+        }
+      );
+    } else {
+      notify("Please add description!");
+    }
+  };
+
+  const updateCustomerPropertyInssurance = (tab) => {
+    setOpenLoader(true);
+    var data = {
+      company: requestData.company,
+      policyNumber: requestData.policyNumber,
+      expiryDate: requestData.expiryDate,
+      deduction: requestData.deduction,
+    };
+    CustomerSericeUpdateInssurance(data).then(
+      (res) => {
+        if (
+          res.data.success ||
+          res.status === 200 ||
+          res.status === 201 ||
+          res.statusText === "Success" ||
+          res.statusText === "Created"
+        ) {
+          setOpenLoader(false);
+          // notify(res.data.message);
+          console.log(res);
+          localStorage.removeItem("company");
+          localStorage.removeItem("policyNumber");
+          localStorage.removeItem("expiryDate");
+          localStorage.removeItem("deduction");
+        }
+      },
+      (error) => {
+        if (error.response) {
+          notify(error.response.data.message);
+        }
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+      }
+    );
+  };
+
+  const updateCustomerContactDetails = (tab) => {
+    if (
+      requestData.userName != "" &&
+      requestData.userPhone != "" &&
+      requestData.userEmail != "" &&
+      requestData.userAddress != "" &&
+      requestData.userCity != "" &&
+      requestData.userState != "" &&
+      requestData.userZipCode != ""
+    ) {
+      setOpenLoader(true);
+      var data = {
+        name: requestData.userName,
+        phone: requestData.userPhone,
+        allowSms: requestData.allowSms,
+        email: requestData.userEmail,
+        address: requestData.userAddress,
+        latitude: 112.0988,
+        longitude: 133.4444,
+        unit: requestData.userUnit,
+        city: requestData.userCity,
+        state: requestData.userState,
+        zipCode: requestData.userZipCode,
+      };
+      CustomerSericeUpdateContactDetails(data).then(
+        (res) => {
+          if (
+            res.data.success ||
+            res.status === 200 ||
+            res.status === 201 ||
+            res.status === 200 ||
+            res.statusText === 201 ||
+            res.statusText === "OK"
+          ) {
+            setOpenLoader(false);
+            notify("Request has been submitted!");
+            console.log(res);
+            localStorage.removeItem("userName");
+            localStorage.removeItem("userPhone");
+            localStorage.removeItem("allowSms");
+            localStorage.removeItem("userEmail");
+            localStorage.removeItem("userAddress");
+            localStorage.removeItem("userUnit");
+            localStorage.removeItem("userCity");
+            localStorage.removeItem("userState");
+            localStorage.removeItem("userZipCode");
+            document.getElementById("home").click();
+            // document.getElementById("complete").click();
+          }
+        },
+        (error) => {
+          if (error.response) {
+            notify(error.response.data.message);
+          }
+          setOpenLoader(false);
+          console.log("This is response", error.response);
+        }
+      );
+    } else {
+      notify("Please provide all information!");
+    }
+  };
+
   const notify = (data) => toast(data);
 
   return (
@@ -207,8 +564,13 @@ export default function LoginPage() {
                     localStorage.setItem("token", res.data.token);
                     localStorage.setItem("id", res.data._id);
 
+                    localStorage.setItem("requestAfterLogin", "true");
+                    if (localStorage.getItem("requestAfterLogin")) {
+                      localStorage.removeItem("requestAfterLogin");
+                      postMyRequest();
+                    }
+
                     localStorage.setItem("email", email);
-                    document.getElementById("home").click();
                   }
                 },
                 (error) => {
@@ -216,10 +578,7 @@ export default function LoginPage() {
                     notify(error.response.data.message);
                   }
                   setOpenLoader(false);
-                  console.log(
-                    "This is response",
-                    error.response.response.message
-                  );
+                  console.log("This is response", error.response.data.message);
                 }
               );
             }

@@ -232,11 +232,19 @@ export default function HomePage(pros) {
                 cursor: "pointer",
               }}
               onClick={() => {
-                if (props.item.isAccepted === false) {
-                  console.log("This is the item", props.item);
+                console.log("This si he click", props.item);
+                if (
+                  props.item.isAccepted != null
+                    ? props.item.isAccepted === false
+                    : props.item.serviceId.isAccepted === false
+                ) {
+                  alert("It is here");
                   document.getElementById("details" + props.item._id).click();
                   localStorage.setItem("job", JSON.stringify(props.item));
-                } else if (props.item.isAccepted === true) {
+                } else if (
+                  props.item.isAccepted === true ||
+                  props.item.serviceId.isAccepted === true
+                ) {
                   localStorage.setItem("job", JSON.stringify(props.item));
                   document
                     .getElementById("jobdetails" + props.item._id)
@@ -640,15 +648,15 @@ export default function HomePage(pros) {
   };
 
   useEffect(() => {
-    if (localStorage.getItem("allOffers")) {
-      setAllOffers(JSON.parse(localStorage.getItem("allOffers")));
-    }
-
     getLocation();
+    if (localStorage.getItem("allProviders")) {
+      setAllProviders(JSON.parse(localStorage.getItem("allProviders")));
+    }
     if (localStorage.getItem("token")) {
-      if (localStorage.getItem("allProviders")) {
-        setAllProviders(JSON.parse(localStorage.getItem("allProviders")));
+      if (localStorage.getItem("allOffers")) {
+        setAllOffers(JSON.parse(localStorage.getItem("allOffers")));
       }
+
       if (localStorage.getItem("allContacts")) {
         setAllContacts(JSON.parse(localStorage.getItem("allContacts")));
       }
