@@ -145,7 +145,7 @@ function ProviderDetail(props) {
     expiryDate: localStorage.getItem("expiryDate") || "",
     deduction: localStorage.getItem("deduction") || "",
     userName: localStorage.getItem("userName"),
-    userPhone: "+" + localStorage.getItem("userPhone"),
+    userPhone: localStorage.getItem("userPhone"),
     allowSms: localStorage.getItem("allowSms")
       ? JSON.parse(localStorage.getItem("allowSms"))
       : true,
