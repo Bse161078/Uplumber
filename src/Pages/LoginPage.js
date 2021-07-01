@@ -563,12 +563,13 @@ export default function LoginPage() {
 
                     localStorage.setItem("token", res.data.token);
                     localStorage.setItem("id", res.data._id);
+                    localStorage.setItem("email", email);
                     if (localStorage.getItem("requestAfterLogin")) {
                       localStorage.removeItem("requestAfterLogin");
                       postMyRequest();
+                    } else {
+                      document.getElementById("home").click();
                     }
-
-                    localStorage.setItem("email", email);
                   }
                 },
                 (error) => {
