@@ -68,9 +68,7 @@ export default function LoginPage() {
   const [confirmResult, setConfirmResult] = useState();
   const [firstName, setFirstName] = useState(localStorage.getItem("firstName"));
   const [lastName, setLastName] = useState(localStorage.getItem("lastName"));
-  const [phoneNumber, setPhoneNumber] = useState(
-    localStorage.getItem("phoneNumber")
-  );
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState(localStorage.getItem("address"));
   const [unit, setUnit] = useState(localStorage.getItem("unit"));
   const [city, setCity] = useState(localStorage.getItem("city"));

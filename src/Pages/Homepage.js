@@ -177,6 +177,7 @@ export default function HomePage(pros) {
     if (props.item.isServiceCancelled == true) {
       type = "Cancelled";
     }
+    console.log("This sis great", props.item.providerProfileId);
 
     return (
       <Paper style={{ width: "90%", padding: 10, marginBottom: 10 }}>
@@ -191,7 +192,10 @@ export default function HomePage(pros) {
         <Grid container direction="row">
           <Grid item md={2} xs={2}>
             <img
-              src={props.item.providerImage}
+              src={
+                props.item.providerImage ||
+                props.item.providerProfileId.providerImage
+              }
               style={{ width: 50, height: 50, borderRadius: "50%" }}
             ></img>
           </Grid>
@@ -204,18 +208,27 @@ export default function HomePage(pros) {
                   fontWeight: 600,
                 }}
               >
-                {props.item.providerName}
+                {props.item.providerName ||
+                  props.item.providerProfileId.firstName +
+                    " " +
+                    props.item.providerProfileId.lastName}
               </p>
               <Rating
-                value={props.item.providerRating}
+                value={props.item.providerRating ||
+                  props.item.providerProfileId.providerRating}
                 style={{ fontSize: 10 }}
               ></Rating>
               <span style={{ fontSize: 10 }}>
-                {props.item.providerRating}({props.item.providerReviews}){" "}
+                {props.item.providerRating ||
+                  props.item.providerProfileId.providerRating}
+                (
+                {props.item.providerReviews ||
+                  props.item.providerProfileId.providerReviews}
+                ){" "}
               </span>
               <div style={{ width: "100%" }}></div>
               <span style={{ fontSize: 10 }}>
-                ${props.item.pricePerHour} / hr
+                ${props.item.pricePerHour || props.item.labourRatePerHour} / hr
               </span>
             </Grid>
           </Grid>
@@ -289,11 +302,17 @@ export default function HomePage(pros) {
         <Grid container direction="row" justify="center">
           <Grid item md={6} xs={6}>
             <span style={{ color: "#60a3d6", fontSize: 10 }}>Date</span>
-            <p style={{ fontSize: 10, margin: 0 }}>{props.item.serviceDate}</p>
+            <p style={{ fontSize: 10, margin: 0 }}>
+              {props.item.serviceDate ||
+                props.item.serviceId.problem.serviceDate}
+            </p>
           </Grid>
           <Grid item md={6} xs={6}>
             <span style={{ color: "#60a3d6", fontSize: 10 }}>Item</span>
-            <p style={{ fontSize: 10, margin: 0 }}> {props.item.itemName}</p>
+            <p style={{ fontSize: 10, margin: 0 }}>
+              {" "}
+              {props.item.itemName || props.item.serviceId.problem.problemItem}
+            </p>
           </Grid>
         </Grid>
       </Paper>
@@ -477,13 +496,7 @@ export default function HomePage(pros) {
           res.data.success ||
           res.status === 200 ||
           res.status === 201 ||
-          res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
+          res.status === 200
         ) {
           setOpenLoader(false);
           // notify(res.data.message);

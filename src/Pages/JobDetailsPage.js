@@ -145,6 +145,7 @@ function ProviderDetail(props) {
       }
     );
   };
+
   const orderComplete = () => {
     setOpenLoader(true);
     markOrderComplete(jobData._id).then(
@@ -341,18 +342,29 @@ function ProviderDetail(props) {
                     fontWeight: 600,
                   }}
                 >
-                  {jobData.providerName}
+                  {jobData.providerName ||
+                    jobData.providerProfileId.firstName +
+                      " " +
+                      jobData.providerProfileId.lastName}
                 </p>
                 <Rating
-                  value={jobData.providerRating}
+                  value={
+                    jobData.providerRating ||
+                    jobData.providerProfileId.providerRating
+                  }
                   style={{ fontSize: 10 }}
                 ></Rating>
                 <span style={{ fontSize: 10 }}>
-                  {jobData.providerRating}({jobData.providerReviews}){" "}
+                  {jobData.providerRating ||
+                    jobData.providerProfileId.providerRating}
+                  (
+                  {jobData.providerReviews ||
+                    jobData.providerProfileId.providerReviews}
+                  ){" "}
                 </span>
                 <div style={{ width: "100%" }}></div>
                 <span style={{ fontSize: 10 }}>
-                  ${jobData.pricePerHour} / hr
+                  ${jobData.pricePerHour || jobData.labourRatePerHour} / hr
                 </span>
               </Grid>
             </Grid>
@@ -379,7 +391,7 @@ function ProviderDetail(props) {
                       textAlign: "center",
                     }}
                   >
-                    {jobData.itemName}
+                    {jobData.itemName || jobData.serviceId.problem.problemItem}
                   </p>
                 </Grid>
               </Grid>
@@ -395,7 +407,7 @@ function ProviderDetail(props) {
                 <span style={{ color: "#60a3d6", fontSize: 10 }}>Service</span>
                 <p style={{ fontSize: 10, margin: 0 }}>
                   {" "}
-                  {jobData.serviceName}
+                  {jobData.serviceName || jobData.serviceId.problem.serviceName}
                 </p>
               </Grid>
             </Grid>
@@ -413,13 +425,18 @@ function ProviderDetail(props) {
                 <span style={{ color: "#60a3d6", fontSize: 10 }}>
                   Provider Phone
                 </span>
-                <p style={{ fontSize: 10, margin: 0 }}>12345678</p>
+                <p style={{ fontSize: 10, margin: 0 }}>
+                  {jobData.providerProfileId.phoneNumber}
+                </p>
               </Grid>{" "}
               <Grid item md={12} xs={12}>
                 <span style={{ color: "#60a3d6", fontSize: 10 }}>
                   Provider Email
                 </span>
-                <p style={{ fontSize: 10, margin: 0 }}>test@example.com</p>
+                <p style={{ fontSize: 10, margin: 0 }}>
+                  {" "}
+                  {jobData.providerProfileId.email}
+                </p>
               </Grid>
             </Grid>
             <div
@@ -436,19 +453,26 @@ function ProviderDetail(props) {
                 <span style={{ color: "#60a3d6", fontSize: 10 }}>
                   Estimated Work Hours
                 </span>
-                <p style={{ fontSize: 10, margin: 0 }}>3 hrs</p>
+                <p style={{ fontSize: 10, margin: 0 }}>
+                  {jobData.estimatedHours} hrs
+                </p>
               </Grid>{" "}
               <Grid item md={6} xs={6}>
                 <span style={{ color: "#60a3d6", fontSize: 10 }}>
                   Estimated Completion Date
                 </span>
-                <p style={{ fontSize: 10, margin: 0 }}>April 6 , 2021</p>
+                <p style={{ fontSize: 10, margin: 0 }}>
+                  {" "}
+                  {jobData.serviceDate || jobData.serviceId.problem.serviceDate}
+                </p>
               </Grid>{" "}
               <Grid item md={12} xs={12}>
                 <span style={{ color: "#60a3d6", fontSize: 10 }}>
                   Estimated Labour Cost
                 </span>
-                <p style={{ fontSize: 10, margin: 0 }}>$ 63.00</p>
+                <p style={{ fontSize: 10, margin: 0 }}>
+                  $ {jobData.labourRatePerHour}
+                </p>
               </Grid>
             </Grid>
             <Grid

@@ -563,8 +563,6 @@ export default function LoginPage() {
 
                     localStorage.setItem("token", res.data.token);
                     localStorage.setItem("id", res.data._id);
-
-                    localStorage.setItem("requestAfterLogin", "true");
                     if (localStorage.getItem("requestAfterLogin")) {
                       localStorage.removeItem("requestAfterLogin");
                       postMyRequest();

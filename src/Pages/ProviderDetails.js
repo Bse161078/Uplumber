@@ -16,7 +16,11 @@ import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import PersonIcon from "@material-ui/icons/Person";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Link, withRouter } from "react-router-dom";
-import { acceptOffer, getProviderReviews } from "../ApiHelper";
+import {
+  acceptOffer,
+  getProviderReviews,
+  sendCustomerNotification,
+} from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
@@ -65,6 +69,31 @@ function ProviderDetail(props) {
   const [activeTab, setActiveTab] = React.useState("Contacts");
   const [reviews, setReviews] = useState(false);
 
+  const sendCustomeNotification = (text, serviceId) => {
+    setOpenLoader(true);
+    sendCustomerNotification(jobData.providerId, text, serviceId).then(
+      (res) => {
+        if (
+          res.data.success ||
+          res.status === 200 ||
+          res.status === 201 ||
+          res.status === 200
+        ) {
+          setOpenLoader(false);
+          console.log("Accept Notification", res.data);
+          // notify("Location Request sent");
+        }
+      },
+      (error) => {
+        if (error.response) {
+          notify(error.response.data.message);
+        }
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+      }
+    );
+  };
+
   const acceptTheOffer = () => {
     setOpenLoader(true);
     acceptOffer(jobData._id).then(
@@ -73,16 +102,14 @@ function ProviderDetail(props) {
           res.data.success ||
           res.status === 200 ||
           res.status === 201 ||
-          res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
+          res.status === 200
         ) {
           setOpenLoader(false);
           console.log("This is accepted", res.data);
+          sendCustomeNotification(
+            "Your request for " + jobData.serviceId._id + "has been accepted",
+            jobData.serviceId._id
+          );
           setOfferAccepted(true);
         }
       },
@@ -306,17 +333,31 @@ function ProviderDetail(props) {
                   fontWeight: 600,
                 }}
               >
-                {jobData.providerName}
+                {jobData.providerName ||
+                  jobData.providerProfileId.firstName +
+                    " " +
+                    jobData.providerProfileId.lastName}
               </p>
               <Rating
-                value={jobData.providerRating}
+                value={
+                  jobData.providerRating ||
+                  jobData.providerProfileId.providerRating
+                }
                 style={{ fontSize: 10 }}
               ></Rating>
               <span style={{ fontSize: 10 }}>
-                {jobData.providerRating}({jobData.providerReviews}){" "}
+                {jobData.providerRating ||
+                  jobData.providerProfileId.providerRating}
+                (
+                {jobData.providerReviews ||
+                  jobData.providerProfileId.providerReviews}
+                ){" "}
               </span>
               <div style={{ width: "100%" }}></div>
-              <span style={{ fontSize: 10 }}>${jobData.pricePerHour} / hr</span>
+              <span style={{ fontSize: 10 }}>
+                {" "}
+                ${jobData.pricePerHour || jobData.labourRatePerHour} / hr
+              </span>
             </Grid>
             <div
               style={{ width: "100%", border: "1px solid #f6f6f6", margin: 20 }}
@@ -329,11 +370,16 @@ function ProviderDetail(props) {
             >
               <Grid item md={6} xs={6}>
                 <span style={{ color: "#60a3d6", fontSize: 10 }}>Date</span>
-                <p style={{ fontSize: 10, margin: 0 }}>{jobData.serviceDate}</p>
+
+                <p style={{ fontSize: 10, margin: 0 }}>
+                  {jobData.serviceDate || jobData.serviceId.problem.serviceDate}
+                </p>
               </Grid>
               <Grid item md={6} xs={6}>
                 <span style={{ color: "#60a3d6", fontSize: 10 }}>Item</span>
-                <p style={{ fontSize: 10, margin: 0 }}>{jobData.itemName}</p>
+                <p style={{ fontSize: 10, margin: 0 }}>
+                  {jobData.itemName || jobData.serviceId.problem.problemItem}
+                </p>
               </Grid>
               {/* estimatedDistance: "20 miles"
 ​
@@ -369,7 +415,10 @@ estimatedTravelTime: "20 minutes" */}
                     fontWeight: 600,
                   }}
                 >
-                  {jobData.providerName}
+                  {jobData.providerName ||
+                    jobData.providerProfileId.firstName +
+                      " " +
+                      jobData.providerProfileId.lastName}
                 </p>
               </Grid>
               <Grid item md={4} xs={4}>

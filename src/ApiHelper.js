@@ -625,11 +625,12 @@ export const uploadImage = (image) => {
   return axios(config);
 };
 
-export const sendCustomerNotification = (id, notificationText) => {
+export const sendCustomerNotification = (id, notificationText, serviceId) => {
   var data = JSON.stringify({
     customerId: localStorage.getItem("id"),
     providerId: id,
     notificationText: notificationText,
+    serviceId: serviceId,
   });
   console.log("This is dataa", data);
   var config = {
