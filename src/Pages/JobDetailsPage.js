@@ -18,6 +18,7 @@ import { ToastContainer, toast } from "react-toastify";
 import {
   needModificationOffer,
   markOrderComplete,
+  acceptNewCompletionDate,
   setProviderReviews,
   sendCustomerNotification,
 } from "../ApiHelper";
@@ -182,6 +183,34 @@ function ProviderDetail(props) {
       }
     );
   };
+
+  const acceptNewDate = () => {
+    setOpenLoader(true);
+    acceptNewCompletionDate(
+      jobData._id,
+      jobData.newEstimatedCompletionDate
+    ).then(
+      (res) => {
+        if (
+          res.data.success ||
+          res.status === 200 ||
+          res.status === 201 ||
+          res.status === 200
+        ) {
+          setOpenLoader(false);
+          console.log("This is the acceptNew Date response", res.data);
+        }
+      },
+      (error) => {
+        if (error.response) {
+          notify(error.response.data.message);
+        }
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+      }
+    );
+  };
+
   const givereRating = () => {
     setOpenLoader(true);
     setProviderReviews(
@@ -486,7 +515,13 @@ function ProviderDetail(props) {
               justify="center"
               style={{ paddingBottom: 5, paddingTop: 5 }}
             >
-              <button className={classes.button} style={{ marginTop: 10 }}>
+              <button
+                className={classes.button}
+                style={{ marginTop: 10 }}
+                onClick={() => {
+                  acceptNewDate();
+                }}
+              >
                 <Grid
                   container
                   direction="row"

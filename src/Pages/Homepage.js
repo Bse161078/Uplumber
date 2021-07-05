@@ -161,7 +161,23 @@ export default function HomePage(pros) {
   const position = [51.505, -0.09];
   console.log("This isid", localStorage.getItem("id"));
   console.log("This is token", localStorage.getItem("token"));
+
   const OfferCards = (props) => {
+    var calulatedStatus = "";
+    if (props.item.isAccepted) {
+      calulatedStatus = "Offer Accepted";
+      if (props.item.status === "pending") {
+        calulatedStatus = "Pending";
+      } else if (props.item.status === "started") {
+        calulatedStatus = "Job Started";
+      } else if (props.item.status === "onTheWay") {
+        calulatedStatus = "OnTheWay";
+      } else if (props.item.status === "NeedModification") {
+        calulatedStatus = "Need Modification";
+      }
+    } else {
+      calulatedStatus = "Offer Created";
+    }
     var type = "";
     if (props.item.isOrderCompleted) {
       type = "Completed";
@@ -214,8 +230,10 @@ export default function HomePage(pros) {
                     props.item.providerProfileId.lastName}
               </p>
               <Rating
-                value={props.item.providerRating ||
-                  props.item.providerProfileId.providerRating}
+                value={
+                  props.item.providerRating ||
+                  props.item.providerProfileId.providerRating
+                }
                 style={{ fontSize: 10 }}
               ></Rating>
               <span style={{ fontSize: 10 }}>
@@ -265,7 +283,7 @@ export default function HomePage(pros) {
                 }
               }}
             >
-              {type}
+              {calulatedStatus}
             </div>
             {type != "Completed" && type != "Cancelled" && type != "Accepted" && (
               <div
