@@ -467,7 +467,7 @@ export const needModificationOffer = (id, text) => {
 export const markOrderComplete = (id) => {
   var data = JSON.stringify({
     isOrderCompleted: true,
-    status: "Completed",
+    status: "OrderCompleted",
   });
 
   var config = {
@@ -625,12 +625,18 @@ export const uploadImage = (image) => {
   return axios(config);
 };
 
-export const sendCustomerNotification = (id, notificationText, serviceId) => {
+export const sendCustomerNotification = (
+  id,
+  notificationText,
+  serviceId,
+  offerId
+) => {
   var data = JSON.stringify({
     customerId: localStorage.getItem("id"),
     providerId: id,
     notificationText: notificationText,
     serviceId: serviceId,
+    offerId: offerId,
   });
   console.log("This is dataa", data);
   var config = {
@@ -649,7 +655,7 @@ export const sendCustomerNotification = (id, notificationText, serviceId) => {
 export const checkUser = (email, phone) => {
   var data = JSON.stringify({
     email: email,
-    phoneNumber: phone,
+    // phoneNumber: phone,
   });
   console.log("This is dataa", data);
   var config = {

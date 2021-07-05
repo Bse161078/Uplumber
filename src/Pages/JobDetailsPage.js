@@ -123,7 +123,12 @@ function ProviderDetail(props) {
 
   const requestLocation = () => {
     setOpenLoader(true);
-    sendCustomerNotification(jobData.providerId, "Send Location").then(
+    sendCustomerNotification(
+      jobData.providerId,
+      "Send Location",
+      jobData.serviceId,
+      jobData._id
+    ).then(
       (res) => {
         if (
           res.data.success ||

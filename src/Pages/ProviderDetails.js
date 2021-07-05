@@ -71,7 +71,12 @@ function ProviderDetail(props) {
 
   const sendCustomeNotification = (text, serviceId) => {
     setOpenLoader(true);
-    sendCustomerNotification(jobData.providerId, text, serviceId).then(
+    sendCustomerNotification(
+      jobData.providerId,
+      text,
+      serviceId,
+      jobData._id
+    ).then(
       (res) => {
         if (
           res.data.success ||
