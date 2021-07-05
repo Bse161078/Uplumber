@@ -112,9 +112,10 @@ function ProviderDetail(props) {
   const [calendar, setCalendar] = React.useState(false);
   const [prfferedTime, setPrefferedTime] = React.useState(false);
   const [postRequest, setPostRequest] = React.useState(false);
+
   const [allAreas, setAllAreas] = React.useState(null);
   const [value, setValue] = React.useState("As soon as possible");
-  const [itemName, setItemName] = React.useState("Air Conditioner");
+  const [itemName, setItemName] = React.useState("Air-Condition");
   const [openLoader, setOpenLoader] = useState(false);
   const [calendarType, setCalendarType] = React.useState("");
   const [item, setItem] = React.useState(false);
@@ -124,7 +125,7 @@ function ProviderDetail(props) {
   const [requestData, setRequestData] = useState({
     requestDate: moment(new Date()).format("MMMM Do YYYY"),
     prfferedTime: localStorage.getItem("prfferedTime") || "As soon a possible",
-    itemName: localStorage.getItem("itemName") || "Air Conditioner",
+    itemName: localStorage.getItem("itemName") || "Air-Condition",
     serviceType: localStorage.getItem("serviceType") || "Repair",
     requestOption:
       localStorage.getItem("requestOption") || "Auto accept 1st offer",
@@ -178,6 +179,7 @@ function ProviderDetail(props) {
     getAllPrefferedTimings();
     getAllItems();
     getAllRequestorStatus();
+    getLocation();
 
     // setRequestData({
     //   ...requestData,
@@ -251,7 +253,21 @@ function ProviderDetail(props) {
     setBottomState(open);
   };
   const position = [51.505, -0.09];
-  //console.log("THis is great", props);
+  const [currentLocation, setCurrentLoction] = useState(null);
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+      return true;
+    } else {
+      alert("App need your location work properly");
+    }
+    return false;
+  };
+
+  const showPosition = (position) => {
+    console.log("This is the position", position.coords);
+    setCurrentLoction(position.coords);
+  };
 
   const postMyRequest = () => {
     if (localStorage.getItem("token")) {
@@ -518,8 +534,8 @@ function ProviderDetail(props) {
         allowSms: requestData.allowSms,
         email: requestData.userEmail,
         address: requestData.userAddress,
-        latitude: 112.0988,
-        longitude: 133.4444,
+        latitude: currentLocation.latitude || 112.0988,
+        longitude: currentLocation.longitude || 133.4444,
         unit: requestData.userUnit,
         city: requestData.userCity,
         state: requestData.userState,
@@ -2281,7 +2297,7 @@ function ProviderDetail(props) {
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  document.getElementById("sumittedRequest").click();
+                  document.getElementById("current-requests").click();
                 }}
               >
                 View My Requests

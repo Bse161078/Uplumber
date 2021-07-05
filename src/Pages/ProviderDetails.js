@@ -20,6 +20,7 @@ import {
   acceptOffer,
   getProviderReviews,
   sendCustomerNotification,
+  markOrderCancelled,
 } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -99,6 +100,29 @@ function ProviderDetail(props) {
     );
   };
 
+  const orderCancel = () => {
+    setOpenLoader(true);
+    markOrderCancelled(jobData._id).then(
+      (res) => {
+        if (
+          res.data.success ||
+          res.status === 200 ||
+          res.status === 201 ||
+          res.status === 200
+        ) {
+          setOpenLoader(false);
+        }
+      },
+      (error) => {
+        if (error.response) {
+          notify(error.response.data.message);
+        }
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+      }
+    );
+  };
+
   const acceptTheOffer = () => {
     setOpenLoader(true);
     acceptOffer(jobData._id).then(
@@ -136,13 +160,7 @@ function ProviderDetail(props) {
           res.data.success ||
           res.status === 200 ||
           res.status === 201 ||
-          res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
+          res.status === 200
         ) {
           setOpenLoader(false);
           console.log(res.data);
@@ -285,6 +303,9 @@ function ProviderDetail(props) {
                   borderRadius: 20,
                   color: "white",
                   fontSize: 12,
+                }}
+                onClick={() => {
+                  orderCancel();
                 }}
               >
                 Cancel

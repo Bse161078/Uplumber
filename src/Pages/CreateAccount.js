@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   makeStyles,
   Grid,
@@ -107,7 +107,27 @@ export default function LoginPage() {
     userZipCode: localStorage.getItem("userZipCode"),
   });
 
+  const [currentLocation, setCurrentLoction] = useState(null);
+  const getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+      return true;
+    } else {
+      alert("App need your location work properly");
+    }
+    return false;
+  };
+
+  const showPosition = (position) => {
+    console.log("This is the position", position.coords);
+    setCurrentLoction(position.coords);
+  };
+
   console.log("THis is reqeustor data on signup", requestData);
+
+  useEffect(() => {
+    getLocation();
+  }, []);
 
   const postMyRequest = (id) => {
     if (localStorage.getItem("token") || id) {
@@ -371,8 +391,8 @@ export default function LoginPage() {
         allowSms: requestData.allowSms,
         email: requestData.userEmail,
         address: requestData.userAddress,
-        latitude: 112.0988,
-        longitude: 133.4444,
+        latitude: currentLocation.latitude || 112.0988,
+        longitude: currentLocation.longitude || 133.4444,
         unit: requestData.userUnit,
         city: requestData.userCity,
         state: requestData.userState,

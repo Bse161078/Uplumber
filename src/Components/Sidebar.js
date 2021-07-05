@@ -127,6 +127,8 @@ export default function Sidebar(props) {
             onClick={() => {
               localStorage.removeItem("id");
               localStorage.removeItem("token");
+              localStorage.removeItem("userData");
+
               window.location.reload();
             }}
           >

@@ -163,20 +163,26 @@ export default function HomePage(pros) {
   console.log("This is token", localStorage.getItem("token"));
 
   const OfferCards = (props) => {
-    var calulatedStatus = "";
+    var calculatedStatus = "";
     if (props.item.isAccepted) {
-      calulatedStatus = "Offer Accepted";
+      calculatedStatus = "Offer Accepted";
       if (props.item.status === "pending") {
-        calulatedStatus = "Pending";
+        calculatedStatus = "Job Not Started";
       } else if (props.item.status === "started") {
-        calulatedStatus = "Job Started";
+        calculatedStatus = "Job Started";
+      } else if (props.item.status === "OrderCompleted") {
+        calculatedStatus = "Job Completed";
       } else if (props.item.status === "onTheWay") {
-        calulatedStatus = "OnTheWay";
+        calculatedStatus = "Plumber On Way";
+      } else if (props.item.status === "delivered") {
+        calculatedStatus = "Delivered";
       } else if (props.item.status === "NeedModification") {
-        calulatedStatus = "Need Modification";
+        calculatedStatus = "Need Modification";
+      } else if (props.item.status === "OrderCompleted") {
+        calculatedStatus = "Order Completed";
       }
     } else {
-      calulatedStatus = "Offer Created";
+      calculatedStatus = "Offer Created";
     }
     var type = "";
     if (props.item.isOrderCompleted) {
@@ -269,13 +275,13 @@ export default function HomePage(pros) {
                     ? props.item.isAccepted === false
                     : props.item.serviceId.isAccepted === false
                 ) {
-                  alert("It is here");
                   document.getElementById("details" + props.item._id).click();
                   localStorage.setItem("job", JSON.stringify(props.item));
                 } else if (
                   props.item.isAccepted === true ||
                   props.item.serviceId.isAccepted === true
                 ) {
+                  console.log("This is props item", props.item);
                   localStorage.setItem("job", JSON.stringify(props.item));
                   document
                     .getElementById("jobdetails" + props.item._id)
@@ -283,37 +289,41 @@ export default function HomePage(pros) {
                 }
               }}
             >
-              {calulatedStatus}
+              {calculatedStatus}
             </div>
-            {type != "Completed" && type != "Cancelled" && type != "Accepted" && (
-              <div
-                style={{
-                  background: "red",
-                  fontSize: 10,
-                  borderRadius: 10,
-                  padding: 4,
-                  textAlign: "center",
-                  color: "white",
-                  cursor: "pointer",
-                  marginTop: 4,
-                }}
-                onClick={() => {
-                  if (
-                    type != "Completed" &&
-                    type != "Cancelled" &&
-                    type != "Accepted"
-                  ) {
-                    cancleTheOffers(props.item.serviceId);
-                  } else if (type === "Completed") {
-                    notify("This order is already completed!!");
-                  } else if (type === "Cancelled") {
-                    notify("This order is already cancelled!!");
-                  }
-                }}
-              >
-                Cancel
-              </div>
-            )}
+            {type != "Completed" &&
+              type != "Cancelled" &&
+              type != "Accepted" &&
+              calculatedStatus != "Job Completed" &&
+              calculatedStatus != "Job Not Started" && (
+                <div
+                  style={{
+                    background: "red",
+                    fontSize: 10,
+                    borderRadius: 10,
+                    padding: 4,
+                    textAlign: "center",
+                    color: "white",
+                    cursor: "pointer",
+                    marginTop: 4,
+                  }}
+                  onClick={() => {
+                    if (
+                      type != "Completed" &&
+                      type != "Cancelled" &&
+                      type != "Accepted"
+                    ) {
+                      cancleTheOffers(props.item.serviceId);
+                    } else if (type === "Completed") {
+                      notify("This order is already completed!!");
+                    } else if (type === "Cancelled") {
+                      notify("This order is already cancelled!!");
+                    }
+                  }}
+                >
+                  Cancel
+                </div>
+              )}
           </Grid>
         </Grid>
         <div style={{ width: "100%", border: "1px solid #f6f6f6" }}></div>

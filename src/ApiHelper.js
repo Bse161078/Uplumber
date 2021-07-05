@@ -482,13 +482,34 @@ export const markOrderComplete = (id) => {
 
   return axios(config);
 };
+
+export const markOrderCancelled = (id) => {
+  var data = JSON.stringify({
+    isOrderCompleted: true,
+    status: "OrderCancelled",
+  });
+
+  var config = {
+    method: "put",
+    url: "https://u-plumber.net/api/customeroffer/" + id,
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+
+  return axios(config);
+};
+
 console.log("Token", localStorage.getItem("token"));
 export const acceptNewCompletionDate = (id, newEstimatedCompletionDate) => {
   var data = JSON.stringify({
     estimatedCompletionDate: newEstimatedCompletionDate,
-    newEstimatedCompletionDate: null,
+    newEstimatedCompletionDate: "",
   });
 
+  console.log("This is data", data, id);
   var config = {
     method: "put",
     url: "https://u-plumber.net/api/customeroffer/" + id,
