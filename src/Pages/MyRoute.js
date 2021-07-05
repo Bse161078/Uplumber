@@ -8,19 +8,43 @@ import {
 class Map extends Component {
   state = {
     directions: null,
+    origin: { lat: 6.5244, lng: 3.3792 },
   };
 
-  componentDidMount() {
+  getLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(this.showPosition);
+      return true;
+    } else {
+      alert("App need your location work properly");
+    }
+    return false;
+  };
+
+  showPosition = (position) => {
+    console.log("This is the position", position.coords);
+    this.setState({
+      origin: { lat: position.coords.latitude, lng: position.coords.longitude },
+    });
+    console.log("This is data", {
+      lat: JSON.parse(localStorage.getItem("plumberlat")),
+      lng: JSON.parse(localStorage.getItem("plumberlong")),
+    });
     const google = window.google;
     const directionsService = new google.maps.DirectionsService();
-
-    const origin = { lat: 6.5244, lng: 3.3792 };
-    const destination = { lat: 6.4667, lng: 3.45 };
-
     directionsService.route(
       {
-        origin: origin,
-        destination: destination,
+        origin: {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        },
+        // localStorage.setItem("plumberlat", item.latitude);
+        // localStorage.setItem("plumberlong", item.longitude);
+        // destination: { lat: 6.5244, lng: 3.3792 },
+        destination: {
+          lat: JSON.parse(localStorage.getItem("plumberlat")),
+          lng: JSON.parse(localStorage.getItem("plumberlong")),
+        },
         travelMode: google.maps.TravelMode.DRIVING,
         waypoints: [],
       },
@@ -35,6 +59,12 @@ class Map extends Component {
         }
       }
     );
+  };
+  componentDidMount() {
+    this.getLocation();
+
+    const origin = { lat: 6.5244, lng: 3.3792 };
+    const destination = { lat: 6.4667, lng: 3.45 };
   }
 
   render() {

@@ -112,6 +112,10 @@ function ProviderDetail(props) {
         ) {
           setOpenLoader(false);
           console.log("This is the order canel", res.data);
+          sendCustomeNotification(
+            "Your request for " + jobData.serviceId._id + "has been rejected",
+            jobData.serviceId._id
+          );
         }
       },
       (error) => {

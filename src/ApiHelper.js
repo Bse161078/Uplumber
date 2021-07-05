@@ -1,4 +1,5 @@
 import axios from "axios";
+import Avatar from "./assets/avatar.png";
 
 var URL = "https://u-plumber.net/api/";
 
@@ -677,6 +678,7 @@ export const sendCustomerNotification = (
     notificationText: notificationText,
     serviceId: serviceId,
     offerId: offerId,
+    image: JSON.parse(localStorage.getItem("userData")).profileImage || Avatar,
   });
   console.log("This is dataa", data);
   var config = {

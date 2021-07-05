@@ -184,16 +184,21 @@ function ProviderDetail(props) {
                     cursor: "pointer",
                   }}
                   onClick={() => {
-                    // document.getElementById("route").click();
-                    Notification.requestPermission().then((result) => {
-                      if (result === "granted") {
-                        const options = {
-                          body: item.notificationText,
-                          icon: item.image,
-                        };
-                        new Notification("Uplumber Notification", options);
-                      }
-                    });
+                    if (item.latitude != null && item.longitude != null) {
+                      document.getElementById("route").click();
+                      localStorage.setItem("plumberlat", item.latitude);
+                      localStorage.setItem("plumberlong", item.longitude);
+                    } else {
+                      Notification.requestPermission().then((result) => {
+                        if (result === "granted") {
+                          const options = {
+                            body: item.notificationText,
+                            icon: item.image,
+                          };
+                          new Notification("Uplumber Notification", options);
+                        }
+                      });
+                    }
                   }}
                 >
                   <Grid item md={2} xs={2}>
