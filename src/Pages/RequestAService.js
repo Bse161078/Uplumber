@@ -305,7 +305,7 @@ function ProviderDetail(props) {
             }, 1300);
             setTimeout(() => {
               updateCustomerContactDetails();
-            }, 1600);
+            }, 2000);
           }
         },
         (error) => {

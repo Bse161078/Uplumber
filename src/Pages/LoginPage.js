@@ -176,7 +176,7 @@ export default function LoginPage() {
             }, 1300);
             setTimeout(() => {
               updateCustomerContactDetails();
-            }, 1600);
+            }, 2000);
           }
         },
         (error) => {
