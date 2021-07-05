@@ -78,6 +78,7 @@ function ProviderDetail(props) {
   const [notStarted, setNotStarted] = React.useState(false);
   const [plumberOnWay, setPlumberOnWay] = React.useState(false);
   const [jobDelivered, setJobDelivered] = React.useState(false);
+  const [OrderCancelled, setOrderCanceled] = React.useState(false);
 
   const toggleDrawer = (anchor, open) => (event) => {
     setState(open);
@@ -109,7 +110,6 @@ function ProviderDetail(props) {
       if (JSON.parse(localStorage.getItem("job")).status === "delivered") {
         setJobDelivered(true);
       }
-
       if (
         JSON.parse(localStorage.getItem("job")).status === "NeedModification"
       ) {
@@ -117,6 +117,9 @@ function ProviderDetail(props) {
       }
       if (JSON.parse(localStorage.getItem("job")).status === "OrderCompleted") {
         setMarkComplete(true);
+      }
+      if (JSON.parse(localStorage.getItem("job")).status === "OrderCancelled") {
+        setOrderCanceled(true);
       }
     }
   }, []);
@@ -313,7 +316,24 @@ function ProviderDetail(props) {
           overflowY: "scroll",
         }}
       >
-        {modification ? (
+        {OrderCancelled ? (
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            spacing={1}
+            style={{
+              background: "red",
+              height: "max-content",
+              position: "absolute",
+            }}
+          >
+            {" "}
+            <p style={{ color: "white", width: "100%", textAlign: "center" }}>
+              Order Cancelled
+            </p>
+          </Grid>
+        ) : modification ? (
           <Grid
             container
             direction="row"

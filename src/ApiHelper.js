@@ -485,7 +485,7 @@ export const markOrderComplete = (id) => {
 
 export const markOrderCancelled = (id) => {
   var data = JSON.stringify({
-    isOrderCompleted: true,
+    isOrderCancelled: true,
     status: "OrderCancelled",
   });
 

@@ -180,9 +180,15 @@ export default function HomePage(pros) {
         calculatedStatus = "Need Modification";
       } else if (props.item.status === "OrderCompleted") {
         calculatedStatus = "Order Completed";
+      } else if (props.item.status === "OrderCancelled") {
+        calculatedStatus = "Order Cancelled";
       }
     } else {
-      calculatedStatus = "Offer Created";
+      if (props.item.status === "OrderCancelled") {
+        calculatedStatus = "Order Cancelled";
+      } else {
+        calculatedStatus = "Offer Created";
+      }
     }
     var type = "";
     if (props.item.isOrderCompleted) {
@@ -199,7 +205,7 @@ export default function HomePage(pros) {
     if (props.item.isServiceCancelled == true) {
       type = "Cancelled";
     }
-    console.log("This sis great", props.item.providerProfileId);
+    // console.log("This sis great", props.item.providerProfileId);
 
     return (
       <Paper style={{ width: "90%", padding: 10, marginBottom: 10 }}>
@@ -275,8 +281,16 @@ export default function HomePage(pros) {
                     ? props.item.isAccepted === false
                     : props.item.serviceId.isAccepted === false
                 ) {
-                  document.getElementById("details" + props.item._id).click();
-                  localStorage.setItem("job", JSON.stringify(props.item));
+                  if (calculatedStatus != "Order Cancelled") {
+                    document.getElementById("details" + props.item._id).click();
+                    localStorage.setItem("job", JSON.stringify(props.item));
+                  } else {
+                    console.log("This is props item", props.item);
+                    localStorage.setItem("job", JSON.stringify(props.item));
+                    document
+                      .getElementById("jobdetails" + props.item._id)
+                      .click();
+                  }
                 } else if (
                   props.item.isAccepted === true ||
                   props.item.serviceId.isAccepted === true
@@ -294,6 +308,7 @@ export default function HomePage(pros) {
             {type != "Completed" &&
               type != "Cancelled" &&
               type != "Accepted" &&
+              calculatedStatus != "Order Cancelled" &&
               calculatedStatus != "Job Completed" &&
               calculatedStatus != "Job Not Started" && (
                 <div
@@ -467,13 +482,7 @@ export default function HomePage(pros) {
           res.data.success ||
           res.status === 200 ||
           res.status === 201 ||
-          res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
+          res.status === 200
         ) {
           setOpenLoader(false);
           notify(res.data.message);

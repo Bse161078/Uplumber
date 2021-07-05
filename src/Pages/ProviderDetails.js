@@ -111,6 +111,7 @@ function ProviderDetail(props) {
           res.status === 200
         ) {
           setOpenLoader(false);
+          console.log("This is the order canel", res.data);
         }
       },
       (error) => {
