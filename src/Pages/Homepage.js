@@ -222,7 +222,7 @@ export default function HomePage(pros) {
             <img
               src={
                 props.item.providerImage ||
-                props.item.providerProfileId.providerImage
+                props.item.providerProfileId.profileImage
               }
               style={{ width: 50, height: 50, borderRadius: "50%" }}
             ></img>
@@ -817,6 +817,7 @@ export default function HomePage(pros) {
                 allOffers.map((item, index) => {
                   return <OfferCards index={index} item={item}></OfferCards>;
                 })}
+              <div style={{ height: 120, width: "100%" }}></div>
             </Grid>
           </Grid>
         ) : (

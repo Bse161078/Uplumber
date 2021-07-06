@@ -98,7 +98,10 @@ function ProviderDetail(props) {
 
     setJobData(JSON.parse(localStorage.getItem("job")));
     if (localStorage.getItem("job")) {
-      if (JSON.parse(localStorage.getItem("job")).status === "") {
+      if (
+        JSON.parse(localStorage.getItem("job")).status === "" ||
+        JSON.parse(localStorage.getItem("job")).status === "OfferAccepted"
+      ) {
         setLeadUnpaid(true);
       }
       if (JSON.parse(localStorage.getItem("job")).status === "pending") {
@@ -136,8 +139,48 @@ function ProviderDetail(props) {
         ) {
           setOpenLoader(false);
           console.log(res.data);
+          sendCustomeNotification(
+            JSON.parse(localStorage.getItem("userData")).firstName +
+              " " +
+              JSON.parse(localStorage.getItem("userData")).lastName +
+              "requested a modification in the job",
+            jobData.serviceId._id,
+            "modificationReqeusted"
+          );
+
           setNeedModifications(false);
           setModification(true);
+        }
+      },
+      (error) => {
+        if (error.response) {
+          notify(error.response.data.message);
+        }
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+      }
+    );
+  };
+
+  const sendCustomeNotification = (text, serviceId, type) => {
+    setOpenLoader(true);
+    sendCustomerNotification(
+      jobData.providerId,
+      text,
+      serviceId,
+      jobData._id,
+      type
+    ).then(
+      (res) => {
+        if (
+          res.data.success ||
+          res.status === 200 ||
+          res.status === 201 ||
+          res.status === 200
+        ) {
+          setOpenLoader(false);
+          console.log("Accept Notification", res.data);
+          // notify("Location Request sent");
         }
       },
       (error) => {
@@ -154,9 +197,10 @@ function ProviderDetail(props) {
     setOpenLoader(true);
     sendCustomerNotification(
       jobData.providerId,
-      "Send Location",
+      "Send Your current Location",
       jobData.serviceId,
-      jobData._id
+      jobData._id,
+      "locationRequested"
     ).then(
       (res) => {
         if (
@@ -189,15 +233,18 @@ function ProviderDetail(props) {
           res.status === 200 ||
           res.status === 201 ||
           res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
+          res.statusText === 201
         ) {
           setOpenLoader(false);
           console.log(res.data);
+          sendCustomeNotification(
+            JSON.parse(localStorage.getItem("userData")).firstName +
+              " " +
+              JSON.parse(localStorage.getItem("userData")).lastName +
+              " marked your order complete",
+            jobData.serviceId._id,
+            "jobCompleted"
+          );
           setMarkComplete(true);
           setBottomState(true);
         }
@@ -226,6 +273,14 @@ function ProviderDetail(props) {
           res.status === 200
         ) {
           setOpenLoader(false);
+          sendCustomeNotification(
+            JSON.parse(localStorage.getItem("userData")).firstName +
+              " " +
+              JSON.parse(localStorage.getItem("userData")).lastName +
+              "has updated the completion date",
+            jobData.serviceId._id,
+            "completionDateUpdated"
+          );
           console.log("This is the acceptNew Date response", res.data);
         }
       },
@@ -256,6 +311,14 @@ function ProviderDetail(props) {
         ) {
           setOpenLoader(false);
           console.log("This is rating response", res.data);
+          sendCustomeNotification(
+            JSON.parse(localStorage.getItem("userData")).firstName +
+              " " +
+              JSON.parse(localStorage.getItem("userData")).lastName +
+              " provided you a review",
+            jobData.serviceId._id,
+            "jobReviewed"
+          );
         }
       },
       (error) => {
@@ -466,7 +529,7 @@ function ProviderDetail(props) {
           >
             <Grid item md={2} xs={2}>
               <img
-                src={jobData.providerImage}
+                src={jobData.providerProfileId.profileImage}
                 style={{
                   width: 50,
                   height: 50,

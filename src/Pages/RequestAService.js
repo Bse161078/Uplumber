@@ -2210,6 +2210,8 @@ function ProviderDetail(props) {
                               ...requestData,
                               itemName: stuff.Description,
                             });
+
+                            localStorage.setItem("itemName", stuff.Description);
                             setItem(false);
                           }}
                         >

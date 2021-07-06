@@ -72,7 +72,7 @@ export default function LoginPage() {
   const [requestData, setRequestData] = useState({
     requestDate: moment(new Date()).format("MMMM Do YYYY"),
     prfferedTime: localStorage.getItem("prfferedTime") || "As soon a possible",
-    itemName: localStorage.getItem("itemName") || "Air Conditioner",
+    itemName: localStorage.getItem("itemName") || "Air-Conditioner",
     serviceType: localStorage.getItem("serviceType") || "Repair",
     requestOption:
       localStorage.getItem("requestOption") || "Auto accept 1st offer",

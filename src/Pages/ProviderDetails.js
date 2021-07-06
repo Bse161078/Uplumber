@@ -70,13 +70,14 @@ function ProviderDetail(props) {
   const [activeTab, setActiveTab] = React.useState("Contacts");
   const [reviews, setReviews] = useState(false);
 
-  const sendCustomeNotification = (text, serviceId) => {
+  const sendCustomeNotification = (text, serviceId, type) => {
     setOpenLoader(true);
     sendCustomerNotification(
       jobData.providerId,
       text,
       serviceId,
-      jobData._id
+      jobData._id,
+      type
     ).then(
       (res) => {
         if (
@@ -113,8 +114,12 @@ function ProviderDetail(props) {
           setOpenLoader(false);
           console.log("This is the order canel", res.data);
           sendCustomeNotification(
-            "Your request for " + jobData.serviceId._id + "has been rejected",
-            jobData.serviceId._id
+            JSON.parse(localStorage.getItem("userData")).firstName +
+              " " +
+              JSON.parse(localStorage.getItem("userData")).lastName +
+              " rejected your request",
+            jobData.serviceId._id,
+            "offerRejected"
           );
         }
       },
@@ -141,8 +146,12 @@ function ProviderDetail(props) {
           setOpenLoader(false);
           console.log("This is accepted", res.data);
           sendCustomeNotification(
-            "Your request for " + jobData.serviceId._id + "has been accepted",
-            jobData.serviceId._id
+            JSON.parse(localStorage.getItem("userData")).firstName +
+              " " +
+              JSON.parse(localStorage.getItem("userData")).lastName +
+              " accepted your request",
+            jobData.serviceId._id,
+            "offerAccepted"
           );
           setOfferAccepted(true);
         }
@@ -347,7 +356,7 @@ function ProviderDetail(props) {
             style={{ height: "max-content" }}
           >
             <img
-              src={jobData.providerImage}
+              src={jobData.providerProfileId.profileImage}
               style={{
                 width: 125,
                 height: 125,

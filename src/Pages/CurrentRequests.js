@@ -166,7 +166,7 @@ function ProviderDetail(props) {
   };
 
   const OfferCards = (props) => {
-    console.log("THis is grate", props.item._id);
+    // console.log("THis is grate", props.item);
     var type = props.item;
     if (props.item === "Job Started") {
       type = "jobStarted";

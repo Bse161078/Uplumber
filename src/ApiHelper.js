@@ -670,7 +670,8 @@ export const sendCustomerNotification = (
   id,
   notificationText,
   serviceId,
-  offerId
+  offerId,
+  type
 ) => {
   var data = JSON.stringify({
     customerId: localStorage.getItem("id"),
@@ -679,11 +680,12 @@ export const sendCustomerNotification = (
     serviceId: serviceId,
     offerId: offerId,
     image: JSON.parse(localStorage.getItem("userData")).profileImage || Avatar,
+    type: type,
   });
   console.log("This is dataa", data);
   var config = {
     method: "post",
-    url: "https://u-plumber.net/api/customernotification",
+    url: "https://u-plumber.net/api/providernotification",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
