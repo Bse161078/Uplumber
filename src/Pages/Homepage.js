@@ -591,7 +591,7 @@ export default function HomePage(pros) {
         ) {
           // setOpenLoader(false);
           // notify(res.data.message);
-          setOpenLoader(true);
+          setOpenLoader(false);
           console.log("These are customer contacts", res.data);
           localStorage.setItem(
             "allContacts",
