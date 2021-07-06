@@ -166,7 +166,7 @@ const ContactDetails = (props) => {
           localStorage.setItem("userAddress", e.target.value);
         }}
       ></input>
-      <p className={classes.label}>Unit/APT *</p>
+      <p className={classes.label}>Unit/APT </p>
       <input
         className={classes.input}
         type={"text"}
@@ -180,6 +180,7 @@ const ContactDetails = (props) => {
       <input
         className={classes.input}
         type={"text"}
+        placeholder="City"
         value={props.userCity}
         onChange={(e) => {
           props.setRequestData("userCity", e.target.value);
@@ -215,7 +216,7 @@ const ContactDetails = (props) => {
         }}
         renderInput={(params) => (
           <TextField
-            label={props.userState ? props.userState : ""}
+            label={props.userState ? props.userState : "State"}
             {...params}
           />
         )}

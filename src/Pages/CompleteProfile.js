@@ -74,7 +74,9 @@ export default function LoginPage() {
   const [city, setCity] = useState(localStorage.getItem("city"));
   const [state, setState] = useState(localStorage.getItem("state"));
   const [zipcode, setZipcode] = useState(localStorage.getItem("zipcode"));
-  const [country, setCountry] = useState(localStorage.getItem("country"));
+  const [country, setCountry] = useState(
+    localStorage.getItem("country") || "United States"
+  );
   const [latitude, setLatitude] = useState(localStorage.getItem("latitude"));
   const [longitude, setLongitude] = useState(localStorage.getItem("longitude"));
   const [captchaCreated, setCaptchaCreated] = useState(false);
@@ -349,6 +351,7 @@ export default function LoginPage() {
         <input
           className={classes.input}
           value={city}
+          placeholder="City"
           onChange={(e) => {
             setCity(e.target.value);
             localStorage.setItem("city", e.target.value);
@@ -375,7 +378,7 @@ export default function LoginPage() {
             width: "100%",
           }}
           renderInput={(params) => (
-            <TextField label={state ? state : ""} {...params} />
+            <TextField label={state ? state : "State"} {...params} />
           )}
         />
 
@@ -413,7 +416,10 @@ export default function LoginPage() {
             width: "100%",
           }}
           renderInput={(params) => (
-            <TextField label={country ? country : ""} {...params} />
+            <TextField
+              label={country ? country : "United States"}
+              {...params}
+            />
           )}
         />
 

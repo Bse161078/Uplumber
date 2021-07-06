@@ -1764,7 +1764,7 @@ function ProviderDetail(props) {
           <p className={classes.labelBlack}>{requestData.userEmail} </p>
           <p className={classes.label}>Address * </p>
           <p className={classes.labelBlack}>{requestData.userAddress} </p>
-          <p className={classes.label}>Unit / APT * </p>
+          <p className={classes.label}>Unit / APT </p>
           <p className={classes.labelBlack}>{requestData.userUnit} </p>
           <p className={classes.label}>City * </p>
           <p className={classes.labelBlack}>{requestData.userCity} </p>
@@ -1812,7 +1812,7 @@ function ProviderDetail(props) {
             }
           }}
         >
-          Submit Requests
+          Submit A Request
         </button>
       </Grid>
     );
