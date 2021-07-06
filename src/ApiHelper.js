@@ -379,6 +379,22 @@ export const UpdateCustomerProfile = (postData) => {
   return axios(config);
 };
 
+export const createContact = (postData) => {
+  var data = JSON.stringify(postData);
+
+  var config = {
+    method: "post",
+    url: "https://u-plumber.net/api/customercontact",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+
+  return axios(config);
+};
+console.log("This is my id", localStorage.getItem("id"));
 export const GetAllContacts = () => {
   var config = {
     method: "get",

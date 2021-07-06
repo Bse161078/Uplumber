@@ -22,6 +22,7 @@ import {
   sendCustomerNotification,
   markOrderCancelled,
   getOfferDetail,
+  createContact,
 } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -103,6 +104,50 @@ function ProviderDetail(props) {
     );
   };
 
+  const createMyContact = (serviceId) => {
+    setOpenLoader(true);
+    const data = {
+      customerId: localStorage.getItem("id"),
+      providerId: jobData.providerProfileId._id,
+      serviceId: serviceId,
+      providerImage: jobData.providerProfileId.profileImage,
+      providerName:
+        jobData.providerName ||
+        jobData.providerProfileId.firstName +
+          " " +
+          jobData.providerProfileId.lastName,
+      providerRating:
+        jobData.providerRating || jobData.providerProfileId.providerRating,
+      providerRating:
+        jobData.providerRating || jobData.providerProfileId.providerRating,
+      providerReviews:
+        jobData.providerReviews || jobData.providerProfileId.providerReviews,
+    };
+    createContact(data).then(
+      (res) => {
+        if (
+          res.data.success ||
+          res.status === 200 ||
+          res.status === 201 ||
+          res.status === 200
+        ) {
+          setOpenLoader(false);
+          console.log("This is the contact", res.data);
+          // notify("Location Request sent");
+          document.getElementById("jobdetails" + jobData._id).click();
+          setOfferAccepted(true);
+        }
+      },
+      (error) => {
+        if (error.response) {
+          notify(error.response.data.message);
+        }
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+      }
+    );
+  };
+
   const orderCancel = () => {
     setOpenLoader(true);
     markOrderCancelled(jobData._id).then(
@@ -156,8 +201,7 @@ function ProviderDetail(props) {
             jobData.serviceId._id,
             "offerAccepted"
           );
-          document.getElementById("jobdetails" + jobData._id).click();
-          setOfferAccepted(true);
+          createMyContact(jobData.serviceId._id);
         }
       },
       (error) => {
