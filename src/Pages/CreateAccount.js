@@ -107,7 +107,10 @@ export default function LoginPage() {
     userZipCode: localStorage.getItem("userZipCode"),
   });
 
-  const [currentLocation, setCurrentLoction] = useState(null);
+  const [currentLocation, setCurrentLoction] = useState({
+    latitude: 112.0988,
+    longitude: 133.44,
+  });
   const getLocation = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(showPosition);

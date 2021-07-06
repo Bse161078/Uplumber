@@ -151,12 +151,12 @@ function ProviderDetail(props) {
       ? JSON.parse(localStorage.getItem("allowSms"))
       : true,
     allowContact: "yes",
-    userEmail: localStorage.getItem("userEmail"),
-    userAddress: localStorage.getItem("userAddress"),
-    userUnit: localStorage.getItem("userUnit"),
-    userCity: localStorage.getItem("userCity"),
-    userState: localStorage.getItem("userState"),
-    userZipCode: localStorage.getItem("userZipCode"),
+    userEmail: localStorage.getItem("userEmail") || "",
+    userAddress: localStorage.getItem("userAddress") || "",
+    userUnit: localStorage.getItem("userUnit") || "",
+    userCity: localStorage.getItem("userCity") || "",
+    userState: localStorage.getItem("userState") || "",
+    userZipCode: localStorage.getItem("userZipCode") || "",
   });
 
   const [prefferedTimeData, setPrefferedTimeData] = React.useState([]);
@@ -667,13 +667,7 @@ function ProviderDetail(props) {
           res.data.success ||
           res.status === 200 ||
           res.status === 201 ||
-          res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
+          res.status === 200
         ) {
           setOpenLoader(false);
           console.log("These are inssurace companies", res.data);
@@ -1778,37 +1772,33 @@ function ProviderDetail(props) {
         <button
           className={classes.button}
           onClick={() => {
-            if (localStorage.getItem("id") && localStorage.getItem("token")) {
-              // setPostRequest(true);
-              // postMyRequest();
-
-              postMyRequest();
-              // setTimeout(() => {
-              //   updateCustomerProblem();
-              // }, 500);
-              // setTimeout(() => {
-              //   if (requestData.waterDamage === "Yes") {
-              //     updateCustomerProperty();
-              //   }
-              // }, 500);
-              // setTimeout(() => {
-              //   updateCustomerLookingFor();
-              // }, 500);
-
-              // setTimeout(() => {
-              //   updateCustomerPropertyDescriptionAndProperty();
-              // }, 500);
-              // setTimeout(() => {
-              //   if (requestData.waterDamage === "Yes") {
-              //     updateCustomerPropertyInssurance();
-              //   }
-              // }, 500);
-              // setTimeout(() => {
-              //   updateCustomerContactDetails();
-              // }, 500);
+            if (
+              requestData.requestDate != "" &&
+              requestData.prfferedTime != "" &&
+              requestData.itemName != "" &&
+              requestData.serviceType != "" &&
+              requestData.anyFloorOrWaterDamage != "" &&
+              requestData.serviceType != "" &&
+              requestData.area != "" &&
+              requestData.structure != "" &&
+              requestData.requestorStatus != "" &&
+              requestData.description != "" &&
+              requestData.userName != "" &&
+              requestData.userPhone != "" &&
+              requestData.userEmail != "" &&
+              requestData.userAddress != "" &&
+              requestData.userCity != "" &&
+              requestData.userState != "" &&
+              requestData.userZipCode != ""
+            ) {
+              if (localStorage.getItem("id") && localStorage.getItem("token")) {
+                postMyRequest();
+              } else {
+                checkThisUser();
+                // document.getElementById("create-account").click();
+              }
             } else {
-              checkThisUser();
-              // document.getElementById("create-account").click();
+              notify("Please fill complete information");
             }
           }}
         >
