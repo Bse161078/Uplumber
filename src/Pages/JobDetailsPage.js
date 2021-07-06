@@ -149,7 +149,7 @@ function ProviderDetail(props) {
             JSON.parse(localStorage.getItem("userData")).firstName +
               " " +
               JSON.parse(localStorage.getItem("userData")).lastName +
-              "requested a modification in the job",
+              " requested a modification in the job",
             jobData.serviceId._id,
             "modificationReqeusted"
           );
@@ -315,7 +315,7 @@ function ProviderDetail(props) {
             JSON.parse(localStorage.getItem("userData")).firstName +
               " " +
               JSON.parse(localStorage.getItem("userData")).lastName +
-              "has updated the completion date",
+              " has updated the completion date",
             jobData.serviceId._id,
             "completionDateUpdated"
           );
@@ -350,7 +350,7 @@ function ProviderDetail(props) {
         ) {
           setOpenLoader(false);
           console.log("This is rating response", res.data);
-          setBottomState(true);
+          setBottomState(false);
           sendCustomeNotification(
             JSON.parse(localStorage.getItem("userData")).firstName +
               " " +
@@ -504,8 +504,7 @@ function ProviderDetail(props) {
               Job Not Started
             </p>
           </Grid>
-        ) : plumberOnWay ||
-          JSON.parse(localStorage.getItem("job")).status === "onTheWay" ? (
+        ) : plumberOnWay ? (
           <Grid
             container
             direction="row"
@@ -750,27 +749,44 @@ function ProviderDetail(props) {
                     </Grid>
                   </button>
                 )}
-              {JSON.parse(localStorage.getItem("job")).status === "delivered" ||
-                (JSON.parse(localStorage.getItem("job")).status ===
-                  "NeedModification" && (
-                  <button
-                    className={classes.button}
-                    style={{ marginTop: 10 }}
-                    onClick={() => {
-                      orderComplete();
-                    }}
+              {JSON.parse(localStorage.getItem("job")).status ===
+                "delivered" && (
+                <button
+                  className={classes.button}
+                  style={{ marginTop: 10 }}
+                  onClick={() => {
+                    orderComplete();
+                  }}
+                >
+                  <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="center"
                   >
-                    <Grid
-                      container
-                      direction="row"
-                      justify="center"
-                      alignItems="center"
-                    >
-                      Job Acceptance
-                    </Grid>
-                  </button>
-                ))}
-
+                    Job Acceptance
+                  </Grid>
+                </button>
+              )}
+              {JSON.parse(localStorage.getItem("job")).status ===
+                "NeedModification" && (
+                <button
+                  className={classes.button}
+                  style={{ marginTop: 10 }}
+                  onClick={() => {
+                    orderComplete();
+                  }}
+                >
+                  <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="center"
+                  >
+                    Job Acceptance
+                  </Grid>
+                </button>
+              )}
               {JSON.parse(localStorage.getItem("job")).status ===
                 "onTheWay" && (
                 <button
@@ -790,7 +806,6 @@ function ProviderDetail(props) {
                   </Grid>
                 </button>
               )}
-
               {JSON.parse(localStorage.getItem("job")).status ===
                 "delivered" && (
                 <button
