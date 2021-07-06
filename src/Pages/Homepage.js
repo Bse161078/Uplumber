@@ -305,7 +305,7 @@ export default function HomePage(pros) {
             >
               {calculatedStatus}
             </div>
-            {type != "Completed" &&
+            {/* {type != "Completed" &&
               type != "Cancelled" &&
               type != "Accepted" &&
               calculatedStatus != "Order Cancelled" &&
@@ -338,7 +338,7 @@ export default function HomePage(pros) {
                 >
                   Cancel
                 </div>
-              )}
+              )} */}
           </Grid>
         </Grid>
         <div style={{ width: "100%", border: "1px solid #f6f6f6" }}></div>

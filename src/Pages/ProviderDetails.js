@@ -181,7 +181,7 @@ function ProviderDetail(props) {
           res.status === 200
         ) {
           setOpenLoader(false);
-          console.log(res.data);
+          console.log("These are provider reviews", res.data);
           setReviews(res.data.Customer);
         }
       },
@@ -205,11 +205,11 @@ function ProviderDetail(props) {
 
   useEffect(() => {
     if (localStorage.getItem("job")) {
-      if (JSON.parse(localStorage.getItem("job")).isAccepted) {
+      if (JSON.parse(localStorage.getItem("job")).isAccepted === true) {
         window.location.href =
           "/jobDetails/" + JSON.parse(localStorage.getItem("job"))._id;
       } else {
-        window.location.href = "/jobDetails/" + props.match.params.id;
+        // window.location.href = "/jobDetails/" + props.match.params.id;
       }
       setJobData(JSON.parse(localStorage.getItem("job")));
       providerReviews(JSON.parse(localStorage.getItem("job")));

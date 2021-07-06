@@ -222,7 +222,7 @@ function ProviderDetail(props) {
               {props.item.problem.serviceName || "N/A"}
             </div>
             {/* props.item.isAccepted === true */}
-            {!props.item.isAccepted && (
+            {!props.item.isAccepted && !props.item.isCancelled && (
               <div
                 style={{
                   background: "red",
