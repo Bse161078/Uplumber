@@ -604,13 +604,19 @@ export const getProviderReviews = (id) => {
   return axios(config);
 };
 
-export const setProviderReviews = (customerId, id, rating, comment,serviceId) => {
+export const setProviderReviews = (
+  customerId,
+  id,
+  rating,
+  comment,
+  serviceId
+) => {
   var data = JSON.stringify({
     providerId: id,
     customerId: customerId,
     rating: rating,
     comment: comment,
-    serviceId:serviceId
+    serviceId: serviceId,
   });
   console.log("This is dataa", data);
   var config = {

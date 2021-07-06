@@ -204,6 +204,7 @@ function ProviderDetail(props) {
   const position = [51.505, -0.09];
 
   useEffect(() => {
+    localStorage.removeItem("reviews");
     if (localStorage.getItem("job")) {
       if (JSON.parse(localStorage.getItem("job")).isAccepted === true) {
         window.location.href =
@@ -516,7 +517,10 @@ estimatedTravelTime: "20 minutes" */}
                     cursor: "pointer",
                   }}
                   onClick={() => {
-                    document.getElementById("reviews").click();
+                    if (reviews) {
+                      localStorage.setItem("reviews", JSON.stringify(reviews));
+                      document.getElementById("reviews").click();
+                    }
                   }}
                 >
                   All Reviews
@@ -535,7 +539,7 @@ estimatedTravelTime: "20 minutes" */}
                         <Grid container direction="row">
                           <Grid item md={2} xs={2}>
                             <img
-                              src={Avatar}
+                              src={item.customerImage || Avatar}
                               style={{ width: 50, height: 50 }}
                             ></img>
                           </Grid>
@@ -552,23 +556,25 @@ estimatedTravelTime: "20 minutes" */}
                                   fontWeight: 600,
                                 }}
                               >
-                                Jane Doe
+                                {item.customerName || "Jane Doe"}
                               </p>
                               <Rating
-                                value={5}
+                                value={item.rating}
                                 style={{ fontSize: 12 }}
                               ></Rating>
-                              <span style={{ fontSize: 12 }}>5.0(433) </span>
+                              <span style={{ fontSize: 12 }}>
+                                {item.rating}({reviews.length}){" "}
+                              </span>
                               <div style={{ width: "100%" }}></div>
-                              <span style={{ fontSize: 12 }}>$25 / hr</span>
+                              {/* <span style={{ fontSize: 12 }}>$25 / hr</span> */}
                               <div style={{ width: "100%" }}></div>
                               <span>{item.comment}</span>
                             </Grid>
                           </Grid>
                           <Grid item md={2} xs={2}>
-                            <span style={{ fontSize: 10, color: "gray" }}>
+                            {/* <span style={{ fontSize: 10, color: "gray" }}>
                               $25 / hr
-                            </span>
+                            </span> */}
                           </Grid>
                         </Grid>
                       </Paper>

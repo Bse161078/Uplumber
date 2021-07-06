@@ -100,9 +100,64 @@ export default function LoginPage() {
           style={{ height: "max-content" }}
         >
           <Grid container direction="row">
-            {[1, 2, 3, 4, 5, 6, 7, 8].map((item) => {
-              return <ReviewCard></ReviewCard>;
-            })}
+            {localStorage.getItem("reviews") &&
+              JSON.parse(localStorage.getItem("reviews")).map((item) => {
+                return (
+                  <Grid container direction="row" justify="center">
+                    {" "}
+                    <Paper
+                      style={{ width: "90%", marginBottom: 10, padding: 10 }}
+                    >
+                      <Grid container direction="row">
+                        <Grid item md={2} xs={2}>
+                          <img
+                            src={item.customerImage || Avatar}
+                            style={{ width: 50, height: 50 }}
+                          ></img>
+                        </Grid>
+                        <Grid item md={8} xs={8}>
+                          <Grid
+                            container
+                            direction="row"
+                            style={{ marginLeft: 5 }}
+                          >
+                            <p
+                              style={{
+                                width: "100%",
+                                margin: 0,
+                                fontWeight: 600,
+                              }}
+                            >
+                              {item.customerName || "Jane Doe"}
+                            </p>
+                            <Rating
+                              value={item.rating}
+                              style={{ fontSize: 12 }}
+                            ></Rating>
+                            <span style={{ fontSize: 12 }}>
+                              {item.rating}(
+                              {
+                                JSON.parse(localStorage.getItem("reviews"))
+                                  .length
+                              }
+                              ){" "}
+                            </span>
+                            <div style={{ width: "100%" }}></div>
+                            {/* <span style={{ fontSize: 12 }}>$25 / hr</span> */}
+                            <div style={{ width: "100%" }}></div>
+                            <span>{item.comment}</span>
+                          </Grid>
+                        </Grid>
+                        <Grid item md={2} xs={2}>
+                          {/* <span style={{ fontSize: 10, color: "gray" }}>
+                          $25 / hr
+                        </span> */}
+                        </Grid>
+                      </Grid>
+                    </Paper>
+                  </Grid>
+                );
+              })}
           </Grid>
         </Grid>
         <div className="sideBar" style={{ background: "red" }}>

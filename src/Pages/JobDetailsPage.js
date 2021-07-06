@@ -335,7 +335,7 @@ function ProviderDetail(props) {
   const givereRating = () => {
     setOpenLoader(true);
     setProviderReviews(
-      jobData.customerId,
+      jobData.customerProfileId._id,
       jobData.providerId,
       rating,
       commentText,
