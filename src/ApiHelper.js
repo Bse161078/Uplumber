@@ -445,6 +445,19 @@ export const acceptOffer = (id) => {
   return axios(config);
 };
 
+export const getOfferDetail = (id) => {
+  var config = {
+    method: "get",
+    url: "https://u-plumber.net/api/customeroffer/" + id,
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+  };
+
+  return axios(config);
+};
+
 export const needModificationOffer = (id, text) => {
   var data = JSON.stringify({
     isNeedModification: true,

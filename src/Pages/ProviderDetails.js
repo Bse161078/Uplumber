@@ -21,6 +21,7 @@ import {
   getProviderReviews,
   sendCustomerNotification,
   markOrderCancelled,
+  getOfferDetail,
 } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -59,6 +60,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 function ProviderDetail(props) {
+  console.log("THis is props", props.match.params.id);
   const classes = useStyles();
   const [value, setValue] = useState("");
   const [offerAccepted, setOfferAccepted] = useState(false);
@@ -121,6 +123,7 @@ function ProviderDetail(props) {
             jobData.serviceId._id,
             "offerRejected"
           );
+          document.getElementById("jobdetails" + jobData._id).click();
         }
       },
       (error) => {
@@ -153,6 +156,7 @@ function ProviderDetail(props) {
             jobData.serviceId._id,
             "offerAccepted"
           );
+          document.getElementById("jobdetails" + jobData._id).click();
           setOfferAccepted(true);
         }
       },
@@ -201,14 +205,55 @@ function ProviderDetail(props) {
 
   useEffect(() => {
     if (localStorage.getItem("job")) {
+      if (JSON.parse(localStorage.getItem("job")).isAccepted) {
+        window.location.href =
+          "/jobDetails/" + JSON.parse(localStorage.getItem("job"))._id;
+      } else {
+        window.location.href = "/jobDetails/" + props.match.params.id;
+      }
       setJobData(JSON.parse(localStorage.getItem("job")));
       providerReviews(JSON.parse(localStorage.getItem("job")));
+    } else {
+      getOfferDetailsById();
     }
   }, []);
+  const getOfferDetailsById = () => {
+    setOpenLoader(true);
+    getOfferDetail(props.match.params.id).then(
+      (res) => {
+        if (
+          res.data.success ||
+          res.status === 200 ||
+          res.status === 201 ||
+          res.status === 200
+        ) {
+          setOpenLoader(false);
+          console.log("This is offer Details", res.data.CustomerOffer);
+          localStorage.setItem("job", JSON.stringify(res.data.CustomerOffer));
+          setJobData(JSON.parse(localStorage.getItem("job")));
+          // setTheStatus();
+        }
+      },
+      (error) => {
+        if (error.response) {
+          notify(error.response.data.message);
+        }
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+      }
+    );
+  };
   console.log("This is the job", jobData);
   const notify = (data) => toast(data);
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
+      {localStorage.getItem("job") && (
+        <Link
+          id={"jobdetails" + JSON.parse(localStorage.getItem("job"))._id}
+          to={"/jobDetails/" + JSON.parse(localStorage.getItem("job"))._id}
+        ></Link>
+      )}
+
       <Backdrop className={classes.backdrop} open={openLoader}>
         <CircularProgress color="inherit" />
       </Backdrop>

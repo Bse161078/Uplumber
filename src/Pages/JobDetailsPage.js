@@ -21,6 +21,7 @@ import {
   acceptNewCompletionDate,
   setProviderReviews,
   sendCustomerNotification,
+  getOfferDetail,
 } from "../ApiHelper";
 
 const useStyles = makeStyles((theme) => ({
@@ -60,6 +61,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 function ProviderDetail(props) {
+  console.log("This ", props.match.params.id);
+
   const classes = useStyles();
   const [value, setValue] = useState("");
   const [markComplete, setMarkComplete] = useState(false);
@@ -89,41 +92,44 @@ function ProviderDetail(props) {
   };
   const position = [51.505, -0.09];
   //console.log("THis is great", props);
-
+  const setTheStatus = () => {
+    if (
+      JSON.parse(localStorage.getItem("job")).status === "" ||
+      JSON.parse(localStorage.getItem("job")).status === "OfferAccepted"
+    ) {
+      setLeadUnpaid(true);
+    }
+    if (JSON.parse(localStorage.getItem("job")).status === "pending") {
+      setNotStarted(true);
+    }
+    if (JSON.parse(localStorage.getItem("job")).status === "onTheWay") {
+      setPlumberOnWay(true);
+    }
+    if (JSON.parse(localStorage.getItem("job")).status === "delivered") {
+      setJobDelivered(true);
+    }
+    if (JSON.parse(localStorage.getItem("job")).status === "NeedModification") {
+      setModification(true);
+    }
+    if (JSON.parse(localStorage.getItem("job")).status === "OrderCompleted") {
+      setMarkComplete(true);
+    }
+    if (JSON.parse(localStorage.getItem("job")).status === "OrderCancelled") {
+      setOrderCanceled(true);
+    }
+  };
   useEffect(() => {
     console.log(
       "THis is the job in job details",
       JSON.parse(localStorage.getItem("job"))
     );
 
-    setJobData(JSON.parse(localStorage.getItem("job")));
     if (localStorage.getItem("job")) {
-      if (
-        JSON.parse(localStorage.getItem("job")).status === "" ||
-        JSON.parse(localStorage.getItem("job")).status === "OfferAccepted"
-      ) {
-        setLeadUnpaid(true);
-      }
-      if (JSON.parse(localStorage.getItem("job")).status === "pending") {
-        setNotStarted(true);
-      }
-      if (JSON.parse(localStorage.getItem("job")).status === "onTheWay") {
-        setPlumberOnWay(true);
-      }
-      if (JSON.parse(localStorage.getItem("job")).status === "delivered") {
-        setJobDelivered(true);
-      }
-      if (
-        JSON.parse(localStorage.getItem("job")).status === "NeedModification"
-      ) {
-        setModification(true);
-      }
-      if (JSON.parse(localStorage.getItem("job")).status === "OrderCompleted") {
-        setMarkComplete(true);
-      }
-      if (JSON.parse(localStorage.getItem("job")).status === "OrderCancelled") {
-        setOrderCanceled(true);
-      }
+      setJobData(JSON.parse(localStorage.getItem("job")));
+      setTheStatus();
+      getOfferDetailsById();
+    } else {
+      getOfferDetailsById();
     }
   }, []);
   console.log("This is the job", jobData);
@@ -150,6 +156,38 @@ function ProviderDetail(props) {
 
           setNeedModifications(false);
           setModification(true);
+        }
+      },
+      (error) => {
+        if (error.response) {
+          notify(error.response.data.message);
+        }
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+      }
+    );
+  };
+
+  const getOfferDetailsById = () => {
+    setOpenLoader(true);
+    console.log("getting offer by id");
+    getOfferDetail(props.match.params.id).then(
+      (res) => {
+        if (
+          res.data.success ||
+          res.status === 200 ||
+          res.status === 201 ||
+          res.status === 200
+        ) {
+          setOpenLoader(false);
+          console.log("This is offer Details by id", res.data.CustomerOffer);
+          localStorage.setItem("job", JSON.stringify(res.data.CustomerOffer));
+          console.log(
+            "This is job in local storage ",
+            JSON.parse(localStorage.getItem("job"))
+          );
+          setJobData(JSON.parse(localStorage.getItem("job")));
+          setTheStatus();
         }
       },
       (error) => {
@@ -300,7 +338,8 @@ function ProviderDetail(props) {
       jobData.customerId,
       jobData.providerId,
       rating,
-      commentText
+      commentText,
+      jobData.serviceId._id
     ).then(
       (res) => {
         if (
@@ -311,6 +350,7 @@ function ProviderDetail(props) {
         ) {
           setOpenLoader(false);
           console.log("This is rating response", res.data);
+          setBottomState(true);
           sendCustomeNotification(
             JSON.parse(localStorage.getItem("userData")).firstName +
               " " +
@@ -464,7 +504,8 @@ function ProviderDetail(props) {
               Job Not Started
             </p>
           </Grid>
-        ) : plumberOnWay ? (
+        ) : plumberOnWay ||
+          JSON.parse(localStorage.getItem("job")).status === "onTheWay" ? (
           <Grid
             container
             direction="row"
@@ -689,7 +730,9 @@ function ProviderDetail(props) {
                 .newEstimatedCompletionDate &&
                 JSON.parse(localStorage.getItem("job")).status != "delivered" &&
                 JSON.parse(localStorage.getItem("job")).status !=
-                  "NeedModification" && (
+                  "NeedModification" &&
+                JSON.parse(localStorage.getItem("job")).status !=
+                  "OrderCompleted" && (
                   <button
                     className={classes.button}
                     style={{ marginTop: 10 }}
@@ -707,25 +750,26 @@ function ProviderDetail(props) {
                     </Grid>
                   </button>
                 )}
-              {JSON.parse(localStorage.getItem("job")).status ===
-                "delivered" && (
-                <button
-                  className={classes.button}
-                  style={{ marginTop: 10 }}
-                  onClick={() => {
-                    orderComplete();
-                  }}
-                >
-                  <Grid
-                    container
-                    direction="row"
-                    justify="center"
-                    alignItems="center"
+              {JSON.parse(localStorage.getItem("job")).status === "delivered" ||
+                (JSON.parse(localStorage.getItem("job")).status ===
+                  "NeedModification" && (
+                  <button
+                    className={classes.button}
+                    style={{ marginTop: 10 }}
+                    onClick={() => {
+                      orderComplete();
+                    }}
                   >
-                    Job Acceptance
-                  </Grid>
-                </button>
-              )}
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      Job Acceptance
+                    </Grid>
+                  </button>
+                ))}
 
               {JSON.parse(localStorage.getItem("job")).status ===
                 "onTheWay" && (

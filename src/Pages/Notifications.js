@@ -6,6 +6,7 @@ import {
   Backdrop,
   CircularProgress,
 } from "@material-ui/core";
+import moment from "moment";
 import Drawer from "@material-ui/core/Drawer";
 import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
@@ -188,6 +189,12 @@ function ProviderDetail(props) {
                       document.getElementById("route").click();
                       localStorage.setItem("plumberlat", item.latitude);
                       localStorage.setItem("plumberlong", item.longitude);
+                    } else if (item.offerId.isAccepted === true) {
+                      localStorage.removeItem("job");
+                      window.location.href = "/jobDetails/" + item.offerId._id;
+                    } else if (item.offerId.isAccepted === false) {
+                      localStorage.removeItem("job");
+                      window.location.href = "/details/" + item.offerId._id;
                     } else {
                       Notification.requestPermission().then((result) => {
                         if (result === "granted") {
@@ -221,7 +228,7 @@ function ProviderDetail(props) {
                         {item.notificationText}
                       </p>
                       <span style={{ fontSize: 10, color: "gray" }}>
-                        3 minutes ago
+                        {new moment(new Date(item.updatedAt)).fromNow()}
                       </span>
                     </Grid>
                   </Grid>

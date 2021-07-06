@@ -44,6 +44,8 @@ class Map extends Component {
         destination: {
           lat: JSON.parse(localStorage.getItem("plumberlat")),
           lng: JSON.parse(localStorage.getItem("plumberlong")),
+          // lat: 32.785834,
+          // lng: 72.406417,
         },
         travelMode: google.maps.TravelMode.DRIVING,
         waypoints: [],
