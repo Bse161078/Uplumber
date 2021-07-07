@@ -287,25 +287,25 @@ function ProviderDetail(props) {
             setTimeout(() => {
               updateCustomerProblem();
             }, 600);
-            setTimeout(() => {
-              updateCustomerLookingFor();
-            }, 800);
-            setTimeout(() => {
-              if (requestData.waterDamage === "Yes") {
-                updateCustomerProperty();
-              }
-            }, 900);
-            setTimeout(() => {
-              updateCustomerPropertyDescriptionAndProperty();
-            }, 1000);
-            setTimeout(() => {
-              if (requestData.waterDamage === "Yes") {
-                updateCustomerPropertyInssurance();
-              }
-            }, 1300);
-            setTimeout(() => {
-              updateCustomerContactDetails();
-            }, 2000);
+            // setTimeout(() => {
+            //   updateCustomerLookingFor();
+            // }, 800);
+            // setTimeout(() => {
+            //   if (requestData.waterDamage === "Yes") {
+            //     updateCustomerProperty();
+            //   }
+            // }, 900);
+            // setTimeout(() => {
+            //   updateCustomerPropertyDescriptionAndProperty();
+            // }, 1000);
+            // setTimeout(() => {
+            //   if (requestData.waterDamage === "Yes") {
+            //     updateCustomerPropertyInssurance();
+            //   }
+            // }, 1300);
+            // setTimeout(() => {
+            //   updateCustomerContactDetails();
+            // }, 2000);
           }
         },
         (error) => {
@@ -358,6 +358,7 @@ function ProviderDetail(props) {
             localStorage.removeItem("requestOption");
             console.log(res);
             notify(res.data.message);
+            updateCustomerLookingFor();
           }
         },
         (error) => {
@@ -391,6 +392,11 @@ function ProviderDetail(props) {
           console.log(res);
           notify(res.data.message);
           localStorage.removeItem("lookingFor");
+          if (requestData.waterDamage === "Yes") {
+            updateCustomerProperty();
+          } else {
+            updateCustomerPropertyDescriptionAndProperty();
+          }
         }
       },
       (error) => {
@@ -430,6 +436,7 @@ function ProviderDetail(props) {
             localStorage.removeItem("area");
             localStorage.removeItem("structure");
             localStorage.removeItem("requestorStatus");
+            updateCustomerPropertyDescriptionAndProperty();
           }
         },
         (error) => {
@@ -466,6 +473,11 @@ function ProviderDetail(props) {
             console.log(res);
             localStorage.removeItem("description");
             localStorage.removeItem("image");
+            if (requestData.waterDamage === "Yes") {
+              updateCustomerPropertyInssurance();
+            } else {
+              updateCustomerContactDetails();
+            }
           }
         },
         (error) => {
@@ -505,6 +517,7 @@ function ProviderDetail(props) {
           localStorage.removeItem("policyNumber");
           localStorage.removeItem("expiryDate");
           localStorage.removeItem("deduction");
+          updateCustomerContactDetails();
         }
       },
       (error) => {

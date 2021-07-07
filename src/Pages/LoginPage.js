@@ -143,9 +143,8 @@ export default function LoginPage() {
     getLocation();
   }, []);
 
-  const postMyRequest = (id) => {
-    if (localStorage.getItem("token") || id) {
-      console.log("Posting a requeset");
+  const postMyRequest = () => {
+    if (localStorage.getItem("token")) {
       setOpenLoader(true);
       PostARequest().then(
         (res) => {
@@ -153,33 +152,15 @@ export default function LoginPage() {
             res.data.success ||
             res.status === 200 ||
             res.status === 201 ||
-            res.statusText === "Success" ||
-            res.statusText === "Created"
+            res.status === 200 ||
+            res.statusText === 201
           ) {
+            setOpenLoader(false);
             console.log(res.data);
             localStorage.setItem("requestId", res.data._id);
             setTimeout(() => {
               updateCustomerProblem();
             }, 600);
-            setTimeout(() => {
-              updateCustomerLookingFor();
-            }, 800);
-            setTimeout(() => {
-              if (requestData.waterDamage === "Yes") {
-                updateCustomerProperty();
-              }
-            }, 900);
-            setTimeout(() => {
-              updateCustomerPropertyDescriptionAndProperty();
-            }, 1000);
-            setTimeout(() => {
-              if (requestData.waterDamage === "Yes") {
-                updateCustomerPropertyInssurance();
-              }
-            }, 1300);
-            setTimeout(() => {
-              updateCustomerContactDetails();
-            }, 2000);
           }
         },
         (error) => {
@@ -221,8 +202,8 @@ export default function LoginPage() {
             res.data.success ||
             res.status === 200 ||
             res.status === 201 ||
-            res.statusText === "Success" ||
-            res.statusText === "Created"
+            res.status === 200 ||
+            res.statusText === 201
           ) {
             setOpenLoader(false);
             localStorage.removeItem("requestDate");
@@ -232,6 +213,7 @@ export default function LoginPage() {
             localStorage.removeItem("requestOption");
             console.log(res);
             notify(res.data.message);
+            updateCustomerLookingFor();
           }
         },
         (error) => {
@@ -255,15 +237,21 @@ export default function LoginPage() {
     CustomerSericeUpdateLookingfor(data).then(
       (res) => {
         if (
+          res.data.success ||
           res.status === 200 ||
           res.status === 201 ||
-          res.statusText === "Success" ||
-          res.statusText === "Created"
+          res.status === 200 ||
+          res.statusText === 201
         ) {
           setOpenLoader(false);
           console.log(res);
-          // notify(res.data.message);
+          notify(res.data.message);
           localStorage.removeItem("lookingFor");
+          if (requestData.waterDamage === "Yes") {
+            updateCustomerProperty();
+          } else {
+            updateCustomerPropertyDescriptionAndProperty();
+          }
         }
       },
       (error) => {
@@ -291,17 +279,19 @@ export default function LoginPage() {
       CustomerSericeUpdateProperty(data).then(
         (res) => {
           if (
+            res.data.success ||
             res.status === 200 ||
             res.status === 201 ||
-            res.statusText === "Success" ||
-            res.statusText === "Created"
+            res.status === 200 ||
+            res.statusText === 201
           ) {
             setOpenLoader(false);
             console.log(res);
-            // notify(res.data.message);
+            notify(res.data.message);
             localStorage.removeItem("area");
             localStorage.removeItem("structure");
             localStorage.removeItem("requestorStatus");
+            updateCustomerPropertyDescriptionAndProperty();
           }
         },
         (error) => {
@@ -327,16 +317,22 @@ export default function LoginPage() {
       CustomerSericeUpdateDescriptionAndPhoto(data).then(
         (res) => {
           if (
+            res.data.success ||
             res.status === 200 ||
             res.status === 201 ||
-            res.statusText === "Success" ||
-            res.statusText === "Created"
+            res.status === 200 ||
+            res.statusText === 201
           ) {
             setOpenLoader(false);
-            // notify(res.data.message);
+            notify(res.data.message);
             console.log(res);
             localStorage.removeItem("description");
             localStorage.removeItem("image");
+            if (requestData.waterDamage === "Yes") {
+              updateCustomerPropertyInssurance();
+            } else {
+              updateCustomerContactDetails();
+            }
           }
         },
         (error) => {
@@ -366,16 +362,17 @@ export default function LoginPage() {
           res.data.success ||
           res.status === 200 ||
           res.status === 201 ||
-          res.statusText === "Success" ||
-          res.statusText === "Created"
+          res.status === 200 ||
+          res.statusText === 201
         ) {
           setOpenLoader(false);
-          // notify(res.data.message);
+          notify(res.data.message);
           console.log(res);
           localStorage.removeItem("company");
           localStorage.removeItem("policyNumber");
           localStorage.removeItem("expiryDate");
           localStorage.removeItem("deduction");
+          updateCustomerContactDetails();
         }
       },
       (error) => {
@@ -423,7 +420,7 @@ export default function LoginPage() {
             res.statusText === "OK"
           ) {
             setOpenLoader(false);
-            notify("Request has been submitted!");
+            notify(res.data.message);
             console.log(res);
             localStorage.removeItem("userName");
             localStorage.removeItem("userPhone");
@@ -434,8 +431,7 @@ export default function LoginPage() {
             localStorage.removeItem("userCity");
             localStorage.removeItem("userState");
             localStorage.removeItem("userZipCode");
-            document.getElementById("home").click();
-            // document.getElementById("complete").click();
+            setPostRequest(true);
           }
         },
         (error) => {
