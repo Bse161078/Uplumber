@@ -338,7 +338,7 @@ function ProviderDetail(props) {
         serviceName: requestData.serviceType,
         requestMany:
           requestData.requestOption === "Auto accept 1st offer" ? false : true,
-        anyFloorOrWaterDamage: requestData.waterDamage === "yes" ? true : false,
+        anyFloorOrWaterDamage: requestData.waterDamage === "Yes" ? true : false,
         serviceCode: requestData.serviceType,
       };
       CustomerSericeUpdateProblem(data).then(
