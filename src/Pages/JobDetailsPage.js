@@ -92,29 +92,28 @@ function ProviderDetail(props) {
   };
   const position = [51.505, -0.09];
   //console.log("THis is great", props);
-  const setTheStatus = () => {
-    if (
-      JSON.parse(localStorage.getItem("job")).status === "" ||
-      JSON.parse(localStorage.getItem("job")).status === "OfferAccepted"
-    ) {
+  const setTheStatus = (job) => {
+    var status = JSON.parse(localStorage.getItem("job")).status || job.status;
+    if (status === "" || status === "OfferAccepted") {
       setLeadUnpaid(true);
     }
-    if (JSON.parse(localStorage.getItem("job")).status === "pending") {
+    if (status === "pending") {
+      setLeadUnpaid(false);
       setNotStarted(true);
     }
-    if (JSON.parse(localStorage.getItem("job")).status === "onTheWay") {
+    if (status === "onTheWay") {
       setPlumberOnWay(true);
     }
-    if (JSON.parse(localStorage.getItem("job")).status === "delivered") {
+    if (status === "delivered") {
       setJobDelivered(true);
     }
-    if (JSON.parse(localStorage.getItem("job")).status === "NeedModification") {
+    if (status === "NeedModification") {
       setModification(true);
     }
-    if (JSON.parse(localStorage.getItem("job")).status === "OrderCompleted") {
+    if (status === "OrderCompleted") {
       setMarkComplete(true);
     }
-    if (JSON.parse(localStorage.getItem("job")).status === "OrderCancelled") {
+    if (status === "OrderCancelled") {
       setOrderCanceled(true);
     }
   };
@@ -126,7 +125,7 @@ function ProviderDetail(props) {
 
     if (localStorage.getItem("job")) {
       setJobData(JSON.parse(localStorage.getItem("job")));
-      setTheStatus();
+      setTheStatus(JSON.parse(localStorage.getItem("job")));
       getOfferDetailsById();
     } else {
       getOfferDetailsById();
@@ -187,7 +186,7 @@ function ProviderDetail(props) {
             JSON.parse(localStorage.getItem("job"))
           );
           setJobData(JSON.parse(localStorage.getItem("job")));
-          setTheStatus();
+          setTheStatus(res.data.CustomerOffer);
         }
       },
       (error) => {
@@ -727,6 +726,7 @@ function ProviderDetail(props) {
             >
               {JSON.parse(localStorage.getItem("job"))
                 .newEstimatedCompletionDate &&
+                markComplete === false &&
                 JSON.parse(localStorage.getItem("job")).status != "delivered" &&
                 JSON.parse(localStorage.getItem("job")).status !=
                   "NeedModification" &&
@@ -749,25 +749,25 @@ function ProviderDetail(props) {
                     </Grid>
                   </button>
                 )}
-              {JSON.parse(localStorage.getItem("job")).status ===
-                "delivered" && (
-                <button
-                  className={classes.button}
-                  style={{ marginTop: 10 }}
-                  onClick={() => {
-                    orderComplete();
-                  }}
-                >
-                  <Grid
-                    container
-                    direction="row"
-                    justify="center"
-                    alignItems="center"
+              {JSON.parse(localStorage.getItem("job")).status === "delivered" &&
+                markComplete === false && (
+                  <button
+                    className={classes.button}
+                    style={{ marginTop: 10 }}
+                    onClick={() => {
+                      orderComplete();
+                    }}
                   >
-                    Job Acceptance
-                  </Grid>
-                </button>
-              )}
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      Job Acceptance
+                    </Grid>
+                  </button>
+                )}
               {JSON.parse(localStorage.getItem("job")).status ===
                 "NeedModification" && (
                 <button
@@ -806,30 +806,30 @@ function ProviderDetail(props) {
                   </Grid>
                 </button>
               )}
-              {JSON.parse(localStorage.getItem("job")).status ===
-                "delivered" && (
-                <button
-                  className={classes.button}
-                  style={{
-                    marginTop: 10,
-                    background: "#efefef",
-                    color: "black",
-                    fontWeight: 600,
-                  }}
-                  onClick={() => {
-                    setNeedModifications(true);
-                  }}
-                >
-                  <Grid
-                    container
-                    direction="row"
-                    justify="center"
-                    alignItems="center"
+              {JSON.parse(localStorage.getItem("job")).status === "delivered" &&
+                markComplete === false && (
+                  <button
+                    className={classes.button}
+                    style={{
+                      marginTop: 10,
+                      background: "#efefef",
+                      color: "black",
+                      fontWeight: 600,
+                    }}
+                    onClick={() => {
+                      setNeedModifications(true);
+                    }}
                   >
-                    Need Modification
-                  </Grid>
-                </button>
-              )}
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      Need Modification
+                    </Grid>
+                  </button>
+                )}
             </Grid>
           </Grid>
         )}
