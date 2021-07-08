@@ -61,13 +61,13 @@ const ContactDetails = (props) => {
 
   const handleAddressChange = (address) => {
     props.setRequestData("userAddress", address);
-    localStorage.setItem("userAddress", address);
+    // localStorage.setItem("userAddress", address);
     // console.log("This is the adress", address);
   };
 
   const handleSelect = (address) => {
-    props.setRequestData("userAddress", address);
-    localStorage.setItem("userAddress", address);
+    console.log("This is the dares", address);
+
     geocodeByAddress(address)
       .then((results) => getLatLng(results[0]))
       .then((latLng) => {
@@ -76,6 +76,8 @@ const ContactDetails = (props) => {
           latitude: latLng.lat,
           longitude: latLng.lng,
         });
+        props.setRequestData("userAddress", address);
+        localStorage.setItem("userAddress", address);
         localStorage.setItem(
           "userCurrentLocation",
           JSON.stringify({ latitude: latLng.lat, longitude: latLng.lng })
