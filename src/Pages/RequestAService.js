@@ -377,7 +377,7 @@ function ProviderDetail(props) {
             localStorage.removeItem("serviceType");
             localStorage.removeItem("requestOption");
             console.log(res);
-            notify(res.data.message);
+            // notify(res.data.message);
             updateCustomerLookingFor();
           }
         },
@@ -410,7 +410,7 @@ function ProviderDetail(props) {
         ) {
           setOpenLoader(false);
           console.log(res);
-          notify(res.data.message);
+          // notify(res.data.message);
           localStorage.removeItem("lookingFor");
           if (requestData.waterDamage === "Yes") {
             updateCustomerProperty();
@@ -452,7 +452,7 @@ function ProviderDetail(props) {
           ) {
             setOpenLoader(false);
             console.log(res);
-            notify(res.data.message);
+            // notify(res.data.message);
             localStorage.removeItem("area");
             localStorage.removeItem("structure");
             localStorage.removeItem("requestorStatus");
@@ -489,7 +489,7 @@ function ProviderDetail(props) {
             res.statusText === 201
           ) {
             setOpenLoader(false);
-            notify(res.data.message);
+            // notify(res.data.message);
             console.log(res);
             localStorage.removeItem("description");
             localStorage.removeItem("image");
@@ -531,7 +531,7 @@ function ProviderDetail(props) {
           res.statusText === 201
         ) {
           setOpenLoader(false);
-          notify(res.data.message);
+          // notify(res.data.message);
           console.log(res);
           localStorage.removeItem("company");
           localStorage.removeItem("policyNumber");
@@ -585,7 +585,7 @@ function ProviderDetail(props) {
             res.statusText === "OK"
           ) {
             setOpenLoader(false);
-            notify(res.data.message);
+            // notify(res.data.message);
             console.log(res);
             localStorage.removeItem("userName");
             localStorage.removeItem("userPhone");

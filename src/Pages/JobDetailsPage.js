@@ -752,7 +752,9 @@ function ProviderDetail(props) {
                 </span>
                 <p style={{ fontSize: 10, margin: 0 }}>
                   {" "}
-                  {jobData.serviceDate || jobData.serviceId.problem.serviceDate}
+                  {moment(new Date(jobData.estimatedCompletionDate)).format(
+                    "MMMM Do YYYY"
+                  )}
                 </p>
               </Grid>{" "}
               <Grid item md={12} xs={12}>

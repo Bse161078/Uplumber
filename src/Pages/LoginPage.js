@@ -215,7 +215,7 @@ export default function LoginPage() {
             localStorage.removeItem("serviceType");
             localStorage.removeItem("requestOption");
             console.log(res);
-            notify(res.data.message);
+            // notify(res.data.message);
             updateCustomerLookingFor();
           }
         },
@@ -248,7 +248,7 @@ export default function LoginPage() {
         ) {
           setOpenLoader(false);
           console.log(res);
-          notify(res.data.message);
+          // notify(res.data.message);
           localStorage.removeItem("lookingFor");
           if (requestData.waterDamage === "Yes") {
             updateCustomerProperty();
@@ -290,7 +290,7 @@ export default function LoginPage() {
           ) {
             setOpenLoader(false);
             console.log(res);
-            notify(res.data.message);
+            // notify(res.data.message);
             localStorage.removeItem("area");
             localStorage.removeItem("structure");
             localStorage.removeItem("requestorStatus");
@@ -327,7 +327,7 @@ export default function LoginPage() {
             res.statusText === 201
           ) {
             setOpenLoader(false);
-            notify(res.data.message);
+            // notify(res.data.message);
             console.log(res);
             localStorage.removeItem("description");
             localStorage.removeItem("image");
@@ -369,7 +369,7 @@ export default function LoginPage() {
           res.statusText === 201
         ) {
           setOpenLoader(false);
-          notify(res.data.message);
+          // notify(res.data.message);
           console.log(res);
           localStorage.removeItem("company");
           localStorage.removeItem("policyNumber");
@@ -423,7 +423,7 @@ export default function LoginPage() {
             res.statusText === "OK"
           ) {
             setOpenLoader(false);
-            notify(res.data.message);
+            // notify(res.data.message);
             console.log(res);
             localStorage.removeItem("userName");
             localStorage.removeItem("userPhone");

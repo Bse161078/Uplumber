@@ -200,7 +200,7 @@ function ProviderDetail(props) {
                           res.data.statusText === "OK"
                         ) {
                           setOpenLoader(false);
-                          if (item.latitude != null && item.longitude != null) {
+                          if (item.type === "plumberLocation") {
                             document.getElementById("route").click();
                             localStorage.setItem("plumberlat", item.latitude);
                             localStorage.setItem("plumberlong", item.longitude);
