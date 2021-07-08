@@ -112,7 +112,7 @@ export default function LoginPage() {
                         <Grid item md={2} xs={2}>
                           <img
                             src={item.customerImage || Avatar}
-                            style={{ width: 50, height: 50 }}
+                            style={{ width: 50, height: 50, borderRadius: 70 }}
                           ></img>
                         </Grid>
                         <Grid item md={8} xs={8}>

@@ -523,6 +523,7 @@ function ProviderDetail(props) {
               style={{
                 width: 125,
                 height: 125,
+                borderRadius: 70,
                 borderRadius: 100,
                 marginTop: 120,
               }}
@@ -657,7 +658,11 @@ estimatedTravelTime: "20 minutes" */}
                           <Grid item md={2} xs={2}>
                             <img
                               src={item.customerImage || Avatar}
-                              style={{ width: 50, height: 50 }}
+                              style={{
+                                width: 50,
+                                height: 50,
+                                borderRadius: 70,
+                              }}
                             ></img>
                           </Grid>
                           <Grid item md={8} xs={8}>
