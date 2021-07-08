@@ -762,3 +762,22 @@ export const checkUser = (email, phone) => {
 
   return axios(config);
 };
+
+export const viewNotification = (id) => {
+  var data = JSON.stringify({
+    isView: true,
+    // phoneNumber: phone,
+  });
+  console.log("This is dataa", data);
+  var config = {
+    method: "put",
+    url: "https://u-plumber.net/api/customernotification/" + id,
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+
+  return axios(config);
+};

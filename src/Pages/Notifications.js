@@ -15,7 +15,7 @@ import Rating from "@material-ui/lab/Rating";
 import BathtubIcon from "@material-ui/icons/Bathtub";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Link, withRouter } from "react-router-dom";
-import { CustomerNotifications } from "../ApiHelper";
+import { CustomerNotifications, viewNotification } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
@@ -181,31 +181,62 @@ function ProviderDetail(props) {
                     paddingTop: 10,
                     borderBottom: "1px solid #f1f1f1",
                     height: "max-content",
-                    background: item === 2 ? "#e2f2ff" : "white",
+                    background: item.isView === false ? "#e2f2ff" : "white",
                     cursor: "pointer",
                   }}
                   onClick={() => {
-                    if (item.latitude != null && item.longitude != null) {
-                      document.getElementById("route").click();
-                      localStorage.setItem("plumberlat", item.latitude);
-                      localStorage.setItem("plumberlong", item.longitude);
-                    } else if (item.offerId.isAccepted === true) {
-                      localStorage.removeItem("job");
-                      window.location.href = "/jobDetails/" + item.offerId._id;
-                    } else if (item.offerId.isAccepted === false) {
-                      localStorage.removeItem("job");
-                      window.location.href = "/details/" + item.offerId._id;
-                    } else {
-                      Notification.requestPermission().then((result) => {
-                        if (result === "granted") {
-                          const options = {
-                            body: item.notificationText,
-                            icon: item.image,
-                          };
-                          new Notification("Uplumber Notification", options);
+                    viewNotification(item._id).then(
+                      (res) => {
+                        if (
+                          res.data.success ||
+                          res.status === 200 ||
+                          res.status === 201 ||
+                          res.status === 200 ||
+                          res.statusText === 201 ||
+                          res.statusText === "OK" ||
+                          res.statusText === "Created" ||
+                          res.data.statusText === "OK" ||
+                          res.data.statusText === "Created" ||
+                          res.data.statusText === "OK"
+                        ) {
+                          setOpenLoader(false);
+                          if (item.latitude != null && item.longitude != null) {
+                            document.getElementById("route").click();
+                            localStorage.setItem("plumberlat", item.latitude);
+                            localStorage.setItem("plumberlong", item.longitude);
+                          } else if (item.offerId.isAccepted === true) {
+                            localStorage.removeItem("job");
+                            window.location.href =
+                              "/jobDetails/" + item.offerId._id;
+                          } else if (item.offerId.isAccepted === false) {
+                            localStorage.removeItem("job");
+                            window.location.href =
+                              "/details/" + item.offerId._id;
+                          } else {
+                            Notification.requestPermission().then((result) => {
+                              if (result === "granted") {
+                                const options = {
+                                  body: item.notificationText,
+                                  icon: item.image,
+                                };
+                                new Notification(
+                                  "Uplumber Notification",
+                                  options
+                                );
+                                getAllNotifications();
+                              }
+                            });
+                          }
                         }
-                      });
-                    }
+                      },
+                      (error) => {
+                        if (error.response) {
+                          notify(error.response.data.message);
+                        }
+                        setOpenLoader(false);
+                        console.log("This is response", error.response);
+                      }
+                    );
                   }}
                 >
                   <Grid item md={2} xs={2}>

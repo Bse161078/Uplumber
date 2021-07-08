@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles, Grid, Badge } from "@material-ui/core";
 import ClearAllIcon from "@material-ui/icons/ClearAll";
+import { Link } from "react-router-dom";
 import NotificationsIcon from "@material-ui/icons/Notifications";
+import { CustomerNotifications, viewNotification } from "../ApiHelper";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -35,6 +37,45 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function Header(props) {
   const classes = useStyles();
+  const [allNotifications, setAllNotifications] = useState("");
+  const [badgeValue, setBadgeValue] = useState(0);
+
+  useEffect(() => {
+    if (localStorage.getItem("allNotifications")) {
+      setAllNotifications(JSON.parse(localStorage.getItem("allNotifications")));
+      var notifications = JSON.parse(localStorage.getItem("allNotifications"));
+      var count = 0;
+      notifications.map((item) => {
+        if (item.isView === false) {
+          count = count + 1;
+        }
+      });
+      setBadgeValue(count);
+    }
+    getAllNotifications();
+  }, []);
+
+  const getAllNotifications = () => {
+    CustomerNotifications().then(
+      (res) => {
+        if (
+          res.data.success ||
+          res.status === 200 ||
+          res.status === 201 ||
+          res.status === 200
+        ) {
+          setAllNotifications(res.data.Customers);
+          localStorage.setItem(
+            "allNotifications",
+            JSON.stringify(res.data.Customers)
+          );
+        }
+      },
+      (error) => {
+        console.log("This is response", error.response);
+      }
+    );
+  };
 
   return (
     <div
@@ -44,6 +85,7 @@ export default function Header(props) {
         height: 60,
       }}
     >
+      <Link id={"notifications"} to={"/notifications"}></Link>
       <Grid
         container
         direction="row"
@@ -82,8 +124,12 @@ export default function Header(props) {
             {props.rightIcon ? (
               props.rightIcon
             ) : (
-              <Badge>
-                <NotificationsIcon></NotificationsIcon>
+              <Badge badgeContent={badgeValue} color="secondary">
+                <NotificationsIcon
+                  onClick={() => {
+                    document.getElementById("notifications").click();
+                  }}
+                ></NotificationsIcon>
               </Badge>
             )}
           </Grid>
