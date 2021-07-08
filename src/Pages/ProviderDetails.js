@@ -338,8 +338,8 @@ function ProviderDetail(props) {
           options={{
             destinations: [
               {
-                lat: jobData.providerProfileId.location[1],
-                lng: jobData.providerProfileId.location[0],
+                lat: jobData.providerProfileId.currentLocation.latitude,
+                lng: jobData.providerProfileId.currentLocation.longitude,
               },
             ],
             origins: [
