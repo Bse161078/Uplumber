@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { makeStyles, Grid, TextField } from "@material-ui/core";
+import { makeStyles, Grid, Badge } from "@material-ui/core";
 import ClearAllIcon from "@material-ui/icons/ClearAll";
 import NotificationsIcon from "@material-ui/icons/Notifications";
 
@@ -82,7 +82,9 @@ export default function Header(props) {
             {props.rightIcon ? (
               props.rightIcon
             ) : (
-              <NotificationsIcon></NotificationsIcon>
+              <Badge>
+                <NotificationsIcon></NotificationsIcon>
+              </Badge>
             )}
           </Grid>
         </Grid>

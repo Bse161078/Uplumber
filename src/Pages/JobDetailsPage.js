@@ -15,6 +15,7 @@ import BathtubIcon from "@material-ui/icons/Bathtub";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Link, withRouter } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import moment from "moment";
 import {
   needModificationOffer,
   markOrderComplete,
@@ -23,6 +24,7 @@ import {
   sendCustomerNotification,
   getOfferDetail,
 } from "../ApiHelper";
+import { GoogleMap, DistanceMatrixService } from "@react-google-maps/api";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -82,6 +84,10 @@ function ProviderDetail(props) {
   const [plumberOnWay, setPlumberOnWay] = React.useState(false);
   const [jobDelivered, setJobDelivered] = React.useState(false);
   const [OrderCancelled, setOrderCanceled] = React.useState(false);
+  const [estimatedDistance, setEstimatedDistance] = useState(false);
+  const [estimatedTime, setEstimatedTime] = useState(false);
+
+  // https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592&key=AIzaSyDn-zgL6nFtCy40cEVDMZmpJsjmTLNkGN8
 
   const toggleDrawer = (anchor, open) => (event) => {
     setState(open);
@@ -234,7 +240,7 @@ function ProviderDetail(props) {
     setOpenLoader(true);
     sendCustomerNotification(
       jobData.providerId,
-      "Send Your current Location",
+      "Customer has requested your current location",
       jobData.serviceId,
       jobData._id,
       "locationRequested"
@@ -373,6 +379,38 @@ function ProviderDetail(props) {
   const notify = (data) => toast(data);
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
+      {jobData && (
+        <DistanceMatrixService
+          options={{
+            destinations: [
+              {
+                lat: jobData.providerProfileId.location[1],
+                lng: jobData.providerProfileId.location[0],
+              },
+            ],
+            origins: [
+              {
+                lat: jobData.serviceId.contactDetails.latitude,
+                lng: jobData.serviceId.contactDetails.longitude,
+              },
+            ],
+            travelMode: "DRIVING",
+          }}
+          callback={(res) => {
+            console.log("THis is response", res);
+            // console.log("RESPONSE", res.rows[0].elements[0].distance);
+            // console.log("RESPONSE", res.rows[0].elements[0].duration);
+            if (res.rows[0].elements[0].status === "ZERO_RESULTS") {
+              setEstimatedDistance("N/A");
+              setEstimatedTime("N/A");
+            } else {
+              setEstimatedDistance(res.rows[0].elements[0].distance.text);
+              setEstimatedTime(res.rows[0].elements[0].duration.text);
+            }
+          }}
+        />
+      )}
+
       <Backdrop className={classes.backdrop} open={openLoader}>
         <CircularProgress color="inherit" />
       </Backdrop>
@@ -640,13 +678,21 @@ function ProviderDetail(props) {
               </Grid>
               <Grid item md={6} xs={6}>
                 <span style={{ color: "#60a3d6", fontSize: 10 }}>
+                  Estimated Distance
+                </span>
+                <p style={{ fontSize: 10, margin: 0 }}>
+                  {estimatedDistance && estimatedDistance}
+                </p>
+              </Grid>
+              <Grid item md={6} xs={6}>
+                <span style={{ color: "#60a3d6", fontSize: 10 }}>
                   Estimated Travel Time
                 </span>
                 <p style={{ fontSize: 10, margin: 0 }}>
-                  {jobData.estimatedTravelTime}
+                  {estimatedTime && estimatedTime}
                 </p>
-              </Grid>{" "}
-              <Grid item md={6} xs={6}>
+              </Grid>
+              <Grid item md={12} xs={12}>
                 <span style={{ color: "#60a3d6", fontSize: 10 }}>Service</span>
                 <p style={{ fontSize: 10, margin: 0 }}>
                   {" "}

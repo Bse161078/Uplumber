@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Switch, Route, BrowserRouter } from "react-router-dom";
 import LandingPage from "./Pages/LandingPage";
 import LoginPage from "./Pages/LoginPage";
@@ -30,6 +30,14 @@ import "react-calendar/dist/Calendar.css";
 import "./App.css";
 
 export default function App() {
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src =
+      "https://maps.googleapis.com/maps/api/js?key=AIzaSyDn-zgL6nFtCy40cEVDMZmpJsjmTLNkGN8&libraries=places";
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
+
   return (
     <BrowserRouter>
       <Switch>

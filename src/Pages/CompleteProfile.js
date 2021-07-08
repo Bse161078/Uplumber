@@ -313,7 +313,6 @@ export default function LoginPage() {
           Phone Number
         </p>
         <PhoneInput
-          // className={classes.input}
           placeholder="Enter phone number"
           value={phoneNumber}
           onChange={(e) => {

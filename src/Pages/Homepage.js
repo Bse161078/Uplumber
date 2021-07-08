@@ -755,9 +755,11 @@ export default function HomePage(pros) {
     >
       {allProviders &&
         allProviders.map((item) => {
+          console.log("THis isthe lat long", item.location);
           return (
             <Marker
-              position={{ lat: item.location[0], lng: item.location[1] }}
+              id="findMarker"
+              position={{ lat: item.location[1], lng: item.location[0] }}
             />
           );
         })}

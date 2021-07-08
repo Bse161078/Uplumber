@@ -105,6 +105,9 @@ export default function LoginPage() {
     userCity: localStorage.getItem("userCity"),
     userState: localStorage.getItem("userState"),
     userZipCode: localStorage.getItem("userZipCode"),
+    currentLocation:
+      localStorage.getItem("userCurrentLocation") &&
+      JSON.parse(localStorage.getItem("userCurrentLocation")),
   });
 
   const [currentLocation, setCurrentLoction] = useState({
@@ -410,8 +413,8 @@ export default function LoginPage() {
         allowSms: requestData.allowSms,
         email: requestData.userEmail,
         address: requestData.userAddress,
-        latitude: currentLocation.latitude || 112.0988,
-        longitude: currentLocation.longitude || 133.4444,
+        latitude: requestData.currentLocation.latitude,
+        longitude: requestData.currentLocation.longitude,
         unit: requestData.userUnit,
         city: requestData.userCity,
         state: requestData.userState,

@@ -53,6 +53,11 @@ import {
   checkUser,
 } from "../ApiHelper";
 
+import PlacesAutocomplete, {
+  geocodeByAddress,
+  getLatLng,
+} from "react-places-autocomplete";
+
 const useStyles = makeStyles((theme) => ({
   input: {
     border: "none",
@@ -137,7 +142,7 @@ function ProviderDetail(props) {
     area: localStorage.getItem("area") || "",
     structure: localStorage.getItem("structure") || "",
     requestorStatus: localStorage.getItem("requestorStatus") || "",
-    description: localStorage.getItem("description"),
+    description: localStorage.getItem("description") || "",
     image: localStorage.getItem("image")
       ? JSON.parse(localStorage.getItem("image"))
       : [],
@@ -145,8 +150,8 @@ function ProviderDetail(props) {
     policyNumber: localStorage.getItem("policyNumber") || "",
     expiryDate: localStorage.getItem("expiryDate") || "",
     deduction: localStorage.getItem("deduction") || "",
-    userName: localStorage.getItem("userName"),
-    userPhone: localStorage.getItem("userPhone"),
+    userName: localStorage.getItem("userName") || "",
+    userPhone: localStorage.getItem("userPhone") | "+1",
     allowSms: localStorage.getItem("allowSms")
       ? JSON.parse(localStorage.getItem("allowSms"))
       : true,
@@ -157,6 +162,9 @@ function ProviderDetail(props) {
     userCity: localStorage.getItem("userCity") || "",
     userState: localStorage.getItem("userState") || "",
     userZipCode: localStorage.getItem("userZipCode") || "",
+    currentLocation: localStorage.getItem("userCurrentLocation")
+      ? JSON.parse(localStorage.getItem("userCurrentLocation"))
+      : "",
   });
 
   const [prefferedTimeData, setPrefferedTimeData] = React.useState([]);
@@ -196,6 +204,18 @@ function ProviderDetail(props) {
   }, []);
   // console.log("This is request data", requestData);
   // setRequestData({ ...requestData, [event.target.id]: event.target.value });
+
+  // const handleChange = (address) => {
+  //   console.log("This is the adress", address);
+  // };
+
+  // const handleSelect = (address) => {
+  //   geocodeByAddress(address)
+  //     .then((results) => getLatLng(results[0]))
+  //     .then((latLng) => console.log("Success these are latlongs", latLng))
+  //     .catch((error) => console.error("Error", error));
+  // };
+
   const handleChange = (event) => {
     setValue(event.target.value);
   };
@@ -547,8 +567,8 @@ function ProviderDetail(props) {
         allowSms: requestData.allowSms,
         email: requestData.userEmail,
         address: requestData.userAddress,
-        latitude: currentLocation.latitude || 112.0988,
-        longitude: currentLocation.longitude || 133.4444,
+        latitude: requestData.currentLocation.latitude,
+        longitude: requestData.currentLocation.longitude,
         unit: requestData.userUnit,
         city: requestData.userCity,
         state: requestData.userState,
@@ -650,18 +670,6 @@ function ProviderDetail(props) {
             ...requestData,
             userName: user.firstName + " " + user.lastName,
           });
-          // setRequestData({
-          //   ...requestData,
-          //   userName: user.firstName + " " + user.lastName,
-          //   userPhone: "+" + user.phoneNumber,
-          //   userEmail: user.email,
-          //   userAddress: user.address,
-          //   userCity: user.city,
-          //   userState: user.state,
-          //   userZipCode: user.zipcode,
-          //   userUnit: user.unit,
-          //   userState: user.state,
-          // });
         }
       },
       (error) => {
@@ -1802,7 +1810,8 @@ function ProviderDetail(props) {
               requestData.userAddress != "" &&
               requestData.userCity != "" &&
               requestData.userState != "" &&
-              requestData.userZipCode != ""
+              requestData.userZipCode != "" &&
+              requestData.currentLocation != ""
             ) {
               if (localStorage.getItem("id") && localStorage.getItem("token")) {
                 postMyRequest();
@@ -1985,6 +1994,13 @@ function ProviderDetail(props) {
               userName={requestData.userName}
               userPhone={requestData.userPhone}
               userAddress={requestData.userAddress}
+              // setCurrentLoction={(e) => {
+              //   localStorage.setItem(
+              //     "userCurrentLocation",
+              //     JSON.stringify({ latitude: e.lat, longitude: e.lng })
+              //   );
+              //   setCurrentLoction({ latitude: e.lat, longitude: e.lng });
+              // }}
               userCity={requestData.userCity}
               allowSms={requestData.allowSms}
               userEmail={requestData.userEmail}

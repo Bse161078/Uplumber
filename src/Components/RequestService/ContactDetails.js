@@ -2,6 +2,10 @@ import React, { useState } from "react";
 import { makeStyles, Grid, TextField } from "@material-ui/core";
 import { Countries, states } from "../../Data/Data";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import PlacesAutocomplete, {
+  geocodeByAddress,
+  getLatLng,
+} from "react-places-autocomplete";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -54,6 +58,32 @@ const useStyles = makeStyles((theme) => ({
 const ContactDetails = (props) => {
   const classes = useStyles();
   console.log("THis is  props for contact details", props);
+
+  const handleAddressChange = (address) => {
+    props.setRequestData("userAddress", address);
+    localStorage.setItem("userAddress", address);
+    // console.log("This is the adress", address);
+  };
+
+  const handleSelect = (address) => {
+    props.setRequestData("userAddress", address);
+    localStorage.setItem("userAddress", address);
+    geocodeByAddress(address)
+      .then((results) => getLatLng(results[0]))
+      .then((latLng) => {
+        console.log("Success these are latlongs", latLng);
+        props.setRequestData("currentLocation", {
+          latitude: latLng.lat,
+          longitude: latLng.lng,
+        });
+        localStorage.setItem(
+          "userCurrentLocation",
+          JSON.stringify({ latitude: latLng.lat, longitude: latLng.lng })
+        );
+      })
+      .catch((error) => console.error("Error", error));
+  };
+
   return (
     <Grid
       container
@@ -157,7 +187,46 @@ const ContactDetails = (props) => {
         }}
       ></input>
       <p className={classes.label}>Address *</p>
-      <input
+      <PlacesAutocomplete
+        value={props.userAddress}
+        onChange={handleAddressChange}
+        onSelect={handleSelect}
+      >
+        {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+          <div style={{ width: "100%" }}>
+            <input
+              {...getInputProps({
+                placeholder: "Search Places ...",
+                className: "location-search-input",
+              })}
+              className={classes.input}
+            />
+            <div className="autocomplete-dropdown-container">
+              {loading && <div>Loading...</div>}
+              {suggestions.map((suggestion) => {
+                const className = suggestion.active
+                  ? "suggestion-item--active"
+                  : "suggestion-item";
+                // inline style for demonstration purpose
+                const style = suggestion.active
+                  ? { backgroundColor: "#fafafa", cursor: "pointer" }
+                  : { backgroundColor: "#ffffff", cursor: "pointer" };
+                return (
+                  <div
+                    {...getSuggestionItemProps(suggestion, {
+                      className,
+                      style,
+                    })}
+                  >
+                    <span>{suggestion.description}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </PlacesAutocomplete>
+      {/* <input
         className={classes.input}
         type={"text"}
         value={props.userAddress}
@@ -165,7 +234,7 @@ const ContactDetails = (props) => {
           props.setRequestData("userAddress", e.target.value);
           localStorage.setItem("userAddress", e.target.value);
         }}
-      ></input>
+      ></input> */}
       <p className={classes.label}>Unit/APT </p>
       <input
         className={classes.input}

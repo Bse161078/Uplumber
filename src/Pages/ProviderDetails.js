@@ -24,6 +24,7 @@ import {
   getOfferDetail,
   createContact,
 } from "../ApiHelper";
+import { GoogleMap, DistanceMatrixService } from "@react-google-maps/api";
 import { ToastContainer, toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
@@ -72,6 +73,8 @@ function ProviderDetail(props) {
   const [bottomState, setBottomState] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState("Contacts");
   const [reviews, setReviews] = useState(false);
+  const [estimatedDistance, setEstimatedDistance] = useState(false);
+  const [estimatedTime, setEstimatedTime] = useState(false);
 
   const sendCustomeNotification = (text, serviceId, type) => {
     setOpenLoader(true);
@@ -262,6 +265,43 @@ function ProviderDetail(props) {
       getOfferDetailsById();
     }
   }, []);
+
+  const calculateDistance = (origin) => {
+    setOpenLoader(true);
+    const google = window.google;
+    const directionsService = new google.maps.DirectionsService();
+    directionsService.route(
+      {
+        // 72.2865182, 32.2736135
+        origin: {
+          lat: 32.2736135,
+          lng: 72.2865182,
+        },
+        // localStorage.setItem("plumberlat", item.latitude);
+        // localStorage.setItem("plumberlong", item.longitude);
+        // destination: { lat: 6.5244, lng: 3.3792 },
+        destination: {
+          lat: 32.2736135,
+          lng: 72.2865182,
+          // lat: 32.785834,
+          // lng: 72.406417,
+        },
+        travelMode: google.maps.TravelMode.DRIVING,
+        waypoints: [],
+      },
+      (result, status) => {
+        if (status === google.maps.DirectionsStatus.OK) {
+          console.log(result);
+          this.setState({
+            directions: result,
+          });
+        } else {
+          console.error(`error fetching directions ${result}`);
+        }
+      }
+    );
+  };
+
   const getOfferDetailsById = () => {
     setOpenLoader(true);
     getOfferDetail(props.match.params.id).then(
@@ -276,6 +316,7 @@ function ProviderDetail(props) {
           console.log("This is offer Details", res.data.CustomerOffer);
           localStorage.setItem("job", JSON.stringify(res.data.CustomerOffer));
           setJobData(JSON.parse(localStorage.getItem("job")));
+          // calculateDistance(res.data.CustomerOffer.providerProfileId.location);
           // setTheStatus();
         }
       },
@@ -292,6 +333,38 @@ function ProviderDetail(props) {
   const notify = (data) => toast(data);
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
+      {jobData && (
+        <DistanceMatrixService
+          options={{
+            destinations: [
+              {
+                lat: jobData.providerProfileId.location[1],
+                lng: jobData.providerProfileId.location[0],
+              },
+            ],
+            origins: [
+              {
+                lat: jobData.serviceId.contactDetails.latitude,
+                lng: jobData.serviceId.contactDetails.longitude,
+              },
+            ],
+            travelMode: "DRIVING",
+          }}
+          callback={(res) => {
+            console.log("THis is response", res);
+            // console.log("RESPONSE", res.rows[0].elements[0].distance);
+            // console.log("RESPONSE", res.rows[0].elements[0].duration);
+            if (res.rows[0].elements[0].status === "ZERO_RESULTS") {
+              setEstimatedDistance("N/A");
+              setEstimatedTime("N/A");
+            } else {
+              setEstimatedDistance(res.rows[0].elements[0].distance.text);
+              setEstimatedTime(res.rows[0].elements[0].duration.text);
+            }
+          }}
+        />
+      )}
+
       {localStorage.getItem("job") && (
         <Link
           id={"jobdetails" + JSON.parse(localStorage.getItem("job"))._id}
@@ -519,7 +592,7 @@ estimatedTravelTime: "20 minutes" */}
                   Estimated Distance
                 </span>
                 <p style={{ fontSize: 10, margin: 0 }}>
-                  {jobData.estimatedDistance}
+                  {estimatedDistance && estimatedDistance}
                 </p>
               </Grid>
               <Grid item md={6} xs={6}>
@@ -527,7 +600,7 @@ estimatedTravelTime: "20 minutes" */}
                   Estimated Travel Time
                 </span>
                 <p style={{ fontSize: 10, margin: 0 }}>
-                  {jobData.estimatedTravelTime}
+                  {estimatedTime && estimatedTime}
                 </p>
               </Grid>
             </Grid>
