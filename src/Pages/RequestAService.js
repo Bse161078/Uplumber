@@ -17,7 +17,6 @@ import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
 import moment from "moment";
 import Rating from "@material-ui/lab/Rating";
-import BathtubIcon from "@material-ui/icons/Bathtub";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Link, withRouter } from "react-router-dom";
 import DateRangeIcon from "@material-ui/icons/DateRange";
@@ -151,7 +150,7 @@ function ProviderDetail(props) {
     expiryDate: localStorage.getItem("expiryDate") || "",
     deduction: localStorage.getItem("deduction") || "",
     userName: localStorage.getItem("userName") || "",
-    userPhone: localStorage.getItem("userPhone") | "+1",
+    userPhone: localStorage.getItem("userPhone") || "+1",
     allowSms: localStorage.getItem("allowSms")
       ? JSON.parse(localStorage.getItem("allowSms"))
       : true,
@@ -549,6 +548,7 @@ function ProviderDetail(props) {
       }
     );
   };
+  console.log("This si t", requestData);
 
   const updateCustomerContactDetails = (tab) => {
     if (

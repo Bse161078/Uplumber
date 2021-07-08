@@ -22,7 +22,7 @@ import { Link, withRouter } from "react-router-dom";
 import Calendar from "react-calendar";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ReviewCard from "../Components/ReviewCard";
-import { GetAllOffers } from "../ApiHelper";
+import { GetAllOffers, getItems } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
@@ -89,6 +89,46 @@ function ProviderDetail(props) {
   const [image, setImage] = React.useState([]);
   const [openLoader, setOpenLoader] = useState(false);
   const [allOffers, setAllOffers] = useState(null);
+  const [items, setItems] = React.useState([]);
+  const [icon, setIcon] = React.useState(null);
+
+  const findIcon = (itemName) => {
+    // console.log("This is item", itemName);
+    var image = null;
+    items.map((item) => {
+      if (item.Description === itemName) {
+        image = item.Image;
+        // console.log("THis is ", item.Description);
+      }
+    });
+    // console.log("This is the image", image);
+    return image;
+  };
+  const getAllItems = () => {
+    setOpenLoader(true);
+    getItems().then(
+      (res) => {
+        if (res.data.success || res.status === 200 || res.status === 201) {
+          setOpenLoader(false);
+          console.log("These are items", res.data);
+          setItems(res.data.Customers);
+          if (localStorage.getItem("token")) {
+            if (localStorage.getItem("allOffers")) {
+              setAllOffers(JSON.parse(localStorage.getItem("allOffers")));
+            }
+            getAllMyOffers();
+          }
+        }
+      },
+      (error) => {
+        if (error.response) {
+          notify(error.response.data.message);
+        }
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+      }
+    );
+  };
 
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -135,6 +175,10 @@ function ProviderDetail(props) {
     if (props.item === "Job Started") {
       type = "jobStarted";
     }
+    // console.log(
+    //   "THis is",
+    //   findIcon(props.item.itemName || props.item.serviceId.problem.problemItem)
+    // );
     return (
       <Paper
         style={{ width: "90%", padding: 10, marginBottom: 10 }}
@@ -152,16 +196,31 @@ function ProviderDetail(props) {
         ></Link>
         <Grid container direction="row">
           <Grid item md={8} xs={8}>
-            <Grid container direction="row" style={{ marginLeft: 5 }}>
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              style={{ marginLeft: 5 }}
+            >
               <p
                 style={{
-                  width: "100%",
+                  width: "40%",
                   margin: 0,
                   fontWeight: 600,
                 }}
               >
-                {props.item.itemName} <BathtubIcon></BathtubIcon>
+                {props.item.itemName ||
+                  props.item.serviceId.problem.problemItem}{" "}
               </p>
+              {items && (
+                <img
+                  style={{ width: "10%" }}
+                  src={findIcon(
+                    props.item.itemName ||
+                      props.item.serviceId.problem.problemItem
+                  )}
+                ></img>
+              )}
             </Grid>
           </Grid>
           <Grid item md={3} xs={3}>
@@ -183,7 +242,7 @@ function ProviderDetail(props) {
                 }
               }}
             >
-              {props.item.serviceName}
+              {props.item.serviceId.problem.serviceName}
             </div>
           </Grid>
         </Grid>
@@ -198,7 +257,8 @@ function ProviderDetail(props) {
           <Grid item md={12} xs={12}>
             <span style={{ color: "#60a3d6", fontSize: 10 }}>Description</span>
             <p style={{ fontSize: 10, margin: 0 }}>
-              {props.item.description || "No Description"}
+              {props.item.serviceId.descriptionAndPhoto.description ||
+                "No Description"}
             </p>
             <img src={Refrigertors} className={classes.image}></img>
           </Grid>
@@ -387,13 +447,9 @@ function ProviderDetail(props) {
     );
   };
   const notify = (data) => toast(data);
+
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      if (localStorage.getItem("allOffers")) {
-        setAllOffers(JSON.parse(localStorage.getItem("allOffers")));
-      }
-      getAllMyOffers();
-    }
+    getAllItems();
   }, []);
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
@@ -470,7 +526,7 @@ function ProviderDetail(props) {
           >
             {allOffers &&
               allOffers.map((item, index) => {
-                if (item.isOrderCompleted) {
+                if (item.status === "OrderCompleted") {
                   return <OfferCards index={index} item={item}></OfferCards>;
                 }
               })}

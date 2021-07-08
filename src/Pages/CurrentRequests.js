@@ -23,6 +23,7 @@ import {
   GetAllRequests,
   cancelAllOffers,
   cancelTheRequest,
+  getItems,
 } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 
@@ -90,6 +91,46 @@ function ProviderDetail(props) {
   const [image, setImage] = React.useState([]);
   const [openLoader, setOpenLoader] = useState(false);
   const [allOffers, setAllOffers] = useState(null);
+
+  const [items, setItems] = React.useState([]);
+  const [icon, setIcon] = React.useState(null);
+  const findIcon = (itemName) => {
+    // console.log("This is item", itemName);
+    var image = null;
+    items.map((item) => {
+      if (item.Description === itemName) {
+        image = item.Image;
+        // console.log("THis is ", item.Description);
+      }
+    });
+    // console.log("This is the image", image);
+    return image;
+  };
+  const getAllItems = () => {
+    setOpenLoader(true);
+    getItems().then(
+      (res) => {
+        if (res.data.success || res.status === 200 || res.status === 201) {
+          setOpenLoader(false);
+          console.log("These are items", res.data);
+          setItems(res.data.Customers);
+          if (localStorage.getItem("token")) {
+            if (localStorage.getItem("allMyRequests")) {
+              setAllOffers(JSON.parse(localStorage.getItem("allMyRequests")));
+            }
+            getAllMyOffers();
+          }
+        }
+      },
+      (error) => {
+        if (error.response) {
+          notify(error.response.data.message);
+        }
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+      }
+    );
+  };
 
   const handleChange = (event) => {
     setValue(event.target.value);
@@ -188,16 +229,29 @@ function ProviderDetail(props) {
         ></Link>
         <Grid container direction="row">
           <Grid item md={8} xs={8}>
-            <Grid container direction="row" style={{ marginLeft: 5 }}>
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              style={{ marginLeft: 5 }}
+            >
               <p
                 style={{
-                  width: "100%",
+                  width: "40%",
                   margin: 0,
                   fontWeight: 600,
                 }}
               >
-                {props.item.problem.problemItem} <BathtubIcon></BathtubIcon>
+                {props.item.itemName || props.item.problem.problemItem}{" "}
               </p>
+              {items && (
+                <img
+                  style={{ width: "10%" }}
+                  src={findIcon(
+                    props.item.itemName || props.item.problem.problemItem
+                  )}
+                ></img>
+              )}
             </Grid>
           </Grid>
           <Grid item md={3} xs={3}>
@@ -457,13 +511,7 @@ function ProviderDetail(props) {
   };
   const notify = (data) => toast(data);
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      if (localStorage.getItem("allMyRequests")) {
-        setAllOffers(JSON.parse(localStorage.getItem("allMyRequests")));
-      }
-
-      getAllMyOffers();
-    }
+    getAllItems();
   }, []);
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>

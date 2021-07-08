@@ -11,7 +11,6 @@ import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
 import Avatar from "../assets/profile.png";
 import Rating from "@material-ui/lab/Rating";
-import BathtubIcon from "@material-ui/icons/Bathtub";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Link, withRouter } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
@@ -23,6 +22,7 @@ import {
   setProviderReviews,
   sendCustomerNotification,
   getOfferDetail,
+  getItems,
 } from "../ApiHelper";
 import { GoogleMap, DistanceMatrixService } from "@react-google-maps/api";
 
@@ -86,8 +86,35 @@ function ProviderDetail(props) {
   const [OrderCancelled, setOrderCanceled] = React.useState(false);
   const [estimatedDistance, setEstimatedDistance] = useState(false);
   const [estimatedTime, setEstimatedTime] = useState(false);
+  const [items, setItems] = React.useState([]);
+  const [icon, setIcon] = React.useState(null);
 
-  // https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592&key=AIzaSyDn-zgL6nFtCy40cEVDMZmpJsjmTLNkGN8
+  const findIcon = (itemName) => {
+    items.map((item) => {
+      if (item.Description === itemName) {
+        setIcon(item.Image);
+      }
+    });
+  };
+  const getAllItems = () => {
+    setOpenLoader(true);
+    getItems().then(
+      (res) => {
+        if (res.data.success || res.status === 200 || res.status === 201) {
+          setOpenLoader(false);
+          console.log("These are items", res.data);
+          setItems(res.data.Customers);
+        }
+      },
+      (error) => {
+        if (error.response) {
+          notify(error.response.data.message);
+        }
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+      }
+    );
+  };
 
   const toggleDrawer = (anchor, open) => (event) => {
     setState(open);
@@ -123,7 +150,9 @@ function ProviderDetail(props) {
       setOrderCanceled(true);
     }
   };
+
   useEffect(() => {
+    getAllItems();
     console.log(
       "THis is the job in job details",
       JSON.parse(localStorage.getItem("job"))
@@ -132,6 +161,7 @@ function ProviderDetail(props) {
     if (localStorage.getItem("job")) {
       setJobData(JSON.parse(localStorage.getItem("job")));
       setTheStatus(JSON.parse(localStorage.getItem("job")));
+      findIcon(jobData.itemName || jobData.serviceId.problem.problemItem);
       getOfferDetailsById();
     } else {
       getOfferDetailsById();
@@ -190,6 +220,11 @@ function ProviderDetail(props) {
           console.log(
             "This is job in local storage ",
             JSON.parse(localStorage.getItem("job"))
+          );
+          findIcon(
+            JSON.parse(localStorage.getItem("job")).itemName ||
+              JSON.parse(localStorage.getItem("job")).serviceId.problem
+                .problemItem
           );
           setJobData(JSON.parse(localStorage.getItem("job")));
           setTheStatus(res.data.CustomerOffer);
@@ -663,7 +698,7 @@ function ProviderDetail(props) {
               {" "}
               <Grid item md={12} xs={12}>
                 <Grid container direction="row" alignItems="center">
-                  <BathtubIcon></BathtubIcon>{" "}
+                  {icon && <img style={{ width: "10%" }} src={icon}></img>}
                   <p
                     style={{
                       fontWeight: "bold",

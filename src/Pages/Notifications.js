@@ -12,7 +12,6 @@ import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
 import Avatar from "../assets/profile.png";
 import Rating from "@material-ui/lab/Rating";
-import BathtubIcon from "@material-ui/icons/Bathtub";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Link, withRouter } from "react-router-dom";
 import { CustomerNotifications, viewNotification } from "../ApiHelper";

@@ -23,6 +23,7 @@ import {
   markOrderCancelled,
   getOfferDetail,
   createContact,
+  getItems,
 } from "../ApiHelper";
 import { GoogleMap, DistanceMatrixService } from "@react-google-maps/api";
 import { ToastContainer, toast } from "react-toastify";
@@ -75,6 +76,35 @@ function ProviderDetail(props) {
   const [reviews, setReviews] = useState(false);
   const [estimatedDistance, setEstimatedDistance] = useState(false);
   const [estimatedTime, setEstimatedTime] = useState(false);
+  const [items, setItems] = React.useState([]);
+  const [icon, setIcon] = React.useState(null);
+
+  const findIcon = (itemName) => {
+    items.map((item) => {
+      if (item.Description === itemName) {
+        setIcon(item.Image);
+      }
+    });
+  };
+  const getAllItems = () => {
+    setOpenLoader(true);
+    getItems().then(
+      (res) => {
+        if (res.data.success || res.status === 200 || res.status === 201) {
+          setOpenLoader(false);
+          console.log("These are items", res.data);
+          setItems(res.data.Customers);
+        }
+      },
+      (error) => {
+        if (error.response) {
+          notify(error.response.data.message);
+        }
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+      }
+    );
+  };
 
   const sendCustomeNotification = (text, serviceId, type) => {
     setOpenLoader(true);
