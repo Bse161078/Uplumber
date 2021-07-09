@@ -596,6 +596,7 @@ function ProviderDetail(props) {
             localStorage.removeItem("userCity");
             localStorage.removeItem("userState");
             localStorage.removeItem("userZipCode");
+            localStorage.removeItem("userCurrentLocation");
             setPostRequest(true);
           }
         },

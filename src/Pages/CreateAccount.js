@@ -423,6 +423,7 @@ export default function LoginPage() {
             localStorage.removeItem("userCity");
             localStorage.removeItem("userState");
             localStorage.removeItem("userZipCode");
+            localStorage.removeItem("userCurrentLocation");
           }
         },
         (error) => {

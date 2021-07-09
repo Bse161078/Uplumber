@@ -92,6 +92,7 @@ function ProviderDetail(props) {
   const findIcon = (itemName) => {
     items.map((item) => {
       if (item.Description === itemName) {
+        console.log("THis  is itenname", itemName);
         setIcon(item.Image);
       }
     });
@@ -161,7 +162,10 @@ function ProviderDetail(props) {
     if (localStorage.getItem("job")) {
       setJobData(JSON.parse(localStorage.getItem("job")));
       setTheStatus(JSON.parse(localStorage.getItem("job")));
-      findIcon(jobData.itemName || jobData.serviceId.problem.problemItem);
+      findIcon(
+        JSON.parse(localStorage.getItem("job")).itemName ||
+          JSON.parse(localStorage.getItem("job")).serviceId.problem.problemItem
+      );
       getOfferDetailsById();
     } else {
       getOfferDetailsById();
