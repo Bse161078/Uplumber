@@ -76,12 +76,13 @@ const ContactDetails = (props) => {
           latitude: latLng.lat,
           longitude: latLng.lng,
         });
-        props.setRequestData("userAddress", address);
-        localStorage.setItem("userAddress", address);
         localStorage.setItem(
           "userCurrentLocation",
           JSON.stringify({ latitude: latLng.lat, longitude: latLng.lng })
         );
+
+        props.setRequestData("userAddress", address);
+        localStorage.setItem("userAddress", address);
       })
       .catch((error) => console.error("Error", error));
   };
