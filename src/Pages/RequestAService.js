@@ -1828,7 +1828,11 @@ function ProviderDetail(props) {
                 // document.getElementById("create-account").click();
               }
             } else {
-              notify("Please fill complete information");
+              if (localStorage.getItem("userCurrentLocation") === null) {
+                notify("Please select a location again from drop down!");
+              } else {
+                notify("Please fill complete information");
+              }
             }
           }}
         >
