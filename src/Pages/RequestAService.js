@@ -567,8 +567,12 @@ function ProviderDetail(props) {
         allowSms: requestData.allowSms,
         email: requestData.userEmail,
         address: requestData.userAddress,
-        latitude: requestData.currentLocation.latitude,
-        longitude: requestData.currentLocation.longitude,
+        latitude:
+          localStorage.getItem("userCurrentLocation") &&
+          JSON.parse(localStorage.getItem("userCurrentLocation")).latitude,
+        longitude:
+          localStorage.getItem("userCurrentLocation") &&
+          JSON.parse(localStorage.getItem("userCurrentLocation")).longitude,
         unit: requestData.userUnit,
         city: requestData.userCity,
         state: requestData.userState,
@@ -1775,7 +1779,9 @@ function ProviderDetail(props) {
           <p className={classes.label}>Phone *</p>
           <p className={classes.labelBlack}>{requestData.userPhone} </p>
           <p className={classes.label}>Allow U plumber to contact you</p>
-          <p className={classes.labelBlack}>{requestData.allowSms} </p>
+          <p className={classes.labelBlack}>
+            {requestData.allowSms ? "Yes" : "No"}{" "}
+          </p>
           <p className={classes.label}>Email * </p>
           <p className={classes.labelBlack}>{requestData.userEmail} </p>
           <p className={classes.label}>Address * </p>
@@ -1812,7 +1818,8 @@ function ProviderDetail(props) {
               requestData.userCity != "" &&
               requestData.userState != "" &&
               requestData.userZipCode != "" &&
-              requestData.currentLocation != ""
+              localStorage.getItem("userCurrentLocation") != null
+              // requestData.currentLocation != ""
             ) {
               if (localStorage.getItem("id") && localStorage.getItem("token")) {
                 postMyRequest();

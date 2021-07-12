@@ -389,6 +389,13 @@ export default function LoginPage() {
   };
 
   const updateCustomerContactDetails = (tab) => {
+    console.log(
+      "This is the contact detsilas locatin",
+      localStorage.getItem("userCurrentLocation") &&
+        JSON.parse(localStorage.getItem("userCurrentLocation")).latitude,
+      localStorage.getItem("userCurrentLocation") &&
+        JSON.parse(localStorage.getItem("userCurrentLocation")).longitude
+    );
     if (
       requestData.userName != "" &&
       requestData.userPhone != "" &&
@@ -405,8 +412,12 @@ export default function LoginPage() {
         allowSms: requestData.allowSms,
         email: requestData.userEmail,
         address: requestData.userAddress,
-        latitude: requestData.currentLocation.latitude,
-        longitude: requestData.currentLocation.longitude,
+        latitude:
+          localStorage.getItem("userCurrentLocation") &&
+          JSON.allowSms(localStorage.getItem("userCurrentLocation")).latitude,
+        longitude:
+          localStorage.getItem("userCurrentLocation") &&
+          JSON.allowSms(localStorage.getItem("userCurrentLocation")).longitude,
         unit: requestData.userUnit,
         city: requestData.userCity,
         state: requestData.userState,

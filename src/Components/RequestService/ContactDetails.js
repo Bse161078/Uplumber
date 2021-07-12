@@ -57,7 +57,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 const ContactDetails = (props) => {
   const classes = useStyles();
-  console.log("THis is  props for contact details", props);
 
   const handleAddressChange = (address) => {
     props.setRequestData("userAddress", address);
@@ -76,6 +75,7 @@ const ContactDetails = (props) => {
           latitude: latLng.lat,
           longitude: latLng.lng,
         });
+
         localStorage.setItem(
           "userCurrentLocation",
           JSON.stringify({ latitude: latLng.lat, longitude: latLng.lng })
