@@ -1449,7 +1449,7 @@ function ProviderDetail(props) {
           )}
         />
 
-        <p className={classes.label}>Policy Number *</p>
+        <p className={classes.label}>Policy Number</p>
         <input
           className={classes.input}
           type={"text"}
@@ -1490,7 +1490,8 @@ function ProviderDetail(props) {
             style={{ border: "none", width: "80%" }}
             type={"text"}
             onChange={(e) => {
-              localStorage.setItem("Deduction", e.target.value);
+              //  setRequestData({ ...requestData, deduction: e.target.value });
+              localStorage.setItem("deduction", e.target.value);
             }}
           ></input>
           {/* <RemoveCircleIcon style={{ color: "#1075c2" }}></RemoveCircleIcon>
@@ -1743,11 +1744,16 @@ function ProviderDetail(props) {
           <p className={classes.label}>Company *</p>
           <p className={classes.labelBlack}>{requestData.company} </p>
           <p className={classes.label}>Policy Number</p>
-          <p className={classes.labelBlack}>{requestData.policyNumber} </p>
+          <p className={classes.labelBlack}>
+            {localStorage.getItem("policyNumber")}{" "}
+          </p>
           <p className={classes.label}>Expiry Date</p>
           <p className={classes.labelBlack}>{requestData.expiryDate} </p>
           <p className={classes.label}>Deduction</p>
-          <p className={classes.labelBlack}>{requestData.deduction} </p>
+          <p className={classes.labelBlack}>
+            {" "}
+            {localStorage.getItem("deduction")}{" "}
+          </p>
         </div>
 
         <div
