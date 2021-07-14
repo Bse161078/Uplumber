@@ -14,7 +14,7 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Drawer from "@material-ui/core/Drawer";
 import {
   Login,
-  resetPassword,
+  sendForgotLink,
   PostARequest,
   CustomerSericeUpdateProblem,
   CustomerSericeUpdateLookingfor,
@@ -645,27 +645,6 @@ export default function LoginPage() {
                 setNewEmail(e.target.value);
               }}
             ></input>
-
-            <p className={classes.label} style={{ fontSize: 14, marginTop: 5 }}>
-              New Password
-            </p>
-            <input
-              className={classes.input}
-              type="password"
-              onChange={(e) => {
-                setNewPassword(e.target.value);
-              }}
-            ></input>
-            <p className={classes.label} style={{ fontSize: 14, marginTop: 5 }}>
-              Confirm New Password
-            </p>
-            <input
-              className={classes.input}
-              type="password"
-              onChange={(e) => {
-                setConfirmNewPassword(e.target.value);
-              }}
-            ></input>
             <button
               className={classes.button}
               style={{ marginBottom: 40 }}
@@ -674,17 +653,12 @@ export default function LoginPage() {
                 if (!validator.validate(mail)) {
                   console.log("THis is the email", mail);
                   notify("Please Enter a valid Email");
-                } else if (newPassword === "") {
-                  notify("Please Enter a password");
-                } else if (newPassword != confirmNewPassword) {
-                  notify("Password do not match");
                 } else {
                   setOpenLoader(true);
                   var data = {
                     email: mail.toLowerCase(),
-                    password: newPassword,
                   };
-                  resetPassword(data).then(
+                  sendForgotLink(data).then(
                     (res) => {
                       console.log("This is signup res", res);
                       if (
@@ -694,7 +668,7 @@ export default function LoginPage() {
                       ) {
                         setOpenLoader(false);
                         setState(false);
-                        notify("Password Changed Succesfully!");
+                        notify("Password Change Email Sent Succesfully!");
                       }
                     },
                     (error) => {

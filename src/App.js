@@ -66,7 +66,7 @@ export default function App() {
         />
         <Route
           exact
-          path="/resetPassword/:id"
+          path="/resetPassword/:type/:id"
           render={() => <ResetPassword />}
         />
         <Route exact path="/history" render={() => <History />} />

@@ -10,7 +10,12 @@ import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import Drawer from "@material-ui/core/Drawer";
-import { Login, resetPassword } from "../ApiHelper";
+import {
+  Login,
+  resetPassword,
+  providerResetPassword,
+  customerResetPassword,
+} from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 import { Link, withRouter } from "react-router-dom";
 var validator = require("email-validator");
@@ -48,7 +53,7 @@ const useStyles = makeStyles((theme) => ({
     color: "#fff",
   },
 }));
-function ResetPage() {
+function ResetPage(props) {
   const classes = useStyles();
   const [type, setType] = useState("password");
   const [state, setState] = React.useState(false);
@@ -57,7 +62,7 @@ function ResetPage() {
   const [newEmail, setNewEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-
+  // console.log("This is the reset props", props.match.params);
   const [accept, setAccept] = useState(true);
   const [openLoader, setOpenLoader] = useState(false);
 
@@ -90,6 +95,7 @@ function ResetPage() {
         pauseOnHover
       />
       <Link id="home" to="/homepage"></Link>
+      <Link id="login" to="/login"></Link>
       <Link id="landing" to="/"></Link>
       <img
         style={{ width: "100%" }}
@@ -104,14 +110,6 @@ function ResetPage() {
         justify="center"
         style={{ marginTop: 50 }}
       >
-        <p className={classes.label}>Email</p>
-        <input
-          className={classes.input}
-          value={email}
-          onChange={(e) => {
-            setEmail(e.target.value);
-          }}
-        ></input>
         <div
           className={classes.input}
           style={{ height: 50, marginTop: 50, paddingBottom: 10 }}
@@ -121,9 +119,9 @@ function ResetPage() {
             className={classes.input}
             style={{ border: "none" }}
             type={type}
-            value={password}
+            value={newPassword}
             onChange={(e) => {
-              setPassword(e.target.value);
+              setNewPassword(e.target.value);
             }}
           ></input>
           {type === "text" ? (
@@ -151,9 +149,9 @@ function ResetPage() {
             className={classes.input}
             style={{ border: "none" }}
             type={type}
-            value={password}
+            value={confirmNewPassword}
             onChange={(e) => {
-              setPassword(e.target.value);
+              setConfirmNewPassword(e.target.value);
             }}
           ></input>
           {type === "text" ? (
@@ -178,7 +176,71 @@ function ResetPage() {
           //   document.getElementById("signup").click();
           // }}
           onClick={() => {
-            // document.getElementById("complete").click();
+            if (newPassword === "") {
+              notify("Please Enter a password");
+            } else if (newPassword != confirmNewPassword) {
+              notify("Password do not match");
+            } else {
+              setOpenLoader(true);
+              var data = {
+                password: newPassword,
+              };
+              if (props.match.params.type === "customer") {
+                customerResetPassword(props.match.params.id, newPassword).then(
+                  (res) => {
+                    console.log("This is signup res", res);
+                    if (
+                      res.data.success ||
+                      res.status === 200 ||
+                      res.status === 201
+                    ) {
+                      setOpenLoader(false);
+                      setState(false);
+                      notify("Password Changed Succesfully!");
+                      document.getElementById("login").click();
+                    }
+                  },
+                  (error) => {
+                    if (error.response) {
+                      if (error.response.data.seccess) {
+                        document.getElementById("login").click();
+                      } else {
+                        notify(error.response.data.message);
+                      }
+                    }
+                    setOpenLoader(false);
+                    console.log("This is  error response", error.response);
+                  }
+                );
+              } else {
+                providerResetPassword(props.match.params.id, newPassword).then(
+                  (res) => {
+                    console.log("This is signup res", res);
+                    if (
+                      res.data.success ||
+                      res.status === 200 ||
+                      res.status === 201
+                    ) {
+                      setOpenLoader(false);
+                      setState(false);
+                      notify("Password Changed Succesfully!");
+                      document.getElementById("login").click();
+                    }
+                  },
+                  (error) => {
+                    if (error.response) {
+                      if (error.response.data.seccess) {
+                        document.getElementById("login").click();
+                      } else {
+                        notify(error.response.data.message);
+                      }
+                    }
+                    setOpenLoader(false);
+                    console.log("This is response", error.response);
+                  }
+                );
+              }
+            }
           }}
         >
           Reset
@@ -227,49 +289,7 @@ function ResetPage() {
                 setConfirmNewPassword(e.target.value);
               }}
             ></input>
-            <button
-              className={classes.button}
-              style={{ marginBottom: 40 }}
-              onClick={() => {
-                var mail = newEmail.replace(" ", "");
-                if (!validator.validate(mail)) {
-                  console.log("THis is the email", mail);
-                  notify("Please Enter a valid Email");
-                } else if (newPassword === "") {
-                  notify("Please Enter a password");
-                } else if (newPassword != confirmNewPassword) {
-                  notify("Password do not match");
-                } else {
-                  setOpenLoader(true);
-                  var data = {
-                    email: mail.toLowerCase(),
-                    password: newPassword,
-                  };
-                  resetPassword(data).then(
-                    (res) => {
-                      console.log("This is signup res", res);
-                      if (
-                        res.data.success ||
-                        res.status === 200 ||
-                        res.status === 201
-                      ) {
-                        setOpenLoader(false);
-                        setState(false);
-                        notify("Password Changed Succesfully!");
-                      }
-                    },
-                    (error) => {
-                      if (error.response) {
-                        notify(error.response.data.message);
-                      }
-                      setOpenLoader(false);
-                      console.log("This is response", error.response);
-                    }
-                  );
-                }
-                // document.getElementById("complete").click();
-              }}
-            >
+            <button className={classes.button} style={{ marginBottom: 40 }}>
               Reset Password
             </button>
           </Grid>

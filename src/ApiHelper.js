@@ -45,6 +45,60 @@ export const resetPassword = (postData) => {
   return axios(config);
 };
 
+export const sendForgotLink = (postData) => {
+  console.log("This is great", postData);
+  let headers = new Headers();
+  headers.append("Content-Type", "multipart/form-data");
+  var config = {
+    method: "post",
+    url: "https://u-plumber.net/api/customers/sendresetpasswordemail",
+    headers: {
+      headers,
+    },
+    data: postData,
+  };
+
+  return axios(config);
+};
+
+export const customerResetPassword = (id, newPassword) => {
+  console.log("This is great customer", id, newPassword);
+  const postData = {
+    resetPassword: newPassword,
+  };
+  let headers = new Headers();
+  headers.append("Content-Type", "multipart/form-data");
+  var config = {
+    method: "post",
+    url: "https://u-plumber.net/api/customers/forgotpassword/" + id,
+    headers: {
+      headers,
+    },
+    data: postData,
+  };
+
+  return axios(config);
+};
+
+export const providerResetPassword = (id, newPassword) => {
+  console.log("This is great provider", id, newPassword);
+  const postData = {
+    resetPassword: newPassword,
+  };
+  let headers = new Headers();
+  headers.append("Content-Type", "multipart/form-data");
+  var config = {
+    method: "post",
+    url: "https://u-plumber.net/api/providers/forgotpassword/" + id,
+    headers: {
+      headers,
+    },
+    data: postData,
+  };
+
+  return axios(config);
+};
+
 export const Login = (postData) => {
   let headers = new Headers();
   headers.append("Content-Type", "application/json");
