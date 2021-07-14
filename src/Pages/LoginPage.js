@@ -414,10 +414,10 @@ export default function LoginPage() {
         address: requestData.userAddress,
         latitude:
           localStorage.getItem("userCurrentLocation") &&
-          JSON.allowSms(localStorage.getItem("userCurrentLocation")).latitude,
+          JSON.parse(localStorage.getItem("userCurrentLocation")).latitude,
         longitude:
           localStorage.getItem("userCurrentLocation") &&
-          JSON.allowSms(localStorage.getItem("userCurrentLocation")).longitude,
+          JSON.parse(localStorage.getItem("userCurrentLocation")).longitude,
         unit: requestData.userUnit,
         city: requestData.userCity,
         state: requestData.userState,
@@ -446,6 +446,9 @@ export default function LoginPage() {
             localStorage.removeItem("userState");
             localStorage.removeItem("userZipCode");
             localStorage.removeItem("userCurrentLocation");
+            setTimeout(() => {
+              document.getElementById("home").click();
+            }, 800);
           }
         },
         (error) => {

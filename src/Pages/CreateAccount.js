@@ -428,6 +428,9 @@ export default function LoginPage() {
             localStorage.removeItem("userState");
             localStorage.removeItem("userZipCode");
             localStorage.removeItem("userCurrentLocation");
+            setTimeout(() => {
+              document.getElementById("complete").click();
+            }, 800);
           }
         },
         (error) => {
