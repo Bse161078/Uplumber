@@ -293,7 +293,7 @@ function ProviderDetail(props) {
         ) {
           console.log("Location requst", res.data);
           setOpenLoader(false);
-          notify("Location Reques sent");
+          notify("Location Request sent");
         }
       },
       (error) => {

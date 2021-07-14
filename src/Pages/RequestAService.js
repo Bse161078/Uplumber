@@ -137,7 +137,7 @@ function ProviderDetail(props) {
     lookingFor:
       localStorage.getItem("lookingFor") != null
         ? JSON.parse(localStorage.getItem("lookingFor"))
-        : ["Plumbing Technician"],
+        : [],
     area: localStorage.getItem("area") || "",
     structure: localStorage.getItem("structure") || "",
     requestorStatus: localStorage.getItem("requestorStatus") || "",
@@ -836,8 +836,8 @@ function ProviderDetail(props) {
           res.status === 200
         ) {
           setOpenLoader(false);
-          console.log("These are structures", res.data.ServiceTime);
-          setStructuresData(res.data.ServiceTime);
+          console.log("These are structures", res.data.Properties);
+          setStructuresData(res.data.Properties);
         }
       },
       (error) => {
@@ -1299,20 +1299,23 @@ function ProviderDetail(props) {
                       fontSize: 11,
                       width: "max-content",
                       background:
-                        requestData.structure === value.Name
+                        requestData.structure === value.property
                           ? "#1075c2"
                           : "#f2f2f2",
                       color:
-                        requestData.structure === value.Name
+                        requestData.structure === value.property
                           ? "white"
                           : "black",
                     }}
                     onClick={() => {
-                      setRequestData({ ...requestData, structure: value.Name });
-                      localStorage.setItem("structure", value.Name);
+                      setRequestData({
+                        ...requestData,
+                        structure: value.property,
+                      });
+                      localStorage.setItem("structure", value.property);
                     }}
                   >
-                    {value.Name}
+                    {value.property}
                   </button>
                 );
               }

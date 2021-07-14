@@ -318,7 +318,7 @@ export const getRequestorStatus = () => {
 export const getHomeStructures = () => {
   var config = {
     method: "get",
-    url: "https://u-plumber.net/api/structures",
+    url: "https://u-plumber.net/api/properties",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
