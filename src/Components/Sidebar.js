@@ -128,8 +128,9 @@ export default function Sidebar(props) {
               localStorage.removeItem("id");
               localStorage.removeItem("token");
               localStorage.removeItem("userData");
-
-              window.location.reload();
+              setTimeout(() => {
+                window.location.reload();
+              }, 800);
             }}
           >
             Logout
