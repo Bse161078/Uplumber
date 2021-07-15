@@ -516,9 +516,9 @@ function ProviderDetail(props) {
     setOpenLoader(true);
     var data = {
       company: requestData.company,
-      policyNumber: requestData.policyNumber,
+      policyNumber: localStorage.getItem("policyNumber"),
       expiryDate: requestData.expiryDate,
-      deduction: requestData.deduction,
+      deduction: localStorage.getItem("deduction"),
     };
     CustomerSericeUpdateInssurance(data).then(
       (res) => {
