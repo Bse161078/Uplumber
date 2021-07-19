@@ -416,9 +416,11 @@ function ProviderDetail(props) {
   };
 
   const notify = (data) => toast(data);
+  console.log("This is job data",jobData)
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
       {jobData && (
+
         <DistanceMatrixService
           options={{
             destinations: [
@@ -731,11 +733,18 @@ function ProviderDetail(props) {
                   {estimatedTime && estimatedTime}
                 </p>
               </Grid>
-              <Grid item md={12} xs={12}>
+              <Grid item md={6} xs={6}>
                 <span style={{ color: "#60a3d6", fontSize: 10 }}>Service</span>
                 <p style={{ fontSize: 10, margin: 0 }}>
                   {" "}
                   {jobData.serviceName || jobData.serviceId.problem.serviceName}
+                </p>
+              </Grid>
+              <Grid item md={6} xs={6}>
+                <span style={{ color: "#60a3d6", fontSize: 10 }}>Request Number</span>
+                <p style={{ fontSize: 10, margin: 0 }}>
+                  {" "}
+                  {jobData.serviceName || jobData.serviceId._id}
                 </p>
               </Grid>
             </Grid>
