@@ -90,6 +90,10 @@ function ProviderDetail(props) {
         ) {
           setOpenLoader(false);
           console.log("This is res notification", res.data);
+          localStorage.setItem(
+            "allNotifications",
+            JSON.stringify(res.data.Customers)
+          );
           setAllNotifications(res.data.Customers);
         }
       },

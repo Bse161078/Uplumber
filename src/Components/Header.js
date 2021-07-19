@@ -64,7 +64,14 @@ export default function Header(props) {
           res.status === 201 ||
           res.status === 200
         ) {
+          var count = 0;
           setAllNotifications(res.data.Customers);
+          res.data.Customers.map((item) => {
+            if (item.isView === false) {
+              count = count + 1;
+            }
+          });
+          setBadgeValue(count);
           localStorage.setItem(
             "allNotifications",
             JSON.stringify(res.data.Customers)
