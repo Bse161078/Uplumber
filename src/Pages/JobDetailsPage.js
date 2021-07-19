@@ -742,7 +742,8 @@ function ProviderDetail(props) {
             <div
               style={{ width: "100%", border: "1px solid #f6f6f6", margin: 0 }}
             ></div>
-            <Grid
+            {
+              !leadUnpaid &&     <Grid
               container
               direction="row"
               justify="center"
@@ -767,7 +768,9 @@ function ProviderDetail(props) {
                 </p>
               </Grid>
             </Grid>
-            <div
+           
+            }
+          <div
               style={{ width: "100%", border: "1px solid #f6f6f6", margin: 0 }}
             ></div>
             <Grid

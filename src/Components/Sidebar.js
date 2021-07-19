@@ -1,9 +1,24 @@
-import React from "react";
-import { Grid } from "@material-ui/core";
+import React, { useState, useEffect } from "react";
+import { Grid, Badge } from "@material-ui/core";
 import Avatar from "../assets/avatar.png";
 import { Link, withRouter } from "react-router-dom";
 
 export default function Sidebar(props) {
+  const [badgeValue, setBadgeValue] = useState(0);
+
+  useEffect(() => {
+    if (localStorage.getItem("allNotifications")) {
+      var notifications = JSON.parse(localStorage.getItem("allNotifications"));
+      var count = 0;
+      notifications.map((item) => {
+        if (item.isView === false) {
+          count = count + 1;
+        }
+      });
+      setBadgeValue(count);
+    }
+  }, []);
+
   return (
     <div>
       <Grid
@@ -112,6 +127,13 @@ export default function Sidebar(props) {
                   }}
                 >
                   {item.name}
+                  {item.name === "Notifications" && (
+                    <Badge
+                      style={{ marginLeft: "40%" }}
+                      badgeContent={badgeValue}
+                      color="secondary"
+                    ></Badge>
+                  )}
                 </p>
               </div>
             );

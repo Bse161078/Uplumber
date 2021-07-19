@@ -1422,7 +1422,7 @@ function ProviderDetail(props) {
     );
   };
 
-  const Inssurance = () => {
+  const Insurance = () => {
     return (
       <Grid
         container
@@ -1733,13 +1733,13 @@ function ProviderDetail(props) {
           <Grid container direction="row">
             <Grid item md={11} xs={11}>
               {" "}
-              <p className={classes.heading}>Inssurance</p>
+              <p className={classes.heading}>Insurance</p>
             </Grid>
             <Grid item md={1} xs={1}>
               <EditIcon
                 className={classes.icon}
                 onClick={() => {
-                  setActiveTab("Inssurance");
+                  setActiveTab("Insurance");
                 }}
               ></EditIcon>
             </Grid>
@@ -1929,10 +1929,10 @@ function ProviderDetail(props) {
                 "Looking For",
                 "Property",
                 "Description and Photo",
-                "Inssurance",
+                "Insurance",
                 "Contact Details",
               ].map((value) => {
-                if (value === "Looking For" || value === "Inssurance") {
+                if (value === "Looking For" || value === "Insurance") {
                   if (requestData.waterDamage === "Yes") {
                     return (
                       <button
@@ -2008,8 +2008,8 @@ function ProviderDetail(props) {
                 // updateCustomerPropertyDescriptionAndProperty(tab);
               }}
             ></DescriptionAndPhoto>
-          ) : activeTab === "Inssurance" ? (
-            <Inssurance></Inssurance>
+          ) : activeTab === "Insurance" ? (
+            <Insurance></Insurance>
           ) : activeTab === "Contact Details" ? (
             <ContactDetails
               userName={requestData.userName}

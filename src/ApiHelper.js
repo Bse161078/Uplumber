@@ -133,7 +133,7 @@ export const CompleteProfile = (postData) => {
 export const CustomerNotifications = () => {
   var config = {
     method: "get",
-    url: "https://u-plumber.net/api/customernotification",
+    url: "https://u-plumber.net/api/customernotification/customer/"+ localStorage.getItem("id"),
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
