@@ -634,6 +634,16 @@ estimatedTravelTime: "20 minutes" */}
                   {estimatedTime && estimatedTime}
                 </p>
               </Grid>
+              <Grid item md={12} xs={12}>
+                <span style={{ color: "#60a3d6", fontSize: 10 }}>
+                  Special Offer
+                </span>
+                <p style={{ fontSize: 10, margin: 0 }}>
+                  {jobData.specialOffer || "N/A"}
+                </p>
+              </Grid>
+
+              
             </Grid>
             <div
               style={{ width: "100%", border: "1px solid #f6f6f6", margin: 20 }}
