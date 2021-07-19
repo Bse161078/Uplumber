@@ -124,6 +124,7 @@ function ProviderDetail(props) {
   const [calendarType, setCalendarType] = React.useState("");
   const [item, setItem] = React.useState(false);
   const [activeTab, setActiveTab] = React.useState("Problem");
+  const [editing, setEditing] = React.useState(false);
   const [image, setImage] = React.useState([]);
 
   const [requestData, setRequestData] = useState({
@@ -1111,11 +1112,19 @@ function ProviderDetail(props) {
               }}
               onClick={() => {
                 // updateCustomerProblem();
-                if (requestData.waterDamage === "Yes") {
-                  setActiveTab("Looking For");
-                } else {
-                  setActiveTab("Property");
+                if(editing)
+                {
+                  setActiveTab("ReviewRequest")
                 }
+                else
+                {
+                  if (requestData.waterDamage === "Yes") {
+                    setActiveTab("Looking For");
+                  } else {
+                    setActiveTab("Property");
+                  }
+                }
+            
                 //
               }}
             >
@@ -1232,7 +1241,15 @@ function ProviderDetail(props) {
               }}
               onClick={() => {
                 // updateCustomerLookingFor();
-                setActiveTab("Property");
+                if(editing)
+                {
+                  setActiveTab("ReviewRequest")
+                }
+                else
+                {
+                     setActiveTab("Property");
+                }
+             
               }}
             >
               Next
@@ -1411,7 +1428,15 @@ function ProviderDetail(props) {
               }}
               onClick={() => {
                 // updateCustomerProperty();
-                setActiveTab("Description and Photo");
+                if(editing)
+                {
+                  setActiveTab("ReviewRequest")
+                }
+                else
+                {
+                       setActiveTab("Description and Photo");
+                }
+           
               }}
             >
               Next
@@ -1547,7 +1572,14 @@ function ProviderDetail(props) {
               }}
               onClick={() => {
                 // updateCustomerPropertyInssurance();
-                setActiveTab("Contact Details");
+                if(editing)
+                {
+                  setActiveTab("ReviewRequest")
+                }else
+                {
+                              setActiveTab("Contact Details");
+                }
+    
               }}
             >
               Next
@@ -1585,6 +1617,7 @@ function ProviderDetail(props) {
                 className={classes.icon}
                 onClick={() => {
                   setActiveTab("Problem");
+                  setEditing(true)
                 }}
               ></EditIcon>
             </Grid>
@@ -1627,6 +1660,7 @@ function ProviderDetail(props) {
                 className={classes.icon}
                 onClick={() => {
                   setActiveTab("Looking For");
+                  setEditing(true)
                 }}
               ></EditIcon>
             </Grid>
@@ -1672,6 +1706,7 @@ function ProviderDetail(props) {
                 className={classes.icon}
                 onClick={() => {
                   setActiveTab("Property");
+                  setEditing(true)
                 }}
               ></EditIcon>
             </Grid>
@@ -1705,6 +1740,7 @@ function ProviderDetail(props) {
                 className={classes.icon}
                 onClick={() => {
                   setActiveTab("Description and Photo");
+                  setEditing(true)
                 }}
               ></EditIcon>
             </Grid>
@@ -1740,6 +1776,7 @@ function ProviderDetail(props) {
                 className={classes.icon}
                 onClick={() => {
                   setActiveTab("Insurance");
+                  setEditing(true)
                 }}
               ></EditIcon>
             </Grid>
@@ -2034,8 +2071,15 @@ function ProviderDetail(props) {
                 console.log("THis is the request Data", requestData);
               }}
               setActiveTab={(tab) => {
-                // updateCustomerContactDetails(tab);
-                setActiveTab(tab);
+                if(editing)
+                {
+                  setActiveTab("ReviewRequest")
+                }
+                else
+                {
+                  setActiveTab(tab);
+                }
+            
               }}
             ></ContactDetails>
           ) : (
