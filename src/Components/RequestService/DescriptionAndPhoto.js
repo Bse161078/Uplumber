@@ -193,7 +193,7 @@ const DescriptionAndPhoto = (props) => {
                 width: "95%",
               }}
               onClick={() => {
-                props.setActiveTab("Inssurance");
+                props.setActiveTab("Insurance");
               }}
             >
               Next

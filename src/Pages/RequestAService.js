@@ -551,7 +551,7 @@ function ProviderDetail(props) {
       }
     );
   };
-  console.log("This si t", requestData);
+  // console.log("This si t", requestData);
 
   const updateCustomerContactDetails = (tab) => {
     if (

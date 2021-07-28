@@ -755,7 +755,7 @@ export default function HomePage(pros) {
     >
       {allProviders &&
         allProviders.map((item) => {
-          console.log("THis isthe lat long", item.location);
+          // console.log("THis isthe lat long", item.location);
           return (
             <Marker
               id="findMarker"
