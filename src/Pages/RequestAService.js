@@ -358,6 +358,8 @@ function ProviderDetail(props) {
         serviceName: requestData.serviceType,
         requestMany:
           requestData.requestOption === "Auto accept 1st offer" ? false : true,
+        autoAccept:
+          requestData.requestOption === "Auto accept 1st offer" ? true : false,
         anyFloorOrWaterDamage: requestData.waterDamage === "Yes" ? true : false,
         serviceCode: requestData.serviceType,
       };
@@ -1112,19 +1114,16 @@ function ProviderDetail(props) {
               }}
               onClick={() => {
                 // updateCustomerProblem();
-                if(editing)
-                {
-                  setActiveTab("ReviewRequest")
-                }
-                else
-                {
+                if (editing) {
+                  setActiveTab("ReviewRequest");
+                } else {
                   if (requestData.waterDamage === "Yes") {
                     setActiveTab("Looking For");
                   } else {
                     setActiveTab("Property");
                   }
                 }
-            
+
                 //
               }}
             >
@@ -1241,15 +1240,11 @@ function ProviderDetail(props) {
               }}
               onClick={() => {
                 // updateCustomerLookingFor();
-                if(editing)
-                {
-                  setActiveTab("ReviewRequest")
+                if (editing) {
+                  setActiveTab("ReviewRequest");
+                } else {
+                  setActiveTab("Property");
                 }
-                else
-                {
-                     setActiveTab("Property");
-                }
-             
               }}
             >
               Next
@@ -1428,15 +1423,11 @@ function ProviderDetail(props) {
               }}
               onClick={() => {
                 // updateCustomerProperty();
-                if(editing)
-                {
-                  setActiveTab("ReviewRequest")
+                if (editing) {
+                  setActiveTab("ReviewRequest");
+                } else {
+                  setActiveTab("Description and Photo");
                 }
-                else
-                {
-                       setActiveTab("Description and Photo");
-                }
-           
               }}
             >
               Next
@@ -1572,14 +1563,11 @@ function ProviderDetail(props) {
               }}
               onClick={() => {
                 // updateCustomerPropertyInssurance();
-                if(editing)
-                {
-                  setActiveTab("ReviewRequest")
-                }else
-                {
-                              setActiveTab("Contact Details");
+                if (editing) {
+                  setActiveTab("ReviewRequest");
+                } else {
+                  setActiveTab("Contact Details");
                 }
-    
               }}
             >
               Next
@@ -1617,7 +1605,7 @@ function ProviderDetail(props) {
                 className={classes.icon}
                 onClick={() => {
                   setActiveTab("Problem");
-                  setEditing(true)
+                  setEditing(true);
                 }}
               ></EditIcon>
             </Grid>
@@ -1660,7 +1648,7 @@ function ProviderDetail(props) {
                 className={classes.icon}
                 onClick={() => {
                   setActiveTab("Looking For");
-                  setEditing(true)
+                  setEditing(true);
                 }}
               ></EditIcon>
             </Grid>
@@ -1706,7 +1694,7 @@ function ProviderDetail(props) {
                 className={classes.icon}
                 onClick={() => {
                   setActiveTab("Property");
-                  setEditing(true)
+                  setEditing(true);
                 }}
               ></EditIcon>
             </Grid>
@@ -1740,7 +1728,7 @@ function ProviderDetail(props) {
                 className={classes.icon}
                 onClick={() => {
                   setActiveTab("Description and Photo");
-                  setEditing(true)
+                  setEditing(true);
                 }}
               ></EditIcon>
             </Grid>
@@ -1776,7 +1764,7 @@ function ProviderDetail(props) {
                 className={classes.icon}
                 onClick={() => {
                   setActiveTab("Insurance");
-                  setEditing(true)
+                  setEditing(true);
                 }}
               ></EditIcon>
             </Grid>
@@ -2071,15 +2059,11 @@ function ProviderDetail(props) {
                 console.log("THis is the request Data", requestData);
               }}
               setActiveTab={(tab) => {
-                if(editing)
-                {
-                  setActiveTab("ReviewRequest")
-                }
-                else
-                {
+                if (editing) {
+                  setActiveTab("ReviewRequest");
+                } else {
                   setActiveTab(tab);
                 }
-            
               }}
             ></ContactDetails>
           ) : (

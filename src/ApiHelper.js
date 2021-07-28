@@ -215,6 +215,27 @@ export const CustomerSericeUpdateProblem = (postData) => {
   return axios(config);
 };
 
+export const CustomerSericeAutoAccept = (autoAccept) => {
+  var postData = {
+    "autoAccept": autoAccept
+  }
+  var data = JSON.stringify(postData);
+
+  var config = {
+    method: "put",
+    url:
+      "https://u-plumber.net/api/customerservicerequest/update/problem/" +
+      localStorage.getItem("requestId"),
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+
+  return axios(config);
+};
+
 export const CustomerSericeUpdateLookingfor = (postData) => {
   var data = JSON.stringify(postData);
 
