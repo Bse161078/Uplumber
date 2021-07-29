@@ -16,7 +16,7 @@ import Rating from "@material-ui/lab/Rating";
 import ExploreIcon from "@material-ui/icons/Explore";
 import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import PersonIcon from "@material-ui/icons/Person";
-import { compose, withProps } from "recompose";
+import { compose, withProps,withStateHandlers } from "recompose";
 // import {
 //   Map,
 //   TileLayer,
@@ -52,6 +52,7 @@ import {
   withGoogleMap,
   GoogleMap,
   Marker,
+  InfoWindow
 } from "react-google-maps";
 
 const useStyles = makeStyles((theme) => ({
@@ -88,59 +89,6 @@ const useStyles = makeStyles((theme) => ({
     color: "#fff",
   },
 }));
-const IOSSwitch = withStyles((theme) => ({
-  root: {
-    width: 42,
-    height: 26,
-    padding: 0,
-    margin: theme.spacing(1),
-  },
-  switchBase: {
-    padding: 1,
-    "&$checked": {
-      transform: "translateX(16px)",
-      color: theme.palette.common.white,
-      "& + $track": {
-        backgroundColor: theme.palette.grey[50],
-        opacity: 1,
-        border: `2px solid #1075c2`,
-      },
-    },
-    "&$focusVisible $thumb": {
-      color: "#1075c2",
-      border: `2px solid #1075c2`,
-    },
-  },
-  thumb: {
-    width: 24,
-    height: 24,
-    color: "#1075c2",
-  },
-  track: {
-    borderRadius: 26 / 2,
-    border: `2px solid #1075c2`,
-    backgroundColor: theme.palette.grey[50],
-    opacity: 1,
-    transition: theme.transitions.create(["background-color", "border"]),
-  },
-  checked: {},
-  focusVisible: {},
-}))(({ classes, ...props }) => {
-  return (
-    <Switch
-      focusVisibleClassName={classes.focusVisible}
-      disableRipple
-      classes={{
-        root: classes.root,
-        switchBase: classes.switchBase,
-        thumb: classes.thumb,
-        track: classes.track,
-        checked: classes.checked,
-      }}
-      {...props}
-    />
-  );
-});
 export default function HomePage(pros) {
   const classes = useStyles();
 
@@ -155,6 +103,9 @@ export default function HomePage(pros) {
   const [allOffers, setAllOffers] = useState(null);
   const [allContacts, setAllContacts] = useState(null);
   const [currentLocation, setCurrentLoction] = useState(null);
+  const [openPopup, setOpenPopup] = useState(null);
+
+  
   const toggleDrawer = (anchor, open) => (event) => {
     setState(open);
   };
@@ -738,6 +689,13 @@ export default function HomePage(pros) {
       ),
       mapElement: <div style={{ height: "100%" }} />,
     }),
+    withStateHandlers(() => ({
+      isOpen: false,
+    }), {
+      onToggleOpen: ({ isOpen }) => () => ({
+        isOpen: !isOpen,
+      })
+    }),
     withScriptjs,
     withGoogleMap
   )((props) => (
@@ -759,8 +717,28 @@ export default function HomePage(pros) {
           return (
             <Marker
               id="findMarker"
+              icon={<img src={Avatar} style={{width:80, height:80}}></img>}
               position={{ lat: item.location[1], lng: item.location[0] }}
-            />
+              onClick={props.onToggleOpen}
+              onClick={
+                ()=>{
+                  setOpenPopup(item.providerId)
+                }
+              }
+            >
+               {openPopup === item.providerId && <InfoWindow onCloseClick={
+                 ()=>{
+                  setOpenPopup(null)
+                 }
+               }>
+       <div style={{width:100}}>
+         <Grid container direction="row" justify="center">
+         <img src={item.profileImage} style={{width:50, height:50, borderRadius:40}}></img>
+         <p style={{width:"100%", fontWeight:600, textAlign:'center'}}>{item.firstName+" "+ item.lastName}</p>
+         </Grid>
+       </div>
+      </InfoWindow>}
+            </Marker>
           );
         })}
     </GoogleMap>
