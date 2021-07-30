@@ -51,6 +51,7 @@ export default function App() {
         <Route exact path="/confirm-otp" render={() => <ConfirmOTP />} />
         <Route exact path="/terms" render={() => <TermsAndConditions />} />
         <Route exact path="/homepage" render={() => <Homepage />} />
+        <Route exact path="/homepage/:id" render={() => <Homepage />} />
         <Route exact path="/details/:id" render={() => <ProviderDetails />} />
         <Route exact path="/jobDetails/:id" render={() => <JobDetails />} />
         <Route exact path="/reviews/:id" render={() => <ReviewsPage />} />

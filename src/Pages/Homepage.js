@@ -8,18 +8,18 @@ import {
   Backdrop,
   CircularProgress,
 } from "@material-ui/core";
+import { withRouter } from "react-router";
 import Drawer from "@material-ui/core/Drawer";
 import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
 import Avatar from "../assets/profile.png";
 import Plumber from "../assets/Plumber.png";
 
-
 import Rating from "@material-ui/lab/Rating";
 import ExploreIcon from "@material-ui/icons/Explore";
 import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import PersonIcon from "@material-ui/icons/Person";
-import { compose, withProps,withStateHandlers } from "recompose";
+import { compose, withProps, withStateHandlers } from "recompose";
 // import {
 //   Map,
 //   TileLayer,
@@ -55,7 +55,7 @@ import {
   withGoogleMap,
   GoogleMap,
   Marker,
-  InfoWindow
+  InfoWindow,
 } from "react-google-maps";
 
 const useStyles = makeStyles((theme) => ({
@@ -92,7 +92,8 @@ const useStyles = makeStyles((theme) => ({
     color: "#fff",
   },
 }));
-export default function HomePage(pros) {
+const HomePage = (props) => {
+  console.log("This is props", props.match.params);
   const classes = useStyles();
 
   const [state, setState] = React.useState(false);
@@ -108,7 +109,6 @@ export default function HomePage(pros) {
   const [currentLocation, setCurrentLoction] = useState(null);
   const [openPopup, setOpenPopup] = useState(null);
 
-  
   const toggleDrawer = (anchor, open) => (event) => {
     setState(open);
   };
@@ -171,7 +171,35 @@ export default function HomePage(pros) {
           id={"jobdetails" + props.item._id}
           to={"/jobDetails/" + props.item._id}
         ></Link>
-        <Grid container direction="row">
+        <Grid
+          container
+          direction="row"
+          style={{cursor:'pointer'}}
+          onClick={() => {
+            console.log("This si he click", props.item);
+            if (
+              props.item.isAccepted != null
+                ? props.item.isAccepted === false
+                : props.item.serviceId.isAccepted === false
+            ) {
+              if (calculatedStatus != "Order Cancelled") {
+                document.getElementById("details" + props.item._id).click();
+                localStorage.setItem("job", JSON.stringify(props.item));
+              } else {
+                console.log("This is props item", props.item);
+                localStorage.setItem("job", JSON.stringify(props.item));
+                document.getElementById("jobdetails" + props.item._id).click();
+              }
+            } else if (
+              props.item.isAccepted === true ||
+              props.item.serviceId.isAccepted === true
+            ) {
+              console.log("This is props item", props.item);
+              localStorage.setItem("job", JSON.stringify(props.item));
+              document.getElementById("jobdetails" + props.item._id).click();
+            }
+          }}
+        >
           <Grid item md={2} xs={2}>
             <img
               src={
@@ -228,34 +256,6 @@ export default function HomePage(pros) {
                 color: props.item.isAccepted === true ? "#23c739" : "#60a3d6",
                 cursor: "pointer",
               }}
-              onClick={() => {
-                console.log("This si he click", props.item);
-                if (
-                  props.item.isAccepted != null
-                    ? props.item.isAccepted === false
-                    : props.item.serviceId.isAccepted === false
-                ) {
-                  if (calculatedStatus != "Order Cancelled") {
-                    document.getElementById("details" + props.item._id).click();
-                    localStorage.setItem("job", JSON.stringify(props.item));
-                  } else {
-                    console.log("This is props item", props.item);
-                    localStorage.setItem("job", JSON.stringify(props.item));
-                    document
-                      .getElementById("jobdetails" + props.item._id)
-                      .click();
-                  }
-                } else if (
-                  props.item.isAccepted === true ||
-                  props.item.serviceId.isAccepted === true
-                ) {
-                  console.log("This is props item", props.item);
-                  localStorage.setItem("job", JSON.stringify(props.item));
-                  document
-                    .getElementById("jobdetails" + props.item._id)
-                    .click();
-                }
-              }}
             >
               {calculatedStatus}
             </div>
@@ -296,7 +296,36 @@ export default function HomePage(pros) {
           </Grid>
         </Grid>
         <div style={{ width: "100%", border: "1px solid #f6f6f6" }}></div>
-        <Grid container direction="row" justify="center">
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          onClick={() => {
+            console.log("This si he click", props.item);
+            if (
+              props.item.isAccepted != null
+                ? props.item.isAccepted === false
+                : props.item.serviceId.isAccepted === false
+            ) {
+              if (calculatedStatus != "Order Cancelled") {
+                document.getElementById("details" + props.item._id).click();
+                localStorage.setItem("job", JSON.stringify(props.item));
+              } else {
+                console.log("This is props item", props.item);
+                localStorage.setItem("job", JSON.stringify(props.item));
+                document.getElementById("jobdetails" + props.item._id).click();
+              }
+            } else if (
+              props.item.isAccepted === true ||
+              props.item.serviceId.isAccepted === true
+            ) {
+              console.log("This is props item", props.item);
+              localStorage.setItem("job", JSON.stringify(props.item));
+              document.getElementById("jobdetails" + props.item._id).click();
+            }
+          }}
+          style={{cursor:'pointer'}}
+        >
           <Grid item md={6} xs={6}>
             <span style={{ color: "#60a3d6", fontSize: 10 }}>Date</span>
             <p style={{ fontSize: 10, margin: 0 }}>
@@ -668,6 +697,9 @@ export default function HomePage(pros) {
       getAllMyOffers();
       getAllMyContacts();
       getMyProfile();
+      if (props.match.params.id === "contacts") {
+        setActiveTab("Contacts");
+      }
     }
   }, []);
   const notify = (data) => toast(data);
@@ -692,13 +724,18 @@ export default function HomePage(pros) {
       ),
       mapElement: <div style={{ height: "100%" }} />,
     }),
-    withStateHandlers(() => ({
-      isOpen: false,
-    }), {
-      onToggleOpen: ({ isOpen }) => () => ({
-        isOpen: !isOpen,
-      })
-    }),
+    withStateHandlers(
+      () => ({
+        isOpen: false,
+      }),
+      {
+        onToggleOpen:
+          ({ isOpen }) =>
+          () => ({
+            isOpen: !isOpen,
+          }),
+      }
+    ),
     withScriptjs,
     withGoogleMap
   )((props) => (
@@ -723,24 +760,35 @@ export default function HomePage(pros) {
               icon={Plumber}
               position={{ lat: item.location[1], lng: item.location[0] }}
               onClick={props.onToggleOpen}
-              onClick={
-                ()=>{
-                  setOpenPopup(item.providerId)
-                }
-              }
+              onClick={() => {
+                setOpenPopup(item.providerId);
+              }}
             >
-               {openPopup === item.providerId && <InfoWindow onCloseClick={
-                 ()=>{
-                  setOpenPopup(null)
-                 }
-               }>
-       <div style={{width:100}}>
-         <Grid container direction="row" justify="center">
-         <img src={item.profileImage} style={{width:50, height:50, borderRadius:40}}></img>
-         <p style={{width:"100%", fontWeight:600, textAlign:'center'}}>{item.firstName+" "+ item.lastName}</p>
-         </Grid>
-       </div>
-      </InfoWindow>}
+              {openPopup === item.providerId && (
+                <InfoWindow
+                  onCloseClick={() => {
+                    setOpenPopup(null);
+                  }}
+                >
+                  <div style={{ width: 100 }}>
+                    <Grid container direction="row" justify="center">
+                      <img
+                        src={item.profileImage}
+                        style={{ width: 50, height: 50, borderRadius: 40 }}
+                      ></img>
+                      <p
+                        style={{
+                          width: "100%",
+                          fontWeight: 600,
+                          textAlign: "center",
+                        }}
+                      >
+                        {item.firstName + " " + item.lastName}
+                      </p>
+                    </Grid>
+                  </div>
+                </InfoWindow>
+              )}
             </Marker>
           );
         })}
@@ -987,4 +1035,6 @@ export default function HomePage(pros) {
       </Grid>
     </div>
   );
-}
+};
+
+export default withRouter(HomePage);

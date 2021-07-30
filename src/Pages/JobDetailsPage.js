@@ -467,6 +467,7 @@ function ProviderDetail(props) {
         pauseOnHover
       />
       <Link id="homepage" to="/homepage"></Link>
+      <Link id="homepage/contacts" to="/homepage/contacts"></Link>
       <Link id="reviews" to="/reviews/0"></Link>
       <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
         <Header
@@ -643,7 +644,13 @@ function ProviderDetail(props) {
               height: 60,
               paddingLeft: 15,
               paddingRight: 15,
+              cursor:'pointer'
             }}
+            onClick={
+              ()=>{
+                document.getElementById("homepage/contacts").click()
+              }
+            }
           >
             <Grid item md={2} xs={2}>
               <img
