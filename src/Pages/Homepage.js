@@ -12,6 +12,9 @@ import Drawer from "@material-ui/core/Drawer";
 import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
 import Avatar from "../assets/profile.png";
+import Plumber from "../assets/Plumber.png";
+
+
 import Rating from "@material-ui/lab/Rating";
 import ExploreIcon from "@material-ui/icons/Explore";
 import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
@@ -717,7 +720,7 @@ export default function HomePage(pros) {
           return (
             <Marker
               id="findMarker"
-              icon={<img src={Avatar} style={{width:80, height:80}}></img>}
+              icon={Plumber}
               position={{ lat: item.location[1], lng: item.location[0] }}
               onClick={props.onToggleOpen}
               onClick={
