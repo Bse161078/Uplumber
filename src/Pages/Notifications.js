@@ -207,6 +207,8 @@ function ProviderDetail(props) {
                             document.getElementById("route").click();
                             localStorage.setItem("plumberlat", item.latitude);
                             localStorage.setItem("plumberlong", item.longitude);
+                            localStorage.setItem("joblat", item.serviceId.contactDetails.latitude);
+                            localStorage.setItem("joblong", item.serviceId.contactDetails.longitude);
                           } else if (item.offerId.isAccepted === true) {
                             localStorage.removeItem("job");
                             window.location.href =

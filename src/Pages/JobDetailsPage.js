@@ -646,11 +646,11 @@ function ProviderDetail(props) {
               paddingRight: 15,
               cursor:'pointer'
             }}
-            onClick={
-              ()=>{
-                document.getElementById("homepage/contacts").click()
-              }
-            }
+            // onClick={
+            //   ()=>{
+            //     document.getElementById("homepage/contacts").click()
+            //   }
+            // }
           >
             <Grid item md={2} xs={2}>
               <img

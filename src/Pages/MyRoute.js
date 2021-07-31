@@ -22,9 +22,9 @@ class Map extends Component {
   };
 
   showPosition = (position) => {
-    console.log("This is the position", position.coords);
+    console.log("This is the position", { lat: JSON.parse(localStorage.getItem("joblat")), lng: JSON.parse(localStorage.getItem("joblong")) });
     this.setState({
-      origin: { lat: position.coords.latitude, lng: position.coords.longitude },
+      origin: { lat: JSON.parse(localStorage.getItem("joblat")), lng: JSON.parse(localStorage.getItem("joblong")) },
     });
     console.log("This is data", {
       lat: JSON.parse(localStorage.getItem("plumberlat")),
@@ -34,10 +34,7 @@ class Map extends Component {
     const directionsService = new google.maps.DirectionsService();
     directionsService.route(
       {
-        origin: {
-          lat: position.coords.latitude,
-          lng: position.coords.longitude,
-        },
+        origin: { lat: JSON.parse(localStorage.getItem("joblat")), lng: JSON.parse(localStorage.getItem("joblong")) },
         // localStorage.setItem("plumberlat", item.latitude);
         // localStorage.setItem("plumberlong", item.longitude);
         // destination: { lat: 6.5244, lng: 3.3792 },
