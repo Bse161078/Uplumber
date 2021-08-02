@@ -127,11 +127,13 @@ export default function Header(props) {
           </p>
         </Grid>
         <Grid md={2} xs={2}>
-          <Grid container direction="row" justify="center">
+          <Grid container direction="row" justify="center" style={{cursor:'pointer'}}>
             {props.rightIcon ? (
               props.rightIcon
             ) : (
-              <Badge badgeContent={badgeValue} color="secondary">
+              <Badge badgeContent={badgeValue} color="secondary"  onClick={() => {
+                document.getElementById("notifications").click();
+              }}>
                 <NotificationsIcon
                   onClick={() => {
                     document.getElementById("notifications").click();

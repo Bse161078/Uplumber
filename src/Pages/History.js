@@ -172,6 +172,7 @@ function ProviderDetail(props) {
 
   const OfferCards = (props) => {
     var type = props.item;
+    console.log("This is props.item ",props.item._id)
     if (props.item === "Job Started") {
       type = "jobStarted";
     }
@@ -182,19 +183,22 @@ function ProviderDetail(props) {
     return (
       <Paper
         style={{ width: "90%", padding: 10, marginBottom: 10 }}
-        onClick={() => {
-          setActiveTab("Detail");
-        }}
       >
-        <Link
-          id={"details" + props.index}
-          to={"/details/" + props.index}
-        ></Link>
-        <Link
-          id={"jobdetails" + props.index}
-          to={"/jobDetails/" + props.index}
-        ></Link>
-        <Grid container direction="row">
+            <Link
+            id={"jobdetails" + props.item._id}
+            to={"/jobDetails/" + props.item._id}
+          ></Link>
+
+        <Grid
+          container
+          direction="row"
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            document
+            .getElementById("jobdetails" + props.item._id)
+            .click();
+          }}
+        >
           <Grid item md={8} xs={8}>
             <Grid
               container
@@ -248,8 +252,20 @@ function ProviderDetail(props) {
         </Grid>
         <div
           style={{ width: "100%", border: "1px solid #f6f6f6", marginTop: 15 }}
+          onClick={() => {
+            document
+            .getElementById("jobdetails" + props.item._id)
+            .click();
+          }}
         ></div>
-        <Grid container direction="row" justify="center">
+        <Grid container direction="row" justify="center" 
+          style={{ cursor: "pointer" }}
+         onClick={() => {
+          document
+          .getElementById("jobdetails" + props.item._id)
+          .click();
+        }}
+        >
           <Grid item md={12} xs={12}>
             <span style={{ color: "#60a3d6", fontSize: 10 }}>Date</span>
             <p style={{ fontSize: 10, margin: 0 }}>{props.item.serviceDate}</p>
@@ -269,18 +285,6 @@ function ProviderDetail(props) {
     );
   };
 
-  const MyRequests = () => {
-    return (
-      <Grid
-        container
-        direction="row"
-        justify="center"
-        style={{ padding: 10, height: "max-content", marginTop: -60 }}
-      >
-        <OfferCards item={"Repair"}></OfferCards>
-      </Grid>
-    );
-  };
 
   const ReviewRequest = () => {
     return (

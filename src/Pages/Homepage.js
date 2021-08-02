@@ -116,34 +116,40 @@ const HomePage = (props) => {
   console.log("This isid", localStorage.getItem("id"));
   console.log("This is token", localStorage.getItem("token"));
 
-  const OfferCards = (props) => {
-    var calculatedStatus = "";
-    if (props.item.isAccepted) {
+  const calculateTheStatus = (item)=>{
+    var calculatedStatus= "";
+    if (item.isAccepted) {
       calculatedStatus = "Offer Accepted";
-      if (props.item.status === "pending") {
+      if (item.status === "pending") {
         calculatedStatus = "Job Not Started";
-      } else if (props.item.status === "started") {
+      } else if (item.status === "started") {
         calculatedStatus = "Job Started";
-      } else if (props.item.status === "OrderCompleted") {
+      } else if (item.status === "OrderCompleted") {
         calculatedStatus = "Job Completed";
-      } else if (props.item.status === "onTheWay") {
+      } else if (item.status === "onTheWay") {
         calculatedStatus = "Plumber On Way";
-      } else if (props.item.status === "delivered") {
+      } else if (item.status === "delivered") {
         calculatedStatus = "Delivered";
-      } else if (props.item.status === "NeedModification") {
+      } else if (item.status === "NeedModification") {
         calculatedStatus = "Need Modification";
-      } else if (props.item.status === "OrderCompleted") {
+      } else if (item.status === "OrderCompleted") {
         calculatedStatus = "Order Completed";
-      } else if (props.item.status === "OrderCancelled") {
+      } else if (item.status === "OrderCancelled") {
         calculatedStatus = "Order Cancelled";
       }
     } else {
-      if (props.item.status === "OrderCancelled") {
+      if (item.status === "OrderCancelled") {
         calculatedStatus = "Order Cancelled";
       } else {
         calculatedStatus = "Offer Created";
       }
     }
+    return calculatedStatus
+  }
+
+  const OfferCards = (props) => {
+    var calculatedStatus = "";
+calculatedStatus = calculateTheStatus(props.item);
     var type = "";
     if (props.item.isOrderCompleted) {
       type = "Completed";
@@ -160,106 +166,115 @@ const HomePage = (props) => {
       type = "Cancelled";
     }
     // console.log("This sis great", props.item.providerProfileId);
-
-    return (
-      <Paper style={{ width: "90%", padding: 10, marginBottom: 10 }}>
-        <Link
-          id={"details" + props.item._id}
-          to={"/details/" + props.item._id}
-        ></Link>
-        <Link
-          id={"jobdetails" + props.item._id}
-          to={"/jobDetails/" + props.item._id}
-        ></Link>
-        <Grid
-          container
-          direction="row"
-          style={{cursor:'pointer'}}
-          onClick={() => {
-            console.log("This si he click", props.item);
-            if (
-              props.item.isAccepted != null
-                ? props.item.isAccepted === false
-                : props.item.serviceId.isAccepted === false
-            ) {
-              if (calculatedStatus != "Order Cancelled") {
-                document.getElementById("details" + props.item._id).click();
-                localStorage.setItem("job", JSON.stringify(props.item));
-              } else {
+    
+     
+    
+      return (
+        calculatedStatus !== "Offer Created" &&
+        calculatedStatus !== "Order Cancelled" &&
+        calculatedStatus !== "Order Completed" &&
+        calculatedStatus !== "Job Completed" ?
+        <Paper style={{ width: "90%", padding: 10, marginBottom: 10 }}>
+          <Link
+            id={"details" + props.item._id}
+            to={"/details/" + props.item._id}
+          ></Link>
+          <Link
+            id={"jobdetails" + props.item._id}
+            to={"/jobDetails/" + props.item._id}
+          ></Link>
+          <Grid
+            container
+            direction="row"
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              console.log("This si he click", props.item);
+              if (
+                props.item.isAccepted != null
+                  ? props.item.isAccepted === false
+                  : props.item.serviceId.isAccepted === false
+              ) {
+                if (calculatedStatus != "Order Cancelled") {
+                  document.getElementById("details" + props.item._id).click();
+                  localStorage.setItem("job", JSON.stringify(props.item));
+                } else {
+                  console.log("This is props item", props.item);
+                  localStorage.setItem("job", JSON.stringify(props.item));
+                  document
+                    .getElementById("jobdetails" + props.item._id)
+                    .click();
+                }
+              } else if (
+                props.item.isAccepted === true ||
+                props.item.serviceId.isAccepted === true
+              ) {
                 console.log("This is props item", props.item);
                 localStorage.setItem("job", JSON.stringify(props.item));
                 document.getElementById("jobdetails" + props.item._id).click();
               }
-            } else if (
-              props.item.isAccepted === true ||
-              props.item.serviceId.isAccepted === true
-            ) {
-              console.log("This is props item", props.item);
-              localStorage.setItem("job", JSON.stringify(props.item));
-              document.getElementById("jobdetails" + props.item._id).click();
-            }
-          }}
-        >
-          <Grid item md={2} xs={2}>
-            <img
-              src={
-                props.item.providerImage ||
-                props.item.providerProfileId.profileImage
-              }
-              style={{ width: 50, height: 50, borderRadius: "50%" }}
-            ></img>
-          </Grid>
-          <Grid item md={6} xs={6}>
-            <Grid container direction="row" style={{ marginLeft: 5 }}>
-              <p
+            }}
+          >
+            <Grid item md={2} xs={2}>
+              <img
+                src={
+                  props.item.providerImage ||
+                  props.item.providerProfileId.profileImage
+                }
+                style={{ width: 50, height: 50, borderRadius: "50%" }}
+              ></img>
+            </Grid>
+            <Grid item md={6} xs={6}>
+              <Grid container direction="row" style={{ marginLeft: 5 }}>
+                <p
+                  style={{
+                    width: "100%",
+                    margin: 0,
+                    fontWeight: 600,
+                  }}
+                >
+                  {props.item.providerName ||
+                    props.item.providerProfileId.firstName +
+                      " " +
+                      props.item.providerProfileId.lastName}
+                </p>
+                <Rating
+                  value={
+                    props.item.providerRating ||
+                    props.item.providerProfileId.providerRating
+                  }
+                  style={{ fontSize: 10 }}
+                ></Rating>
+                <span style={{ fontSize: 10 }}>
+                  {props.item.providerRating ||
+                    props.item.providerProfileId.providerRating}
+                  (
+                  {props.item.providerReviews ||
+                    props.item.providerProfileId.providerReviews}
+                  ){" "}
+                </span>
+                <div style={{ width: "100%" }}></div>
+                <span style={{ fontSize: 10 }}>
+                  ${props.item.pricePerHour || props.item.labourRatePerHour} /
+                  hr
+                </span>
+              </Grid>
+            </Grid>
+            <Grid item md={4} xs={4}>
+              <div
                 style={{
-                  width: "100%",
-                  margin: 0,
-                  fontWeight: 600,
+                  background:
+                    props.item.isAccepted === true ? "#e7f9e9" : "#e7f1f9",
+                  fontSize: 10,
+                  borderRadius: 10,
+                  padding: 4,
+                  textAlign: "center",
+                  color: props.item.isAccepted === true ? "#23c739" : "#60a3d6",
+                  cursor: "pointer",
                 }}
               >
-                {props.item.providerName ||
-                  props.item.providerProfileId.firstName +
-                    " " +
-                    props.item.providerProfileId.lastName}
-              </p>
-              <Rating
-                value={
-                  props.item.providerRating ||
-                  props.item.providerProfileId.providerRating
-                }
-                style={{ fontSize: 10 }}
-              ></Rating>
-              <span style={{ fontSize: 10 }}>
-                {props.item.providerRating ||
-                  props.item.providerProfileId.providerRating}
-                (
-                {props.item.providerReviews ||
-                  props.item.providerProfileId.providerReviews}
-                ){" "}
-              </span>
-              <div style={{ width: "100%" }}></div>
-              <span style={{ fontSize: 10 }}>
-                ${props.item.pricePerHour || props.item.labourRatePerHour} / hr
-              </span>
-            </Grid>
-          </Grid>
-          <Grid item md={4} xs={4}>
-            <div
-              style={{
-                background:
-                  props.item.isAccepted === true ? "#e7f9e9" : "#e7f1f9",
-                fontSize: 10,
-                borderRadius: 10,
-                padding: 4,
-                textAlign: "center",
-                color: props.item.isAccepted === true ? "#23c739" : "#60a3d6",
-                cursor: "pointer",
-              }}
-            >
-              {calculatedStatus}
-            </div>
-            {/* {type != "Completed" &&
+                {calculatedStatus}
+              </div>
+              {/* {type != "Completed" &&
               type != "Cancelled" &&
               type != "Accepted" &&
               calculatedStatus != "Order Cancelled" &&
@@ -293,168 +308,191 @@ const HomePage = (props) => {
                   Cancel
                 </div>
               )} */}
+            </Grid>
           </Grid>
-        </Grid>
-        <div style={{ width: "100%", border: "1px solid #f6f6f6" }}></div>
-        <Grid
-          container
-          direction="row"
-          justify="center"
-          onClick={() => {
-            console.log("This si he click", props.item);
-            if (
-              props.item.isAccepted != null
-                ? props.item.isAccepted === false
-                : props.item.serviceId.isAccepted === false
-            ) {
-              if (calculatedStatus != "Order Cancelled") {
-                document.getElementById("details" + props.item._id).click();
-                localStorage.setItem("job", JSON.stringify(props.item));
-              } else {
+          <div style={{ width: "100%", border: "1px solid #f6f6f6" }}></div>
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            onClick={() => {
+              console.log("This si he click", props.item);
+              if (
+                props.item.isAccepted != null
+                  ? props.item.isAccepted === false
+                  : props.item.serviceId.isAccepted === false
+              ) {
+                if (calculatedStatus != "Order Cancelled") {
+                  document.getElementById("details" + props.item._id).click();
+                  localStorage.setItem("job", JSON.stringify(props.item));
+                } else {
+                  console.log("This is props item", props.item);
+                  localStorage.setItem("job", JSON.stringify(props.item));
+                  document
+                    .getElementById("jobdetails" + props.item._id)
+                    .click();
+                }
+              } else if (
+                props.item.isAccepted === true ||
+                props.item.serviceId.isAccepted === true
+              ) {
                 console.log("This is props item", props.item);
                 localStorage.setItem("job", JSON.stringify(props.item));
                 document.getElementById("jobdetails" + props.item._id).click();
               }
-            } else if (
-              props.item.isAccepted === true ||
-              props.item.serviceId.isAccepted === true
-            ) {
-              console.log("This is props item", props.item);
-              localStorage.setItem("job", JSON.stringify(props.item));
-              document.getElementById("jobdetails" + props.item._id).click();
-            }
-          }}
-          style={{cursor:'pointer'}}
-        >
-          <Grid item md={6} xs={6}>
-            <span style={{ color: "#60a3d6", fontSize: 10 }}>Date</span>
-            <p style={{ fontSize: 10, margin: 0 }}>
-              {props.item.serviceDate ||
-                props.item.serviceId.problem.serviceDate}
-            </p>
+            }}
+            style={{ cursor: "pointer" }}
+          >
+            <Grid item md={6} xs={6}>
+              <span style={{ color: "#60a3d6", fontSize: 10 }}>Date</span>
+              <p style={{ fontSize: 10, margin: 0 }}>
+                {props.item.serviceDate ||
+                  props.item.serviceId.problem.serviceDate}
+              </p>
+            </Grid>
+            <Grid item md={6} xs={6}>
+              <span style={{ color: "#60a3d6", fontSize: 10 }}>Item</span>
+              <p style={{ fontSize: 10, margin: 0 }}>
+                {" "}
+                {props.item.itemName ||
+                  props.item.serviceId.problem.problemItem}
+              </p>
+            </Grid>
           </Grid>
-          <Grid item md={6} xs={6}>
-            <span style={{ color: "#60a3d6", fontSize: 10 }}>Item</span>
-            <p style={{ fontSize: 10, margin: 0 }}>
-              {" "}
-              {props.item.itemName || props.item.serviceId.problem.problemItem}
-            </p>
-          </Grid>
-        </Grid>
-      </Paper>
-    );
+        </Paper>
+     :<div></div>
+     );
+    
+   
   };
 
   const ContactCards = (props) => {
     // console.log("This is item", props.item);
     var user = props.item;
-    return (
-      <Paper style={{ width: "90%", padding: 10, marginBottom: 10 }}>
-        <Grid container direction="row">
-          <Grid item md={2} xs={2}>
-            <img
-              src={user.providerImage}
-              style={{ width: 50, height: 50, borderRadius: "50%" }}
-            ></img>
-          </Grid>
-          <Grid item md={9} xs={9}>
-            <Grid container direction="row" style={{ marginLeft: 5 }}>
-              <p
+    
+    var calculatedStatus = "";
+    calculatedStatus = calculateTheStatus(props.item);
+    if(calculatedStatus !== "Order Cancelled" &&
+    calculatedStatus !== "Order Completed" &&
+    calculatedStatus !== "Job Completed" )
+    {
+      return (
+        <Paper style={{ width: "90%", padding: 10, marginBottom: 10 }}>
+          <Grid container direction="row">
+            <Grid item md={2} xs={2}>
+              <img
+                src={user.providerProfileId.profileImage}
+                style={{ width: 50, height: 50, borderRadius: "50%" }}
+              ></img>
+            </Grid>
+            <Grid item md={9} xs={9}>
+              <Grid container direction="row" style={{ marginLeft: 5 }}>
+                <p
+                  style={{
+                    width: "100%",
+                    margin: 0,
+                    fontWeight: 600,
+                  }}
+                >
+                  {user.providerProfileId.firstName+" "+user.providerProfileId.lastName}
+                </p>
+                <Rating value={5} style={{ fontSize: 10 }}></Rating>
+                <span style={{ fontSize: 10 }}>
+                  {user.providerProfileId.providerRating}({user.providerProfileId.providerReviews}){" "}
+                </span>
+                <div style={{ width: "100%" }}></div>
+                <span style={{ fontSize: 10 }}>
+                  ${user.providerProfileId.estimatedLabourCost} / hr
+                </span>
+              </Grid>
+            </Grid>
+            <Grid item md={1} xs={1}>
+              <Paper
                 style={{
-                  width: "100%",
-                  margin: 0,
-                  fontWeight: 600,
+                  fontSize: 10,
+                  borderRadius: "50%",
+                  height: 25,
+                  width: 25,
+                  padding: 4,
+                  textAlign: "center",
+                  color: "#60a3d6",
+                }}
+                onClick={() => {
+                  addToFavorite(user.providerProfileId._id, !user.providerProfileId.isLike);
                 }}
               >
-                {user.providerName}
-              </p>
-              <Rating value={5} style={{ fontSize: 10 }}></Rating>
-              <span style={{ fontSize: 10 }}>
-                {user.providerRating}({user.providerReviews}){" "}
-              </span>
-              <div style={{ width: "100%" }}></div>
-              <span style={{ fontSize: 10 }}>
-                ${user.estimatedLabourCost} / hr
-              </span>
+                <Grid
+                  container
+                  direction="row"
+                  alignItems="center"
+                  justify="center"
+                  style={{ height: 25 }}
+                >
+                  {user.isLike ? (
+                    <FavoriteIcon style={{ fontSize: 20 }}></FavoriteIcon>
+                  ) : (
+                    <FavoriteBorderOutlinedIcon
+                      style={{ fontSize: 20 }}
+                    ></FavoriteBorderOutlinedIcon>
+                  )}
+                </Grid>
+              </Paper>
             </Grid>
           </Grid>
-          <Grid item md={1} xs={1}>
-            <Paper
-              style={{
-                fontSize: 10,
-                borderRadius: "50%",
-                height: 25,
-                width: 25,
-                padding: 4,
-                textAlign: "center",
-                color: "#60a3d6",
-              }}
-              onClick={() => {
-                addToFavorite(user._id, !user.isLike);
-              }}
-            >
+          <div style={{ width: "100%", border: "1px solid #f6f6f6" }}></div>
+          <Grid
+            container
+            direction="row"
+            justify="center"
+            spacing={1}
+            style={{ marginTop: 5 }}
+          >
+            <Grid item md={6} xs={6}>
               <Grid
                 container
                 direction="row"
-                alignItems="center"
                 justify="center"
-                style={{ height: 25 }}
+                alignItems="center"
+                style={{
+                  background: "#f2f2f2",
+                  height: 35,
+                  width: "98%",
+                  borderRadius: 20,
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  window.open(`tel:${user.providerProfileId.phoneNumber}`); 
+                }}
               >
-                {user.isLike ? (
-                  <FavoriteIcon style={{ fontSize: 20 }}></FavoriteIcon>
-                ) : (
-                  <FavoriteBorderOutlinedIcon
-                    style={{ fontSize: 20 }}
-                  ></FavoriteBorderOutlinedIcon>
-                )}
+                <PhoneEnabledIcon style={{ fontSize: 18 }}></PhoneEnabledIcon>{" "}
+                Call
               </Grid>
-            </Paper>
-          </Grid>
-        </Grid>
-        <div style={{ width: "100%", border: "1px solid #f6f6f6" }}></div>
-        <Grid
-          container
-          direction="row"
-          justify="center"
-          spacing={1}
-          style={{ marginTop: 5 }}
-        >
-          <Grid item md={6} xs={6}>
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-              style={{
-                background: "#f2f2f2",
-                height: 35,
-                width: "98%",
-                borderRadius: 20,
-              }}
-            >
-              <PhoneEnabledIcon style={{ fontSize: 18 }}></PhoneEnabledIcon>{" "}
-              Call
+            </Grid>
+            <Grid item md={6} xs={6}>
+              <Grid
+                container
+                direction="row"
+                justify="center"
+                alignItems="center"
+                style={{
+                  background: "#f2f2f2",
+                  height: 35,
+                  width: "98%",
+                  borderRadius: 20,
+                }}
+              >
+                <MessageIcon style={{ fontSize: 18 }}></MessageIcon> Message
+              </Grid>
             </Grid>
           </Grid>
-          <Grid item md={6} xs={6}>
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-              style={{
-                background: "#f2f2f2",
-                height: 35,
-                width: "98%",
-                borderRadius: 20,
-              }}
-            >
-              <MessageIcon style={{ fontSize: 18 }}></MessageIcon> Message
-            </Grid>
-          </Grid>
-        </Grid>
-      </Paper>
-    );
+        </Paper>
+      );
+    }
+    else
+    {
+      return <div></div>
+    }
+
   };
 
   const cancleTheOffers = (id) => {
@@ -496,6 +534,14 @@ const HomePage = (props) => {
           console.log(res.data.data);
           var user = res.data.data;
           localStorage.setItem("userData", JSON.stringify(user));
+          localStorage.setItem("userEmail", user.email) ;
+          localStorage.setItem("userAddress", user.address) ;
+        localStorage.setItem("userUnit", user.unit) ;
+           localStorage.setItem("userCity", user.city);
+          localStorage.setItem("userState", user.state) ;
+          localStorage.setItem("userZipCode", user.zipcode) ;
+          localStorage.setItem("userName", user.firstName+" "+user.lastName) ;
+          localStorage.setItem("userPhone", user.phoneNumber) ;
         }
       },
       (error) => {
@@ -698,7 +744,7 @@ const HomePage = (props) => {
       getAllMyContacts();
       getMyProfile();
       if (props.match.params.id === "contacts") {
-        setActiveTab("Contacts");
+        setActiveTab("Services");
       }
     }
   }, []);
@@ -872,8 +918,8 @@ const HomePage = (props) => {
               alignItems="flex-start"
               style={{ height: "max-content" }}
             >
-              {allContacts &&
-                allContacts.map((item, index) => {
+              {allOffers &&
+                allOffers.map((item, index) => {
                   return (
                     <ContactCards index={index} item={item}></ContactCards>
                   );
@@ -1012,9 +1058,9 @@ const HomePage = (props) => {
                 container
                 direction="row"
                 justify="center"
-                style={{ color: activeTab === "Contacts" ? "black" : "gray" }}
+                style={{ color: activeTab === "Services" ? "black" : "gray" }}
                 onClick={() => {
-                  setActiveTab("Contacts");
+                  setActiveTab("Services");
                 }}
               >
                 <PersonIcon></PersonIcon>
@@ -1026,7 +1072,7 @@ const HomePage = (props) => {
                     fontWeight: 600,
                   }}
                 >
-                  Contacts
+                  Services
                 </p>
               </Grid>
             </Grid>

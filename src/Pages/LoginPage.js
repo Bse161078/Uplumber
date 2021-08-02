@@ -598,9 +598,10 @@ export default function LoginPage() {
                     res.status === 201
                   ) {
                     setOpenLoader(false);
-
+                    const user = res.data ;
                     localStorage.setItem("token", res.data.token);
                     localStorage.setItem("id", res.data._id);
+
                     localStorage.setItem("email", email);
                     if (localStorage.getItem("requestAfterLogin")) {
                       localStorage.removeItem("requestAfterLogin");
