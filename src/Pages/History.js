@@ -276,7 +276,7 @@ function ProviderDetail(props) {
               {props.item.serviceId.descriptionAndPhoto.description ||
                 "No Description"}
             </p>
-            <img src={Refrigertors} className={classes.image}></img>
+            <img src={props.item.serviceId.descriptionAndPhoto.photos[0]} className={classes.image}></img>
           </Grid>
           <Grid item md={8} xs={8}></Grid>
           <Grid item md={3} xs={3}></Grid>

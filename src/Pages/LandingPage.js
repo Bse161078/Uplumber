@@ -86,7 +86,7 @@ export default function LandingPage() {
             Start Exploring <ArrowRightAltIcon></ArrowRightAltIcon>
           </Grid>
         </button>{" "}
-        {/* <button
+        <button
           className={classes.button}
           style={{ background: "white", color: "black" }}
           onClick={() => {
@@ -94,9 +94,9 @@ export default function LandingPage() {
           }}
         >
           <Grid container direction="row" justify="center" alignItems="center">
-            Signup
+            Login
           </Grid>
-        </button> */}
+        </button>
         <p style={{ width: "80%", textAlign: "center" }}>
           By continuing you agree to our{" "}
           <span style={{ fontWeight: "bold" }}>Terms and conditions</span> and{" "}

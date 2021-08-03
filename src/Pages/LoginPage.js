@@ -63,7 +63,7 @@ export default function LoginPage() {
   const classes = useStyles();
   const [type, setType] = useState("password");
   const [state, setState] = React.useState(false);
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(localStorage.getItem("userEmail")||"");
   const [password, setPassword] = useState("");
   const [newEmail, setNewEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");

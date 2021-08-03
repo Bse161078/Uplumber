@@ -66,21 +66,24 @@ export default function LoginPage() {
   const [profileImage, setProfileImage] = useState(null);
   const [goToOtp, setGotoOtp] = useState();
   const [confirmResult, setConfirmResult] = useState();
-  const [firstName, setFirstName] = useState(localStorage.getItem("firstName"));
-  const [lastName, setLastName] = useState(localStorage.getItem("lastName"));
+  const [firstName, setFirstName] = useState(localStorage.getItem("firstName")||localStorage.getItem("userName")?localStorage.getItem("userName").split(" ")[0]:"");
+  const [lastName, setLastName] = useState(localStorage.getItem("lastName")||localStorage.getItem("userName")?localStorage.getItem("userName").split(" ")[1]:"");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [address, setAddress] = useState(localStorage.getItem("address"));
-  const [unit, setUnit] = useState(localStorage.getItem("unit"));
-  const [city, setCity] = useState(localStorage.getItem("city"));
-  const [state, setState] = useState(localStorage.getItem("state"));
-  const [zipcode, setZipcode] = useState(localStorage.getItem("zipcode"));
+  const [address, setAddress] = useState(localStorage.getItem("address")||localStorage.getItem("userAddress")||'');
+  const [unit, setUnit] = useState(localStorage.getItem("unit")||localStorage.getItem("userUnit")||"");
+  const [city, setCity] = useState(localStorage.getItem("city")||localStorage.getItem("userCity")||"");
+  const [state, setState] = useState(localStorage.getItem("state")||localStorage.getItem("userState")||"");
+  const [zipcode, setZipcode] = useState(localStorage.getItem("zipcode")||localStorage.getItem("userZipCode")||"");
   const [country, setCountry] = useState(
     localStorage.getItem("country") || "United States"
   );
-  const [latitude, setLatitude] = useState(localStorage.getItem("latitude"));
-  const [longitude, setLongitude] = useState(localStorage.getItem("longitude"));
+  const [latitude, setLatitude] = useState(localStorage.getItem("latitude")|| localStorage.getItem("userCurrentLocation") &&
+  JSON.parse(localStorage.getItem("userCurrentLocation")).latitude,);
+  const [longitude, setLongitude] = useState(localStorage.getItem("longitude")|| localStorage.getItem("userCurrentLocation") &&
+  JSON.parse(localStorage.getItem("userCurrentLocation")).longitude);
   const [captchaCreated, setCaptchaCreated] = useState(false);
   const [openLoader, setOpenLoader] = useState(false);
+  console.log("This is",localStorage.getItem("userName").split(" "))
 
   const getLocation = () => {
     if (navigator.geolocation) {

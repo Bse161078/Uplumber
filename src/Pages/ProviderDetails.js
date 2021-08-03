@@ -194,10 +194,10 @@ function ProviderDetail(props) {
           setOpenLoader(false);
           console.log("This is the order canel", res.data);
           sendCustomeNotification(
-            JSON.parse(localStorage.getItem("userData")).firstName +
+            JSON.parse("Sorry, ",localStorage.getItem("userData")).firstName +
               " " +
               JSON.parse(localStorage.getItem("userData")).lastName +
-              " rejected your request",
+              " did not accept your offer",
             jobData.serviceId._id,
             "offerRejected"
           );
@@ -230,7 +230,7 @@ function ProviderDetail(props) {
             JSON.parse(localStorage.getItem("userData")).firstName +
               " " +
               JSON.parse(localStorage.getItem("userData")).lastName +
-              " accepted your request",
+              " accepted your offer",
             jobData.serviceId._id,
             "offerAccepted"
           );

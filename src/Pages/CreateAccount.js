@@ -63,7 +63,7 @@ export default function LoginPage() {
   const classes = useStyles();
   const [type, setType] = useState("password");
   const [typeConfirm, setTypeConfirm] = useState("password");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(localStorage.getItem("userEmail")||"");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [accept, setAccept] = useState(true);

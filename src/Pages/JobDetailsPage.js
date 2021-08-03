@@ -416,7 +416,11 @@ function ProviderDetail(props) {
   };
 
   const notify = (data) => toast(data);
-  console.log("This is job data",jobData)
+  if(jobData)
+  {
+    console.log("This is job data",jobData.serviceId)
+  }
+
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
       {jobData && (
@@ -469,6 +473,7 @@ function ProviderDetail(props) {
       <Link id="homepage" to="/homepage"></Link>
       <Link id="homepage/contacts" to="/homepage/contacts"></Link>
       <Link id="reviews" to="/reviews/0"></Link>
+      <Link id="requestAService" to="/requestAService/0"></Link>
       <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
         <Header
           onSidebarDisplay={() => {
@@ -855,6 +860,52 @@ function ProviderDetail(props) {
                     </Grid>
                   </button>
                 )}
+                {
+                  OrderCancelled || markComplete &&<button
+                    className={classes.button}
+                    style={{ marginTop: 10 }}
+                    onClick={() => {
+                      console.log('THis is jobData',jobData.serviceId);
+                      localStorage.setItem("requestDate",jobData.serviceId.problem.serviceDate);
+                      localStorage.setItem("prfferedTime",jobData.serviceId.problem.serviceTime);
+                      localStorage.setItem("itemName",jobData.serviceId.problem.problemItem);
+                      localStorage.setItem("serviceType",jobData.serviceId.problem.serviceName);
+                      localStorage.setItem("requestOption",jobData.serviceId.problem.autoAccept?"Auto accept 1st offer":"Open for multiple offers");
+                     localStorage.setItem("waterDamage",jobData.serviceId.problem.anyFloorOrWaterDamage?"Yes":"No")
+                     if(jobData.serviceId.problem.anyFloorOrWaterDamage)
+                     {
+                      localStorage.setItem("lookingFor",JSON.stringify(jobData.serviceId.lookingFor));
+                     }
+                      localStorage.setItem("description",jobData.serviceId.descriptionAndPhoto.description);
+                      localStorage.setItem("image",JSON.stringify(jobData.serviceId.descriptionAndPhoto.photos));
+                      localStorage.setItem("area",jobData.serviceId.property.area);
+                      localStorage.setItem("structure",jobData.serviceId.property.structure);
+                      localStorage.setItem("requestorStatus",jobData.serviceId.property.requesterStatus);
+                      if(jobData.serviceId.problem.anyFloorOrWaterDamage)
+                      {
+                        localStorage.setItem("company",jobData.serviceId.insurance.company);
+                        localStorage.setItem("deduction",jobData.serviceId.insurance.deduction);
+                        localStorage.setItem("expiryDate",jobData.serviceId.insurance.expiryDate);
+                        localStorage.setItem("policyNumber",jobData.serviceId.insurance.policyNumber);
+                      }
+                      localStorage.setItem("",JSON.stringify({
+                        latitude: jobData.serviceId.contactDetails.latitude,
+                        longitude: jobData.serviceId.contactDetails.longitude,
+                      }))
+                      
+                      document.getElementById("requestAService").click()
+                    }}
+                  >
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      Create Copy
+                    </Grid>
+                  </button> 
+                }
               {JSON.parse(localStorage.getItem("job")).status === "delivered" &&
                 markComplete === false && (
                   <button
