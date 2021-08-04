@@ -2354,8 +2354,7 @@ function ProviderDetail(props) {
                   width: "90%",
                 }}
               >
-                Your service request has been submitted please wait for a
-                request from plumber.
+          Your service request has been submitted. Please wait for offers from plumbers.
               </p>
               <p
                 style={{

@@ -800,7 +800,9 @@ calculatedStatus = calculateTheStatus(props.item);
       {allProviders &&
         allProviders.map((item) => {
           // console.log("THis isthe lat long", item.location);
-          return (
+          if(item.isOnline)
+          {
+                     return (
             <Marker
               id="findMarker"
               icon={Plumber}
@@ -836,7 +838,9 @@ calculatedStatus = calculateTheStatus(props.item);
                 </InfoWindow>
               )}
             </Marker>
-          );
+          ); 
+          }
+
         })}
     </GoogleMap>
   ));
