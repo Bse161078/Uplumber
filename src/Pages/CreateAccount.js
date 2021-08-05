@@ -420,16 +420,6 @@ export default function LoginPage() {
             setOpenLoader(false);
             // notify(res.data.message);
             console.log(res);
-            localStorage.removeItem("userName");
-            localStorage.removeItem("userPhone");
-            localStorage.removeItem("allowSms");
-            localStorage.removeItem("userEmail");
-            localStorage.removeItem("userAddress");
-            localStorage.removeItem("userUnit");
-            localStorage.removeItem("userCity");
-            localStorage.removeItem("userState");
-            localStorage.removeItem("userZipCode");
-            localStorage.removeItem("userCurrentLocation");
             setTimeout(() => {
               document.getElementById("complete").click();
             }, 800);

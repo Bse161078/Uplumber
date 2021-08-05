@@ -78,7 +78,7 @@ export default function LoginPage() {
     localStorage.getItem("country") || "United States"
   );
   const [latitude, setLatitude] = useState(localStorage.getItem("latitude")|| localStorage.getItem("userCurrentLocation") &&
-  JSON.parse(localStorage.getItem("userCurrentLocation")).latitude,);
+  JSON.parse(localStorage.getItem("userCurrentLocation")).latitude);
   const [longitude, setLongitude] = useState(localStorage.getItem("longitude")|| localStorage.getItem("userCurrentLocation") &&
   JSON.parse(localStorage.getItem("userCurrentLocation")).longitude);
   const [captchaCreated, setCaptchaCreated] = useState(false);
@@ -475,6 +475,16 @@ export default function LoginPage() {
                     res.data.statusText === "OK"
                   ) {
                     setOpenLoader(false);
+                    localStorage.removeItem("userName");
+                    localStorage.removeItem("userPhone");
+                    localStorage.removeItem("allowSms");
+                    localStorage.removeItem("userEmail");
+                    localStorage.removeItem("userAddress");
+                    localStorage.removeItem("userUnit");
+                    localStorage.removeItem("userCity");
+                    localStorage.removeItem("userState");
+                    localStorage.removeItem("userZipCode");
+                    localStorage.removeItem("userCurrentLocation");
                     localStorage.setItem("id", res.data.customerId);
                     // Firebase.auth()
                     //   .signInWithPhoneNumber("+923004210859", true)

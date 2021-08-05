@@ -516,15 +516,25 @@ export const addContactToFavorite = (id, like) => {
     isLike: like,
   });
 
+  // var config = {
+  //   method: "put",
+  //   url: "https://u-plumber.net/api/customercontact/" + id,
+  //   headers: {
+  //     Authorization: `Bearer ${localStorage.getItem("token")}`,
+  //     "Content-Type": "application/json",
+  //   },
+  //   data: data,
+  // };
   var config = {
     method: "put",
-    url: "https://u-plumber.net/api/customercontact/" + id,
+    url: "https://u-plumber.net/api/customerprofile/updatecustomer",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
     },
     data: data,
   };
+
 
   return axios(config);
 };

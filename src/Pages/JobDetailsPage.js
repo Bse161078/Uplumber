@@ -440,6 +440,7 @@ function ProviderDetail(props) {
               },
             ],
             travelMode: "DRIVING",
+            unitSystem : window.google.maps.UnitSystem.IMPERIAL,
           }}
           callback={(res) => {
             console.log("THis is response", res);

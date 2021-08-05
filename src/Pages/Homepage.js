@@ -116,8 +116,8 @@ const HomePage = (props) => {
   console.log("This isid", localStorage.getItem("id"));
   console.log("This is token", localStorage.getItem("token"));
 
-  const calculateTheStatus = (item)=>{
-    var calculatedStatus= "";
+  const calculateTheStatus = (item) => {
+    var calculatedStatus = "";
     if (item.isAccepted) {
       calculatedStatus = "Offer Accepted";
       if (item.status === "pending") {
@@ -144,12 +144,12 @@ const HomePage = (props) => {
         calculatedStatus = "Offer Created";
       }
     }
-    return calculatedStatus
-  }
+    return calculatedStatus;
+  };
 
   const OfferCards = (props) => {
     var calculatedStatus = "";
-calculatedStatus = calculateTheStatus(props.item);
+    calculatedStatus = calculateTheStatus(props.item);
     var type = "";
     if (props.item.isOrderCompleted) {
       type = "Completed";
@@ -166,115 +166,109 @@ calculatedStatus = calculateTheStatus(props.item);
       type = "Cancelled";
     }
     // console.log("This sis great", props.item.providerProfileId);
-    
-     
-    
-      return (
-        calculatedStatus !== "Offer Created" &&
-        calculatedStatus !== "Order Cancelled" &&
-        calculatedStatus !== "Order Completed" &&
-        calculatedStatus !== "Job Completed" ?
-        <Paper style={{ width: "90%", padding: 10, marginBottom: 10 }}>
-          <Link
-            id={"details" + props.item._id}
-            to={"/details/" + props.item._id}
-          ></Link>
-          <Link
-            id={"jobdetails" + props.item._id}
-            to={"/jobDetails/" + props.item._id}
-          ></Link>
-          <Grid
-            container
-            direction="row"
-            style={{ cursor: "pointer" }}
-            onClick={() => {
-              console.log("This si he click", props.item);
-              if (
-                props.item.isAccepted != null
-                  ? props.item.isAccepted === false
-                  : props.item.serviceId.isAccepted === false
-              ) {
-                if (calculatedStatus != "Order Cancelled") {
-                  document.getElementById("details" + props.item._id).click();
-                  localStorage.setItem("job", JSON.stringify(props.item));
-                } else {
-                  console.log("This is props item", props.item);
-                  localStorage.setItem("job", JSON.stringify(props.item));
-                  document
-                    .getElementById("jobdetails" + props.item._id)
-                    .click();
-                }
-              } else if (
-                props.item.isAccepted === true ||
-                props.item.serviceId.isAccepted === true
-              ) {
+
+    return calculatedStatus !== "Offer Created" &&
+      calculatedStatus !== "Order Cancelled" &&
+      calculatedStatus !== "Order Completed" &&
+      calculatedStatus !== "Job Completed" ? (
+      <Paper style={{ width: "90%", padding: 10, marginBottom: 10 }}>
+        <Link
+          id={"details" + props.item._id}
+          to={"/details/" + props.item._id}
+        ></Link>
+        <Link
+          id={"jobdetails" + props.item._id}
+          to={"/jobDetails/" + props.item._id}
+        ></Link>
+        <Grid
+          container
+          direction="row"
+          style={{ cursor: "pointer" }}
+          onClick={() => {
+            console.log("This si he click", props.item);
+            if (
+              props.item.isAccepted != null
+                ? props.item.isAccepted === false
+                : props.item.serviceId.isAccepted === false
+            ) {
+              if (calculatedStatus != "Order Cancelled") {
+                document.getElementById("details" + props.item._id).click();
+                localStorage.setItem("job", JSON.stringify(props.item));
+              } else {
                 console.log("This is props item", props.item);
                 localStorage.setItem("job", JSON.stringify(props.item));
                 document.getElementById("jobdetails" + props.item._id).click();
               }
-            }}
-          >
-            <Grid item md={2} xs={2}>
-              <img
-                src={
-                  props.item.providerImage ||
-                  props.item.providerProfileId.profileImage
-                }
-                style={{ width: 50, height: 50, borderRadius: "50%" }}
-              ></img>
-            </Grid>
-            <Grid item md={6} xs={6}>
-              <Grid container direction="row" style={{ marginLeft: 5 }}>
-                <p
-                  style={{
-                    width: "100%",
-                    margin: 0,
-                    fontWeight: 600,
-                  }}
-                >
-                  {props.item.providerName ||
-                    props.item.providerProfileId.firstName +
-                      " " +
-                      props.item.providerProfileId.lastName}
-                </p>
-                <Rating
-                  value={
-                    props.item.providerRating ||
-                    props.item.providerProfileId.providerRating
-                  }
-                  style={{ fontSize: 10 }}
-                ></Rating>
-                <span style={{ fontSize: 10 }}>
-                  {props.item.providerRating ||
-                    props.item.providerProfileId.providerRating}
-                  (
-                  {props.item.providerReviews ||
-                    props.item.providerProfileId.providerReviews}
-                  ){" "}
-                </span>
-                <div style={{ width: "100%" }}></div>
-                <span style={{ fontSize: 10 }}>
-                  ${props.item.pricePerHour || props.item.labourRatePerHour} /
-                  hr
-                </span>
-              </Grid>
-            </Grid>
-            <Grid item md={4} xs={4}>
-              <div
+            } else if (
+              props.item.isAccepted === true ||
+              props.item.serviceId.isAccepted === true
+            ) {
+              console.log("This is props item", props.item);
+              localStorage.setItem("job", JSON.stringify(props.item));
+              document.getElementById("jobdetails" + props.item._id).click();
+            }
+          }}
+        >
+          <Grid item md={2} xs={2}>
+            <img
+              src={
+                props.item.providerImage ||
+                props.item.providerProfileId.profileImage
+              }
+              style={{ width: 50, height: 50, borderRadius: "50%" }}
+            ></img>
+          </Grid>
+          <Grid item md={6} xs={6}>
+            <Grid container direction="row" style={{ marginLeft: 5 }}>
+              <p
                 style={{
-                  background:
-                    props.item.isAccepted === true ? "#e7f9e9" : "#e7f1f9",
-                  fontSize: 10,
-                  borderRadius: 10,
-                  padding: 4,
-                  textAlign: "center",
-                  color: props.item.isAccepted === true ? "#23c739" : "#60a3d6",
-                  cursor: "pointer",
+                  width: "100%",
+                  margin: 0,
+                  fontWeight: 600,
                 }}
               >
-                {calculatedStatus}
-              </div>
-              {/* {type != "Completed" &&
+                {props.item.providerName ||
+                  props.item.providerProfileId.firstName +
+                    " " +
+                    props.item.providerProfileId.lastName}
+              </p>
+              <Rating
+                value={
+                  props.item.providerRating ||
+                  props.item.providerProfileId.providerRating
+                }
+                style={{ fontSize: 10 }}
+              ></Rating>
+              <span style={{ fontSize: 10 }}>
+                {props.item.providerRating ||
+                  props.item.providerProfileId.providerRating}
+                (
+                {props.item.providerReviews ||
+                  props.item.providerProfileId.providerReviews}
+                ){" "}
+              </span>
+              <div style={{ width: "100%" }}></div>
+              <span style={{ fontSize: 10 }}>
+                ${props.item.pricePerHour || props.item.labourRatePerHour} / hr
+              </span>
+            </Grid>
+          </Grid>
+          <Grid item md={4} xs={4}>
+            <div
+              style={{
+                background:
+                  props.item.isAccepted === true ? "#e7f9e9" : "#e7f1f9",
+                fontSize: 10,
+                borderRadius: 10,
+                padding: 4,
+                textAlign: "center",
+                color: props.item.isAccepted === true ? "#23c739" : "#60a3d6",
+                cursor: "pointer",
+              }}
+            >
+              {calculatedStatus}
+            </div>
+            {/* {type != "Completed" &&
               type != "Cancelled" &&
               type != "Accepted" &&
               calculatedStatus != "Order Cancelled" &&
@@ -308,77 +302,85 @@ calculatedStatus = calculateTheStatus(props.item);
                   Cancel
                 </div>
               )} */}
-            </Grid>
           </Grid>
-          <div style={{ width: "100%", border: "1px solid #f6f6f6" }}></div>
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            onClick={() => {
-              console.log("This si he click", props.item);
-              if (
-                props.item.isAccepted != null
-                  ? props.item.isAccepted === false
-                  : props.item.serviceId.isAccepted === false
-              ) {
-                if (calculatedStatus != "Order Cancelled") {
-                  document.getElementById("details" + props.item._id).click();
-                  localStorage.setItem("job", JSON.stringify(props.item));
-                } else {
-                  console.log("This is props item", props.item);
-                  localStorage.setItem("job", JSON.stringify(props.item));
-                  document
-                    .getElementById("jobdetails" + props.item._id)
-                    .click();
-                }
-              } else if (
-                props.item.isAccepted === true ||
-                props.item.serviceId.isAccepted === true
-              ) {
+        </Grid>
+        <div style={{ width: "100%", border: "1px solid #f6f6f6" }}></div>
+        <Grid
+          container
+          direction="row"
+          justify="center"
+          onClick={() => {
+            console.log("This si he click", props.item);
+            if (
+              props.item.isAccepted != null
+                ? props.item.isAccepted === false
+                : props.item.serviceId.isAccepted === false
+            ) {
+              if (calculatedStatus != "Order Cancelled") {
+                document.getElementById("details" + props.item._id).click();
+                localStorage.setItem("job", JSON.stringify(props.item));
+              } else {
                 console.log("This is props item", props.item);
                 localStorage.setItem("job", JSON.stringify(props.item));
                 document.getElementById("jobdetails" + props.item._id).click();
               }
-            }}
-            style={{ cursor: "pointer" }}
-          >
-            <Grid item md={6} xs={6}>
-              <span style={{ color: "#60a3d6", fontSize: 10 }}>Date</span>
-              <p style={{ fontSize: 10, margin: 0 }}>
-                {props.item.serviceDate ||
-                  props.item.serviceId.problem.serviceDate}
-              </p>
-            </Grid>
-            <Grid item md={6} xs={6}>
-              <span style={{ color: "#60a3d6", fontSize: 10 }}>Item</span>
-              <p style={{ fontSize: 10, margin: 0 }}>
-                {" "}
-                {props.item.itemName ||
-                  props.item.serviceId.problem.problemItem}
-              </p>
-            </Grid>
+            } else if (
+              props.item.isAccepted === true ||
+              props.item.serviceId.isAccepted === true
+            ) {
+              console.log("This is props item", props.item);
+              localStorage.setItem("job", JSON.stringify(props.item));
+              document.getElementById("jobdetails" + props.item._id).click();
+            }
+          }}
+          style={{ cursor: "pointer" }}
+        >
+          <Grid item md={6} xs={6}>
+            <span style={{ color: "#60a3d6", fontSize: 10 }}>Date</span>
+            <p style={{ fontSize: 10, margin: 0 }}>
+              {props.item.serviceDate ||
+                props.item.serviceId.problem.serviceDate}
+            </p>
           </Grid>
-        </Paper>
-     :<div></div>
-     );
-    
-   
+          <Grid item md={6} xs={6}>
+            <span style={{ color: "#60a3d6", fontSize: 10 }}>Item</span>
+            <p style={{ fontSize: 10, margin: 0 }}>
+              {" "}
+              {props.item.itemName || props.item.serviceId.problem.problemItem}
+            </p>
+          </Grid>
+        </Grid>
+      </Paper>
+    ) : (
+      <div></div>
+    );
   };
 
   const ContactCards = (props) => {
     // console.log("This is item", props.item);
     var user = props.item;
-    
+
     var calculatedStatus = "";
     calculatedStatus = calculateTheStatus(props.item);
-    if(calculatedStatus !== "Order Cancelled" &&
-    calculatedStatus !== "Order Completed" &&
-    calculatedStatus !== "Job Completed" )
-    {
+    if (
+      calculatedStatus !== "Order Cancelled" &&
+      calculatedStatus !== "Order Completed" &&
+      calculatedStatus !== "Job Completed"
+    ) {
       return (
         <Paper style={{ width: "90%", padding: 10, marginBottom: 10 }}>
-          <Grid container direction="row">
+          <Link
+            id={"jobdetails" + props.item._id}
+            to={"/jobDetails/" + props.item._id}
+          ></Link>
+          <Grid
+            container
+            direction="row"
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              document.getElementById("jobdetails" + props.item._id).click();
+            }}
+          >
             <Grid item md={2} xs={2}>
               <img
                 src={user.providerProfileId.profileImage}
@@ -394,11 +396,14 @@ calculatedStatus = calculateTheStatus(props.item);
                     fontWeight: 600,
                   }}
                 >
-                  {user.providerProfileId.firstName+" "+user.providerProfileId.lastName}
+                  {user.providerProfileId.firstName +
+                    " " +
+                    user.providerProfileId.lastName}
                 </p>
                 <Rating value={5} style={{ fontSize: 10 }}></Rating>
                 <span style={{ fontSize: 10 }}>
-                  {user.providerProfileId.providerRating}({user.providerProfileId.providerReviews}){" "}
+                  {user.providerProfileId.providerRating}(
+                  {user.providerProfileId.providerReviews}){" "}
                 </span>
                 <div style={{ width: "100%" }}></div>
                 <span style={{ fontSize: 10 }}>
@@ -418,7 +423,10 @@ calculatedStatus = calculateTheStatus(props.item);
                   color: "#60a3d6",
                 }}
                 onClick={() => {
-                  addToFavorite(user.providerProfileId._id, !user.providerProfileId.isLike);
+                  addToFavorite(
+                    user.providerProfileId._id,
+                    !user.providerProfileId.isLike
+                  );
                 }}
               >
                 <Grid
@@ -461,7 +469,7 @@ calculatedStatus = calculateTheStatus(props.item);
                   cursor: "pointer",
                 }}
                 onClick={() => {
-                  window.open(`tel:${user.providerProfileId.phoneNumber}`); 
+                  window.open(`tel:${user.providerProfileId.phoneNumber}`);
                 }}
               >
                 <PhoneEnabledIcon style={{ fontSize: 18 }}></PhoneEnabledIcon>{" "}
@@ -487,12 +495,9 @@ calculatedStatus = calculateTheStatus(props.item);
           </Grid>
         </Paper>
       );
+    } else {
+      return <div></div>;
     }
-    else
-    {
-      return <div></div>
-    }
-
   };
 
   const cancleTheOffers = (id) => {
@@ -534,14 +539,17 @@ calculatedStatus = calculateTheStatus(props.item);
           console.log(res.data.data);
           var user = res.data.data;
           localStorage.setItem("userData", JSON.stringify(user));
-          localStorage.setItem("userEmail", user.email) ;
-          localStorage.setItem("userAddress", user.address) ;
-        localStorage.setItem("userUnit", user.unit) ;
-           localStorage.setItem("userCity", user.city);
-          localStorage.setItem("userState", user.state) ;
-          localStorage.setItem("userZipCode", user.zipcode) ;
-          localStorage.setItem("userName", user.firstName+" "+user.lastName) ;
-          localStorage.setItem("userPhone", user.phoneNumber) ;
+          localStorage.setItem("userEmail", user.email);
+          localStorage.setItem("userAddress", user.address);
+          localStorage.setItem("userUnit", user.unit);
+          localStorage.setItem("userCity", user.city);
+          localStorage.setItem("userState", user.state);
+          localStorage.setItem("userZipCode", user.zipcode);
+          localStorage.setItem(
+            "userName",
+            user.firstName + " " + user.lastName
+          );
+          localStorage.setItem("userPhone", user.phoneNumber);
         }
       },
       (error) => {
@@ -800,47 +808,45 @@ calculatedStatus = calculateTheStatus(props.item);
       {allProviders &&
         allProviders.map((item) => {
           // console.log("THis isthe lat long", item.location);
-          if(item.isOnline)
-          {
-                     return (
-            <Marker
-              id="findMarker"
-              icon={Plumber}
-              position={{ lat: item.location[1], lng: item.location[0] }}
-              onClick={props.onToggleOpen}
-              onClick={() => {
-                setOpenPopup(item.providerId);
-              }}
-            >
-              {openPopup === item.providerId && (
-                <InfoWindow
-                  onCloseClick={() => {
-                    setOpenPopup(null);
-                  }}
-                >
-                  <div style={{ width: 100 }}>
-                    <Grid container direction="row" justify="center">
-                      <img
-                        src={item.profileImage}
-                        style={{ width: 50, height: 50, borderRadius: 40 }}
-                      ></img>
-                      <p
-                        style={{
-                          width: "100%",
-                          fontWeight: 600,
-                          textAlign: "center",
-                        }}
-                      >
-                        {item.firstName + " " + item.lastName}
-                      </p>
-                    </Grid>
-                  </div>
-                </InfoWindow>
-              )}
-            </Marker>
-          ); 
+          if (item.isOnline) {
+            return (
+              <Marker
+                id="findMarker"
+                icon={Plumber}
+                position={{ lat: item.location[1], lng: item.location[0] }}
+                onClick={props.onToggleOpen}
+                onClick={() => {
+                  setOpenPopup(item.providerId);
+                }}
+              >
+                {openPopup === item.providerId && (
+                  <InfoWindow
+                    onCloseClick={() => {
+                      setOpenPopup(null);
+                    }}
+                  >
+                    <div style={{ width: 100 }}>
+                      <Grid container direction="row" justify="center">
+                        <img
+                          src={item.profileImage}
+                          style={{ width: 50, height: 50, borderRadius: 40 }}
+                        ></img>
+                        <p
+                          style={{
+                            width: "100%",
+                            fontWeight: 600,
+                            textAlign: "center",
+                          }}
+                        >
+                          {item.firstName + " " + item.lastName}
+                        </p>
+                      </Grid>
+                    </div>
+                  </InfoWindow>
+                )}
+              </Marker>
+            );
           }
-
         })}
     </GoogleMap>
   ));
