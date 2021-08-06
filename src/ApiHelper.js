@@ -133,7 +133,9 @@ export const CompleteProfile = (postData) => {
 export const CustomerNotifications = () => {
   var config = {
     method: "get",
-    url: "https://u-plumber.net/api/customernotification/customer/"+ localStorage.getItem("id"),
+    url:
+      "https://u-plumber.net/api/customernotification/customer/" +
+      localStorage.getItem("id"),
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
     },
@@ -217,8 +219,8 @@ export const CustomerSericeUpdateProblem = (postData) => {
 
 export const CustomerSericeAutoAccept = (autoAccept) => {
   var postData = {
-    "autoAccept": autoAccept
-  }
+    autoAccept: autoAccept,
+  };
   var data = JSON.stringify(postData);
 
   var config = {
@@ -535,7 +537,6 @@ export const addContactToFavorite = (id, like) => {
     data: data,
   };
 
-
   return axios(config);
 };
 
@@ -810,12 +811,17 @@ export const sendCustomerNotification = (
     customerId: localStorage.getItem("id"),
     providerId: id,
     notificationText: notificationText,
-    serviceId: serviceId,
+    serviceId: serviceId._id,
     offerId: offerId,
     image: JSON.parse(localStorage.getItem("userData")).profileImage || Avatar,
     type: type,
+    isProviderReview: false,
+    latitude: null,
+    longitude: null,
+    isView: false,
+    locationName: "",
   });
-  console.log("This is dataa", data);
+  console.log("This is dataa", JSON.parse(data));
   var config = {
     method: "post",
     url: "https://u-plumber.net/api/providernotification",
