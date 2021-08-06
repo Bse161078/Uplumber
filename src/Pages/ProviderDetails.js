@@ -378,7 +378,7 @@ function ProviderDetail(props) {
                 lng: jobData.serviceId.contactDetails.longitude,
               },
             ],
-            unitSystem: window.google.maps.UnitSystem.METRIC, 
+            unitSystem : window.google.maps.UnitSystem.IMPERIAL,
             travelMode: "DRIVING",
           }}
           callback={(res) => {

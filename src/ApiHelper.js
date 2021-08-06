@@ -163,7 +163,7 @@ export const AllProvidersByLocation = (lat, long, distance) => {
       "/" +
       long +
       "/" +
-      distance,
+      30,
     // headers: {
     //   Authorization: `Bearer ${localStorage.getItem("token")}`,
     // },

@@ -17,6 +17,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { connectFirebase } from "../Config/firebase";
 import ConfirmOtp from "./ConfirmOTP";
 import firebase from "firebase";
+import { formatPhoneNumber } from "../Functions";
 var validator = require("email-validator");
 
 const useStyles = makeStyles((theme) => ({
@@ -68,7 +69,7 @@ export default function LoginPage() {
   const [confirmResult, setConfirmResult] = useState();
   const [firstName, setFirstName] = useState(localStorage.getItem("firstName")||localStorage.getItem("userName")?localStorage.getItem("userName").split(" ")[0]:"");
   const [lastName, setLastName] = useState(localStorage.getItem("lastName")||localStorage.getItem("userName")?localStorage.getItem("userName").split(" ")[1]:"");
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(localStorage.getItem("userPhone")?localStorage.getItem("userPhone"):"");
   const [address, setAddress] = useState(localStorage.getItem("address")||localStorage.getItem("userAddress")||'');
   const [unit, setUnit] = useState(localStorage.getItem("unit")||localStorage.getItem("userUnit")||"");
   const [city, setCity] = useState(localStorage.getItem("city")||localStorage.getItem("userCity")||"");
@@ -315,7 +316,15 @@ export default function LoginPage() {
         >
           Phone Number
         </p>
-        <PhoneInput
+        <input
+              className={classes.input}
+              value={phoneNumber}
+              onChange={(e) => {
+                setPhoneNumber(formatPhoneNumber(e.target.value));
+                localStorage.setItem("phoneNumber", formatPhoneNumber(e.target.value));
+              }}
+            ></input>
+        {/* <PhoneInput
           placeholder="Enter phone number"
           value={phoneNumber}
           onChange={(e) => {
@@ -323,8 +332,7 @@ export default function LoginPage() {
             setPhoneNumber(e);
             localStorage.setItem("phoneNumber", e);
           }}
-        />
-        <div className={classes.input} style={{ height: 10 }}></div>
+        /> */}
         <p className={classes.label} style={{ marginTop: 10 }}>
           Address
         </p>
