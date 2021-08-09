@@ -107,6 +107,7 @@ function ProviderDetail(props) {
   };
 
   const sendCustomeNotification = (text, serviceId, type) => {
+    console.log("This is being passed",text,"ServiceId",serviceId,"type",type)
     setOpenLoader(true);
     sendCustomerNotification(
       jobData.providerId,
@@ -198,7 +199,7 @@ function ProviderDetail(props) {
               " " +
               JSON.parse(localStorage.getItem("userData")).lastName +
               " did not accept your offer",
-            jobData.serviceId._id,
+            jobData.serviceId,
             "offerRejected"
           );
           document.getElementById("jobdetails" + jobData._id).click();

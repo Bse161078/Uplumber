@@ -324,7 +324,7 @@ function ProviderDetail(props) {
               " " +
               JSON.parse(localStorage.getItem("userData")).lastName +
               " marked your order complete",
-            jobData.serviceId._id,
+            jobData.serviceId,
             "jobCompleted"
           );
           setMarkComplete(true);
@@ -816,9 +816,9 @@ function ProviderDetail(props) {
                 </span>
                 <p style={{ fontSize: 10, margin: 0 }}>
                   {" "}
-                  {moment(new Date(jobData.estimatedCompletionDate)).format(
+                  {jobData.estimatedCompletionDate?moment(new Date(jobData.estimatedCompletionDate)).format(
                     "MMMM Do YYYY"
-                  )}
+                  ):"N/A"}
                 </p>
               </Grid>{" "}
               <Grid item md={12} xs={12}>
