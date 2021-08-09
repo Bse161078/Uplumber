@@ -23,6 +23,7 @@ import {
   sendCustomerNotification,
   getOfferDetail,
   getItems,
+  getProviderReviews
 } from "../ApiHelper";
 import { GoogleMap, DistanceMatrixService } from "@react-google-maps/api";
 
@@ -78,7 +79,7 @@ function ProviderDetail(props) {
   const [commentText, setCommentText] = React.useState("");
   const [rating, setRating] = React.useState(null);
   const [openLoader, setOpenLoader] = useState(false);
-
+  const [reviews, setReviews] = useState(false);
   const [leadUnpaid, setLeadUnpaid] = React.useState(false);
   const [notStarted, setNotStarted] = React.useState(false);
   const [plumberOnWay, setPlumberOnWay] = React.useState(false);
@@ -166,6 +167,7 @@ function ProviderDetail(props) {
         JSON.parse(localStorage.getItem("job")).itemName ||
           JSON.parse(localStorage.getItem("job")).serviceId.problem.problemItem
       );
+      providerReviews(JSON.parse(localStorage.getItem("job")));
       getOfferDetailsById();
     } else {
       getOfferDetailsById();
@@ -230,6 +232,7 @@ function ProviderDetail(props) {
               JSON.parse(localStorage.getItem("job")).serviceId.problem
                 .problemItem
           );
+          providerReviews(JSON.parse(localStorage.getItem("job")));
           setJobData(JSON.parse(localStorage.getItem("job")));
           setTheStatus(res.data.CustomerOffer);
         }
@@ -415,6 +418,31 @@ function ProviderDetail(props) {
     );
   };
 
+  const providerReviews = (jobData) => {
+    setOpenLoader(true);
+    getProviderReviews(jobData.providerProfileId.providerId).then(
+      (res) => {
+        if (
+          res.data.success ||
+          res.status === 200 ||
+          res.status === 201 ||
+          res.status === 200
+        ) {
+          setOpenLoader(false);
+          console.log("These are provider reviews", res.data);
+          setReviews(res.data.Customer);
+        }
+      },
+      (error) => {
+        if (error.response) {
+          notify(error.response.data.message);
+        }
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+      }
+    );
+  };
+
   const notify = (data) => toast(data);
   if(jobData)
   {
@@ -563,13 +591,17 @@ function ProviderDetail(props) {
             spacing={1}
             style={{
               background: "#1075c2",
+              background: "#10c228",
               height: "max-content",
               position: "absolute",
             }}
           >
             {" "}
-            <p style={{ color: "white", width: "100%", textAlign: "center" }}>
+            {/* <p style={{ color: "white", width: "100%", textAlign: "center" }}>
               Lead Unpaid
+            </p> */}
+              <p style={{ color: "white", width: "100%", textAlign: "center" }}>
+              You accepted this offer
             </p>
           </Grid>
         ) : notStarted ? (
@@ -580,13 +612,17 @@ function ProviderDetail(props) {
             spacing={1}
             style={{
               background: "#1075c2",
+              background: "#10c228",
               height: "max-content",
               position: "absolute",
             }}
           >
             {" "}
-            <p style={{ color: "white", width: "100%", textAlign: "center" }}>
+            {/* <p style={{ color: "white", width: "100%", textAlign: "center" }}>
               Job Not Started
+            </p> */}
+                   <p style={{ color: "white", width: "100%", textAlign: "center" }}>
+              You accepted this offer
             </p>
           </Grid>
         ) : plumberOnWay ? (
@@ -597,13 +633,17 @@ function ProviderDetail(props) {
             spacing={1}
             style={{
               background: "#1075c2",
+              background: "#10c228",
               height: "max-content",
               position: "absolute",
             }}
           >
             {" "}
-            <p style={{ color: "white", width: "100%", textAlign: "center" }}>
+            {/* <p style={{ color: "white", width: "100%", textAlign: "center" }}>
               Plumber On The Way
+            </p> */}
+                   <p style={{ color: "white", width: "100%", textAlign: "center" }}>
+              You accepted this offer
             </p>
           </Grid>
         ) : jobDelivered ? (
@@ -989,6 +1029,103 @@ function ProviderDetail(props) {
                   </button>
                 )}
             </Grid>
+            <Grid container direction="row" justify="center">
+              <Grid item md={8} xs={8}>
+                {" "}
+                <p
+                  style={{
+                    margin: 0,
+                    marginBottom: 10,
+                    marginLeft: 10,
+                    fontWeight: 600,
+                  }}
+                >
+                  {jobData.providerName ||
+                    jobData.providerProfileId.firstName +
+                      " " +
+                      jobData.providerProfileId.lastName}
+                </p>
+              </Grid>
+              <Grid item md={4} xs={4}>
+                <p
+                  style={{
+                    margin: 0,
+                    marginBottom: 10,
+                    marginLeft: 10,
+                    fontWeight: 500,
+                    cursor: "pointer",
+                  }}
+                  onClick={() => {
+                    if (reviews) {
+                      localStorage.setItem("reviews", JSON.stringify(reviews));
+                      document.getElementById("reviews").click();
+                    }
+                  }}
+                >
+                  All Reviews
+                </p>
+              </Grid>
+            </Grid>
+            <Grid container direction="row">
+              {reviews &&
+                reviews.map((item) => {
+                  return (
+                    <Grid container direction="row" justify="center">
+                      {" "}
+                      <Paper
+                        style={{ width: "90%", marginBottom: 10, padding: 10 }}
+                      >
+                        <Grid container direction="row">
+                          <Grid item md={2} xs={2}>
+                            <img
+                              src={item.customerImage || Avatar}
+                              style={{
+                                width: 50,
+                                height: 50,
+                                borderRadius: 70,
+                              }}
+                            ></img>
+                          </Grid>
+                          <Grid item md={8} xs={8}>
+                            <Grid
+                              container
+                              direction="row"
+                              style={{ marginLeft: 5 }}
+                            >
+                              <p
+                                style={{
+                                  width: "100%",
+                                  margin: 0,
+                                  fontWeight: 600,
+                                }}
+                              >
+                                {item.customerName || "Jane Doe"}
+                              </p>
+                              <Rating
+                                value={item.rating}
+                                style={{ fontSize: 12 }}
+                              ></Rating>
+                              <span style={{ fontSize: 12 }}>
+                                {item.rating}({reviews.length}){" "}
+                              </span>
+                              <div style={{ width: "100%" }}></div>
+                              {/* <span style={{ fontSize: 12 }}>$25 / hr</span> */}
+                              <div style={{ width: "100%" }}></div>
+                              <span>{item.comment}</span>
+                            </Grid>
+                          </Grid>
+                          <Grid item md={2} xs={2}>
+                            {/* <span style={{ fontSize: 10, color: "gray" }}>
+                              $25 / hr
+                            </span> */}
+                          </Grid>
+                        </Grid>
+                      </Paper>
+                    </Grid>
+                  );
+                })}
+            </Grid>
+         
           </Grid>
         )}
         <div className="sideBar" style={{ background: "red" }}>

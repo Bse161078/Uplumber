@@ -250,7 +250,7 @@ function ProviderDetail(props) {
 
   const providerReviews = (jobData) => {
     setOpenLoader(true);
-    getProviderReviews(jobData.providerId).then(
+    getProviderReviews(jobData.providerProfileId.providerId).then(
       (res) => {
         if (
           res.data.success ||
