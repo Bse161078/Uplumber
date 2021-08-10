@@ -232,7 +232,7 @@ function ProviderDetail(props) {
               " " +
               JSON.parse(localStorage.getItem("userData")).lastName +
               " accepted your offer",
-            jobData.serviceId._id,
+            jobData.serviceId,
             "offerAccepted"
           );
           createMyContact(jobData.serviceId._id);

@@ -14,12 +14,13 @@ import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
 import Avatar from "../assets/profile.png";
 import Plumber from "../assets/Plumber.png";
-
+import firebase from "firebase";
 import Rating from "@material-ui/lab/Rating";
 import ExploreIcon from "@material-ui/icons/Explore";
 import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import PersonIcon from "@material-ui/icons/Person";
 import { compose, withProps, withStateHandlers } from "recompose";
+import { connectFirebase } from "../Config/firebase";
 // import {
 //   Map,
 //   TileLayer,
@@ -108,6 +109,8 @@ const HomePage = (props) => {
   const [allContacts, setAllContacts] = useState(null);
   const [currentLocation, setCurrentLoction] = useState(null);
   const [openPopup, setOpenPopup] = useState(null);
+  const [tokenFound, setTokenFound] = useState(null);
+  
 
   const toggleDrawer = (anchor, open) => (event) => {
     setState(open);
@@ -115,6 +118,37 @@ const HomePage = (props) => {
   const position = [51.505, -0.09];
   console.log("This isid", localStorage.getItem("id"));
   console.log("This is token", localStorage.getItem("token"));
+
+
+
+
+ const getToken = (setTokenFound) => {
+    return firebase.messaging()
+      .getToken()
+      .then(currentToken => {
+        if (currentToken) {
+          console.log('current token for client: ', currentToken)
+          setTokenFound(true)
+          // Track the token -> client mapping, by sending to backend server
+          // show on the UI that permission is secured
+        } else {
+          console.log('No registration token available. Request permission to generate one.')
+          setTokenFound(false)
+          // shows on the UI that permission is required
+        }
+      })
+      .catch(err => {
+        console.log('An error occurred while retrieving token. ', err)
+        // catch error while creating client token
+      })
+  }
+  
+ const onMessageListener = () =>
+    new Promise((resolve) => {
+      firebase.messaging().onMessage((payload) => {
+        resolve(payload);
+      });
+  });
 
   const calculateTheStatus = (item) => {
     var calculatedStatus = "";
@@ -735,8 +769,11 @@ const HomePage = (props) => {
     );
   };
 
-  useEffect(() => {
+  useEffect(async () => {
     getLocation();
+    let fb = await connectFirebase();
+    getToken(setTokenFound)
+    console.log("This is fb",fb)
     if (localStorage.getItem("allProviders")) {
       setAllProviders(JSON.parse(localStorage.getItem("allProviders")));
     }

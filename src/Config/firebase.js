@@ -49,16 +49,16 @@ export async function connectFirebase() {
   // };
 
   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-  const firebaseConfig = {
-    apiKey: "AIzaSyAT7sXZZ3ivKw84CRIXQoRK895yaYEovjM",
-    authDomain: "uplumber-3f5cf.firebaseapp.com",
-    projectId: "uplumber-3f5cf",
-    storageBucket: "uplumber-3f5cf.appspot.com",
-    messagingSenderId: "417513041043",
-    appId: "1:417513041043:web:b8683b7f10c51a9a23b166",
-    measurementId: "G-0H83TW0W3M",
-  };
-
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyD2GUiwFkhH9w6Mk6OBzwPC5LV9poCrHcs",
+  authDomain: "uplumber-e51a0.firebaseapp.com",
+  projectId: "uplumber-e51a0",
+  storageBucket: "uplumber-e51a0.appspot.com",
+  messagingSenderId: "989502393112",
+  appId: "1:989502393112:web:a1dde83c9523fabf17ec6d",
+  measurementId: "G-8TEG4BTJML"
+};
   // Initialize Firebase
   if (!firebase.apps.length) {
     console.log("FIREBASE CONNECTED!!!");
