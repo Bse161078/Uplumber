@@ -191,7 +191,7 @@ function ProviderDetail(props) {
               " " +
               JSON.parse(localStorage.getItem("userData")).lastName +
               " requested a modification in the job",
-            jobData.serviceId._id,
+            jobData.serviceId,
             "modificationReqeusted"
           );
 
@@ -363,7 +363,7 @@ function ProviderDetail(props) {
               " " +
               JSON.parse(localStorage.getItem("userData")).lastName +
               " has updated the completion date",
-            jobData.serviceId._id,
+            jobData.serviceId,
             "completionDateUpdated"
           );
           console.log("This is the acceptNew Date response", res.data);
@@ -403,7 +403,7 @@ function ProviderDetail(props) {
               " " +
               JSON.parse(localStorage.getItem("userData")).lastName +
               " provided you a review",
-            jobData.serviceId._id,
+            jobData.serviceId,
             "jobReviewed"
           );
         }
