@@ -896,7 +896,7 @@ function ProviderDetail(props) {
             onFocus={() => {
               setCalendar(true);
             }}
-            value={requestData.requestDate}
+            value={moment(requestData.requestDate).format("MMMM Do YYYY")}
             style={{ border: "none", width: "90%" }}
             type={"text"}
           ></input>
@@ -1488,7 +1488,7 @@ function ProviderDetail(props) {
             className={classes.input}
             style={{ border: "none", width: "90%" }}
             type={"text"}
-            value={requestData.expiryDate}
+            value={moment(requestData.expiryDate).format("MMMM Do YYYY")}
           ></input>
           <DateRangeIcon
             style={{ color: "#1075c2" }}
@@ -2155,13 +2155,14 @@ function ProviderDetail(props) {
                 if (calendarType === "expiryDate") {
                   setRequestData({
                     ...requestData,
-                    expiryDate: moment(e).format("MMMM Do YYYY"),
+                    expiryDate: e,
                   });
                   setCalendar(false);
                 } else {
+                  console.log("Thhis is request date")
                   setRequestData({
                     ...requestData,
-                    requestDate: moment(e).format("MMMM Do YYYY"),
+                    requestDate: e,
                   });
                   setCalendar(false);
                 }

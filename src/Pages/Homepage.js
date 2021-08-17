@@ -49,6 +49,7 @@ import {
   addContactToFavorite,
   cancelAllOffers,
   MyProfile,
+  UpdateCustomerProfile
 } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 import {
@@ -120,6 +121,28 @@ const HomePage = (props) => {
   console.log("This is token", localStorage.getItem("token"));
 
 
+  const updateMyProfile = (fcmToken) => {
+    var data = {
+      fcmToken:fcmToken
+    };
+    console.log("THis is the data", data);
+    setOpenLoader(true);
+    UpdateCustomerProfile(data).then(
+      (res) => {
+        if (res.data.success || res.status === 200 || res.status === 201) {
+          setOpenLoader(false);
+          console.log(res.data.data);
+        }
+      },
+      (error) => {
+        if (error.response) {
+          notify(error.response.data.message);
+        }
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+      }
+    );
+  };
 
 
  const getToken = (setTokenFound) => {
@@ -128,6 +151,7 @@ const HomePage = (props) => {
       .then(currentToken => {
         if (currentToken) {
           console.log('current token for client: ', currentToken)
+          updateMyProfile(currentToken)
           setTokenFound(true)
           // Track the token -> client mapping, by sending to backend server
           // show on the UI that permission is secured
