@@ -716,7 +716,7 @@ const HomePage = (props) => {
           res.status === 200
         ) {
           setOpenLoader(false);
-          console.log("This is res", res);
+          console.log("This is res for plumber", res);
           if (res.data.data.length === 0) {
             notify("No providers were found withing this radius!!");
           } else {

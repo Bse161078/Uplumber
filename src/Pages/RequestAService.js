@@ -128,7 +128,7 @@ function ProviderDetail(props) {
   const [image, setImage] = React.useState([]);
 
   const [requestData, setRequestData] = useState({
-    requestDate: moment(new Date()).format("MMMM Do YYYY"),
+    requestDate: localStorage.getItem("requestDate") || new Date(),
     prfferedTime: localStorage.getItem("prfferedTime") || "As soon a possible",
     itemName: localStorage.getItem("itemName") || "Air-Condition",
     serviceType: localStorage.getItem("serviceType") || "Repair",
@@ -148,7 +148,7 @@ function ProviderDetail(props) {
       : [],
     company: localStorage.getItem("company") || "",
     policyNumber: localStorage.getItem("policyNumber") || "",
-    expiryDate: localStorage.getItem("expiryDate") || "",
+    expiryDate: localStorage.getItem("expiryDate") || new Date(),
     deduction: localStorage.getItem("deduction") || "",
     userName: localStorage.getItem("userName") || "",
     userPhone: localStorage.getItem("userPhone") || "+1",
@@ -304,28 +304,7 @@ function ProviderDetail(props) {
             setOpenLoader(false);
             console.log(res.data);
             localStorage.setItem("requestId", res.data._id);
-            setTimeout(() => {
               updateCustomerProblem();
-            }, 600);
-            // setTimeout(() => {
-            //   updateCustomerLookingFor();
-            // }, 800);
-            // setTimeout(() => {
-            //   if (requestData.waterDamage === "Yes") {
-            //     updateCustomerProperty();
-            //   }
-            // }, 900);
-            // setTimeout(() => {
-            //   updateCustomerPropertyDescriptionAndProperty();
-            // }, 1000);
-            // setTimeout(() => {
-            //   if (requestData.waterDamage === "Yes") {
-            //     updateCustomerPropertyInssurance();
-            //   }
-            // }, 1300);
-            // setTimeout(() => {
-            //   updateCustomerContactDetails();
-            // }, 2000);
           }
         },
         (error) => {
@@ -414,11 +393,7 @@ function ProviderDetail(props) {
           console.log(res);
           // notify(res.data.message);
           localStorage.removeItem("lookingFor");
-          if (requestData.waterDamage === "Yes") {
-            updateCustomerProperty();
-          } else {
-            updateCustomerPropertyDescriptionAndProperty();
-          }
+          updateCustomerProperty();
         }
       },
       (error) => {
@@ -1611,7 +1586,9 @@ function ProviderDetail(props) {
             </Grid>
           </Grid>
           <p className={classes.label}>Request Service on date *</p>
-          <p className={classes.labelBlack}>{requestData.requestDate} </p>
+          <p className={classes.labelBlack}>
+            {moment(requestData.requestDate).format("MMMM Do YYYY")}{" "}
+          </p>
           <p className={classes.label}>Preffered service time *</p>
           <p className={classes.labelBlack}>{requestData.prfferedTime}</p>
 
@@ -1776,7 +1753,9 @@ function ProviderDetail(props) {
             {localStorage.getItem("policyNumber")}{" "}
           </p>
           <p className={classes.label}>Expiry Date</p>
-          <p className={classes.labelBlack}>{requestData.expiryDate} </p>
+          <p className={classes.labelBlack}>
+            {moment(requestData.expiryDate).format("MMMM Do YYYY")}{" "}
+          </p>
           <p className={classes.label}>Deduction</p>
           <p className={classes.labelBlack}>
             {" "}
@@ -2159,7 +2138,7 @@ function ProviderDetail(props) {
                   });
                   setCalendar(false);
                 } else {
-                  console.log("Thhis is request date")
+                  console.log("Thhis is request date");
                   setRequestData({
                     ...requestData,
                     requestDate: e,
@@ -2355,7 +2334,8 @@ function ProviderDetail(props) {
                   width: "90%",
                 }}
               >
-          Your service request has been submitted. Please wait for offers from plumbers.
+                Your service request has been submitted. Please wait for offers
+                from plumbers.
               </p>
               <p
                 style={{

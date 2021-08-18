@@ -11,7 +11,7 @@ import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
 import Avatar from "../assets/profile.png";
 import Refrigertors from "../assets/refrigertors.png";
-
+import moment from "moment";
 import Rating from "@material-ui/lab/Rating";
 import BathtubIcon from "@material-ui/icons/Bathtub";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
@@ -184,16 +184,16 @@ function ProviderDetail(props) {
           res.statusText === 201
         ) {
           setOpenLoader(false);
-          // notify(res.data.message);
+          notify(res);
           console.log(
             "These are customer requsts",
-            res.data.CustomerServiceRequests
+            res.data.Customers
           );
           localStorage.setItem(
             "allMyRequests",
-            JSON.stringify(res.data.CustomerServiceRequests)
+            JSON.stringify(res.data.Customers)
           );
-          setAllOffers(res.data.CustomerServiceRequests);
+          setAllOffers(res.data.Customers);
         }
       },
       (error) => {
@@ -312,7 +312,7 @@ function ProviderDetail(props) {
           <Grid item md={12} xs={12}>
             <span style={{ color: "#60a3d6", fontSize: 10 }}>Date</span>
             <p style={{ fontSize: 10, margin: 0 }}>
-              {props.item.problem.serviceDate}
+              {moment(props.item.problem.serviceDate ).format("MMMM Do YYYY")}
             </p>
           </Grid>
           <Grid item md={12} xs={12}>

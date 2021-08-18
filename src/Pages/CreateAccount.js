@@ -71,7 +71,7 @@ export default function LoginPage() {
   const [state, setState] = React.useState(false);
 
   const [requestData, setRequestData] = useState({
-    requestDate: moment(new Date()).format("MMMM Do YYYY"),
+    requestDate: localStorage.getItem("requestDate") || new Date(),
     prfferedTime: localStorage.getItem("prfferedTime") || "As soon a possible",
     itemName: localStorage.getItem("itemName") || "Air-Conditioner",
     serviceType: localStorage.getItem("serviceType") || "Repair",
@@ -150,9 +150,7 @@ export default function LoginPage() {
             setOpenLoader(false);
             console.log(res.data);
             localStorage.setItem("requestId", res.data._id);
-            setTimeout(() => {
               updateCustomerProblem();
-            }, 600);
           }
         },
         (error) => {
@@ -241,11 +239,7 @@ export default function LoginPage() {
           console.log(res);
           // notify(res.data.message);
           localStorage.removeItem("lookingFor");
-          if (requestData.waterDamage === "Yes") {
-            updateCustomerProperty();
-          } else {
-            updateCustomerPropertyDescriptionAndProperty();
-          }
+          updateCustomerProperty();
         }
       },
       (error) => {
@@ -378,6 +372,7 @@ export default function LoginPage() {
       }
     );
   };
+  // console.log("This si t", requestData);
 
   const updateCustomerContactDetails = (tab) => {
     if (
@@ -420,9 +415,16 @@ export default function LoginPage() {
             setOpenLoader(false);
             // notify(res.data.message);
             console.log(res);
-            setTimeout(() => {
-              document.getElementById("complete").click();
-            }, 800);
+            localStorage.removeItem("userName");
+            localStorage.removeItem("userPhone");
+            localStorage.removeItem("allowSms");
+            localStorage.removeItem("userEmail");
+            localStorage.removeItem("userAddress");
+            localStorage.removeItem("userUnit");
+            localStorage.removeItem("userCity");
+            localStorage.removeItem("userState");
+            localStorage.removeItem("userZipCode");
+            localStorage.removeItem("userCurrentLocation");
           }
         },
         (error) => {
@@ -437,6 +439,7 @@ export default function LoginPage() {
       notify("Please provide all information!");
     }
   };
+
 
   const toggleDrawer = (anchor, open) => (event) => {
     if (

@@ -70,7 +70,7 @@ export default function LoginPage() {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
 
   const [requestData, setRequestData] = useState({
-    requestDate: moment(new Date()).format("MMMM Do YYYY"),
+    requestDate: localStorage.getItem("requestDate") || new Date(),
     prfferedTime: localStorage.getItem("prfferedTime") || "As soon a possible",
     itemName: localStorage.getItem("itemName") || "Air-Conditioner",
     serviceType: localStorage.getItem("serviceType") || "Repair",
@@ -90,7 +90,7 @@ export default function LoginPage() {
       : [],
     company: localStorage.getItem("company") || "",
     policyNumber: localStorage.getItem("policyNumber") || "",
-    expiryDate: localStorage.getItem("expiryDate") || "",
+    expiryDate: localStorage.getItem("expiryDate") || new Date(),
     deduction: localStorage.getItem("deduction") || "",
     userName: localStorage.getItem("userName"),
     userPhone: localStorage.getItem("userPhone"),
@@ -161,9 +161,7 @@ export default function LoginPage() {
             setOpenLoader(false);
             console.log(res.data);
             localStorage.setItem("requestId", res.data._id);
-            setTimeout(() => {
               updateCustomerProblem();
-            }, 600);
           }
         },
         (error) => {
@@ -252,11 +250,7 @@ export default function LoginPage() {
           console.log(res);
           // notify(res.data.message);
           localStorage.removeItem("lookingFor");
-          if (requestData.waterDamage === "Yes") {
-            updateCustomerProperty();
-          } else {
-            updateCustomerPropertyDescriptionAndProperty();
-          }
+          updateCustomerProperty();
         }
       },
       (error) => {
@@ -389,15 +383,9 @@ export default function LoginPage() {
       }
     );
   };
+  // console.log("This si t", requestData);
 
   const updateCustomerContactDetails = (tab) => {
-    console.log(
-      "This is the contact detsilas locatin",
-      localStorage.getItem("userCurrentLocation") &&
-        JSON.parse(localStorage.getItem("userCurrentLocation")).latitude,
-      localStorage.getItem("userCurrentLocation") &&
-        JSON.parse(localStorage.getItem("userCurrentLocation")).longitude
-    );
     if (
       requestData.userName != "" &&
       requestData.userPhone != "" &&
@@ -448,9 +436,6 @@ export default function LoginPage() {
             localStorage.removeItem("userState");
             localStorage.removeItem("userZipCode");
             localStorage.removeItem("userCurrentLocation");
-            setTimeout(() => {
-              document.getElementById("home").click();
-            }, 800);
           }
         },
         (error) => {
@@ -465,6 +450,7 @@ export default function LoginPage() {
       notify("Please provide all information!");
     }
   };
+
 
   const notify = (data) => toast(data);
 
