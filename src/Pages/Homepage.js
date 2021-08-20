@@ -706,7 +706,7 @@ const HomePage = (props) => {
   };
 
   const getAllProvidersbyLocation = (lat, long, distance) => {
-    setOpenLoader(true);
+    // setOpenLoader(true);
     AllProvidersByLocation(lat, long, distance).then(
       (res) => {
         if (
@@ -794,7 +794,11 @@ const HomePage = (props) => {
   };
 
   useEffect(async () => {
-    getLocation();
+    
+    setInterval (() => {
+      getLocation();
+    }, 10000);
+
     let fb = await connectFirebase();
     getToken(setTokenFound)
     console.log("This is fb",fb)
