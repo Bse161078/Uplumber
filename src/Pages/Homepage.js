@@ -792,12 +792,17 @@ const HomePage = (props) => {
       100000000000
     );
   };
-
+const [already,setAlready] = useState(false);
   useEffect(async () => {
-    
-    setInterval (() => {
-      getLocation();
-    }, 10000);
+    if(!already)
+    {
+      setAlready(true)
+      setInterval (() => {
+        getLocation();
+ 
+      }, 10000);
+    }
+
 
     let fb = await connectFirebase();
     getToken(setTokenFound)
@@ -874,6 +879,12 @@ const HomePage = (props) => {
         allProviders.map((item) => {
           // console.log("THis isthe lat long", item.location);
           if (item.isOnline) {
+            var averageRating = 0;
+            item.ratings && item.ratings.map(
+              (item)=>{
+                averageRating = averageRating+item;
+              }
+            )
             return (
               <Marker
                 id="findMarker"
@@ -905,6 +916,18 @@ const HomePage = (props) => {
                         >
                           {item.firstName + " " + item.lastName}
                         </p>
+                        <Rating
+                value={
+                  averageRating
+                }
+                style={{ fontSize: 10 }}
+              ></Rating>
+              <span style={{ fontSize: 10 }}>
+                {averageRating}
+                (
+                {item.ratings && item.ratings.length}
+                ){" "}
+              </span>
                       </Grid>
                     </div>
                   </InfoWindow>

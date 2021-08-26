@@ -179,6 +179,7 @@ function ProviderDetail(props) {
 
   useEffect(() => {
     console.log("This si user", JSON.parse(localStorage.getItem("userData")));
+    handleSelect(localStorage.getItem("userAddress"))
     // getMyProfile();
     getInssuranceCompnies();
     getAllLookingFor();
@@ -209,12 +210,23 @@ function ProviderDetail(props) {
   //   console.log("This is the adress", address);
   // };
 
-  // const handleSelect = (address) => {
-  //   geocodeByAddress(address)
-  //     .then((results) => getLatLng(results[0]))
-  //     .then((latLng) => console.log("Success these are latlongs", latLng))
-  //     .catch((error) => console.error("Error", error));
-  // };
+  const handleSelect = (address) => {
+    geocodeByAddress(address)
+      .then((results) => getLatLng(results[0]))
+      .then((latLng) => {
+        console.log("This is the current Location",latLng)
+        setRequestData("currentLocation", {
+          latitude: latLng.lat,
+          longitude: latLng.lng,
+        });
+
+        localStorage.setItem(
+          "userCurrentLocation",
+          JSON.stringify({ latitude: latLng.lat, longitude: latLng.lng })
+        );
+      })
+      .catch((error) => console.error("Error", error));
+  };
 
   const handleChange = (event) => {
     setValue(event.target.value);
