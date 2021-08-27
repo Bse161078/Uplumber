@@ -67,8 +67,9 @@ export default function LoginPage() {
   const [profileImage, setProfileImage] = useState(null);
   const [goToOtp, setGotoOtp] = useState();
   const [confirmResult, setConfirmResult] = useState();
-  const [firstName, setFirstName] = useState(localStorage.getItem("firstName")||localStorage.getItem("userName")?localStorage.getItem("userName").split(" ")[0]:"");
-  const [lastName, setLastName] = useState(localStorage.getItem("lastName")||localStorage.getItem("userName")?localStorage.getItem("userName").split(" ")[1]:"");
+  console.log("THis is greate",localStorage.getItem("firstName"))
+  const [firstName, setFirstName] = useState(localStorage.getItem("userName")?localStorage.getItem("userName").split(" ")[0]:"");
+  const [lastName, setLastName] = useState(localStorage.getItem("userName")?localStorage.getItem("userName").split(" ")[1]:"");
   const [phoneNumber, setPhoneNumber] = useState(localStorage.getItem("userPhone")?localStorage.getItem("userPhone"):"");
   const [address, setAddress] = useState(localStorage.getItem("address")||localStorage.getItem("userAddress")||'');
   const [unit, setUnit] = useState(localStorage.getItem("unit")||localStorage.getItem("userUnit")||"");
@@ -84,7 +85,7 @@ export default function LoginPage() {
   JSON.parse(localStorage.getItem("userCurrentLocation")).longitude);
   const [captchaCreated, setCaptchaCreated] = useState(false);
   const [openLoader, setOpenLoader] = useState(false);
-  console.log("This is",localStorage.getItem("userName").split(" "))
+  // console.log("This is",localStorage.getItem("userName").split(" "))
 
   const getLocation = () => {
     if (navigator.geolocation) {
@@ -318,10 +319,10 @@ export default function LoginPage() {
         </p>
         <input
               className={classes.input}
-              value={phoneNumber}
+              value={formatPhoneNumber(phoneNumber)}
               onChange={(e) => {
-                setPhoneNumber(formatPhoneNumber(e.target.value));
-                localStorage.setItem("phoneNumber", formatPhoneNumber(e.target.value));
+                setPhoneNumber(e.target.value);
+                localStorage.setItem("phoneNumber",e.target.value);
               }}
             ></input>
         {/* <PhoneInput

@@ -515,7 +515,7 @@ export const getAllFavorites = (id) => {
 export const addContactToFavorite = (id, like) => {
   console.log("This is islike", like);
   var data = JSON.stringify({
-    isLike: like,
+    plumberProfileId: id,
   });
 
   // var config = {

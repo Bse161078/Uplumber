@@ -125,7 +125,7 @@ function ProviderDetail(props) {
         ) {
           setOpenLoader(false);
           console.log("Accept Notification", res.data);
-          // notify("Location Request sent");
+          notify("Your acceptance has been sent.");
         }
       },
       (error) => {

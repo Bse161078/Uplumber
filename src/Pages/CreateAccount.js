@@ -425,6 +425,7 @@ export default function LoginPage() {
             localStorage.removeItem("userState");
             localStorage.removeItem("userZipCode");
             localStorage.removeItem("userCurrentLocation");
+            document.getElementById("complete").click();
           }
         },
         (error) => {
@@ -653,7 +654,13 @@ export default function LoginPage() {
                     localStorage.setItem("token", res.data.token);
                     localStorage.setItem("id", res.data._id);
                     localStorage.setItem("email", email);
-                    postMyRequest(res.data.token);
+                    if (localStorage.getItem("requestAfterLogin")) {
+                      localStorage.removeItem("requestAfterLogin");
+                      postMyRequest(res.data.token);
+                    } else {
+                      document.getElementById("complete").click();
+                    }
+                    
                   }
                 },
                 (error) => {

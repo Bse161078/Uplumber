@@ -435,9 +435,9 @@ const HomePage = (props) => {
             container
             direction="row"
             style={{ cursor: "pointer" }}
-            onClick={() => {
-              document.getElementById("jobdetails" + props.item._id).click();
-            }}
+            // onClick={() => {
+            //   // document.getElementById("jobdetails" + props.item._id).click();
+            // }}
           >
             <Grid item md={2} xs={2}>
               <img
@@ -884,7 +884,12 @@ const [already,setAlready] = useState(false);
               (item)=>{
                 averageRating = averageRating+item;
               }
-            )
+            );
+            if(item.ratings.length>0)
+            {
+              averageRating = averageRating / item.ratings.length;
+            }
+   
             return (
               <Marker
                 id="findMarker"
