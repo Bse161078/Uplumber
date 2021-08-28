@@ -319,7 +319,7 @@ export default function LoginPage() {
         </p>
         <input
               className={classes.input}
-              value={formatPhoneNumber(phoneNumber)}
+              value={phoneNumber}
               onChange={(e) => {
                 setPhoneNumber(e.target.value);
                 localStorage.setItem("phoneNumber",e.target.value);
