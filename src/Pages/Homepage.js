@@ -49,7 +49,8 @@ import {
   addContactToFavorite,
   cancelAllOffers,
   MyProfile,
-  UpdateCustomerProfile
+  UpdateCustomerProfile,
+  removeFavorite,
 } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 import {
@@ -111,7 +112,6 @@ const HomePage = (props) => {
   const [currentLocation, setCurrentLoction] = useState(null);
   const [openPopup, setOpenPopup] = useState(null);
   const [tokenFound, setTokenFound] = useState(null);
-  
 
   const toggleDrawer = (anchor, open) => (event) => {
     setState(open);
@@ -120,10 +120,9 @@ const HomePage = (props) => {
   console.log("This isid", localStorage.getItem("id"));
   console.log("This is token", localStorage.getItem("token"));
 
-
   const updateMyProfile = (fcmToken) => {
     var data = {
-      fcmToken:fcmToken
+      fcmToken: fcmToken,
     };
     console.log("THis is the data", data);
     setOpenLoader(true);
@@ -144,35 +143,37 @@ const HomePage = (props) => {
     );
   };
 
-
- const getToken = (setTokenFound) => {
-    return firebase.messaging()
+  const getToken = (setTokenFound) => {
+    return firebase
+      .messaging()
       .getToken()
-      .then(currentToken => {
+      .then((currentToken) => {
         if (currentToken) {
-          console.log('current token for client: ', currentToken)
-          updateMyProfile(currentToken)
-          setTokenFound(true)
+          console.log("current token for client: ", currentToken);
+          updateMyProfile(currentToken);
+          setTokenFound(true);
           // Track the token -> client mapping, by sending to backend server
           // show on the UI that permission is secured
         } else {
-          console.log('No registration token available. Request permission to generate one.')
-          setTokenFound(false)
+          console.log(
+            "No registration token available. Request permission to generate one."
+          );
+          setTokenFound(false);
           // shows on the UI that permission is required
         }
       })
-      .catch(err => {
-        console.log('An error occurred while retrieving token. ', err)
+      .catch((err) => {
+        console.log("An error occurred while retrieving token. ", err);
         // catch error while creating client token
-      })
-  }
-  
- const onMessageListener = () =>
+      });
+  };
+
+  const onMessageListener = () =>
     new Promise((resolve) => {
       firebase.messaging().onMessage((payload) => {
         resolve(payload);
       });
-  });
+    });
 
   const calculateTheStatus = (item) => {
     var calculatedStatus = "";
@@ -418,6 +419,14 @@ const HomePage = (props) => {
     // console.log("This is item", props.item);
     var user = props.item;
 
+    var isFavorite = false;
+    var favoritePlumber = props.item.customerProfileId.favouritPlumbers;
+    favoritePlumber.map((plum) => {
+      if (plum === props.item.providerProfileId._id) {
+        isFavorite = true;
+      }
+    });
+
     var calculatedStatus = "";
     calculatedStatus = calculateTheStatus(props.item);
     if (
@@ -480,12 +489,6 @@ const HomePage = (props) => {
                   textAlign: "center",
                   color: "#60a3d6",
                 }}
-                onClick={() => {
-                  addToFavorite(
-                    user.providerProfileId._id,
-                    !user.providerProfileId.isLike
-                  );
-                }}
               >
                 <Grid
                   container
@@ -494,10 +497,24 @@ const HomePage = (props) => {
                   justify="center"
                   style={{ height: 25 }}
                 >
-                  {user.isLike ? (
-                    <FavoriteIcon style={{ fontSize: 20 }}></FavoriteIcon>
+                  {isFavorite ? (
+                    <FavoriteIcon
+                      onClick={() => {
+                        removeFromFavorite(
+                          user.providerProfileId._id,
+                          !user.providerProfileId.isLike
+                        );
+                      }}
+                      style={{ fontSize: 20 }}
+                    ></FavoriteIcon>
                   ) : (
                     <FavoriteBorderOutlinedIcon
+                      onClick={() => {
+                        addToFavorite(
+                          user.providerProfileId._id,
+                          !user.providerProfileId.isLike
+                        );
+                      }}
                       style={{ fontSize: 20 }}
                     ></FavoriteBorderOutlinedIcon>
                   )}
@@ -558,31 +575,6 @@ const HomePage = (props) => {
     }
   };
 
-  const cancleTheOffers = (id) => {
-    setOpenLoader(true);
-    cancelAllOffers(id).then(
-      (res) => {
-        if (
-          res.data.success ||
-          res.status === 200 ||
-          res.status === 201 ||
-          res.status === 200
-        ) {
-          setOpenLoader(false);
-          notify(res.data.message);
-          GetAllOffers();
-        }
-      },
-      (error) => {
-        if (error.response) {
-          notify(error.response.data.message);
-        }
-        setOpenLoader(false);
-        console.log("This is response", error.response);
-      }
-    );
-  };
-
   const getMyProfile = () => {
     setOpenLoader(true);
     MyProfile().then(
@@ -632,8 +624,34 @@ const HomePage = (props) => {
         ) {
           setOpenLoader(false);
           // notify(res.data.message);
-          getAllMyContacts();
+          getAllMyOffers();
           console.log("This is the response of add to favorite", res.data);
+        }
+      },
+      (error) => {
+        if (error.response) {
+          notify(error.response.data.message);
+        }
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+      }
+    );
+  };
+
+  const removeFromFavorite = (id, like) => {
+    setOpenLoader(true);
+    removeFavorite(id, like).then(
+      (res) => {
+        if (
+          res.data.success ||
+          res.status === 200 ||
+          res.status === 201 ||
+          res.status === 200
+        ) {
+          setOpenLoader(false);
+          // notify(res.data.message);
+          getAllMyOffers();
+          console.log("This is the response of remove favorite", res.data);
         }
       },
       (error) => {
@@ -792,21 +810,18 @@ const HomePage = (props) => {
       100000000000
     );
   };
-const [already,setAlready] = useState(false);
+  const [already, setAlready] = useState(false);
   useEffect(async () => {
-    if(!already)
-    {
-      setAlready(true)
-      setInterval (() => {
+    if (!already) {
+      setAlready(true);
+      setInterval(() => {
         getLocation();
- 
       }, 10000);
     }
 
-
     let fb = await connectFirebase();
-    getToken(setTokenFound)
-    console.log("This is fb",fb)
+    getToken(setTokenFound);
+    console.log("This is fb", fb);
     if (localStorage.getItem("allProviders")) {
       setAllProviders(JSON.parse(localStorage.getItem("allProviders")));
     }
@@ -880,16 +895,14 @@ const [already,setAlready] = useState(false);
           // console.log("THis isthe lat long", item.location);
           if (item.isOnline) {
             var averageRating = 0;
-            item.ratings && item.ratings.map(
-              (item)=>{
-                averageRating = averageRating+item;
-              }
-            );
-            if(item.ratings.length>0)
-            {
+            item.ratings &&
+              item.ratings.map((item) => {
+                averageRating = averageRating + item;
+              });
+            if (item.ratings.length > 0) {
               averageRating = averageRating / item.ratings.length;
             }
-   
+
             return (
               <Marker
                 id="findMarker"
@@ -922,17 +935,12 @@ const [already,setAlready] = useState(false);
                           {item.firstName + " " + item.lastName}
                         </p>
                         <Rating
-                value={
-                  averageRating
-                }
-                style={{ fontSize: 10 }}
-              ></Rating>
-              <span style={{ fontSize: 10 }}>
-                {averageRating}
-                (
-                {item.ratings && item.ratings.length}
-                ){" "}
-              </span>
+                          value={averageRating}
+                          style={{ fontSize: 10 }}
+                        ></Rating>
+                        <span style={{ fontSize: 10 }}>
+                          {averageRating}({item.ratings && item.ratings.length}){" "}
+                        </span>
                       </Grid>
                     </div>
                   </InfoWindow>

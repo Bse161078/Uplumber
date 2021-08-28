@@ -24,6 +24,7 @@ import {
   getOfferDetail,
   createContact,
   getItems,
+  hideAllOffers
 } from "../ApiHelper";
 import { GoogleMap, DistanceMatrixService } from "@react-google-maps/api";
 import { ToastContainer, toast } from "react-toastify";
@@ -182,6 +183,29 @@ function ProviderDetail(props) {
     );
   };
 
+  const cancleTheOffers = (id) => {
+    setOpenLoader(true);
+    hideAllOffers(id).then(
+      (res) => {
+        if (
+          res.data.success ||
+          res.status === 200 ||
+          res.status === 201 ||
+          res.status === 200
+        ) {
+          setOpenLoader(false);
+        }
+      },
+      (error) => {
+        if (error.response) {
+          notify(error.response.data.message);
+        }
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+      }
+    );
+  };
+
   const orderCancel = () => {
     setOpenLoader(true);
     markOrderCancelled(jobData._id).then(
@@ -235,6 +259,7 @@ function ProviderDetail(props) {
             jobData.serviceId,
             "offerAccepted"
           );
+          cancleTheOffers(jobData.serviceId._id)
           createMyContact(jobData.serviceId._id);
         }
       },

@@ -517,19 +517,27 @@ export const addContactToFavorite = (id, like) => {
   var data = JSON.stringify({
     plumberProfileId: id,
   });
-
-  // var config = {
-  //   method: "put",
-  //   url: "https://u-plumber.net/api/customercontact/" + id,
-  //   headers: {
-  //     Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //     "Content-Type": "application/json",
-  //   },
-  //   data: data,
-  // };
   var config = {
     method: "put",
     url: "https://u-plumber.net/api/customerprofile/updatecustomer",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+
+  return axios(config);
+};
+
+export const removeFavorite = (id, like) => {
+  console.log("This is islike", like);
+  var data = JSON.stringify({
+    plumberProfileId: id,
+  });
+  var config = {
+    method: "put",
+    url: "https://u-plumber.net/api/customerprofile/removefavouritplumber",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
@@ -746,14 +754,14 @@ export const setProviderReviews = (
   return axios(config);
 };
 
-export const cancelAllOffers = (id) => {
+export const hideAllOffers = (id) => {
   var data = JSON.stringify({
     serviceId: id,
   });
   console.log("This is dataa", data);
   var config = {
     method: "post",
-    url: "https://u-plumber.net/api/customeroffer/cancellofers",
+    url: "https://u-plumber.net/api/customeroffer/hideoffers",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
