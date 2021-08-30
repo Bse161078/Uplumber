@@ -5,6 +5,7 @@ import Avatar from "../assets/profile.png";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 
 export default function ReviewCard(props) {
+  console.log("THis is ",props.item.averageRating)
   return (
     <Grid container direction="row" justify="center">
       {" "}
@@ -14,7 +15,7 @@ export default function ReviewCard(props) {
         <Grid container direction="row">
           <Grid item md={2} xs={2}>
             <img
-              src={props.item.providerImage}
+              src={props.item.profileImage}
               style={{ width: 50, height: 50 }}
             ></img>
           </Grid>
@@ -28,19 +29,19 @@ export default function ReviewCard(props) {
                 }}
               >
                 {" "}
-                {props.item.providerName}
+                {props.item.firstName+" "+props.item.lastName}
               </p>
               <Rating
-                value={props.item.providerRating}
+                value={props.item.averageRating}
                 style={{ fontSize: 12 }}
               ></Rating>
               <span style={{ fontSize: 12 }}>
                 {" "}
-                {props.item.providerRating}({props.item.providerReviews}){" "}
+                {props.item.averageRating}({props.item.totalRatings}){" "}
               </span>
               <div style={{ width: "100%" }}></div>
               <span style={{ fontSize: 12 }}>
-                ${props.item.providerPricePerHour} / hr
+                ${props.item.hourlyRates} / hr
               </span>
             </Grid>
           </Grid>

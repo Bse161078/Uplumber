@@ -15,7 +15,7 @@ import Calendar from "react-calendar";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ReviewCard from "../Components/ReviewCard";
 import FavoriteCard from "../Components/FavoriteCard";
-import { getAllFavorites, addContactToFavorite } from "../ApiHelper";
+import { getAllFavorites, addContactToFavorite,MyProfile } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
@@ -103,7 +103,7 @@ function ProviderDetail(props) {
   }, []);
   const getFavorite = (id, like) => {
     setOpenLoader(true);
-    getAllFavorites().then(
+    MyProfile().then(
       (res) => {
         if (
           res.data.success ||
@@ -118,8 +118,8 @@ function ProviderDetail(props) {
           res.data.statusText === "OK"
         ) {
           setOpenLoader(false);
-          console.log("This is the response of add to favorite", res.data);
-          setFavorite(res.data.Customers);
+          console.log("This is the response of add to favorite",res.data.data);
+          setFavorite(res.data.data.favouritPlumbers);
         }
       },
       (error) => {

@@ -941,6 +941,16 @@ const HomePage = (props) => {
                         <span style={{ fontSize: 10 }}>
                           {averageRating}({item.ratings && item.ratings.length}){" "}
                         </span>
+                        <p
+                          style={{
+                            fontSize: 10,
+                            width: "100%",
+                            textAlign: "center",
+                            margin: 0,
+                          }}
+                        >
+                          ${item.hourlyRates + "/hr"}
+                        </p>
                       </Grid>
                     </div>
                   </InfoWindow>

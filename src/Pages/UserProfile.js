@@ -109,7 +109,7 @@ export default function UserProfile() {
           res.data.statusText === "OK"
         ) {
           setOpenLoader(false);
-          console.log(res.data.data);
+          console.log("This is profile",res.data.data);
           var user = res.data.data;
           setFirstName(user.firstName);
           setLastName(user.lastName);
