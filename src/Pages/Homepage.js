@@ -564,7 +564,9 @@ const HomePage = (props) => {
                   borderRadius: 20,
                 }}
               >
-                <MessageIcon style={{ fontSize: 18 }}></MessageIcon> Message
+                <MessageIcon style={{ fontSize: 18 }}  onClick={() => {
+                  window.open(`sms:${user.providerProfileId.phoneNumber}&body=Hi there i have recently placed on order you`);
+                }}></MessageIcon> Message
               </Grid>
             </Grid>
           </Grid>
@@ -812,8 +814,9 @@ const HomePage = (props) => {
   };
   const [already, setAlready] = useState(false);
   useEffect(async () => {
-    if (!already) {
-      setAlready(true);
+    if (localStorage.getItem("already")===null) {
+      localStorage.setItem("already","already")
+      console.log("This is now fetching the data", new Date())
       setInterval(() => {
         getLocation();
       }, 10000);

@@ -358,6 +358,7 @@ function ProviderDetail(props) {
           res.status === 200
         ) {
           setOpenLoader(false);
+          alert("You accepted new completion date.")
           sendCustomeNotification(
             JSON.parse(localStorage.getItem("userData")).firstName +
               " " +
