@@ -8,6 +8,7 @@ import {
   Backdrop,
   CircularProgress,
 } from "@material-ui/core";
+import moment from "moment";
 import { withRouter } from "react-router";
 import Drawer from "@material-ui/core/Drawer";
 import Sidebar from "../Components/Sidebar";
@@ -90,6 +91,18 @@ const useStyles = makeStyles((theme) => ({
     height: 45,
     marginTop: 20,
   },
+  buttonSerial: {
+    color: "white",
+    border: "none",
+    borderRadius: 15,
+    width: 70,
+    background: "#1075c2",
+    height: 25,
+    fontSize:16,
+  margin:0,
+  textAlign:'center',
+  marginRight:5
+  },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
@@ -122,7 +135,7 @@ const HomePage = (props) => {
 
   const updateMyProfile = (fcmToken) => {
     var data = {
-      fcmToken: fcmToken,
+      fcmTokenWeb: fcmToken,
     };
     console.log("THis is the data", data);
     setOpenLoader(true);
@@ -418,7 +431,7 @@ const HomePage = (props) => {
   const ContactCards = (props) => {
     // console.log("This is item", props.item);
     var user = props.item;
-
+    console.log("THis is the user", user);
     var isFavorite = false;
     var favoritePlumber = props.item.customerProfileId.favouritPlumbers;
     favoritePlumber.map((plum) => {
@@ -454,7 +467,7 @@ const HomePage = (props) => {
                 style={{ width: 50, height: 50, borderRadius: "50%" }}
               ></img>
             </Grid>
-            <Grid item md={9} xs={9}>
+            <Grid item md={6} xs={6}>
               <Grid container direction="row" style={{ marginLeft: 5 }}>
                 <p
                   style={{
@@ -469,57 +482,68 @@ const HomePage = (props) => {
                 </p>
                 <Rating value={5} style={{ fontSize: 10 }}></Rating>
                 <span style={{ fontSize: 10 }}>
-                  {user.providerProfileId.providerRating}(
-                  {user.providerProfileId.providerReviews}){" "}
+                  {user.providerProfileId.averageRating}(
+                  {user.providerProfileId.ratings.length}){" "}
                 </span>
                 <div style={{ width: "100%" }}></div>
                 <span style={{ fontSize: 10 }}>
-                  ${user.providerProfileId.estimatedLabourCost} / hr
+                  ${user.providerProfileId.hourlyRates} / hr
                 </span>
               </Grid>
             </Grid>
-            <Grid item md={1} xs={1}>
-              <Paper
-                style={{
-                  fontSize: 10,
-                  borderRadius: "50%",
-                  height: 25,
-                  width: 25,
-                  padding: 4,
-                  textAlign: "center",
-                  color: "#60a3d6",
-                }}
-              >
-                <Grid
-                  container
-                  direction="row"
-                  alignItems="center"
-                  justify="center"
-                  style={{ height: 25 }}
+            <Grid item md={4} xs={4}>
+              <Grid container direction="row">
+                <p style={{fontSize:12, margin:0}}>
+                {moment(user.serviceId.problem.serviceDate).format("MMMM Do YYYY")}
+                </p>
+              </Grid>
+              <Grid container direction="row" alignItems="center">
+                <p className={classes.buttonSerial}>
+                 SR {user.serviceId.serviceRequestNumber}
+                </p>
+
+                <Paper
+                  style={{
+                    fontSize: 10,
+                    borderRadius: "50%",
+                    height: 25,
+                    width: 25,
+                    padding: 4,
+                    textAlign: "center",
+                    color: "#60a3d6",
+                  }}
                 >
-                  {isFavorite ? (
-                    <FavoriteIcon
-                      onClick={() => {
-                        removeFromFavorite(
-                          user.providerProfileId._id,
-                          !user.providerProfileId.isLike
-                        );
-                      }}
-                      style={{ fontSize: 20 }}
-                    ></FavoriteIcon>
-                  ) : (
-                    <FavoriteBorderOutlinedIcon
-                      onClick={() => {
-                        addToFavorite(
-                          user.providerProfileId._id,
-                          !user.providerProfileId.isLike
-                        );
-                      }}
-                      style={{ fontSize: 20 }}
-                    ></FavoriteBorderOutlinedIcon>
-                  )}
-                </Grid>
-              </Paper>
+                  <Grid
+                    container
+                    direction="row"
+                    alignItems="center"
+                    justify="center"
+                    style={{ height: 25 }}
+                  >
+                    {isFavorite ? (
+                      <FavoriteIcon
+                        onClick={() => {
+                          removeFromFavorite(
+                            user.providerProfileId._id,
+                            !user.providerProfileId.isLike
+                          );
+                        }}
+                        style={{ fontSize: 20 }}
+                      ></FavoriteIcon>
+                    ) : (
+                      <FavoriteBorderOutlinedIcon
+                        onClick={() => {
+                          addToFavorite(
+                            user.providerProfileId._id,
+                            !user.providerProfileId.isLike
+                          );
+                        }}
+                        style={{ fontSize: 20 }}
+                      ></FavoriteBorderOutlinedIcon>
+                    )}
+                  </Grid>
+                </Paper>
+              </Grid>
             </Grid>
           </Grid>
           <div style={{ width: "100%", border: "1px solid #f6f6f6" }}></div>
@@ -564,9 +588,15 @@ const HomePage = (props) => {
                   borderRadius: 20,
                 }}
               >
-                <MessageIcon style={{ fontSize: 18 }}  onClick={() => {
-                  window.open(`sms:${user.providerProfileId.phoneNumber}&body=Hi there i have recently placed on order you`);
-                }}></MessageIcon> Message
+                <MessageIcon
+                  style={{ fontSize: 18 }}
+                  onClick={() => {
+                    window.open(
+                      `sms:${user.providerProfileId.phoneNumber}&body=Hi there i have recently placed on order you`
+                    );
+                  }}
+                ></MessageIcon>{" "}
+                Message
               </Grid>
             </Grid>
           </Grid>
@@ -804,23 +834,24 @@ const HomePage = (props) => {
 
   const showPosition = (position) => {
     console.log("This is the position", position.coords);
-    setCurrentLoction(position.coords);
-    setZoom(12);
-    getAllProvidersbyLocation(
-      position.coords.latitude,
-      position.coords.longitude,
-      100000000000
-    );
+    if (localStorage.getItem("already") === null) {
+      setCurrentLoction(position.coords);
+      setZoom(12);
+    }
+    if (localStorage.getItem("already") === null) {
+      localStorage.setItem("already", "already");
+      setInterval(() => {
+        getAllProvidersbyLocation(
+          position.coords.latitude,
+          position.coords.longitude,
+          100000000000
+        );
+      }, 10000);
+    }
   };
   const [already, setAlready] = useState(false);
   useEffect(async () => {
-    if (localStorage.getItem("already")===null) {
-      localStorage.setItem("already","already")
-      console.log("This is now fetching the data", new Date())
-      setInterval(() => {
-        getLocation();
-      }, 10000);
-    }
+    getLocation();
 
     let fb = await connectFirebase();
     getToken(setTokenFound);
