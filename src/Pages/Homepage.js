@@ -833,8 +833,14 @@ const HomePage = (props) => {
   };
 
   const showPosition = (position) => {
-    console.log("This is the position", position.coords);
+
+    var currentLocation = {
+      latitude : position.coords.latitude,
+      longitude : position.coords.longitude,
+    }
+    console.log("This is the position", JSON.stringify(currentLocation));
     if (localStorage.getItem("already") === null) {
+      localStorage.setItem("coords",JSON.stringify(currentLocation))
       setCurrentLoction(position.coords);
       setZoom(12);
     }
@@ -852,6 +858,12 @@ const HomePage = (props) => {
   const [already, setAlready] = useState(false);
   useEffect(async () => {
     getLocation();
+    
+    if(localStorage.getItem("coords"))
+    {
+      // alert("THis will do what we want")
+      setCurrentLoction(JSON.parse(localStorage.getItem("coords")));
+    }
 
     let fb = await connectFirebase();
     getToken(setTokenFound);
