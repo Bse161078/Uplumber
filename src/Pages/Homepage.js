@@ -98,10 +98,10 @@ const useStyles = makeStyles((theme) => ({
     width: 70,
     background: "#1075c2",
     height: 25,
-    fontSize:16,
-  margin:0,
-  textAlign:'center',
-  marginRight:5
+    fontSize: 16,
+    margin: 0,
+    textAlign: "center",
+    marginRight: 5,
   },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
@@ -493,13 +493,24 @@ const HomePage = (props) => {
             </Grid>
             <Grid item md={4} xs={4}>
               <Grid container direction="row">
-                <p style={{fontSize:12, margin:0}}>
-                {moment(user.serviceId.problem.serviceDate).format("MMMM Do YYYY")}
+                <p style={{ fontSize: 12, margin: 0 }}>
+                  {moment(user.serviceId.problem.serviceDate).format(
+                    "MMMM Do YYYY"
+                  )}
                 </p>
               </Grid>
               <Grid container direction="row" alignItems="center">
-                <p className={classes.buttonSerial}>
-                 SR {user.serviceId.serviceRequestNumber}
+                <Link
+                  id={user.serviceId._id}
+                  to={"jobDetails/" + user.serviceId._id}
+                ></Link>
+                <p
+                  className={classes.buttonSerial}
+                  onClick={() => {
+                    document.getElementById(user.serviceId._id).click();
+                  }}
+                >
+                  SR {user.serviceId.serviceRequestNumber}
                 </p>
 
                 <Paper
@@ -833,14 +844,13 @@ const HomePage = (props) => {
   };
 
   const showPosition = (position) => {
-
     var currentLocation = {
-      latitude : position.coords.latitude,
-      longitude : position.coords.longitude,
-    }
+      latitude: position.coords.latitude,
+      longitude: position.coords.longitude,
+    };
     console.log("This is the position", JSON.stringify(currentLocation));
     if (localStorage.getItem("already") === null) {
-      localStorage.setItem("coords",JSON.stringify(currentLocation))
+      localStorage.setItem("coords", JSON.stringify(currentLocation));
       setCurrentLoction(position.coords);
       setZoom(12);
     }
@@ -858,9 +868,8 @@ const HomePage = (props) => {
   const [already, setAlready] = useState(false);
   useEffect(async () => {
     getLocation();
-    
-    if(localStorage.getItem("coords"))
-    {
+
+    if (localStorage.getItem("coords")) {
       // alert("THis will do what we want")
       setCurrentLoction(JSON.parse(localStorage.getItem("coords")));
     }
@@ -981,11 +990,12 @@ const HomePage = (props) => {
                           {item.firstName + " " + item.lastName}
                         </p>
                         <Rating
-                          value={averageRating}
+                          value={item.averageRating}
                           style={{ fontSize: 10 }}
                         ></Rating>
                         <span style={{ fontSize: 10 }}>
-                          {averageRating}({item.ratings && item.ratings.length}){" "}
+                          {item.averageRating}(
+                          {item.ratings && item.ratings.length}){" "}
                         </span>
                         <p
                           style={{
