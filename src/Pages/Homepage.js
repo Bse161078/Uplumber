@@ -114,7 +114,7 @@ const HomePage = (props) => {
 
   const [state, setState] = React.useState(false);
   const [bottomState, setBottomState] = React.useState(false);
-  const [zoom, setZoom] = React.useState(4);
+  const [zoom, setZoom] = React.useState(12);
   const [online, setOnline] = React.useState(true);
   const [activeTab, setActiveTab] = React.useState("NearBy");
   const [activeServiceTab, setActiveServiceTab] = React.useState("Problem");
@@ -429,7 +429,7 @@ const HomePage = (props) => {
   };
 
   const ContactCards = (props) => {
-    // console.log("This is item", props.item);
+    console.log("This is item", props.item);
     var user = props.item;
     console.log("THis is the user", user);
     var isFavorite = false;
@@ -501,13 +501,13 @@ const HomePage = (props) => {
               </Grid>
               <Grid container direction="row" alignItems="center">
                 <Link
-                  id={user.serviceId._id}
-                  to={"jobDetails/" + user.serviceId._id}
+                  id={user._id}
+                  to={"jobDetails/" + user._id}
                 ></Link>
                 <p
                   className={classes.buttonSerial}
                   onClick={() => {
-                    document.getElementById(user.serviceId._id).click();
+                    document.getElementById(user._id).click();
                   }}
                 >
                   SR {user.serviceId.serviceRequestNumber}
@@ -629,7 +629,7 @@ const HomePage = (props) => {
           res.status === 200
         ) {
           setOpenLoader(false);
-          console.log(res.data.data);
+          console.log ("xenon" ,res.data.data);
           var user = res.data.data;
           localStorage.setItem("userData", JSON.stringify(user));
           localStorage.setItem("userEmail", user.email);

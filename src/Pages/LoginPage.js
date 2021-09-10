@@ -473,7 +473,7 @@ export default function LoginPage() {
       <Link id="home" to="/homepage"></Link>
       <Link id="landing" to="/"></Link>
       <img
-        style={{ width: "100%" }}
+        style={{ width: "100%" ,height:"50vh" }}
         onClick={() => {
           document.getElementById("landing").click();
         }}

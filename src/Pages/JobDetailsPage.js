@@ -724,18 +724,18 @@ function ProviderDetail(props) {
                       jobData.providerProfileId.lastName}
                 </p>
                 <Rating
-                  value={
-                    jobData.providerRating ||
-                    jobData.providerProfileId.providerRating
+                
+                value={
+                    Math.round(jobData.providerProfileId.averageRating) 
                   }
                   style={{ fontSize: 10 }}
                 ></Rating>
                 <span style={{ fontSize: 10 }}>
                   {jobData.providerRating ||
-                    jobData.providerProfileId.providerRating}
+                    jobData.providerProfileId.averageRating}
                   (
                   {jobData.providerReviews ||
-                    jobData.providerProfileId.providerReviews}
+                    jobData.providerProfileId.ratings.length}
                   ){" "}
                 </span>
                 <div style={{ width: "100%" }}></div>
@@ -818,7 +818,7 @@ function ProviderDetail(props) {
                   Provider Phone
                 </span>
                 <p style={{ fontSize: 10, margin: 0 }}>
-                  {jobData.providerProfileId.phoneNumber}
+                  {jobData.providerProfileId.countryPhoneCode+jobData.providerProfileId.phoneNumber}
                 </p>
               </Grid>{" "}
               <Grid item md={12} xs={12}>

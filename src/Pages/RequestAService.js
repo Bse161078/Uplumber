@@ -166,6 +166,7 @@ function ProviderDetail(props) {
       ? JSON.parse(localStorage.getItem("userCurrentLocation"))
       : "",
   });
+  console.log("this is user state",localStorage.getItem("userState"))
 
   const [prefferedTimeData, setPrefferedTimeData] = React.useState([]);
   const [inssuranceCompaniesData, setInssuranceCompaniesData] = React.useState(
@@ -725,7 +726,15 @@ function ProviderDetail(props) {
           setOpenLoader(false);
           console.log("These are areas", res.data);
           var temp = [];
-          res.data.Insurances.map((item) => {
+          res.data.Insurances.map((item,index) => {
+            if( index==0)
+            {
+              console.log("This is coming here")
+              setTimeout(() => {
+                setRequestData({ ...requestData, area: item.Area });
+              }, 1000);
+   
+            }
             temp.push({
               title: item.Area,
               value: item.Area,
@@ -827,6 +836,9 @@ function ProviderDetail(props) {
         ) {
           setOpenLoader(false);
           console.log("These are structures", res.data.Properties);
+          setTimeout(() => {
+            setRequestData({ ...requestData, structure:  res.data.Properties[0].property});
+          }, 1000);
           setStructuresData(res.data.Properties);
         }
       },
@@ -1928,6 +1940,7 @@ function ProviderDetail(props) {
           height: "max-content",
           background: activeTab != "ReviewRequest" ? "white" : "#f2f2f2",
         }}
+        className="hideScrollBar"
       >
         <div style={{ width: "100%" }}>
           <div

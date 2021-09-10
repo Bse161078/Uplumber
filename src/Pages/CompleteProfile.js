@@ -102,7 +102,10 @@ export default function LoginPage() {
     localStorage.setItem("latitude", position.coords.latitude);
     setLongitude(position.coords.longitude);
     localStorage.setItem("longitude", position.coords.longitude);
-  };
+  };console.log("this state in complete profile", state)
+  console.log("this state in localstorage ",localStorage.getItem("state"))
+
+
 
   const createRecapha = () => {
     window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
@@ -376,7 +379,7 @@ export default function LoginPage() {
           getOptionLabel={(option) => option.title}
           onChange={(event, values) => {
             if (values) {
-              setState(value.title);
+              setState(values.title);
               localStorage.setItem("state", values.title);
             }
           }}
