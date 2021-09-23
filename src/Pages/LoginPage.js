@@ -29,18 +29,34 @@ const useStyles = makeStyles((theme) => ({
   input: {
     border: "none",
     borderBottom: "1px solid #e9e9e9",
-    width: "90%",
+    width: "50%",
     height: 40,
     fontSize: 16,
-    // [theme.breakpoints.down("sm")]: {
-    //   height: "100%",
-    // },
+    [theme.breakpoints.down("sm")]: {
+      width: "90%",
+    },
+  },
+  loginimg: {
+     width: "50%", height: "45vh", [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    }
+    
   },
   label: {
-    width: "90%",
+    width: "50%",
     color: "#aeaeae",
     margin: 0,
     fontSize: 13,
+    [theme.breakpoints.down("sm")]: {
+      width: "90%",
+    },
+  },
+  rememberMeDiv: {
+    width: "50%",
+    marginTop: 30,
+    [theme.breakpoints.down("sm")]: {
+      width: "90%",
+    },
   },
   icon: {
     color: "#aeaeae",
@@ -49,10 +65,13 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     border: "none",
     borderRadius: 15,
-    width: "80%",
+    width: "50%",
     background: "#1075c2",
     height: 45,
     marginTop: 20,
+    [theme.breakpoints.down("sm")]: {
+      width: "90%",
+    },
   },
   backdrop: {
     zIndex: theme.zIndex.drawer + 1,
@@ -63,7 +82,7 @@ export default function LoginPage() {
   const classes = useStyles();
   const [type, setType] = useState("password");
   const [state, setState] = React.useState(false);
-  const [email, setEmail] = useState(localStorage.getItem("userEmail")||"");
+  const [email, setEmail] = useState(localStorage.getItem("userEmail") || "");
   const [password, setPassword] = useState("");
   const [newEmail, setNewEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -161,7 +180,7 @@ export default function LoginPage() {
             setOpenLoader(false);
             console.log(res.data);
             localStorage.setItem("requestId", res.data._id);
-              updateCustomerProblem();
+            updateCustomerProblem();
           }
         },
         (error) => {
@@ -451,7 +470,6 @@ export default function LoginPage() {
     }
   };
 
-
   const notify = (data) => toast(data);
 
   return (
@@ -472,13 +490,13 @@ export default function LoginPage() {
       />
       <Link id="home" to="/homepage"></Link>
       <Link id="landing" to="/"></Link>
+      <Grid container direction="row" justify="center" lg={12} >
       <img
-        style={{ width: "100%" ,height:"50vh" }}
-        onClick={() => {
-          document.getElementById("landing").click();
-        }}
+        className={classes.loginimg}
         src={LoginPic}
       ></img>
+      </Grid>
+      
       <Grid
         container
         direction="row"
@@ -500,7 +518,7 @@ export default function LoginPage() {
           <p className={classes.label}>Password</p>
           <input
             className={classes.input}
-            style={{ border: "none" }}
+            style={{ border: "none", width: "90%" }}
             type={type}
             value={password}
             onChange={(e) => {
@@ -523,40 +541,44 @@ export default function LoginPage() {
             ></VisibilityOutlinedIcon>
           )}
         </div>
-        <div style={{ width: "90%", marginTop: 30 }}>
-          <Grid container direction="row">
-            <Grid item md={6} xs={6}>
-              <Grid container direction="row" alignItems="center">
-                <CheckCircleIcon
-                  onClick={() => {
-                    setAccept(!accept);
-                  }}
-                  style={{ fontSize: 18, color: accept ? "#1075c2" : "gray" }}
-                ></CheckCircleIcon>{" "}
-                <span style={{ fontSize: 13, fontWeight: 500, marginLeft: 10 }}>
-                  Remember me
-                </span>
+        <Grid container direction="row" justify="center" >
+          <div className={classes.rememberMeDiv}>
+            <Grid container direction="row">
+              <Grid item md={6} xs={6}>
+                <Grid container direction="row" alignItems="center">
+                  <CheckCircleIcon
+                    onClick={() => {
+                      setAccept(!accept);
+                    }}
+                    style={{ fontSize: 18, color: accept ? "#1075c2" : "gray" }}
+                  ></CheckCircleIcon>{" "}
+                  <span
+                    style={{ fontSize: 13, fontWeight: 500, marginLeft: 10 }}
+                  >
+                    Remember me
+                  </span>
+                </Grid>
+              </Grid>
+              <Grid item md={6} xs={6}>
+                <Grid container direction="row" justify="flex-end">
+                  <span
+                    style={{
+                      fontSize: 13,
+                      fontWeight: 700,
+                      cursor: "pointer",
+                      color: "#1a7bbf",
+                    }}
+                    onClick={() => {
+                      setState(true);
+                    }}
+                  >
+                    Forgot Password?
+                  </span>
+                </Grid>
               </Grid>
             </Grid>
-            <Grid item md={6} xs={6}>
-              <Grid container direction="row" justify="flex-end">
-                <span
-                  style={{
-                    fontSize: 13,
-                    fontWeight: 700,
-                    cursor: "pointer",
-                    color: "#1a7bbf",
-                  }}
-                  onClick={() => {
-                    setState(true);
-                  }}
-                >
-                  Forgot Password?
-                </span>
-              </Grid>
-            </Grid>
-          </Grid>
-        </div>
+          </div>
+        </Grid>
         <button
           className={classes.button}
           // onClick={() => {
@@ -584,7 +606,7 @@ export default function LoginPage() {
                     res.status === 201
                   ) {
                     setOpenLoader(false);
-                    const user = res.data ;
+                    const user = res.data;
                     localStorage.setItem("token", res.data.token);
                     localStorage.setItem("id", res.data._id);
 

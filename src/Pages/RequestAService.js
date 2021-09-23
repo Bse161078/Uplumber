@@ -139,9 +139,9 @@ function ProviderDetail(props) {
       localStorage.getItem("lookingFor") != null
         ? JSON.parse(localStorage.getItem("lookingFor"))
         : [],
-    area: localStorage.getItem("area") || "",
-    structure: localStorage.getItem("structure") || "",
-    requestorStatus: localStorage.getItem("requestorStatus") || "",
+    area: localStorage.getItem("area") || "Bathroom",
+    structure: localStorage.getItem("structure") || "Single Home",
+    requestorStatus: localStorage.getItem("requestorStatus") || "Home Owner",
     description: localStorage.getItem("description") || "",
     image: localStorage.getItem("image")
       ? JSON.parse(localStorage.getItem("image"))
@@ -166,7 +166,7 @@ function ProviderDetail(props) {
       ? JSON.parse(localStorage.getItem("userCurrentLocation"))
       : "",
   });
-  console.log("this is user state",localStorage.getItem("userState"))
+  console.log("this is user state", localStorage.getItem("userState"));
 
   const [prefferedTimeData, setPrefferedTimeData] = React.useState([]);
   const [inssuranceCompaniesData, setInssuranceCompaniesData] = React.useState(
@@ -180,7 +180,7 @@ function ProviderDetail(props) {
 
   useEffect(() => {
     console.log("This si user", JSON.parse(localStorage.getItem("userData")));
-    handleSelect(localStorage.getItem("userAddress"))
+    handleSelect(localStorage.getItem("userAddress"));
     // getMyProfile();
     getInssuranceCompnies();
     getAllLookingFor();
@@ -215,7 +215,7 @@ function ProviderDetail(props) {
     geocodeByAddress(address)
       .then((results) => getLatLng(results[0]))
       .then((latLng) => {
-        console.log("This is the current Location",latLng)
+        console.log("This is the current Location", latLng);
         setRequestData("currentLocation", {
           latitude: latLng.lat,
           longitude: latLng.lng,
@@ -317,7 +317,7 @@ function ProviderDetail(props) {
             setOpenLoader(false);
             console.log(res.data);
             localStorage.setItem("requestId", res.data._id);
-              updateCustomerProblem();
+            updateCustomerProblem();
           }
         },
         (error) => {
@@ -726,14 +726,13 @@ function ProviderDetail(props) {
           setOpenLoader(false);
           console.log("These are areas", res.data);
           var temp = [];
-          res.data.Insurances.map((item,index) => {
-            if( index==0)
-            {
-              console.log("This is coming here")
+          res.data.Insurances.map((item, index) => {
+            if (index == 0) {
+              console.log("This is coming here");
               setTimeout(() => {
                 setRequestData({ ...requestData, area: item.Area });
-              }, 1000);
-   
+                localStorage.setItem("area", item.Area);
+              }, 3000);
             }
             temp.push({
               title: item.Area,
@@ -812,6 +811,10 @@ function ProviderDetail(props) {
             ...requestData,
             requestorStatus: res.data.ServiceTime[0].Status,
           });
+          localStorage.setItem(
+            "requestorStatus",
+            res.data.ServiceTime[0].Status
+          );
         }
       },
       (error) => {
@@ -836,9 +839,13 @@ function ProviderDetail(props) {
         ) {
           setOpenLoader(false);
           console.log("These are structures", res.data.Properties);
-          setTimeout(() => {
-            setRequestData({ ...requestData, structure:  res.data.Properties[0].property});
-          }, 1000);
+
+          setRequestData({
+            ...requestData,
+            structure: res.data.Properties[0].property,
+          });
+          localStorage.setItem("structure", res.data.Properties[0].property);
+
           setStructuresData(res.data.Properties);
         }
       },
@@ -1054,6 +1061,7 @@ function ProviderDetail(props) {
                 setRequestData({
                   ...requestData,
                   waterDamage: "Yes",
+                  lookingFor:['Plumber','Water Damage Specialist']
                 });
               }}
             >
@@ -1282,7 +1290,10 @@ function ProviderDetail(props) {
               width: "100%",
             }}
             renderInput={(params) => (
-              <TextField label={requestData.area} {...params} />
+              <TextField
+                label={requestData.area || areasData[0].title}
+                {...params}
+              />
             )}
           />
         )}
@@ -1310,11 +1321,13 @@ function ProviderDetail(props) {
                       fontSize: 11,
                       width: "max-content",
                       background:
-                        requestData.structure === value.property
+                        requestData.structure === value.property ||
+                        structuresData[0] === value.property
                           ? "#1075c2"
                           : "#f2f2f2",
                       color:
-                        requestData.structure === value.property
+                        requestData.structure === value.property ||
+                        structuresData[0] === value.property
                           ? "white"
                           : "black",
                     }}
@@ -1354,11 +1367,13 @@ function ProviderDetail(props) {
                     fontSize: 11,
                     width: "max-content",
                     background:
-                      requestData.requestorStatus === value.Status
+                      requestData.requestorStatus === value.Status ||
+                      requestorStatusData[0] === value.Status
                         ? "#1075c2"
                         : "#f2f2f2",
                     color:
-                      requestData.requestorStatus === value.Status
+                      requestData.requestorStatus === value.Status ||
+                      requestorStatusData[0] === value.Status
                         ? "white"
                         : "black",
                   }}

@@ -30,6 +30,12 @@ const useStyles = makeStyles((theme) => ({
     //   height: "100%",
     // },
   },
+  loginimg: {
+    width: "50%", height: "45vh", [theme.breakpoints.down("sm")]: {
+     width: "100%",
+   }
+   
+ },
   label: {
     width: "90%",
     color: "#aeaeae",
@@ -97,13 +103,12 @@ function ResetPage(props) {
       <Link id="home" to="/homepage"></Link>
       <Link id="login" to="/login"></Link>
       <Link id="landing" to="/"></Link>
+      <Grid container direction="row" justify="center" lg={12} >
       <img
-        style={{ width: "100%" }}
-        onClick={() => {
-          document.getElementById("landing").click();
-        }}
+        className={classes.loginimg}
         src={LoginPic}
       ></img>
+      </Grid>
       <Grid
         container
         direction="row"
@@ -224,7 +229,7 @@ function ResetPage(props) {
                       setOpenLoader(false);
                       setState(false);
                       notify("Password Changed Succesfully!");
-                      document.getElementById("login").click();
+                      // document.getElementById("login").click();
                     }
                   },
                   (error) => {
