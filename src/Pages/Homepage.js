@@ -642,10 +642,12 @@ const HomePage = (props) => {
             "userName",
             user.firstName + " " + user.lastName
           );
-          localStorage.setItem("userPhone", user.phoneNumber);
+          localStorage.setItem("userPhone", user.countryPhoneCode+user.phoneNumber);
+          
         }
       },
       (error) => {
+        setOpenLoader(false);
         if (error.response) {
           notify(error.response.data.message);
         }
@@ -672,6 +674,7 @@ const HomePage = (props) => {
         }
       },
       (error) => {
+        setOpenLoader(false);
         if (error.response) {
           notify(error.response.data.message);
         }
@@ -698,6 +701,7 @@ const HomePage = (props) => {
         }
       },
       (error) => {
+        setOpenLoader(false);
         if (error.response) {
           notify(error.response.data.message);
         }
@@ -725,6 +729,7 @@ const HomePage = (props) => {
         }
       },
       (error) => {
+        setOpenLoader(false);
         if (error.response) {
           notify(error.response.data.message);
         }
@@ -757,6 +762,7 @@ const HomePage = (props) => {
         }
       },
       (error) => {
+        setOpenLoader(false);
         if (error.response) {
           notify(error.response.data.message);
         }
@@ -784,9 +790,14 @@ const HomePage = (props) => {
             localStorage.setItem("allProviders", JSON.stringify(res.data.data));
             setAllProviders(res.data.data);
           }
+          setTimeout(() => {
+            getAllProvidersbyLocation(lat, long, distance);
+          }, 10000);
+        
         }
       },
       (error) => {
+        setOpenLoader(false);
         if (error.response) {
           notify(error.response.data.message);
         }
@@ -854,15 +865,20 @@ const HomePage = (props) => {
       setCurrentLoction(position.coords);
       setZoom(12);
     }
-    if (localStorage.getItem("already") === null) {
-      localStorage.setItem("already", "already");
-      setInterval(() => {
-        getAllProvidersbyLocation(
+    getAllProvidersbyLocation(
           position.coords.latitude,
           position.coords.longitude,
           100000000000
         );
-      }, 10000);
+    if (localStorage.getItem("already") === null) {
+      localStorage.setItem("already", "already");
+      // setInterval(() => {
+      //   getAllProvidersbyLocation(
+      //     position.coords.latitude,
+      //     position.coords.longitude,
+      //     100000000000
+      //   );
+      // }, 10000);
     }
   };
   const [already, setAlready] = useState(false);
