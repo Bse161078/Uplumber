@@ -1061,7 +1061,7 @@ function ProviderDetail(props) {
                 setRequestData({
                   ...requestData,
                   waterDamage: "Yes",
-                  lookingFor:['Plumber','Water Damage Specialist']
+                  lookingFor: ["Plumber", "Water Damage Specialist"],
                 });
               }}
             >
@@ -2078,22 +2078,17 @@ function ProviderDetail(props) {
                 console.log("THis is the request Data", requestData);
               }}
               setActiveTab={(tab) => {
-                console.log('This is the active tab',tab)
-                console.log('This is the editing ',editing)
+                console.log("This is the active tab", tab);
+                console.log("This is the editing ", editing);
 
                 if (editing) {
-                  if (requestData.waterDamage === "Yes") 
-                  setActiveTab("ReviewRequest");
+                    setActiveTab("ReviewRequest");
                 } else {
-                  if (requestData.waterDamage === "Yes")
-                  {
-                    setActiveTab(tab)
-                  }
-                  else
-                  {
+                  if (requestData.waterDamage === "Yes") {
+                    setActiveTab(tab);
+                  } else {
                     setActiveTab("Description and Photo");
                   }
-      
                 }
               }}
             ></ContactDetails>

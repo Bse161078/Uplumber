@@ -229,6 +229,7 @@ function ResetPage(props) {
                       setOpenLoader(false);
                       setState(false);
                       notify("Password Changed Succesfully!");
+                      window.open("uplumberpro://auth/signin")
                       // document.getElementById("login").click();
                     }
                   },
@@ -237,6 +238,7 @@ function ResetPage(props) {
                       if (error.response.data.success) {
                       //   document.getElementById("login").click();
                       notify("Password Changed Succesfully!");
+                      window.open("uplumberpro://auth/signin")
                       } 
                       else {
                         notify(error.response.data.message);
