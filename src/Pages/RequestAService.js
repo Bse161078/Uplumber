@@ -2078,10 +2078,22 @@ function ProviderDetail(props) {
                 console.log("THis is the request Data", requestData);
               }}
               setActiveTab={(tab) => {
+                console.log('This is the active tab',tab)
+                console.log('This is the editing ',editing)
+
                 if (editing) {
+                  if (requestData.waterDamage === "Yes") 
                   setActiveTab("ReviewRequest");
                 } else {
-                  setActiveTab(tab);
+                  if (requestData.waterDamage === "Yes")
+                  {
+                    setActiveTab(tab)
+                  }
+                  else
+                  {
+                    setActiveTab("Description and Photo");
+                  }
+      
                 }
               }}
             ></ContactDetails>

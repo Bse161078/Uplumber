@@ -330,7 +330,8 @@ const ContactDetails = (props) => {
               color: "black",
             }}
             onClick={() => {
-              props.setActiveTab("Inssurance");
+
+              props.setActiveTab("Insurance");
             }}
           >
             Prev

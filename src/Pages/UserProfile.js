@@ -427,7 +427,7 @@ export default function UserProfile() {
           var user = res.data.data;
           setFirstName(user.firstName);
           setLastName(user.lastName);
-          setPhoneNumber("+" + user.phoneNumber);
+          setPhoneNumber("+" + user.countryPhoneCode+user.phoneNumber);
           setAddress(user.address);
           setCity(user.city);
           setState(user.state);
