@@ -234,9 +234,11 @@ function ResetPage(props) {
                   },
                   (error) => {
                     if (error.response) {
-                      if (error.response.data.seccess) {
-                        document.getElementById("login").click();
-                      } else {
+                      if (error.response.data.success) {
+                      //   document.getElementById("login").click();
+                      notify("Password Changed Succesfully!");
+                      } 
+                      else {
                         notify(error.response.data.message);
                       }
                     }
