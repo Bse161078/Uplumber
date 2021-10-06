@@ -2072,6 +2072,7 @@ function ProviderDetail(props) {
               userZipCode={requestData.userZipCode}
               userUnit={requestData.userUnit}
               userState={requestData.userState}
+              requestData={requestData}
               setRequestData={(field, value) => {
                 console.log("This is field", field);
                 setRequestData({ ...requestData, [field]: value });
@@ -2080,16 +2081,7 @@ function ProviderDetail(props) {
               setActiveTab={(tab) => {
                 console.log("This is the active tab", tab);
                 console.log("This is the editing ", editing);
-
-                if (editing) {
-                    setActiveTab("ReviewRequest");
-                } else {
-                  if (requestData.waterDamage === "Yes") {
-                    setActiveTab(tab);
-                  } else {
-                    setActiveTab("Description and Photo");
-                  }
-                }
+                setActiveTab("ReviewRequest");
               }}
             ></ContactDetails>
           ) : (

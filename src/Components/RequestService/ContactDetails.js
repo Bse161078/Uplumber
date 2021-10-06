@@ -330,8 +330,11 @@ const ContactDetails = (props) => {
               color: "black",
             }}
             onClick={() => {
-
-              props.setActiveTab("Insurance");
+              if (props.requestData.waterDamage === "Yes") {
+                props.setActiveTab("Insurance");
+              } else {
+                props.setActiveTab("Description and Photo");
+              }
             }}
           >
             Prev

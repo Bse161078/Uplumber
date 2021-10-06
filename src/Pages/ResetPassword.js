@@ -235,7 +235,8 @@ function ResetPage(props) {
                   },
                   (error) => {
                     if (error.response) {
-                      if (error.response.data.success) {
+                      console.log("THis is error.response",error.response.data.seccess)
+                      if (error.response.data.success || error.response.data.seccess) {
                       //   document.getElementById("login").click();
                       notify("Password Changed Succesfully!");
                       window.open("uplumberpro://auth/signin")
