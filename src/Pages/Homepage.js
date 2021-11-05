@@ -642,7 +642,7 @@ const HomePage = (props) => {
             "userName",
             user.firstName + " " + user.lastName
           );
-          localStorage.setItem("userPhone", user.countryPhoneCode+user.phoneNumber);
+          localStorage.setItem("userPhone", "+"+user.countryPhoneCode+user.phoneNumber);
           
         }
       },

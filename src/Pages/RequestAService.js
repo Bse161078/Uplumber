@@ -1932,7 +1932,50 @@ function ProviderDetail(props) {
               style={{ cursor: "pointer" }}
               onClick={() => {
                 if (activeTab != "ReviewRequest") {
-                  document.getElementById("homepage").click();
+                  if(activeTab==="Problem")
+                  {
+                    document.getElementById("homepage").click();
+                  }
+                  else if(activeTab==="Looking For")
+                  {
+                    setActiveTab("Problem")
+                  }
+                  else if(activeTab==="Property")
+                  {
+                    if(requestData.waterDamage === "Yes")
+                    {
+                      setActiveTab("Looking For")
+                    }
+                    else
+                    {
+                      setActiveTab("Problem")
+                    }
+                  }
+                  
+                  else if(activeTab==="Description and Photo")
+                  {
+                 
+                      setActiveTab("Property")
+                  
+                  }
+                  else if(activeTab==="Insurance")
+                  {
+                    setActiveTab("Description and Photo")
+                  }
+                  else if(activeTab==="Contact Details")
+                  {
+                    if(requestData.waterDamage === "Yes")
+                    {
+                      setActiveTab("Insurance")
+                    }
+                    else
+                    {
+                      setActiveTab("Description and Photo")
+                    }
+                  }
+
+                  
+                
                 } else {
                   setActiveTab("Contact Details");
                 }
