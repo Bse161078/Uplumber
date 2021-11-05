@@ -63,34 +63,8 @@ export default function ConfirmOTP(props) {
         props.confirmResult
           .confirm(OTP)
           .then((user) => {
-            verifyPhone().then(
-              (res) => {
-                if (
-                  res.data.success ||
-                  res.status === 200 ||
-                  res.status === 201 ||
-                  res.status === 200 ||
-                  res.statusText === 201 ||
-                  res.statusText === "OK" ||
-                  res.statusText === "Created" ||
-                  res.data.statusText === "OK" ||
-                  res.data.statusText === "Created" ||
-                  res.data.statusText === "OK"
-                ) {
-                  document.getElementById("homepage").click();
-                }
-              },
-              (error) => {
-                // props.if(error.response);
-                // {
-                //   notify(error.response.data.message);
-                // }
-                props.setOpenLoader(false);
-                console.log("This is response", error.response);
-              }
-            );
-          })
-          .catch((error) => {
+            props.onSuccessOtp()
+          }).catch((error) => {
             alert(error.message);
             console.log(error);
           });
@@ -167,6 +141,24 @@ export default function ConfirmOTP(props) {
         >
           Verify
         </button>
+        <button
+          className={classes.button}
+          onClick={() => {
+            props.goBack()
+          }}
+        >
+          Resend OTP
+        </button>
+        {/* <button
+          className={classes.button}
+          onClick={() => {
+           props.goBack()
+          }}
+        >
+          Change Phone
+        </button> */}
+
+        
         <Drawer
           anchor={"bottom"}
           open={state}

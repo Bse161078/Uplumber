@@ -12,7 +12,7 @@ import Drawer from "@material-ui/core/Drawer";
 import Camera from "../assets/camera.PNG";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { Countries, states } from "../Data/Data";
-import { CompleteProfile, uploadImage } from "../ApiHelper";
+import { CompleteProfile, uploadImage,verifyPhone } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 import { connectFirebase } from "../Config/firebase";
 import ConfirmOtp from "./ConfirmOTP";
@@ -185,15 +185,14 @@ export default function LoginPage() {
   const sendFirebaseOTP = () => {
     console.log("This is valid", validatePhoneNumber(phoneNumber));
     setOpenLoader(true);
-    if (captchaCreated === false) {
       createRecapha();
-    }
+  
 
     const appVerifier = window.recaptchaVerifier;
     // console.log("THis is appverifier", appVerifier);
-    // if (appVerifier) {
-    //   setCaptchaCreated(true);
-    // }
+    if (appVerifier) {
+      setCaptchaCreated(true);
+    }
     firebase
       .auth()
       .signInWithPhoneNumber(phoneNumber, appVerifier)
@@ -202,6 +201,7 @@ export default function LoginPage() {
         setConfirmResult(result);
         setGotoOtp(true);
         setOpenLoader(false);
+        window.recaptchaVerifier =null
       })
       .catch((error) => {
         notify(error.code);
@@ -214,8 +214,104 @@ export default function LoginPage() {
     <ConfirmOtp
       confirmResult={confirmResult}
       phoneNumber={phoneNumber}
+      goBack={
+        ()=>{
+          setGotoOtp(false);
+          setOpenLoader(false)
+        }
+      }
+      sendFirebaseOTP={
+        ()=>{
+          sendFirebaseOTP()
+        }
+      }
       notify={notify}
       setOpenLoader={setOpenLoader}
+      onSuccessOtp={
+        ()=>{
+          var data = {
+            profileImage:profileImage ||
+              "https://image.shutterstock.com/image-vector/profile-placeholder-image-gray-silhouette-260nw-1153673752.jpg",
+            firstName: firstName,
+            lastName: lastName,
+            phoneNumber: phoneNumber,
+            address: address,
+            unit: unit,
+            city: city,
+            state: state,
+            zipcode: zipcode,
+            country: country,
+            latitude: latitude,
+            longitude: longitude,
+            email: localStorage.getItem("email"),
+          };
+          CompleteProfile(data).then(
+            (res) => {
+              console.log(res);
+              if (
+                res.data.success ||
+                res.status === 200 ||
+                res.status === 201 ||
+                res.status === 200 ||
+                res.statusText === 201 ||
+                res.statusText === "OK" ||
+                res.statusText === "Created" ||
+                res.data.statusText === "OK" ||
+                res.data.statusText === "Created" ||
+                res.data.statusText === "OK"
+              ) {
+                setOpenLoader(false);
+                localStorage.removeItem("userName");
+                localStorage.removeItem("userPhone");
+                localStorage.removeItem("allowSms");
+                localStorage.removeItem("userEmail");
+                localStorage.removeItem("userAddress");
+                localStorage.removeItem("userUnit");
+                localStorage.removeItem("userCity");
+                localStorage.removeItem("userState");
+                localStorage.removeItem("userZipCode");
+                localStorage.removeItem("userCurrentLocation");
+                localStorage.setItem("id", res.data.customerId);
+                verifyPhone().then(
+                  (res2) => {
+                    if (
+                      res2.data.success ||
+                      res2.status === 200 ||
+                      res2.status === 201 ||
+                      res2.status === 200 ||
+                      res2.statusText === 201 ||
+                      res2.statusText === "OK" ||
+                      res2.statusText === "Created" ||
+                      res2.data.statusText === "OK" ||
+                      res2.data.statusText === "Created" ||
+                      res2.data.statusText === "OK"
+                    ) {
+                      document.getElementById("homepage").click();
+                    }
+                  },
+                  (error) => {
+                    // props.if(error.response);
+                    // {
+                    //   notify(error.response.data.message);
+                    // }
+                    setOpenLoader(false);
+                    console.log("This is response", error.response);
+                  }
+                );
+                console.log(res);
+            
+              }
+            },
+            (error) => {
+              if (error.response) {
+                notify(error.response.data.message);
+              }
+              setOpenLoader(false);
+              console.log("This is response", error.response);
+            }
+          );
+        }
+      }
     ></ConfirmOtp>
   ) : (
     <div>
@@ -453,72 +549,11 @@ export default function LoginPage() {
               // } else {
               // setOpenLoader(true);
 
-              var data = {
-                profileImage:
-                  "https://image.shutterstock.com/image-vector/profile-placeholder-image-gray-silhouette-260nw-1153673752.jpg",
-                firstName: firstName,
-                lastName: lastName,
-                phoneNumber: phoneNumber,
-                address: address,
-                unit: unit,
-                city: city,
-                state: state,
-                zipcode: zipcode,
-                country: country,
-                latitude: latitude,
-                longitude: longitude,
-                email: localStorage.getItem("email"),
-              };
+
               setOpenLoader(true);
               // console.log("This is great", data);
-              CompleteProfile(data).then(
-                (res) => {
-                  console.log(res);
-                  if (
-                    res.data.success ||
-                    res.status === 200 ||
-                    res.status === 201 ||
-                    res.status === 200 ||
-                    res.statusText === 201 ||
-                    res.statusText === "OK" ||
-                    res.statusText === "Created" ||
-                    res.data.statusText === "OK" ||
-                    res.data.statusText === "Created" ||
-                    res.data.statusText === "OK"
-                  ) {
-                    setOpenLoader(false);
-                    localStorage.removeItem("userName");
-                    localStorage.removeItem("userPhone");
-                    localStorage.removeItem("allowSms");
-                    localStorage.removeItem("userEmail");
-                    localStorage.removeItem("userAddress");
-                    localStorage.removeItem("userUnit");
-                    localStorage.removeItem("userCity");
-                    localStorage.removeItem("userState");
-                    localStorage.removeItem("userZipCode");
-                    localStorage.removeItem("userCurrentLocation");
-                    localStorage.setItem("id", res.data.customerId);
-                    // Firebase.auth()
-                    //   .signInWithPhoneNumber("+923004210859", true)
-                    //   .then((confirmResult) => {
-                    //     console.log(confirmResult);
-                    //   })
-                    //   .catch((error) => {
-                    //     alert(error.message);
-                    //     console.log(error);
-                    //   });
-                    console.log(res);
-                    sendFirebaseOTP();
-                  }
-                },
-                (error) => {
-                  if (error.response) {
-                    notify(error.response.data.message);
-                  }
-                  setOpenLoader(false);
-                  console.log("This is response", error.response);
-                }
-              );
+              sendFirebaseOTP();
+           
             }
             // document.getElementById("complete").click();
           }
