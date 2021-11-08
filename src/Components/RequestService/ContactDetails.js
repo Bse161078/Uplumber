@@ -64,6 +64,31 @@ const ContactDetails = (props) => {
     // console.log("This is the adress", address);
   };
 
+             //  if(add.types.includes("postal_code"))
+            //  {
+            //   props.setRequestData("userZipCode",  add.long_name);
+            //   localStorage.setItem("userZipCode",   add.long_name);
+            //  }
+            //  else if(add.types.includes("administrative_area_level_2"))
+            //  {
+            //    console.log("THis is the results userCity", add.long_name)
+            //   // props.setRequestData("userCity",  add.long_name);
+            //   setTimeout(() => {
+                
+            //   }, 400);
+            //   // localStorage.setItem("userCity",   add.long_name);
+            //  }
+
+            //  else if(add.types.includes("administrative_area_level_1"))
+            //  {
+            //   console.log("THis is the results administrative_area_level_1", add.long_name)
+            //   props.setRequestData("userState",  add.long_name);
+            //   // localStorage.setItem("userState",   add.long_name);
+            //  }
+          // }
+          // )
+          // ;
+
   const handleSelect = (address) => {
     console.log("This is the dares", address);
 

@@ -15,7 +15,7 @@ import moment from "moment";
 import Rating from "@material-ui/lab/Rating";
 import BathtubIcon from "@material-ui/icons/Bathtub";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import { Link, withRouter } from "react-router-dom";
+import { Link, withRouter,useHistory } from "react-router-dom";
 import Calendar from "react-calendar";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ReviewCard from "../Components/ReviewCard";
@@ -215,17 +215,17 @@ function ProviderDetail(props) {
     return (
       <Paper
         style={{ width: "90%", padding: 10, marginBottom: 10 }}
-        onClick={() => {
-          setActiveTab("Detail");
-        }}
+        // onClick={() => {
+        //   setActiveTab("Detail");
+        // }}
       >
         <Link
-          id={"details" + props.index}
-          to={"/details/" + props.index}
+          id={"details" +  props.item._id}
+          to={"/details/" + props.item._id}
         ></Link>
         <Link
-          id={"jobdetails" + props.index}
-          to={"/jobDetails/" + props.index}
+          id={"jobdetails" + props.item._id}
+          to={"/jobDetails/" +  props.item._id}
         ></Link>
         <Grid container direction="row">
           <Grid item md={8} xs={8}>
@@ -266,10 +266,11 @@ function ProviderDetail(props) {
                 cursor: "pointer",
               }}
               onClick={() => {
-                if (props.item === "Pending") {
-                  document.getElementById("details" + props.index).click();
-                } else if (props.item === "Job Started") {
-                  document.getElementById("jobdetails" + props.index).click();
+                console.log("this is the props",props.item)
+                if (!props.item.isAccepted) {
+                  document.getElementById("details" + props.item._id).click();
+                } else {
+                  document.getElementById("jobdetails" + props.item._id).click();
                 }
               }}
             >
@@ -513,6 +514,7 @@ function ProviderDetail(props) {
   useEffect(() => {
     getAllItems();
   }, []);
+  let history = useHistory();
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
       <Backdrop className={classes.backdrop} open={openLoader}>
@@ -541,11 +543,12 @@ function ProviderDetail(props) {
             <ArrowBackIosIcon
               style={{ cursor: "pointer" }}
               onClick={() => {
-                if (activeTab === "Problem") {
-                  document.getElementById("homepage").click();
-                } else {
-                  setActiveTab("Problem");
-                }
+                history.goBack();
+                // if (activeTab === "Problem") {
+                //   document.getElementById("homepage").click();
+                // } else {
+                //   setActiveTab("Problem");
+                // }
               }}
             ></ArrowBackIosIcon>
           }
