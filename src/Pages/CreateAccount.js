@@ -651,8 +651,10 @@ export default function LoginPage() {
                   ) {
                     setOpenLoader(false);
                     console.log("This is greate", res.data.token);
-                    localStorage.setItem("token", res.data.token);
-                    localStorage.setItem("id", res.data._id);
+                    localStorage.setItem("tokenTemp", res.data.token);
+                    localStorage.setItem("idTemp", res.data._id);
+                    // localStorage.setItem("token", res.data.token);
+                    // localStorage.setItem("id", res.data._id);
                     localStorage.setItem("email", email);
                     if (localStorage.getItem("requestAfterLogin")) {
                       localStorage.removeItem("requestAfterLogin");

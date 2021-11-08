@@ -116,12 +116,21 @@ export const Login = (postData) => {
 
 export const CompleteProfile = (postData) => {
   var data = JSON.stringify(postData);
+  var token  = "";
+  if(localStorage.getItem("tokenTemp"))
+  {
+    token = localStorage.getItem("tokenTemp")
+  }
+  else if(localStorage.getItem("token"))
+  {
+    token =  localStorage.getItem("token")
+  }
 
   var config = {
     method: "post",
     url: "https://u-plumber.net/api/customerprofile",
     headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
     },
     data: data,

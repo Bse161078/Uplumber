@@ -22,6 +22,7 @@ import {
   CustomerSericeUpdateDescriptionAndPhoto,
   CustomerSericeUpdateInssurance,
   CustomerSericeUpdateContactDetails,
+  MyProfile
 } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 var validator = require("email-validator");
@@ -127,6 +128,34 @@ export default function LoginPage() {
       localStorage.getItem("userCurrentLocation") &&
       JSON.parse(localStorage.getItem("userCurrentLocation")),
   });
+
+  const getMyProfile = () => {
+    MyProfile().then(
+      (res) => {
+        if (
+          res.data.success ||
+          res.status === 200 ||
+          res.status === 201 ||
+          res.status === 200
+        ) {
+          document.getElementById("home").click()
+        }
+        else if( res.data.success===404)
+        {
+          document.getElementById("home").click()
+        }
+      },
+      (error) => {
+        setOpenLoader(false);
+        if (error.response) {
+          // notify(error.response.data.message);
+          document.getElementById("completeProfile").click()
+        }
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+      }
+    );
+  };
 
   const [currentLocation, setCurrentLoction] = useState({
     latitude: 112.0988,
@@ -489,6 +518,8 @@ export default function LoginPage() {
         pauseOnHover
       />
       <Link id="home" to="/homepage"></Link>
+      <Link id="completeProfile" to="/complete-profile"></Link>
+
       <Link id="landing" to="/"></Link>
       <Grid container direction="row" justify="center" lg={12} >
       <img
@@ -615,7 +646,8 @@ export default function LoginPage() {
                       localStorage.removeItem("requestAfterLogin");
                       postMyRequest();
                     } else {
-                      document.getElementById("home").click();
+                      getMyProfile()
+                   
                     }
                   }
                 },

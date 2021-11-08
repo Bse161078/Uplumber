@@ -271,6 +271,9 @@ export default function LoginPage() {
                 localStorage.removeItem("userState");
                 localStorage.removeItem("userZipCode");
                 localStorage.removeItem("userCurrentLocation");
+
+                localStorage.setItem("token", localStorage.getItem("tokenTemp"));
+                    // localStorage.setItem("id", res.data._id);
                 localStorage.setItem("id", res.data.customerId);
                 verifyPhone().then(
                   (res2) => {

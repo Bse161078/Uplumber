@@ -619,7 +619,7 @@ const HomePage = (props) => {
   };
 
   const getMyProfile = () => {
-    setOpenLoader(true);
+    // setOpenLoader(true);
     MyProfile().then(
       (res) => {
         if (
