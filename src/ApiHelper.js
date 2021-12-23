@@ -889,3 +889,14 @@ export const viewNotification = (id) => {
 
   return axios(config);
 };
+
+
+export const uploadFile= (data)=>{
+  return  axios.post("https://u-plumber.net/api/upload", data, {
+      headers: {
+          'accept': 'application/json',
+          'Accept-Language': 'en-US,en;q=0.8',
+          'Content-Type': `multipart/form-data`,
+      }
+  })
+}

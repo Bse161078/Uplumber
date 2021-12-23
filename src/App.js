@@ -86,9 +86,11 @@ export default function App() {
           path="/notificationSetting"
           render={() => <NotificationSettings />}
         />
+
         <Route exact path="/userProfile" render={() => <UserProfile />} />
         UserProfile
         <Route exact path="/" render={() => <LandingPage />} />
+
       </Switch>
     </BrowserRouter>
   );

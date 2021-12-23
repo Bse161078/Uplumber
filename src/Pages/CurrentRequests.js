@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, {useState, useEffect} from "react";
 import {
-  makeStyles,
-  Grid,
-  Paper,
-  Backdrop,
-  CircularProgress,
+    makeStyles,
+    Grid,
+    Paper,
+    Backdrop,
+    CircularProgress,
 } from "@material-ui/core";
 import Drawer from "@material-ui/core/Drawer";
 import Sidebar from "../Components/Sidebar";
@@ -15,736 +15,798 @@ import moment from "moment";
 import Rating from "@material-ui/lab/Rating";
 import BathtubIcon from "@material-ui/icons/Bathtub";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import { Link, withRouter,useHistory } from "react-router-dom";
+import {Link, withRouter, useHistory} from "react-router-dom";
 import Calendar from "react-calendar";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ReviewCard from "../Components/ReviewCard";
 import {
-  GetAllRequests,
-  cancelAllOffers,
-  cancelTheRequest,
-  getItems,
+    GetAllRequests,
+    cancelAllOffers,
+    cancelTheRequest,
+    getItems,
+    uploadFile
 } from "../ApiHelper";
-import { ToastContainer, toast } from "react-toastify";
+import {ToastContainer, toast} from "react-toastify";
+
+import ItemDetails from '../Components/ItemDetails';
+import axios from "axios";
+
 
 const useStyles = makeStyles((theme) => ({
-  input: {
-    border: "none",
-    borderBottom: "1px solid #e9e9e9",
-    width: "100%",
-    height: 40,
-    fontSize: 12,
-  },
-  label: {
-    width: "100%",
-    // color: "#aeaeae",
-    color: "#1075c2",
-    margin: 0,
-    fontSize: 13,
-    marginTop: 20,
-  },
-  icon: {
-    color: "#aeaeae",
-  },
-  button: {
-    color: "white",
-    border: "none",
-    borderRadius: 15,
-    width: "80%",
-    background: "#1075c2",
-    height: 45,
-    marginTop: 20,
-  },
-  heading: {
-    fontSize: 16,
-    margin: 0,
-    marginTop: 10,
-    fontWeight: 600,
-  },
-  icon: { marginTop: 10, fontSize: 16, color: "#2d86c9" },
-  labelBlack: {
-    width: "100%",
-    margin: 0,
-    fontSize: 13,
-    marginTop: 10,
-  },
-  image: {
-    width: 100,
-    height: 100,
-    borderRadius: 5,
-    marginRight: 15,
-    marginTop: 5,
-  },
-  backdrop: {
-    zIndex: theme.zIndex.drawer + 1,
-    color: "#fff",
-  },
+    input: {
+        border: "none",
+        borderBottom: "1px solid #e9e9e9",
+        width: "100%",
+        height: 40,
+        fontSize: 12,
+    },
+    label: {
+        width: "100%",
+        // color: "#aeaeae",
+        color: "#1075c2",
+        margin: 0,
+        fontSize: 13,
+        marginTop: 20,
+    },
+    icon: {
+        color: "#aeaeae",
+    },
+    button: {
+        color: "white",
+        border: "none",
+        borderRadius: 15,
+        width: "80%",
+        background: "#1075c2",
+        height: 45,
+        marginTop: 20,
+    },
+    heading: {
+        fontSize: 16,
+        margin: 0,
+        marginTop: 10,
+        fontWeight: 600,
+    },
+    icon: {marginTop: 10, fontSize: 16, color: "#2d86c9"},
+    labelBlack: {
+        width: "100%",
+        margin: 0,
+        fontSize: 13,
+        marginTop: 10,
+    },
+    image: {
+        width: 100,
+        height: 100,
+        borderRadius: 5,
+        marginRight: 15,
+        marginTop: 5,
+    },
+    backdrop: {
+        zIndex: theme.zIndex.drawer + 1,
+        color: "#fff",
+    },
 }));
+
 function ProviderDetail(props) {
-  const classes = useStyles();
-  const [state, setState] = React.useState(false);
-  const [bottomState, setBottomState] = React.useState(false);
-  const [calendar, setCalendar] = React.useState(false);
-  const [postRequest, setPostRequest] = React.useState(false);
-  const [value, setValue] = React.useState("female");
-  const [activeTab, setActiveTab] = React.useState("Problem");
-  const [image, setImage] = React.useState([]);
-  const [openLoader, setOpenLoader] = useState(false);
-  const [allOffers, setAllOffers] = useState(null);
+    const classes = useStyles();
+    const [state, setState] = React.useState(false);
+    const [bottomState, setBottomState] = React.useState(false);
+    const [calendar, setCalendar] = React.useState(false);
+    const [postRequest, setPostRequest] = React.useState(false);
+    const [value, setValue] = React.useState("female");
+    const [activeTab, setActiveTab] = React.useState("Problem");
+    const [image, setImage] = React.useState([]);
+    const [openLoader, setOpenLoader] = useState(false);
+    const [allOffers, setAllOffers] = useState(null);
 
-  const [items, setItems] = React.useState([]);
-  const [icon, setIcon] = React.useState(null);
-  const findIcon = (itemName) => {
-    // console.log("This is item", itemName);
-    var image = null;
-    items.map((item) => {
-      if (item.Description === itemName) {
-        image = item.Image;
-        // console.log("THis is ", item.Description);
-      }
+
+    const [itemDetails, setItemDetails] = useState({
+        item: null,
+        show: false
     });
-    // console.log("This is the image", image);
-    return image;
-  };
-  const getAllItems = () => {
-    setOpenLoader(true);
-    getItems().then(
-      (res) => {
-        if (res.data.success || res.status === 200 || res.status === 201) {
-          setOpenLoader(false);
-          console.log("These are items", res.data);
-          setItems(res.data.Customers);
-          if (localStorage.getItem("token")) {
-            if (localStorage.getItem("allMyRequests")) {
-              setAllOffers(JSON.parse(localStorage.getItem("allMyRequests")));
+
+    const [items, setItems] = React.useState([]);
+    const [icon, setIcon] = React.useState(null);
+    const findIcon = (itemName) => {
+        // console.log("This is item", itemName);
+        var image = null;
+        items.map((item) => {
+            if (item.Description === itemName) {
+                image = item.Image;
+                // console.log("THis is ", item.Description);
             }
-            getAllMyOffers();
-          }
-        }
-      },
-      (error) => {
-        if (error.response) {
-          notify(error.response.data.message);
-        }
-        setOpenLoader(false);
-        console.log("This is response", error.response);
-      }
-    );
-  };
+        });
+        // console.log("This is the image", image);
+        return image;
+    };
 
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
 
-  const toggleDrawer = (anchor, open) => (event) => {
-    setState(open);
-  };
-  const toggleDrawerBottom = (anchor, open) => (event) => {
-    setBottomState(open);
-  };
-  const position = [51.505, -0.09];
-  //console.log("THis is great", props);
-
-  const cancleTheRequst = (id) => {
-    setOpenLoader(true);
-    cancelTheRequest(id).then(
-      (res) => {
-        if (
-          res.data.success ||
-          res.status === 200 ||
-          res.status === 201 ||
-          res.status === 200 ||
-          res.statusText === 201
-        ) {
-          setOpenLoader(false);
-          notify(res.data.message);
-          getAllMyOffers();
-        }
-      },
-      (error) => {
-        if (error.response) {
-          notify(error.response.data.message);
-        }
-
-        setOpenLoader(false);
-        console.log("This is response", error.response);
-      }
-    );
-  };
-
-  const getAllMyOffers = () => {
-    setOpenLoader(true);
-    GetAllRequests().then(
-      (res) => {
-        if (
-          res.data.success ||
-          res.status === 200 ||
-          res.status === 201 ||
-          res.status === 200 ||
-          res.statusText === 201
-        ) {
-          setOpenLoader(false);
-          notify(res);
-          console.log(
-            "These are customer requsts",
-            res.data.Customers
-          );
-          localStorage.setItem(
-            "allMyRequests",
-            JSON.stringify(res.data.Customers)
-          );
-          setAllOffers(res.data.Customers);
-        }
-      },
-      (error) => {
-        if (error.response) {
-          notify(error.response.data.message);
-        }
-        setOpenLoader(false);
-        console.log("This is response", error.response);
-      }
-    );
-  };
-
-  const OfferCards = (props) => {
-    // console.log("THis is grate", props.item);
-    var type = props.item;
-    if (props.item === "Job Started") {
-      type = "jobStarted";
-    }
-    return (
-      <Paper
-        style={{ width: "90%", padding: 10, marginBottom: 10 }}
-        // onClick={() => {
-        //   setActiveTab("Detail");
-        // }}
-      >
-        <Link
-          id={"details" +  props.item._id}
-          to={"/details/" + props.item._id}
-        ></Link>
-        <Link
-          id={"jobdetails" + props.item._id}
-          to={"/jobDetails/" +  props.item._id}
-        ></Link>
-        <Grid container direction="row">
-          <Grid item md={8} xs={8}>
-            <Grid
-              container
-              direction="row"
-              alignItems="center"
-              style={{ marginLeft: 5 }}
-            >
-              <p
-                style={{
-                  width: "40%",
-                  margin: 0,
-                  fontWeight: 600,
-                }}
-              >
-                {props.item.itemName || props.item.problem.problemItem}{" "}
-              </p>
-              {items && (
-                <img
-                  style={{ width: "10%" }}
-                  src={findIcon(
-                    props.item.itemName || props.item.problem.problemItem
-                  )}
-                ></img>
-              )}
-            </Grid>
-          </Grid>
-          <Grid item md={3} xs={3}>
-            <div
-              style={{
-                background: props.item === "Accepted" ? "#60a3d6" : "#60a3d6",
-                fontSize: 10,
-                borderRadius: 10,
-                padding: 4,
-                textAlign: "center",
-                color: props.item === "Accepted" ? "white" : "white",
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                console.log("this is the props",props.item)
-                if (!props.item.isAccepted) {
-                  document.getElementById("details" + props.item._id).click();
-                } else {
-                  document.getElementById("jobdetails" + props.item._id).click();
+    const getAllItems = () => {
+        setOpenLoader(true);
+        getItems().then(
+            (res) => {
+                if (res.data.success || res.status === 200 || res.status === 201) {
+                    setOpenLoader(false);
+                    console.log("These are items", res.data);
+                    setItems(res.data.Customers);
+                    if (localStorage.getItem("token")) {
+                        if (localStorage.getItem("allMyRequests")) {
+                            setAllOffers(JSON.parse(localStorage.getItem("allMyRequests")));
+                        }
+                        getAllMyOffers();
+                    }
                 }
-              }}
-            >
-              {props.item.problem.serviceName || "N/A"}
-            </div>
-            {/* props.item.isAccepted === true */}
-            {!props.item.isAccepted && !props.item.isCancelled && (
-              <div
-                style={{
-                  background: "red",
-                  fontSize: 10,
-                  borderRadius: 10,
-                  padding: 4,
-                  textAlign: "center",
-                  color: "white",
-                  cursor: "pointer",
-                  marginTop: 4,
-                }}
-                onClick={() => {
-                  if (!props.item.isCancelled && !props.item.isAccepted) {
-                    cancleTheRequst(props.item._id);
-                  } else if (props.item.isAccepted) {
-                    notify(
-                      "You have already accepted an offer for this request!!"
+            },
+            (error) => {
+                if (error.response) {
+                    notify(error.response.data.message);
+                }
+                setOpenLoader(false);
+                console.log("This is response", error.response);
+            }
+        );
+    };
+
+    const handleChange = (event) => {
+        setValue(event.target.value);
+    };
+
+    const toggleDrawer = (anchor, open) => (event) => {
+        setState(open);
+    };
+    const toggleDrawerBottom = (anchor, open) => (event) => {
+        setBottomState(open);
+    };
+    const position = [51.505, -0.09];
+    //console.log("THis is great", props);
+
+    const cancleTheRequst = (id) => {
+        setOpenLoader(true);
+        cancelTheRequest(id).then(
+            (res) => {
+                if (
+                    res.data.success ||
+                    res.status === 200 ||
+                    res.status === 201 ||
+                    res.status === 200 ||
+                    res.statusText === 201
+                ) {
+                    setOpenLoader(false);
+                    notify(res.data.message);
+                    getAllMyOffers();
+                }
+            },
+            (error) => {
+                if (error.response) {
+                    notify(error.response.data.message);
+                }
+
+                setOpenLoader(false);
+                console.log("This is response", error.response);
+            }
+        );
+    };
+
+    const getAllMyOffers = () => {
+        setOpenLoader(true);
+        GetAllRequests().then(
+            (res) => {
+                if (
+                    res.data.success ||
+                    res.status === 200 ||
+                    res.status === 201 ||
+                    res.status === 200 ||
+                    res.statusText === 201
+                ) {
+                    setOpenLoader(false);
+                    notify(res);
+                    console.log(
+                        "These are customer requsts",
+                        res.data.Customers
                     );
-                  } else if (props.item.isCancelled) {
-                    notify("This request is already cancelled!!");
-                  }
-                }}
-              >
-                Cancel
-              </div>
-            )}
-          </Grid>
-        </Grid>
-        <div
-          style={{ width: "100%", border: "1px solid #f6f6f6", marginTop: 15 }}
-        ></div>
-        <Grid container direction="row" justify="center">
-          <Grid item md={12} xs={12}>
-            <span style={{ color: "#60a3d6", fontSize: 10 }}>Date</span>
-            <p style={{ fontSize: 10, margin: 0 }}>
-              {moment(props.item.problem.serviceDate ).format("MMMM Do YYYY")}
-            </p>
-          </Grid>
-          <Grid item md={12} xs={12}>
-            <span style={{ color: "#60a3d6", fontSize: 10 }}>Description</span>
-            <p style={{ fontSize: 10, margin: 0 }}>
-              {props.item.descriptionAndPhoto.description || "No Description"}
-            </p>
-            <img
-              src={props.item.descriptionAndPhoto.photos[0]}
-              className={classes.image}
-            ></img>
-          </Grid>
-          <Grid item md={8} xs={8}></Grid>
-          <Grid item md={3} xs={3}></Grid>
-        </Grid>
-      </Paper>
-    );
-  };
+                    localStorage.setItem(
+                        "allMyRequests",
+                        JSON.stringify(res.data.Customers)
+                    );
+                    setAllOffers(res.data.Customers);
+                }
+            },
+            (error) => {
+                if (error.response) {
+                    notify(error.response.data.message);
+                }
+                setOpenLoader(false);
+                console.log("This is response", error.response);
+            }
+        );
+    };
 
-  const MyRequests = () => {
-    return (
-      <Grid
-        container
-        direction="row"
-        justify="center"
-        style={{ padding: 10, height: "max-content", marginTop: -60 }}
-      >
-        <OfferCards item={"Repair"}></OfferCards>
-      </Grid>
-    );
-  };
-
-  const ReviewRequest = () => {
-    return (
-      <Grid
-        container
-        direction="row"
-        style={{
-          marginTop: -50,
-          height: 60,
-          paddingLeft: 15,
-          paddingRight: 15,
-        }}
-      >
-        <Grid item md={2} xs={2}>
-          <img
-            src={Avatar}
-            style={{
-              width: 50,
-              height: 50,
-              borderRadius: 100,
+    const OfferCards = (props) => {
+        // console.log("THis is grate", props.item);
+        var type = props.item;
+        if (props.item === "Job Started") {
+            type = "jobStarted";
+        }
+        return (
+            <Paper onClick={(e) => {
+                props.handleOfferClick(props.item)
             }}
-          ></img>
-        </Grid>
-        <Grid item md={8} xs={8}>
-          <Grid container direction="row">
-            <p
-              style={{
-                width: "100%",
-                margin: 0,
-                fontWeight: 600,
-              }}
+                   style={{width: "90%", padding: 10, marginBottom: 10}}
+                // onClick={() => {
+                //   setActiveTab("Detail");
+                // }}
             >
-              Jane Doe
-            </p>
-            <Rating value={5} style={{ fontSize: 10 }}></Rating>
-            <span style={{ fontSize: 10 }}>5.0(433) </span>
-            <div style={{ width: "100%" }}></div>
-            <span style={{ fontSize: 10 }}>$25 / hr</span>
-          </Grid>
-        </Grid>
+                <Link
+                    id={"details" + props.item._id}
+                    to={"/details/" + props.item._id}
+                ></Link>
+                <Link
+                    id={"jobdetails" + props.item._id}
+                    to={"/jobDetails/" + props.item._id}
+                ></Link>
+                <Grid container direction="row">
+                    <Grid item md={8} xs={8}>
+                        <Grid
+                            container
+                            direction="row"
+                            alignItems="center"
+                            style={{marginLeft: 5}}
+                        >
+                            <p
+                                style={{
+                                    width: "40%",
+                                    margin: 0,
+                                    fontWeight: 600,
+                                }}
+                            >
+                                {props.item.itemName || props.item.problem.problemItem}{" "}
+                            </p>
+                            {items && (
+                                <img
+                                    style={{width: "10%"}}
+                                    src={findIcon(
+                                        props.item.itemName || props.item.problem.problemItem
+                                    )}
+                                ></img>
+                            )}
+                        </Grid>
+                    </Grid>
+                    <Grid item md={3} xs={3}>
+                        <div
+                            style={{
+                                background: props.item === "Accepted" ? "#60a3d6" : "#60a3d6",
+                                fontSize: 10,
+                                borderRadius: 10,
+                                padding: 4,
+                                textAlign: "center",
+                                color: props.item === "Accepted" ? "white" : "white",
+                                cursor: "pointer",
+                            }}
+                            onClick={() => {
+                                console.log("this is the props", props.item)
+                                if (!props.item.isAccepted) {
+                                    document.getElementById("details" + props.item._id).click();
+                                } else {
+                                    document.getElementById("jobdetails" + props.item._id).click();
+                                }
+                            }}
+                        >
+                            {props.item.problem.serviceName || "N/A"}
+                        </div>
+                        {/* props.item.isAccepted === true */}
+                        {!props.item.isAccepted && !props.item.isCancelled && (
+                            <div
+                                style={{
+                                    background: "red",
+                                    fontSize: 10,
+                                    borderRadius: 10,
+                                    padding: 4,
+                                    textAlign: "center",
+                                    color: "white",
+                                    cursor: "pointer",
+                                    marginTop: 4,
+                                }}
+                                onClick={() => {
+                                    if (!props.item.isCancelled && !props.item.isAccepted) {
+                                        cancleTheRequst(props.item._id);
+                                    } else if (props.item.isAccepted) {
+                                        notify(
+                                            "You have already accepted an offer for this request!!"
+                                        );
+                                    } else if (props.item.isCancelled) {
+                                        notify("This request is already cancelled!!");
+                                    }
+                                }}
+                            >
+                                Cancel
+                            </div>
+                        )}
+                    </Grid>
+                </Grid>
+                <div
+                    style={{width: "100%", border: "1px solid #f6f6f6", marginTop: 15}}
+                ></div>
+                <Grid container direction="row" justify="center">
+                    <Grid item md={12} xs={12}>
+                        <span style={{color: "#60a3d6", fontSize: 10}}>Date</span>
+                        <p style={{fontSize: 10, margin: 0}}>
+                            {moment(props.item.problem.serviceDate).format("MMMM Do YYYY")}
+                        </p>
+                    </Grid>
+                    <Grid item md={12} xs={12}>
+                        <span style={{color: "#60a3d6", fontSize: 10}}>Description</span>
+                        <p style={{fontSize: 10, margin: 0}}>
+                            {props.item.descriptionAndPhoto.description || "No Description"}
+                        </p>
+                        <img
+                            src={props.item.descriptionAndPhoto.photos[0]}
+                            className={classes.image}
+                        ></img>
+                    </Grid>
+                    <Grid item md={8} xs={8}></Grid>
+                    <Grid item md={3} xs={3}></Grid>
+                </Grid>
+            </Paper>
+        );
+    };
 
-        <div
-          style={{ width: "100%", border: "1px solid #f6f6f6", margin: 0 }}
-        ></div>
-        <Grid
-          container
-          direction="row"
-          justify="center"
-          style={{ paddingBottom: 5, paddingTop: 5 }}
-        >
-          <p
-            style={{
-              fontWeight: "bold",
-              fontSize: 18,
-              marginLeft: 15,
-              width: "100%",
-            }}
-          >
-            Your Review
-          </p>
-          <ReviewCard width="100%"></ReviewCard>
-          <Grid item md={12} xs={12}>
-            <Grid container direction="row" alignItems="center">
-              <BathtubIcon></BathtubIcon>{" "}
-              <p
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 18,
-                  marginLeft: 15,
-                  textAlign: "center",
-                }}
-              >
-                Bath Tub
-              </p>
+    const MyRequests = () => {
+        return (
+            <Grid
+                container
+                direction="row"
+                justify="center"
+                style={{padding: 10, height: "max-content", marginTop: -60}}
+            >
+                <OfferCards item={"Repair"}></OfferCards>
             </Grid>
-          </Grid>
-          <Grid item md={6} xs={6}>
-            <span style={{ color: "#60a3d6", fontSize: 10 }}>
+        );
+    };
+
+    const ReviewRequest = () => {
+        return (
+            <Grid
+                container
+                direction="row"
+                style={{
+                    marginTop: -50,
+                    height: 60,
+                    paddingLeft: 15,
+                    paddingRight: 15,
+                }}
+            >
+                <Grid item md={2} xs={2}>
+                    <img
+                        src={Avatar}
+                        style={{
+                            width: 50,
+                            height: 50,
+                            borderRadius: 100,
+                        }}
+                    ></img>
+                </Grid>
+                <Grid item md={8} xs={8}>
+                    <Grid container direction="row">
+                        <p
+                            style={{
+                                width: "100%",
+                                margin: 0,
+                                fontWeight: 600,
+                            }}
+                        >
+                            Jane Doe
+                        </p>
+                        <Rating value={5} style={{fontSize: 10}}></Rating>
+                        <span style={{fontSize: 10}}>5.0(433) </span>
+                        <div style={{width: "100%"}}></div>
+                        <span style={{fontSize: 10}}>$25 / hr</span>
+                    </Grid>
+                </Grid>
+
+                <div
+                    style={{width: "100%", border: "1px solid #f6f6f6", margin: 0}}
+                ></div>
+                <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    style={{paddingBottom: 5, paddingTop: 5}}
+                >
+                    <p
+                        style={{
+                            fontWeight: "bold",
+                            fontSize: 18,
+                            marginLeft: 15,
+                            width: "100%",
+                        }}
+                    >
+                        Your Review
+                    </p>
+                    <ReviewCard width="100%"></ReviewCard>
+                    <Grid item md={12} xs={12}>
+                        <Grid container direction="row" alignItems="center">
+                            <BathtubIcon></BathtubIcon>{" "}
+                            <p
+                                style={{
+                                    fontWeight: "bold",
+                                    fontSize: 18,
+                                    marginLeft: 15,
+                                    textAlign: "center",
+                                }}
+                            >
+                                Bath Tub
+                            </p>
+                        </Grid>
+                    </Grid>
+                    <Grid item md={6} xs={6}>
+            <span style={{color: "#60a3d6", fontSize: 10}}>
               Estimated Travel Time
             </span>
-            <p style={{ fontSize: 10, margin: 0 }}>5 minutes</p>
-          </Grid>{" "}
-          <Grid item md={6} xs={6}>
-            <span style={{ color: "#60a3d6", fontSize: 10 }}>Service</span>
-            <p style={{ fontSize: 10, margin: 0 }}>Dishwasher</p>
-          </Grid>
-        </Grid>
-        <div
-          style={{ width: "100%", border: "1px solid #f6f6f6", margin: 0 }}
-        ></div>
-        <Grid
-          container
-          direction="row"
-          justify="center"
-          style={{ paddingBottom: 5, paddingTop: 5 }}
-        >
-          {" "}
-          <Grid item md={12} xs={12}>
-            <span style={{ color: "#60a3d6", fontSize: 10 }}>
+                        <p style={{fontSize: 10, margin: 0}}>5 minutes</p>
+                    </Grid>{" "}
+                    <Grid item md={6} xs={6}>
+                        <span style={{color: "#60a3d6", fontSize: 10}}>Service</span>
+                        <p style={{fontSize: 10, margin: 0}}>Dishwasher</p>
+                    </Grid>
+                </Grid>
+                <div
+                    style={{width: "100%", border: "1px solid #f6f6f6", margin: 0}}
+                ></div>
+                <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    style={{paddingBottom: 5, paddingTop: 5}}
+                >
+                    {" "}
+                    <Grid item md={12} xs={12}>
+            <span style={{color: "#60a3d6", fontSize: 10}}>
               Provider Phone
             </span>
-            <p style={{ fontSize: 10, margin: 0 }}>12345678</p>
-          </Grid>{" "}
-          <Grid item md={12} xs={12}>
-            <span style={{ color: "#60a3d6", fontSize: 10 }}>
+                        <p style={{fontSize: 10, margin: 0}}>12345678</p>
+                    </Grid>{" "}
+                    <Grid item md={12} xs={12}>
+            <span style={{color: "#60a3d6", fontSize: 10}}>
               Provider Email
             </span>
-            <p style={{ fontSize: 10, margin: 0 }}>test@example.com</p>
-          </Grid>
-        </Grid>
-        <div
-          style={{ width: "100%", border: "1px solid #f6f6f6", margin: 0 }}
-        ></div>
-        <Grid
-          container
-          direction="row"
-          justify="center"
-          style={{ paddingBottom: 5, paddingTop: 5 }}
-        >
-          {" "}
-          <Grid item md={6} xs={6}>
-            <span style={{ color: "#60a3d6", fontSize: 10 }}>
+                        <p style={{fontSize: 10, margin: 0}}>test@example.com</p>
+                    </Grid>
+                </Grid>
+                <div
+                    style={{width: "100%", border: "1px solid #f6f6f6", margin: 0}}
+                ></div>
+                <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    style={{paddingBottom: 5, paddingTop: 5}}
+                >
+                    {" "}
+                    <Grid item md={6} xs={6}>
+            <span style={{color: "#60a3d6", fontSize: 10}}>
               Estimated Work Hours
             </span>
-            <p style={{ fontSize: 10, margin: 0 }}>3 hrs</p>
-          </Grid>{" "}
-          <Grid item md={6} xs={6}>
-            <span style={{ color: "#60a3d6", fontSize: 10 }}>
+                        <p style={{fontSize: 10, margin: 0}}>3 hrs</p>
+                    </Grid>{" "}
+                    <Grid item md={6} xs={6}>
+            <span style={{color: "#60a3d6", fontSize: 10}}>
               Estimated Completion Date
             </span>
-            <p style={{ fontSize: 10, margin: 0 }}>April 6 , 2021</p>
-          </Grid>{" "}
-          <Grid item md={12} xs={12}>
-            <span style={{ color: "#60a3d6", fontSize: 10 }}>
+                        <p style={{fontSize: 10, margin: 0}}>April 6 , 2021</p>
+                    </Grid>{" "}
+                    <Grid item md={12} xs={12}>
+            <span style={{color: "#60a3d6", fontSize: 10}}>
               Estimated Labour Cost
             </span>
-            <p style={{ fontSize: 10, margin: 0 }}>$ 63.00</p>
-          </Grid>
-        </Grid>
-        <Grid
-          container
-          direction="row"
-          justify="center"
-          style={{ paddingBottom: 5, paddingTop: 5 }}
-        >
-          <button
-            className={classes.button}
-            style={{ marginTop: 10 }}
-            onClick={() => {
-              // setBottomState(true);
-            }}
-          >
-            <Grid
-              container
-              direction="row"
-              justify="center"
-              alignItems="center"
-            >
-              Make Copy
+                        <p style={{fontSize: 10, margin: 0}}>$ 63.00</p>
+                    </Grid>
+                </Grid>
+                <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    style={{paddingBottom: 5, paddingTop: 5}}
+                >
+                    <button
+                        className={classes.button}
+                        style={{marginTop: 10}}
+                        onClick={() => {
+                            // setBottomState(true);
+                        }}
+                    >
+                        <Grid
+                            container
+                            direction="row"
+                            justify="center"
+                            alignItems="center"
+                        >
+                            Make Copy
+                        </Grid>
+                    </button>
+                </Grid>
             </Grid>
-          </button>
-        </Grid>
-      </Grid>
-    );
-  };
-  const notify = (data) => toast(data);
-  useEffect(() => {
-    getAllItems();
-  }, []);
-  let history = useHistory();
-  return (
-    <div style={{ background: "#f2f2f2", background: "white" }}>
-      <Backdrop className={classes.backdrop} open={openLoader}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
-      <ToastContainer
-        position="top-center"
-        autoClose={2000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
-      <Link id="homepage" to="/homepage"></Link>
-      <Link id="reviews" to="/reviews/0"></Link>
-      <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
-        <Header
-          onSidebarDisplay={() => {
-            setState(true);
-          }}
-          heading={activeTab != "Detail" ? "My Requests" : "Request Details"}
-          leftIcon={
-            <ArrowBackIosIcon
-              style={{ cursor: "pointer" }}
-              onClick={() => {
-                history.goBack();
-                // if (activeTab === "Problem") {
-                //   document.getElementById("homepage").click();
-                // } else {
-                //   setActiveTab("Problem");
-                // }
-              }}
-            ></ArrowBackIosIcon>
-          }
-          rightIcon={<div></div>}
-        ></Header>{" "}
-      </div>
+        );
+    };
+    const notify = (data) => toast(data);
+    useEffect(() => {
+        getAllItems();
+    }, []);
+    let history = useHistory();
 
-      <Grid
-        container
-        direction="row"
-        justify="center"
-        style={{
-          marginTop: 0,
-          maxHeight: "calc( 100vh - 100px )",
-          minHeight: "calc( 100vh - 100px )",
-          overflowY: "scroll",
-          height: "max-content",
-          background: activeTab === "Problem" ? "#f2f2f2" : "white",
-        }}
-      >
-        <div style={{ width: "100%" }}>
-          <div
-            style={{
-              width: "100vw",
-              maxWidth: "100vw",
-              overflow: "scroll",
-              display: "flex",
-              height: 70,
-            }}
-          ></div>{" "}
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            style={{
-              padding: 10,
-              height: "max-content",
-              marginTop: -60,
-            }}
-          >
-            {allOffers &&
-              allOffers.map((item, index) => {
-                return <OfferCards index={index} item={item}></OfferCards>;
-              })}
-          </Grid>
-        </div>
-        <div className="sideBar">
-          <Drawer
-            anchor={"left"}
-            open={state}
-            onClose={toggleDrawer("bottom", false)}
-          >
-            <div style={{ width: "60vw" }}>
-              <Sidebar></Sidebar>
+
+    const handleOfferClick = (item) => {
+        console.log('handleOfferClick ', item);
+
+        setItemDetails({
+            item,
+            show: true
+        })
+    }
+
+
+    const handleSetItemDetailsToDefault = () => {
+        setItemDetails({
+            item: null,
+            show: false
+        })
+    }
+
+
+    const onChangeFile = async (event) => {
+        console.log('selected file = ', event.target.files[0]);
+        try {
+            var data = new FormData();
+            data.append('image', event.target.files[0]);
+
+            console.log('uploading file  ')
+            const response = await uploadFile(data);
+
+            console.log('file uploaded = ',response)
+        } catch (e) {
+            console.log('file uploaded error = ', e)
+        }
+    }
+
+
+    console.log('allOffers = ', itemDetails)
+    return (
+        <div style={{background: "#f2f2f2", background: "white"}}>
+            {itemDetails.show ?
+                <ItemDetails itemDetails={itemDetails} setItemDetailsToDefault={handleSetItemDetailsToDefault}/> : null}
+            <input id="upload" type="file" accept="image/*" onChange={(e) => {
+                onChangeFile(e);
+            }}/>
+
+            <Backdrop className={classes.backdrop} open={openLoader}>
+                <CircularProgress color="inherit"/>
+            </Backdrop>
+            <ToastContainer
+                position="top-center"
+                autoClose={2000}
+                hideProgressBar={false}
+                newestOnTop={false}
+                closeOnClick
+                rtl={false}
+                pauseOnFocusLoss
+                draggable
+                pauseOnHover
+            />
+            <Link id="homepage" to="/homepage"></Link>
+            <Link id="reviews" to="/reviews/0"></Link>
+            <div style={{borderBottom: "1px solid #e9e9e9", height: 60}}>
+                <Header
+                    onSidebarDisplay={() => {
+                        setState(true);
+                    }}
+                    heading={activeTab != "Detail" ? "My Requests" : "Request Details"}
+                    leftIcon={
+                        <ArrowBackIosIcon
+                            style={{cursor: "pointer"}}
+                            onClick={() => {
+                                history.goBack();
+                                // if (activeTab === "Problem") {
+                                //   document.getElementById("homepage").click();
+                                // } else {
+                                //   setActiveTab("Problem");
+                                // }
+                            }}
+                        ></ArrowBackIosIcon>
+                    }
+                    rightIcon={<div></div>}
+                ></Header>{" "}
             </div>
-          </Drawer>
+
+            <Grid
+                container
+                direction="row"
+                justify="center"
+                style={{
+                    marginTop: 0,
+                    maxHeight: "calc( 100vh - 100px )",
+                    minHeight: "calc( 100vh - 100px )",
+                    overflowY: "scroll",
+                    height: "max-content",
+                    background: activeTab === "Problem" ? "#f2f2f2" : "white",
+                }}
+            >
+                <div style={{width: "100%"}}>
+                    <div
+                        style={{
+                            width: "100vw",
+                            maxWidth: "100vw",
+                            overflow: "scroll",
+                            display: "flex",
+                            height: 70,
+                        }}
+                    ></div>
+                    {" "}
+                    <Grid
+                        container
+                        direction="row"
+                        justify="center"
+                        style={{
+                            padding: 10,
+                            height: "max-content",
+                            marginTop: -60,
+                        }}
+                    >
+                        {allOffers &&
+                        allOffers.map((item, index) => {
+                            return <OfferCards handleOfferClick={handleOfferClick} index={index}
+                                               item={item}></OfferCards>;
+                        })}
+                    </Grid>
+                </div>
+                <div className="sideBar">
+                    <Drawer
+                        anchor={"left"}
+                        open={state}
+                        onClose={toggleDrawer("bottom", false)}
+                    >
+                        <div style={{width: "60vw"}}>
+                            <Sidebar></Sidebar>
+                        </div>
+                    </Drawer>
+                </div>
+                <Drawer
+                    anchor={"bottom"}
+                    open={bottomState}
+                    onClose={toggleDrawerBottom("bottom", false)}
+                >
+                    <Grid
+                        container
+                        direction="row"
+                        justify="center"
+                        // alignItems="center"
+                        style={{height: "max-content", paddingLeft: 20, paddingRight: 20}}
+                    >
+                        {" "}
+                        <p
+                            style={{
+                                fontWeight: "bold",
+                                fontSize: 18,
+
+                                textAlign: "center",
+                                width: "100%",
+                            }}
+                        >
+                            Rate and Review
+                        </p>
+                        <Rating style={{fontSize: 40}}></Rating>
+                        <p className={classes.label}>Write Something</p>
+                        <input
+                            className={classes.input}
+                            placeholder="Write Something"
+                            style={{border: "none"}}
+                        ></input>
+                        <button
+                            className={classes.button}
+                            onClick={() => {
+                                setBottomState(false);
+                            }}
+                        >
+                            Submit
+                        </button>
+                    </Grid>
+                </Drawer>
+
+                <Drawer
+                    anchor={"bottom"}
+                    // open={needModifications}
+                    open={calendar}
+                    onClose={() => {
+                        setCalendar(false);
+                    }}
+                >
+                    <Grid
+                        container
+                        direction="row"
+                        justify="center"
+                        // alignItems="center"
+                        style={{height: "max-content", paddingLeft: 20, paddingRight: 20}}
+                    >
+                        {" "}
+                        <p
+                            style={{
+                                fontWeight: "bold",
+                                fontSize: 18,
+
+                                textAlign: "center",
+                                width: "100%",
+                            }}
+                        >
+                            Select a Date
+                        </p>
+                        <Calendar></Calendar>
+                    </Grid>
+                </Drawer>
+
+                <Drawer
+                    anchor={"bottom"}
+                    open={postRequest}
+                    onClose={() => setPostRequest(false)}
+                >
+                    <Grid container direction="row" justify="center">
+                        <CheckCircleIcon
+                            style={{marginTop: 20, fontSize: 50, color: "#1075c2"}}
+                        ></CheckCircleIcon>
+                    </Grid>
+                    <p
+                        style={{
+                            fontWeight: "bold",
+                            fontSize: 18,
+
+                            textAlign: "center",
+                            width: "100%",
+                        }}
+                    >
+                        Thank you for your submission
+                    </p>
+
+                    <Grid
+                        container
+                        direction="row"
+                        justify="center"
+                        // alignItems="center"
+                        style={{height: 120}}
+                    >
+                        <p
+                            style={{
+                                fontSize: 12,
+                                textAlign: "center",
+                                width: "90%",
+                            }}
+                        >
+                            Your service request has been submitted please wait for a request
+                            from plumber.
+                        </p>
+                        <p
+                            style={{
+                                color: "#358acb",
+                                textDecoration: "underline",
+                                fontSize: 12,
+                                textAlign: "center",
+                                width: "90%",
+                                cursor: "pointer",
+                            }}
+                        >
+                            View My Requests
+                        </p>
+                        <button
+                            className={classes.button}
+                            onClick={() => {
+                                setBottomState(false);
+                            }}
+                            onClick={() => {
+                                document.getElementById("homepage").click();
+                            }}
+                        >
+                            Continue
+                        </button>
+                    </Grid>
+                </Drawer>
+            </Grid>
         </div>
-        <Drawer
-          anchor={"bottom"}
-          open={bottomState}
-          onClose={toggleDrawerBottom("bottom", false)}
-        >
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            // alignItems="center"
-            style={{ height: "max-content", paddingLeft: 20, paddingRight: 20 }}
-          >
-            {" "}
-            <p
-              style={{
-                fontWeight: "bold",
-                fontSize: 18,
-
-                textAlign: "center",
-                width: "100%",
-              }}
-            >
-              Rate and Review
-            </p>
-            <Rating style={{ fontSize: 40 }}></Rating>
-            <p className={classes.label}>Write Something</p>
-            <input
-              className={classes.input}
-              placeholder="Write Something"
-              style={{ border: "none" }}
-            ></input>
-            <button
-              className={classes.button}
-              onClick={() => {
-                setBottomState(false);
-              }}
-            >
-              Submit
-            </button>
-          </Grid>
-        </Drawer>
-
-        <Drawer
-          anchor={"bottom"}
-          // open={needModifications}
-          open={calendar}
-          onClose={() => {
-            setCalendar(false);
-          }}
-        >
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            // alignItems="center"
-            style={{ height: "max-content", paddingLeft: 20, paddingRight: 20 }}
-          >
-            {" "}
-            <p
-              style={{
-                fontWeight: "bold",
-                fontSize: 18,
-
-                textAlign: "center",
-                width: "100%",
-              }}
-            >
-              Select a Date
-            </p>
-            <Calendar></Calendar>
-          </Grid>
-        </Drawer>
-
-        <Drawer
-          anchor={"bottom"}
-          open={postRequest}
-          onClose={() => setPostRequest(false)}
-        >
-          <Grid container direction="row" justify="center">
-            <CheckCircleIcon
-              style={{ marginTop: 20, fontSize: 50, color: "#1075c2" }}
-            ></CheckCircleIcon>
-          </Grid>
-          <p
-            style={{
-              fontWeight: "bold",
-              fontSize: 18,
-
-              textAlign: "center",
-              width: "100%",
-            }}
-          >
-            Thank you for your submission
-          </p>
-
-          <Grid
-            container
-            direction="row"
-            justify="center"
-            // alignItems="center"
-            style={{ height: 120 }}
-          >
-            <p
-              style={{
-                fontSize: 12,
-                textAlign: "center",
-                width: "90%",
-              }}
-            >
-              Your service request has been submitted please wait for a request
-              from plumber.
-            </p>
-            <p
-              style={{
-                color: "#358acb",
-                textDecoration: "underline",
-                fontSize: 12,
-                textAlign: "center",
-                width: "90%",
-                cursor: "pointer",
-              }}
-            >
-              View My Requests
-            </p>
-            <button
-              className={classes.button}
-              onClick={() => {
-                setBottomState(false);
-              }}
-              onClick={() => {
-                document.getElementById("homepage").click();
-              }}
-            >
-              Continue
-            </button>
-          </Grid>
-        </Drawer>
-      </Grid>
-    </div>
-  );
+    );
 }
+
 export default withRouter(ProviderDetail);

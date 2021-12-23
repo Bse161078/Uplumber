@@ -55,6 +55,16 @@ const useStyles = makeStyles((theme) => ({
     marginRight: 15,
   },
 }));
+
+
+function extractFromAdress(components, type){
+    for (var i=0; i<components.length; i++)
+        for (var j=0; j<components[i].types.length; j++)
+            if (components[i].types[j]==type) return components[i].long_name;
+    return "";
+}
+
+
 const ContactDetails = (props) => {
   const classes = useStyles();
 
@@ -89,29 +99,65 @@ const ContactDetails = (props) => {
           // )
           // ;
 
-  const handleSelect = (address) => {
+  const handleSelect = async (address) => {
     console.log("This is the dares", address);
 
-    geocodeByAddress(address)
-      .then((results) => getLatLng(results[0]))
-      .then((latLng) => {
-        console.log("Success these are latlongs", latLng);
-        props.setRequestData("currentLocation", {
-          latitude: latLng.lat,
-          longitude: latLng.lng,
-        });
 
-        localStorage.setItem(
-          "userCurrentLocation",
-          JSON.stringify({ latitude: latLng.lat, longitude: latLng.lng })
-        );
+    try{
+        const results = await geocodeByAddress(address);
+        console.log('results = ',results)
 
-        props.setRequestData("userAddress", address);
-        localStorage.setItem("userAddress", address);
-      })
-      .catch((error) => console.error("Error", error));
+        if(results.length>0) {
+
+            const addressComponents=results[0].address_components;
+            const latLng = await getLatLng(results[0]);
+            var userZipCode = extractFromAdress(addressComponents, "postal_code");
+            var userCity = extractFromAdress(addressComponents, "administrative_area_level_2");
+            var userState = extractFromAdress(addressComponents, "administrative_area_level_1");
+
+
+
+            localStorage.setItem(
+                "userCurrentLocation",
+                JSON.stringify({latitude: latLng.lat, longitude: latLng.lng})
+            );
+            localStorage.setItem("userZipCode", userZipCode);
+            localStorage.setItem("userCity", userCity);
+            localStorage.setItem("userState", userState);
+            localStorage.setItem("userAddress", address);
+
+
+            const data={
+                currentLocation:{
+                    latitude: latLng.lat,
+                    longitude: latLng.lng,
+                },
+                userAddress:address,
+                userCity,
+                userZipCode,
+                userState
+            }
+
+
+
+
+
+
+            props.updateAddressDetails(data)
+
+        }
+
+
+    }catch (e) {
+        console.error("Error", e)
+    }
+
+
   };
 
+
+
+  console.log('Contact details = ',props)
   return (
     <Grid
       container
