@@ -10,7 +10,9 @@ import {
   FormGroup,
   Checkbox,
   Badge,
+  
 } from "@material-ui/core";
+import { uploadFile } from "../../ApiHelper";
 import CancelIcon from "@material-ui/icons/Cancel";
 import CameraAltIcon from "@material-ui/icons/CameraAlt";
 const useStyles = makeStyles((theme) => ({
@@ -63,6 +65,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 const DescriptionAndPhoto = (props) => {
   const classes = useStyles();
+  const onChangeFile = async (event) => {
+    console.log('selected file = ', event.target.files[0]);
+    try {
+        var data = new FormData();
+        data.append('image', event.target.files[0]);
+
+        console.log('uploading file  ')
+        const response = await uploadFile(data);
+
+        console.log('file uploaded = ',response)
+    } catch (e) {
+        console.log('file uploaded error = ', e)
+    }
+}
+
+
   return (
     <Grid
       container
@@ -100,7 +118,11 @@ const DescriptionAndPhoto = (props) => {
           className="form-control"
           // value={post.image.name}
           style={{ display: "none" }}
-          onChange={props.handleFileChange}
+          onChange= {   (e) => {
+          
+         
+            onChangeFile(e);
+        }}
         />
         <Grid container direction="row" alignItems="center">
           {props.image.length > 0 &&

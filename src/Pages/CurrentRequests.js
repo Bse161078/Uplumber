@@ -572,9 +572,7 @@ function ProviderDetail(props) {
         <div style={{background: "#f2f2f2", background: "white"}}>
             {itemDetails.show ?
                 <ItemDetails itemDetails={itemDetails} setItemDetailsToDefault={handleSetItemDetailsToDefault}/> : null}
-            <input id="upload" type="file" accept="image/*" onChange={(e) => {
-                onChangeFile(e);
-            }}/>
+        
 
             <Backdrop className={classes.backdrop} open={openLoader}>
                 <CircularProgress color="inherit"/>
