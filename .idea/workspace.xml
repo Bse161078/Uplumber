@@ -3,14 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e1d24e51-c80d-49c9-9c04-3adcec945b4b" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Pages/CompleteProfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/CompleteProfile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Pages/ConfirmOTP.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/ConfirmOTP.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Pages/CreateAccount.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/CreateAccount.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Pages/EditProfile.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/EditProfile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Pages/Homepage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/Homepage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Pages/LandingPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/LandingPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Pages/RequestAService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/RequestAService.js" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -79,11 +71,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Pages/UserProfile.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1118">
-              <caret line="305" column="7" lean-forward="true" selection-start-line="305" selection-start-column="7" selection-end-line="305" selection-end-column="7" />
+            <state relative-caret-position="242">
+              <caret line="313" column="7" lean-forward="true" selection-start-line="313" selection-start-column="7" selection-end-line="313" selection-end-column="7" />
               <folding>
                 <element signature="e#0#51#0" expanded="true" />
               </folding>
@@ -91,11 +83,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Pages/EditProfile.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="71">
-              <caret line="500" column="12" selection-start-line="500" selection-start-column="12" selection-end-line="500" selection-end-column="12" />
+            <state relative-caret-position="190">
+              <caret line="507" column="8" lean-forward="true" selection-start-line="507" selection-start-column="8" selection-end-line="507" selection-end-column="8" />
             </state>
           </provider>
         </entry>
@@ -270,7 +262,7 @@
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1640960196421" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1640960311196" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\IntelliJ IDEA 2018.2.4\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
@@ -300,18 +292,18 @@
       <workItem from="1640271025253" duration="7674000" />
       <workItem from="1640800203364" duration="15870000" />
       <workItem from="1640893434397" duration="59000" />
-      <workItem from="1640955247564" duration="4848000" />
+      <workItem from="1640955247564" duration="4962000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="28451000" />
+    <option name="totallyTimeSpent" value="28565000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="830" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25973153" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.25973153" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -328,7 +320,7 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="9" visible="true" weight="0.38538682" />
+      <window_info active="true" anchor="bottom" id="Terminal" order="9" visible="true" weight="0.38538682" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="TypeScript" order="11" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -586,16 +578,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Pages/UserProfile.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1118">
-          <caret line="305" column="7" lean-forward="true" selection-start-line="305" selection-start-column="7" selection-end-line="305" selection-end-column="7" />
-          <folding>
-            <element signature="e#0#51#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Pages/ConfirmOTP.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-291">
@@ -622,8 +604,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Pages/EditProfile.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="71">
-          <caret line="500" column="12" selection-start-line="500" selection-start-column="12" selection-end-line="500" selection-end-column="12" />
+        <state relative-caret-position="190">
+          <caret line="507" column="8" lean-forward="true" selection-start-line="507" selection-start-column="8" selection-end-line="507" selection-end-column="8" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Pages/UserProfile.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="242">
+          <caret line="313" column="7" lean-forward="true" selection-start-line="313" selection-start-column="7" selection-end-line="313" selection-end-column="7" />
+          <folding>
+            <element signature="e#0#51#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
