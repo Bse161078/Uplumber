@@ -620,7 +620,7 @@ function ProviderDetail(props) {
                     res.status === 200
                 ) {
                     setOpenLoader(false);
-                    console.log("THis si my proifle", res.data);
+                    console.log("THis si my proifle", res.data,'  ',requestData);
                     if (res.data.message === "Customer exists") {
                         localStorage.setItem("requestAfterLogin", "true");
                         document.getElementById("login").click();

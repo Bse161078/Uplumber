@@ -15,6 +15,9 @@ import Avatar from "../assets/profile.png";
 import { MyProfile, UpdateCustomerProfile, uploadImage } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 import { Countries, states } from "../Data/Data";
+import ConfirmOtp from "./ConfirmOTP";
+import firebase from "firebase";
+import {connectFirebase} from "../Config/firebase";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -51,7 +54,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 export default function UpdateUserProfile(props) {
-  const [openLoader, setOpenLoader] = useState(false);
+    const [goToOtp, setGoToOtp] = useState(false);
+    const [confirmResult, setConfirmResult] = useState();
+    const [captchaCreated, setCaptchaCreated] = useState(false);
+
+
+
+
+    const [openLoader, setOpenLoader] = useState(false);
   const classes = useStyles();
   const [value, setValue] = useState("");
 
@@ -79,6 +89,7 @@ export default function UpdateUserProfile(props) {
   const [longitude, setLongitude] = useState(
     localStorage.getItem("longitude1") || localStorage.getItem("longitude")
   );
+  const [oldPhoneNumber, setOldPhoneNumber] = useState(localStorage.getItem("phoneNumber1"));
 
   const getLocation = () => {
     if (navigator.geolocation) {
@@ -192,6 +203,7 @@ export default function UpdateUserProfile(props) {
           setFirstName(user.firstName);
           setLastName(user.lastName);
           setPhoneNumber("+" + user.phoneNumber);
+          setOldPhoneNumber("+" + user.phoneNumber)
           setAddress(user.address);
           setCity(user.city);
           setState(user.state);
@@ -224,11 +236,89 @@ export default function UpdateUserProfile(props) {
   useEffect(() => {
     getLocation();
     getMyProfile();
+    connectFirebase();
+
   }, []);
+
+
+
+
+    const createRecapha = () => {
+        window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+            "recaptcha-container",
+            {
+                size: "invisible",
+                callback: (response) => {
+                    // reCAPTCHA solved, allow signInWithPhoneNumber.
+                },
+            }
+        );
+    };
+
+    const validatePhoneNumber = (phoneNumber) => {
+        console.log("This is validating phonenumeer", phoneNumber);
+        var regexp = /^\+[0-9]?()[0-9](\s|\S)(\d[0-9]{8,16})$/;
+        return phoneNumber.match(/\d/g).length === 10;
+    };
+
+    const sendFirebaseOTP = () => {
+        console.log("This is valid", validatePhoneNumber(phoneNumber));
+        setOpenLoader(true);
+        createRecapha();
+
+
+        const appVerifier = window.recaptchaVerifier;
+        // console.log("THis is appverifier", appVerifier);
+        if (appVerifier) {
+            setCaptchaCreated(true);
+        }
+        firebase
+            .auth()
+            .signInWithPhoneNumber(phoneNumber, appVerifier)
+            .then((result) => {
+                console.log('result  =   ', result);
+                setConfirmResult(result);
+                setGoToOtp(true);
+                setOpenLoader(false);
+                window.recaptchaVerifier = null
+            })
+            .catch((error) => {
+                notify(error.code);
+                setOpenLoader(false);
+                console.log("This is the error", error);
+            });
+    };
+
 
   const notify = (data) => toast(data);
   return (
+      goToOtp ? (
+              <ConfirmOtp
+                  confirmResult={confirmResult}
+                  phoneNumber={phoneNumber}
+                  goBack={
+                      () => {
+                          setGoToOtp(false);
+                          setOpenLoader(false)
+                      }
+                  }
+                  sendFirebaseOTP={
+                      () => {
+                          sendFirebaseOTP()
+                      }
+                  }
+                  notify={notify}
+                  setOpenLoader={setOpenLoader}
+                  onSuccessOtp={
+                      async () => {
+                          setOpenLoader(true)
+                          updateMyProfile();
+                      }
+                  }
+              ></ConfirmOtp>
+          ):
     <div>
+        <div id="recaptcha-container"></div>
       <Backdrop className={classes.backdrop} open={openLoader}>
         <CircularProgress color="inherit" />
       </Backdrop>
@@ -407,7 +497,13 @@ export default function UpdateUserProfile(props) {
         <button
           className={classes.button}
           onClick={() => {
-            updateMyProfile();
+            setOpenLoader(true);
+            if(oldPhoneNumber!==phoneNumber){
+                  sendFirebaseOTP();
+              }else{
+                  updateMyProfile();
+              }
+
           }}
         >
           Save

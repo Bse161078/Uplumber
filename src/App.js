@@ -89,7 +89,7 @@ export default function App() {
 
         <Route exact path="/userProfile" render={() => <UserProfile />} />
         UserProfile
-        <Route exact path="/" render={() => <LandingPage />} />
+        <Route exact path="/" render={() => <LandingPage/>} />
 
       </Switch>
     </BrowserRouter>

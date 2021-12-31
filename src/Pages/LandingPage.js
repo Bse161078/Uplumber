@@ -4,6 +4,7 @@ import { Grid, makeStyles } from "@material-ui/core";
 import UPlumberLogo from "../assets/uplumberlogo.png";
 import Plumbers from "../assets/Plumbers.png";
 import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
+import { withRouter } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -42,9 +43,13 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-
-export default function LandingPage() {
+ function LandingPage(props) {
   const classes = useStyles();
+  console.log('history = ',props);
+
+
+
+
   return (
     <div
       style={{
@@ -100,9 +105,10 @@ export default function LandingPage() {
         <p style={{ width: "80%", textAlign: "center" }}>
           By continuing you agree to our{" "}
           <span style={{ fontWeight: "bold" }}>Terms and conditions</span> and{" "}
-          <span style={{ fontWeight: "bold" }}>Privay Policy</span>
+          <span style={{ fontWeight: "bold" }}>Privacy Policy</span>
         </p>
       </Grid>
     </div>
   );
 }
+export default withRouter(LandingPage);

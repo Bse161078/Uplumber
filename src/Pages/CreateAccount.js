@@ -6,7 +6,7 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 import moment from "moment";
-import { Link } from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme) => ({
     color: "#fff",
   },
 }));
-export default function LoginPage() {
+function LoginPage(props) {
   const classes = useStyles();
   const [type, setType] = useState("password");
   const [typeConfirm, setTypeConfirm] = useState("password");
@@ -478,7 +478,13 @@ export default function LoginPage() {
           alignItems="center"
           style={{ height: 60 }}
         >
-          <Link id="complete" to="/complete-profile"></Link>
+          <Link
+              id="complete"
+              to={{
+                  pathname: '/complete-profile',
+                  state: { email: email,password:password }
+              }}
+          ></Link>
           <Link id="homepage" to="/homepage"></Link>
           <ArrowBackIosIcon
             style={{ marginLeft: 20 }}
@@ -634,7 +640,7 @@ export default function LoginPage() {
                 email: email,
                 password: password,
               };
-              Signup(data).then(
+              /*Signup(data).then(
                 (res) => {
                   console.log("This is signup res", res);
                   if (
@@ -672,9 +678,15 @@ export default function LoginPage() {
                   setOpenLoader(false);
                   console.log("This is response", error.response.data.messag);
                 }
-              );
+              );*/
+
+                props.history.push({
+                    pathname: '/complete-profile',
+                    state: { email: email,password:password }
+                })
+                //document.getElementById("complete").click();
+
             }
-            // document.getElementById("complete").click();
           }}
         >
           Register
@@ -710,3 +722,4 @@ export default function LoginPage() {
     </div>
   );
 }
+export default withRouter(LoginPage);
