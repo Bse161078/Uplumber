@@ -270,8 +270,8 @@ const HomePage = (props) => {
                                 ? props.item.isAccepted === false
                                 : props.item.serviceId.isAccepted === false
                         ) {
-                            if (calculatedStatus != "Order Cancelled") {
-                                document.getElementById("details" + props.item._id).click();
+                            if (calculatedStatus != "Order Cancelled+ props.item._id") {
+                                document.getElementById("details" ).click();
                                 localStorage.setItem("job", JSON.stringify(props.item));
                             } else {
                                 console.log("This is props item", props.item);

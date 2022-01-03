@@ -146,7 +146,7 @@ function ProviderDetail(props) {
         description: localStorage.getItem("description") || "",
         image: localStorage.getItem("image")
             ? JSON.parse(localStorage.getItem("image"))
-            : [],
+            : null,
         company: localStorage.getItem("company") || "",
         policyNumber: localStorage.getItem("policyNumber") || "",
         expiryDate: localStorage.getItem("expiryDate") || new Date(),

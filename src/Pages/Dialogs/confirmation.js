@@ -60,7 +60,7 @@ export default function Alert(props){
                     ></img>
                 </Grid>
                 <Grid item>
-                    <p style={{fontStyle:'bold'}}>
+                    <p style={{marginLeft:'20',marginRight:'20',fontStyle:'bold'}}>
                         {props.title}
                     </p>
                 </Grid>
