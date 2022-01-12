@@ -633,7 +633,9 @@ const useStyles = makeStyles((theme) => ({
         if (appVerifier) {
             setCaptchaCreated(true);
         }
+        console.log("verifier",appVerifier)
         firebase
+
             .auth()
             .signInWithPhoneNumber(phoneNumber, appVerifier)
             .then((result) => {

@@ -5,7 +5,7 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Typography } from '@mui/material';
+import { Grid, Typography } from '@mui/material';
 
 
 export default function ItemDetails(props){
@@ -99,6 +99,21 @@ export default function ItemDetails(props){
               
               
             </DialogContent>
+            <DialogTitle id="alert-dialog-title"style={{color:'black',fontWeight:'bold'}}>
+                {"Description and Photo"}
+            </DialogTitle>
+            <DialogContent>
+            <DialogContentText id="alert-dialog-description"style={{color:'black'}}>
+            <Typography variant='body2'> Description: {item.descriptionAndPhoto.description} </Typography>      
+               
+                </DialogContentText>
+                <Grid direction='row' > 
+                <DialogContentText id="alert-dialog-description" style={{color:'black',marginTop:'10px',width:'30%',height:'30%'}} >
+                <p>Photos : <img src= {item.descriptionAndPhoto.photos} style={{display:'flex',alignContent:'space-between',width:70,height:70}}/>     
+                </p>
+                </DialogContentText>
+                </Grid>
+                </DialogContent>
 
 
 
