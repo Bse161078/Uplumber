@@ -138,11 +138,28 @@ const DescriptionAndPhoto = (props) => {
                             console.log('files = ', files, '   ', fileType)
                             if (fileType.includes("image")) {
                                 // invalid file type code goes here.
-                                props.setRequestData('image', {type: 'image', data: this.result})
-
+                            if(props.image){
+                                let image=props.image
+                                image.push({type: 'image', data: this.result})
+                                props.setRequestData('image', image)
+                            
+                            }else {
+                                let image=[]
+                                image.push({type: 'image', data: this.result})
+                                props.setRequestData('image', image)
+                            }
                             } else if (fileType.includes("video")) {
                                 // invalid file type code goes here.
-                                props.setRequestData('image', {type: 'video', data: URL.createObjectURL(files)})
+                                if(props.image){
+                                    let image=props.image
+                                    image.push({type: 'video', data: URL.createObjectURL(files)})
+                                    props.setRequestData('image', image)
+                                
+                                }else {
+                                    let image=[]
+                                    image.push({type: 'video', data: URL.createObjectURL(files)})
+                                    props.setRequestData('image', image)
+                                }
 
                             }
                         });
@@ -151,33 +168,49 @@ const DescriptionAndPhoto = (props) => {
                     }}
                 />
 
+              
                 <Grid container direction="row" alignItems="center">
-                    {props.image &&
-                    <Badge
-                        badgeContent={
-                            <CancelIcon
-                                onClick={(e) => {
-                                    props.setRequestData('image', null)
-
-                                }
-                                }
-                                style={{color: "red", marginLeft: -40}}
-                            ></CancelIcon>
+                {
+                    props.image && props.image.map((img,index)=>{
+                     let imageDiv=null;
+                     
+                     if(img.type==='image'){
+                         imageDiv=<img src={img.data} style={{padding:20}} className={classes.image}/>
+                     }else if(img.type==='video'){
+                        imageDiv=<video width={130} height={100} style={{padding:20}} controls>
+                        <source src={img.data} id="video_here"/>
+                        Your browser does not support HTML5 video.
+                    </video>
+                     }
+                     
+                     if(imageDiv){
+                         return(
+                            <Badge
+                            badgeContent={
+                                <CancelIcon
+                                    onClick={(e) => {
+                                        let images=props.image;
+                                        images.splice(index,1);
+                                        props.setRequestData('image', images)
+    
+                                    }
+                                    }
+                                    style={{color: "red", marginLeft: -40}}
+                                ></CancelIcon>
+                            }
+                            color=""
+                        >{
+                            imageDiv
                         }
-                        color=""
-                    >{
-                        props.image.type === 'image' &&
-                        <img src={props.image.data} className={classes.image}/>
-                    }{
-                        props.image.type === 'video' &&
-                        <video width={200} height={200} controls>
-                            <source src={props.image.data} id="video_here"/>
-                            Your browser does not support HTML5 video.
-                        </video>
+                        </Badge>         
+                         )
+                     }else{
+                         return null;
+                     }
 
-                    }
-                    </Badge>
-                    }
+
+                    })
+                }
                     <Grid
                         style={{
                             width: 100,

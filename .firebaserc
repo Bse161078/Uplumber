@@ -1,5 +1,9 @@
 {
   "projects": {
-    "default": "uplumber-e51a0"
-  }
+    "default": "uplumber-e51a0",
+    "uplumber": "uplumber-2ab0a",
+    "plumber": "uplumber-194d5",
+    "pulumber": "uplumber-194d5"
+  },
+  "targets": {}
 }
