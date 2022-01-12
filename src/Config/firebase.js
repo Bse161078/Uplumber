@@ -50,7 +50,6 @@ export async function connectFirebase() {
 
   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-<<<<<<< HEAD
     const firebaseConfig = {
         apiKey: "AIzaSyB50DQACQqkjEr0h737WQ74munb1LDjbpw",
         authDomain: "brave-design-132020.firebaseapp.com",
@@ -60,23 +59,9 @@ export async function connectFirebase() {
         appId: "1:575110924160:web:75495b6086e94d53e76365",
         measurementId: "G-TB14HF39LE"
     };
-=======
-
-
-const firebaseConfig = {
-  apiKey: "AIzaSyCeyooskb29r5BszIRMnVsnV1avcbZ8bnc",
-  authDomain: "uplumber-194d5.firebaseapp.com",
-  projectId: "uplumber-194d5",
-  storageBucket: "uplumber-194d5.appspot.com",
-  messagingSenderId: "69348745457",
-  appId: "1:69348745457:web:8a3656a15c3128582f4950",
-  measurementId: "G-LWF66SW3SW"
-};
-
->>>>>>> 6724b996515bc37d935139f9f960b7bf3dead5cf
   // Initialize Firebase
   if (!firebase.apps.length) {
-    console.log("FIREBASE CONNECTED!!!");
+    console.log("FIREBASE CONNECTED111111!!!");
     return firebase.initializeApp(firebaseConfig);
   }
 }
