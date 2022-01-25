@@ -124,9 +124,9 @@ const DescriptionAndPhoto = (props) => {
                     onChange={(e) => {
 
 
-                        onChangeFile(e);
+                        //onChangeFile(e);
                         const files = e.target.files[0];
-
+                        console.log('files = ',files)
 
                         const fileReader = new FileReader();
                         fileReader.readAsDataURL(files);
@@ -135,33 +135,21 @@ const DescriptionAndPhoto = (props) => {
 
 
                             const fileType = files.type;
-                            console.log('files = ', files, '   ', fileType)
+                            let image=props.image?props.image:[];
+
                             if (fileType.includes("image")) {
-                                // invalid file type code goes here.
-                            if(props.image){
-                                let image=props.image
-                                image.push({type: 'image', data: this.result})
+                                image.push({type: 'image', data: this.result,name:files.name,file_type:files.type})
                                 props.setRequestData('image', image)
-                            
-                            }else {
-                                let image=[]
-                                image.push({type: 'image', data: this.result})
-                                props.setRequestData('image', image)
-                            }
                             } else if (fileType.includes("video")) {
-                                // invalid file type code goes here.
-                                if(props.image){
-                                    let image=props.image
-                                    image.push({type: 'video', data: URL.createObjectURL(files)})
+
+                                    image.push({type: 'video', data: this.result,name:files.name,file_type:files.type})
                                     props.setRequestData('image', image)
-                                
-                                }else {
-                                    let image=[]
-                                    image.push({type: 'video', data: URL.createObjectURL(files)})
-                                    props.setRequestData('image', image)
-                                }
+
 
                             }
+
+                            localStorage.setItem("image", JSON.stringify(image));
+
                         });
                         e.target.value = ''
 

@@ -1,3 +1,5 @@
+
+
 import React, {useState, useEffect} from "react";
 import {
     makeStyles,
@@ -463,42 +465,59 @@ function ProviderDetail(props) {
         }
     };
 
-    const updateCustomerPropertyDescriptionAndProperty = (tab) => {
+    const updateCustomerPropertyDescriptionAndProperty = async (tab) => {
+        console.log('updateCustomerPropertyDescriptionAndProperty = ',requestData.image);
         if (requestData.description != "") {
             setOpenLoader(true);
-            var data = {
-                description: requestData.description,
-                photos: requestData.image,
-            };
-            CustomerSericeUpdateDescriptionAndPhoto(data).then(
-                (res) => {
-                    if (
-                        res.data.success ||
-                        res.status === 200 ||
-                        res.status === 201 ||
-                        res.status === 200 ||
-                        res.statusText === 201
-                    ) {
-                        setOpenLoader(false);
-                        // notify(res.data.message);
-                        console.log(res);
-                        localStorage.removeItem("description");
-                        localStorage.removeItem("image");
-                        if (requestData.waterDamage === "Yes") {
-                            updateCustomerPropertyInssurance();
-                        } else {
-                            updateCustomerContactDetails();
+            let photos=[];
+
+            try{
+
+                for(let i=0;i<requestData.image.length;i++){
+                    try{
+                        const blobRes= await fetch(requestData.image[i].data);
+                        const blob=await blobRes.blob();
+                        console.log('blob = ',blob)
+                        const uploadResponse=await uploadImage(new File([blob],requestData.image[i].name));
+
+                        if(uploadResponse.status===200){
+                            photos.push(uploadResponse.data);
                         }
+                    }catch (e) {
+                        console.log('e = ',e)
                     }
-                },
-                (error) => {
-                    if (error.response) {
-                        notify(error.response.data.message);
-                    }
-                    setOpenLoader(false);
-                    console.log("This is response", error.response);
                 }
-            );
+                var data = {
+                    description: requestData.description,
+                    photos,
+                };
+                const res = await CustomerSericeUpdateDescriptionAndPhoto(data);
+                if (
+                    res.data.success ||
+                    res.status === 200 ||
+                    res.status === 201 ||
+                    res.status === 200 ||
+                    res.statusText === 201
+                ) {
+                    setOpenLoader(false);
+                    // notify(res.data.message);
+                    console.log(res);
+                    localStorage.removeItem("description");
+                    localStorage.removeItem("image");
+                    if (requestData.waterDamage === "Yes") {
+                        updateCustomerPropertyInssurance();
+                    } else {
+                        updateCustomerContactDetails();
+                    }
+                }
+
+
+            }catch (error) {
+                if (error.response) {
+                    notify(error.response.data.message);
+                }
+                setOpenLoader(false);
+            }
         } else {
             notify("Please add description!");
         }
@@ -1755,9 +1774,18 @@ function ProviderDetail(props) {
                         {localStorage.getItem("description")}{" "}
                     </p>
                     <p className={classes.label}>Photos</p>
-                    {requestData.image.length > 0 &&
+                    {requestData.image  && requestData.image.length > 0 &&
                     requestData.image.map((img) => {
-                        return <img src={img} className={classes.image}/>;
+                        let imageDiv=null;
+                        if(img.type==='image'){
+                            imageDiv=<img src={img.data} style={{padding:20}} className={classes.image}/>
+                        }else if(img.type==='video'){
+                            imageDiv=<video width={130} height={100} style={{padding:20}} controls>
+                                <source src={img.data} id="video_here"/>
+                                Your browser does not support HTML5 video.
+                            </video>
+                        }
+                        return imageDiv;
                     })}
                 </div>
 
