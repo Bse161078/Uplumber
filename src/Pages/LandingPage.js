@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Grid, makeStyles } from "@material-ui/core";
-import UPlumberLogo from "../assets/uplumberlogo.png";
+import UPlumberLogo from "../assets/uplumberlogo.PNG";
 import Plumbers from "../assets/Plumbers.png";
 import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import { withRouter } from "react-router-dom";

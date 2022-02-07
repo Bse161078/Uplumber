@@ -929,7 +929,7 @@ const HomePage = (props) => {
     const MyMapComponent = compose(
         withProps({
             googleMapURL:
-                "https://maps.googleapis.com/maps/api/js?key=AIzaSyA2mTVqK-uOK_Pbo0tTXyUtUP84cClbS9Q&v=3.exp&libraries=geometry,drawing,places",
+                "https://maps.googleapis.com/maps/api/js?key=AIzaSyAY-S1OMvpOMhUrXgmtAiJ-jDTAX0jJzSU&v=3.exp&libraries=geometry,drawing,places",
             loadingElement: <div style={{height: `100%`}}/>,
             containerElement: (
                 <div

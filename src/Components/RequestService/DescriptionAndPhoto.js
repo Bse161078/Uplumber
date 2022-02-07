@@ -136,7 +136,7 @@ const DescriptionAndPhoto = (props) => {
 
                             const fileType = files.type;
                             let image=props.image?props.image:[];
-
+                            
                             if (fileType.includes("image")) {
                                 image.push({type: 'image', data: this.result,name:files.name,file_type:files.type})
                                 props.setRequestData('image', image)

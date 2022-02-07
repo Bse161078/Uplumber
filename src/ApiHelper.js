@@ -452,7 +452,7 @@ export const getItems = () => {
 export const getDistanceFromCordintates = (cordinates) => {
   var config = {
     method: "get",
-    url: "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592&key=AIzaSyDn-zgL6nFtCy40cEVDMZmpJsjmTLNkGN8",
+    url: "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592&key=AIzaSyAY-S1OMvpOMhUrXgmtAiJ-jDTAX0jJzSU",
     headers: {
       "Access-Control-Allow-Origin": "*",
     },

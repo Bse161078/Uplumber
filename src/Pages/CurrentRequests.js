@@ -331,16 +331,24 @@ function ProviderDetail(props) {
                         <p style={{fontSize: 10, margin: 0}}>
                             {moment(props.item.problem.serviceDate).format("MMMM Do YYYY")}
                         </p>
+                        <span style={{color: "#60a3d6", fontSize: 10}}>SRNO</span>
+                        <p style={{fontSize: 10, margin: 0}}>
+                            {props.item.serviceRequestNumber}
+                        </p>
                     </Grid>
                     <Grid item md={12} xs={12}>
                         <span style={{color: "#60a3d6", fontSize: 10}}>Description</span>
                         <p style={{fontSize: 10, margin: 0}}>
                             {props.item.descriptionAndPhoto.description || "No Description"}
                         </p>
+                        {props.item.descriptionAndPhoto.photos[0]!=null?
                         <img
                             src={props.item.descriptionAndPhoto.photos[0]}
                             className={classes.image}
-                        ></img>
+                        ></img>:
+                        <video src={props.item.descriptionAndPhoto.videos[0]}
+                        className={classes.image}/>
+                        }
                     </Grid>
                     <Grid item md={8} xs={8}></Grid>
                     <Grid item md={3} xs={3}></Grid>
