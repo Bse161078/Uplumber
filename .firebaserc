@@ -1,5 +1,10 @@
 {
   "projects": {
-    "default": "uplumber-61e0f"
-  }
+    "default": "uplumber-61e0f",
+    "recruit": "recruit-suite-149f6",
+    "pulm": "uplumber-194d5",
+    "u": "uplumber-194d5",
+    "uplumber": "uplumber-194d5"
+  },
+  "targets": {}
 }

@@ -109,8 +109,20 @@ export default function ItemDetails(props){
                 </DialogContentText>
                 <Grid direction='row' > 
                 <DialogContentText id="alert-dialog-description" style={{color:'black',marginTop:'10px',width:'30%',height:'30%'}} >
-                <p>Photos : <img src= {item.descriptionAndPhoto.photos} style={{display:'flex',alignContent:'space-between',width:70,height:70}}/>     
-                </p>
+                  {item.descriptionAndPhoto.photos[0]!=null?
+                   
+                  ( <p>Photos :
+                       <img
+                            src={item.descriptionAndPhoto.photos[0] }
+                           style={{width:70,height:70}}
+                        ></img>
+                        </p>)
+                        :
+                      ( <p> Videos :
+                        <video src={item.descriptionAndPhoto.videos[0]}
+                        style={{width:70,height:70}}
+                        />
+                        </p> )}        
                 </DialogContentText>
                 </Grid>
                 </DialogContent>

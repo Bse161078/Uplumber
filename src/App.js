@@ -33,7 +33,7 @@ export default function App() {
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
-      "https://maps.googleapis.com/maps/api/js?key=AIzaSyDn-zgL6nFtCy40cEVDMZmpJsjmTLNkGN8&libraries=places";
+      "https://maps.googleapis.com/maps/api/js?key=AIzaSyAY-S1OMvpOMhUrXgmtAiJ-jDTAX0jJzSU&libraries=places";
     script.async = true;
     document.body.appendChild(script);
   }, []);

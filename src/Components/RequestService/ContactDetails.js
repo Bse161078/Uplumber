@@ -110,12 +110,13 @@ const ContactDetails = (props) => {
         if(results.length>0) {
 
             const addressComponents=results[0].address_components;
+            console.log('addressComponents = ',addressComponents)
             const latLng = await getLatLng(results[0]);
             var userZipCode = extractFromAdress(addressComponents, "postal_code");
-            var userCity = extractFromAdress(addressComponents, "administrative_area_level_2");
+            var userCity = extractFromAdress(addressComponents, "locality");
             var userState = extractFromAdress(addressComponents, "administrative_area_level_1");
-
-
+            //address=extractFromAdress(addressComponents, "political");
+            address=address.split(",").length>0?address.split(",")[0]:address;
 
             localStorage.setItem(
                 "userCurrentLocation",

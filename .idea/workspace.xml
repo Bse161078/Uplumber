@@ -2,8 +2,19 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e1d24e51-c80d-49c9-9c04-3adcec945b4b" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.firebase/hosting.YnVpbGQ.cache" beforeDir="false" afterPath="$PROJECT_DIR$/.firebase/hosting.YnVpbGQ.cache" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.firebaserc" beforeDir="false" afterPath="$PROJECT_DIR$/.firebaserc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ApiHelper.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/ApiHelper.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/ItemDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/ItemDetails.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/RequestService/ContactDetails.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/RequestService/ContactDetails.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Components/RequestService/DescriptionAndPhoto.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Components/RequestService/DescriptionAndPhoto.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pages/CurrentRequests.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/CurrentRequests.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pages/Homepage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/Homepage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pages/LandingPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/LandingPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Pages/RequestAService.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/RequestAService.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Pages/ShowRoute.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/Pages/ShowRoute.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/assets/uplumberlogo.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/assets/uplumberlogo.png" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,14 +27,14 @@
       <usages-collector id="statistics.lifecycle.project">
         <counts>
           <entry key="project.closed" value="18" />
-          <entry key="project.open.time.0" value="2" />
+          <entry key="project.open.time.0" value="3" />
           <entry key="project.open.time.1" value="9" />
           <entry key="project.open.time.10" value="1" />
           <entry key="project.open.time.14" value="1" />
           <entry key="project.open.time.2" value="2" />
           <entry key="project.open.time.25" value="1" />
           <entry key="project.open.time.33" value="1" />
-          <entry key="project.opened" value="18" />
+          <entry key="project.opened" value="19" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
@@ -31,19 +42,19 @@
           <entry key="PNG" value="1" />
           <entry key="cache" value="1" />
           <entry key="firebaserc" value="2" />
-          <entry key="js" value="46" />
+          <entry key="js" value="52" />
           <entry key="json" value="4" />
           <entry key="lock" value="1" />
-          <entry key="png" value="32" />
+          <entry key="png" value="33" />
           <entry key="rnc" value="1" />
           <entry key="ts" value="2" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Image" value="33" />
+          <entry key="Image" value="34" />
           <entry key="JSON" value="4" />
-          <entry key="JavaScript" value="46" />
+          <entry key="JavaScript" value="52" />
           <entry key="PLAIN_TEXT" value="3" />
           <entry key="RNG Compact" value="1" />
           <entry key="TypeScript" value="2" />
@@ -52,13 +63,13 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="js" value="5986" />
+          <entry key="js" value="6097" />
           <entry key="txt" value="1" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JavaScript" value="5986" />
+          <entry key="JavaScript" value="6097" />
           <entry key="PLAIN_TEXT" value="1" />
         </counts>
       </usages-collector>
@@ -79,8 +90,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/App.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="153">
-              <caret line="65" column="29" lean-forward="true" selection-start-line="65" selection-start-column="29" selection-end-line="65" selection-end-column="29" />
+            <state relative-caret-position="1105">
+              <caret line="65" column="29" selection-start-line="65" selection-start-column="29" selection-end-line="65" selection-end-column="29" />
               <folding>
                 <element signature="e#0#41#0" expanded="true" />
               </folding>
@@ -88,13 +99,25 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Pages/RequestAService.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="258">
-              <caret line="2377" column="73" selection-start-line="2377" selection-start-column="73" selection-end-line="2377" selection-end-column="73" />
+            <state relative-caret-position="150">
+              <caret line="2146" column="33" selection-start-line="2146" selection-start-column="33" selection-end-line="2146" selection-end-column="33" />
               <folding>
                 <element signature="e#2#51#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Components/RequestService/ContactDetails.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="112">
+              <caret line="118" column="25" selection-start-line="118" selection-start-column="25" selection-end-line="118" selection-end-column="25" />
+              <folding>
+                <element signature="e#0#40#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -111,12 +134,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>withRouter</find>
-      <find>update/descriptionandphoto</find>
-      <find>notify</find>
-      <find>onChangeFile</find>
-      <find>image</find>
-      <find>Photos</find>
       <find>Submit</find>
       <find>photos</find>
       <find>updateDes</find>
@@ -141,6 +158,12 @@
       <find>What item is</find>
       <find>setItems</find>
       <find>items</find>
+      <find>geocodeByAddress</find>
+      <find>Address</find>
+      <find>Contact Details</find>
+      <find>requestData.userAddress</find>
+      <find>handleSelect</find>
+      <find>updateAddressDetails</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -149,14 +172,12 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/Components/RequestService/ContactDetails.js" />
         <option value="$PROJECT_DIR$/src/Components/ItemDetails.js" />
         <option value="$PROJECT_DIR$/src/Pages/CurrentRequests.js" />
         <option value="$PROJECT_DIR$/src/ApiHelper.js" />
         <option value="$PROJECT_DIR$/src/Pages/ConfirmOTP.js" />
         <option value="$PROJECT_DIR$/src/App.js" />
         <option value="$PROJECT_DIR$/src/Pages/CreateAccount.js" />
-        <option value="$PROJECT_DIR$/src/Pages/LandingPage.js" />
         <option value="$PROJECT_DIR$/src/Pages/CompleteProfile.js" />
         <option value="$PROJECT_DIR$/src/Pages/EditProfile.js" />
         <option value="$PROJECT_DIR$/src/Pages/Homepage.js" />
@@ -167,6 +188,8 @@
         <option value="$PROJECT_DIR$/src/Config/firebase.js" />
         <option value="$PROJECT_DIR$/src/Components/RequestService/DescriptionAndPhoto.js" />
         <option value="$PROJECT_DIR$/src/Pages/RequestAService.js" />
+        <option value="$PROJECT_DIR$/src/Pages/LandingPage.js" />
+        <option value="$PROJECT_DIR$/src/Components/RequestService/ContactDetails.js" />
       </list>
     </option>
   </component>
@@ -195,7 +218,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -218,13 +241,6 @@
               <item name="hk" type="b2602c69:ProjectViewProjectNode" />
               <item name="hk" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="Components" type="462c0819:PsiDirectoryNode" />
-              <item name="RequestService" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="hk" type="b2602c69:ProjectViewProjectNode" />
-              <item name="hk" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="Config" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -237,7 +253,7 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -288,17 +304,18 @@
       <workItem from="1643122236070" duration="8000" />
       <workItem from="1643620989104" duration="1129000" />
       <workItem from="1644309563019" duration="1637000" />
+      <workItem from="1644338825416" duration="2463000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="49091000" />
+    <option name="totallyTimeSpent" value="51554000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="830" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27046978" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.27449664" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Designer" order="2" />
       <window_info id="Image Layers" order="3" />
@@ -315,7 +332,7 @@
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4966443" weight="0.3295129" />
+      <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.4966443" visible="true" weight="0.24355301" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5033557" side_tool="true" weight="0.38538682" />
       <window_info anchor="bottom" id="TypeScript" order="11" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -378,18 +395,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/assets/refrigertors.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/assets/Plumbers.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/assets/Plumber.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/assets/loginPic.png">
-      <provider selected="true" editor-type-id="images" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/assets/camera.PNG">
       <provider selected="true" editor-type-id="images" />
     </entry>
@@ -545,9 +550,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.firebaserc">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/ApiHelper.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="13651">
@@ -556,28 +558,12 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Components/FavoriteCard.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#26#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Pages/ConfirmOTP.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="561">
           <caret line="41" column="24" selection-start-line="41" selection-start-column="24" selection-end-line="41" selection-end-column="24" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Components/RequestService/ContactDetails.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6172">
-          <caret line="393" selection-start-line="392" selection-end-line="393" />
-          <folding>
-            <element signature="e#0#40#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -592,9 +578,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="241">
           <caret line="132" column="64" selection-start-line="132" selection-start-column="64" selection-end-line="132" selection-end-column="64" />
-          <folding>
-            <element signature="e#0#49#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -605,22 +588,59 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/.firebaserc">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/App.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="65" column="29" lean-forward="true" selection-start-line="65" selection-start-column="29" selection-end-line="65" selection-end-column="29" />
+        <state relative-caret-position="1105">
+          <caret line="65" column="29" selection-start-line="65" selection-start-column="29" selection-end-line="65" selection-end-column="29" />
           <folding>
             <element signature="e#0#41#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/assets/Plumbers.png">
+      <provider selected="true" editor-type-id="images" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Pages/LandingPage.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-357">
+          <caret line="3" column="52" selection-start-line="3" selection-start-column="52" selection-end-line="3" selection-end-column="52" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/react-places-autocomplete/dist/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="5" selection-start-line="5" selection-end-line="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build/static/js/main.7ff01d0d.chunk.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="166">
+          <caret column="189460" selection-start-column="189460" selection-end-column="189460" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/Pages/RequestAService.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="258">
-          <caret line="2377" column="73" selection-start-line="2377" selection-start-column="73" selection-end-line="2377" selection-end-column="73" />
+        <state relative-caret-position="150">
+          <caret line="2146" column="33" selection-start-line="2146" selection-start-column="33" selection-end-line="2146" selection-end-column="33" />
           <folding>
             <element signature="e#2#51#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Components/RequestService/ContactDetails.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="112">
+          <caret line="118" column="25" selection-start-line="118" selection-start-column="25" selection-end-line="118" selection-end-column="25" />
+          <folding>
+            <element signature="e#0#40#0" expanded="true" />
           </folding>
         </state>
       </provider>

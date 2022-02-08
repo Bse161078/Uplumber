@@ -482,13 +482,11 @@ function ProviderDetail(props) {
                         const uploadResponse=await uploadImage(new File([blob],requestData.image[i].name));
 
                         if(uploadResponse.status===200){
-
                             if ((requestData.image[i].file_type).includes("image")) {
                                 photos.push(uploadResponse.data);
                             } else if ((requestData.image[i].file_type).includes("video")) {
                                 videos.push(uploadResponse.data);
                             }
-
                         }
                     }catch (e) {
                         console.log('e = ',e)
@@ -2320,7 +2318,13 @@ function ProviderDetail(props) {
                             </RadioGroup>
                         </FormControl>
                         <button
-                            className={classes.button}
+                            style={{color: "white",
+                            border: "none",
+                            borderRadius: 15,
+                            width: "100%",
+                            background: "#1075c2",
+                            height: 45,
+                            }}
                             onClick={() => {
                                 setBottomState(false);
                             }}

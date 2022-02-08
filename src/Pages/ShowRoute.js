@@ -89,7 +89,7 @@ function ProviderDetail(props) {
         loadingElement={<div style={{ height: `100%` }} />}
       /> */}
       <MapLoader
-        googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyA2mTVqK-uOK_Pbo0tTXyUtUP84cClbS9Q"
+        googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAY-S1OMvpOMhUrXgmtAiJ-jDTAX0jJzSU"
         loadingElement={<div style={{ height: `100%` }} />}
       />
 
