@@ -168,6 +168,8 @@ function ProviderDetail(props) {
         currentLocation: localStorage.getItem("userCurrentLocation")
             ? JSON.parse(localStorage.getItem("userCurrentLocation"))
             : "",
+        leadPrice: Number(localStorage.getItem("leadPrice")) || 0,
+
     });
     console.log("this is user state", localStorage.getItem("userState"));
 
@@ -357,6 +359,7 @@ function ProviderDetail(props) {
                     requestData.requestOption === "Auto accept 1st offer" ? true : false,
                 anyFloorOrWaterDamage: requestData.waterDamage === "Yes" ? true : false,
                 serviceCode: requestData.serviceType,
+                leadPrice:requestData.leadPrice
             };
             CustomerSericeUpdateProblem(data).then(
                 (res) => {
@@ -395,6 +398,8 @@ function ProviderDetail(props) {
         setOpenLoader(true);
         var data = {
             lookingFor: requestData.lookingFor,
+            leadPrice:requestData.leadPrice
+
         };
         CustomerSericeUpdateLookingfor(data).then(
             (res) => {
@@ -433,6 +438,7 @@ function ProviderDetail(props) {
                 area: requestData.area,
                 structure: requestData.structure,
                 requesterStatus: requestData.requestorStatus,
+                leadPrice:requestData.leadPrice
             };
             CustomerSericeUpdateProperty(data).then(
                 (res) => {
@@ -535,6 +541,7 @@ function ProviderDetail(props) {
             policyNumber: localStorage.getItem("policyNumber"),
             expiryDate: requestData.expiryDate,
             deduction: localStorage.getItem("deduction"),
+            leadPrice:requestData.leadPrice
         };
         CustomerSericeUpdateInssurance(data).then(
             (res) => {
@@ -593,6 +600,7 @@ function ProviderDetail(props) {
                 city: requestData.userCity,
                 state: requestData.userState,
                 zipCode: requestData.userZipCode,
+                leadPrice:requestData.leadPrice
             };
             CustomerSericeUpdateContactDetails(data).then(
                 (res) => {
@@ -2379,10 +2387,12 @@ function ProviderDetail(props) {
                                                     setRequestData({
                                                         ...requestData,
                                                         itemName: stuff.Description,
-                                                        price:stuff.Price
+                                                        leadPrice:stuff.Price
                                                     });
 
                                                     localStorage.setItem("itemName", stuff.Description);
+                                                    localStorage.setItem("leadPrice", stuff.Price);
+
                                                     setItem(false);
                                                 }}
                                             >
