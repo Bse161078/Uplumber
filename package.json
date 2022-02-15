@@ -19,7 +19,7 @@
     "axios": "^0.21.1",
     "email-validator": "^2.0.4",
     "eruda": "^2.4.1",
-    "firebase": "^7.15.0",
+    "firebase": "^7.24.0",
     "leaflet": "^1.6.0",
     "leaflet-routing-machine": "^3.2.12",
     "moment": "^2.29.1",
@@ -42,6 +42,7 @@
     "react-toastify": "^7.0.4",
     "recompose": "^0.30.0",
     "styled-components": "^5.3.3",
+    "vercel": "^23.1.2",
     "web-vitals": "^1.0.1"
   },
   "scripts": {

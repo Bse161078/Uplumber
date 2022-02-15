@@ -237,7 +237,7 @@ function ProviderDetail(props) {
     const handleChange = (event) => {
         setValue(event.target.value);
     };
-
+ 
     const uploadMyImage = async (files) => {
         var temp = [];
         setOpenLoader(true);
@@ -276,7 +276,7 @@ function ProviderDetail(props) {
     const handleFileChange = (e) => {
         console.log("THis is great", e.target.files);
         var temp = [];
-        uploadMyImage(e.target.files);
+      //  uploadMyImage(e.target.files);
         // for (var i = 0; i < e.target.files.length; i++) {
         //   uploadMyImage(e.target.files[i]);
         //   // temp.push();
@@ -473,7 +473,7 @@ function ProviderDetail(props) {
 
     const updateCustomerPropertyDescriptionAndProperty = async (tab) => {
         console.log('updateCustomerPropertyDescriptionAndProperty = ',requestData.image);
-        if (requestData.description != "") {
+        if (requestData.image != null && image.length>0 ) {
             setOpenLoader(true);
             let photos=[];
             let videos=[];
@@ -530,7 +530,17 @@ function ProviderDetail(props) {
                 setOpenLoader(false);
             }
         } else {
-            notify("Please add description!");
+           // notify("Please add description!");
+            setOpenLoader(false);
+            // notify(res.data.message);
+        
+            localStorage.removeItem("description");
+            localStorage.removeItem("image");
+            if (requestData.waterDamage === "Yes") {
+                updateCustomerPropertyInssurance();
+            } else {
+                updateCustomerContactDetails();
+            }
         }
     };
 
