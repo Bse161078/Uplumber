@@ -77,12 +77,15 @@ const useStyles = makeStyles((theme) => ({
     console.log('props = ',props)
 
 
-     if(!props.location.state){
-         props.history.push('/homepage')
+     const user=Object.assign({}, JSON.parse(localStorage.getItem('emailForSignIn')));
+     if(!user){
+         props.history.push('/')
      }
+     localStorage.removeItem('emailForSignIn');
 
-    const [email, setEmail] = useState(props.location.state?props.location.state.email:null)
-    const [password, setPassword] = useState(props.location.state?props.location.state.password:null)
+     console.log("user = ",user)
+    const [email, setEmail] = useState(user.email)
+    const [password, setPassword] = useState(user.password);
     const [value, setValue] = useState("");
     const [typeConfirm, setTypeConfirm] = useState("text");
     const [verify, setVerify] = React.useState(false);
@@ -151,7 +154,10 @@ const useStyles = makeStyles((theme) => ({
     });
 
 
-    const getLocation = () => {
+
+
+
+     const getLocation = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
             return true;
@@ -635,7 +641,6 @@ const useStyles = makeStyles((theme) => ({
         }
         console.log("verifier",appVerifier)
         firebase
-
             .auth()
             .signInWithPhoneNumber(phoneNumber, appVerifier)
             .then((result) => {
@@ -648,7 +653,7 @@ const useStyles = makeStyles((theme) => ({
             .catch((error) => {
                 notify(error.code);
                 setOpenLoader(false);
-                console.log("This is the error", error);
+                console.log("firebase", error);
             });
     };
 

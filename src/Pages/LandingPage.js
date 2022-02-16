@@ -1,10 +1,11 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Link } from "react-router-dom";
 import { Grid, makeStyles } from "@material-ui/core";
 import UPlumberLogo from "../assets/uplumberlogo.png";
 import Plumbers from "../assets/Plumbers.png";
 import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import { withRouter } from "react-router-dom";
+import {connectFirebase} from "../Config/firebase";
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -45,9 +46,12 @@ const useStyles = makeStyles((theme) => ({
 }));
  function LandingPage(props) {
   const classes = useStyles();
-  console.log('history = ',props);
 
+console.log("landing pagesss")
 
+     useEffect(() => {
+         connectFirebase();
+     }, []);
 
 
   return (

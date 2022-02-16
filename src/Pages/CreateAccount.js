@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import firebase from "firebase";
+import {connectFirebase} from "../Config/firebase";
+
 import {
   makeStyles,
   Grid,
@@ -23,6 +26,11 @@ import {
   CustomerSericeUpdateInssurance,
   CustomerSericeUpdateContactDetails,
 } from "../ApiHelper";
+import ConfirmationDialog from "./Dialogs/confirmationDialog";
+
+
+
+
 var validator = require("email-validator");
 
 const useStyles = makeStyles((theme) => ({
@@ -69,6 +77,7 @@ function LoginPage(props) {
   const [accept, setAccept] = useState(true);
   const [openLoader, setOpenLoader] = useState(false);
   const [state, setState] = React.useState(false);
+  const [emailVerificationDialog, setEmailVerificationDialog] = React.useState(false);
 
   const [requestData, setRequestData] = useState({
     requestDate: localStorage.getItem("requestDate") || new Date(),
@@ -133,6 +142,7 @@ function LoginPage(props) {
 
   useEffect(() => {
     getLocation();
+    connectFirebase();
   }, []);
 
   const postMyRequest = () => {
@@ -457,6 +467,7 @@ function LoginPage(props) {
   return (
     <div>
       {" "}
+        {emailVerificationDialog && <ConfirmationDialog/>}
       <ToastContainer
         position="top-center"
         autoClose={2000}
@@ -668,7 +679,7 @@ function LoginPage(props) {
                     } else {
                       document.getElementById("complete").click();
                     }
-                    
+
                   }
                 },
                 (error) => {
@@ -680,10 +691,30 @@ function LoginPage(props) {
                 }
               );*/
 
-                props.history.push({
+                /*props.history.push({
                     pathname: '/complete-profile',
                     state: { email: email,password:password }
-                })
+                })*/
+
+
+                try{
+                    const result=await firebase.auth().createUserWithEmailAndPassword(email, password);
+                    const emailResult=result.user.sendEmailVerification({
+                        url: "https://localhost:3000/complete-profile"
+                    });
+
+                    localStorage.setItem('emailForSignIn',JSON.stringify({email,password}));
+                    setOpenLoader(false);
+                    setEmailVerificationDialog(true)
+                }catch (e) {
+                    console.log('exception while sending email',e);
+                    notify(e.message);
+                    setOpenLoader(false);
+                }
+
+
+
+
                 //document.getElementById("complete").click();
 
             }

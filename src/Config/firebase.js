@@ -1,3 +1,4 @@
+import { initializeApp } from 'firebase/app';
 import firebase from "firebase";
 
 // let firebaseConfig = {
@@ -51,17 +52,17 @@ export async function connectFirebase() {
   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
     const firebaseConfig = {
-        apiKey: "AIzaSyB50DQACQqkjEr0h737WQ74munb1LDjbpw",
-        authDomain: "brave-design-132020.firebaseapp.com",
-        projectId: "brave-design-132020",
-        storageBucket: "brave-design-132020.appspot.com",
-        messagingSenderId: "575110924160",
-        appId: "1:575110924160:web:75495b6086e94d53e76365",
-        measurementId: "G-TB14HF39LE"
+        apiKey: "AIzaSyBPLHYxoCrRXXcK7H0ll-i0SC9W8HjRxSA",
+        authDomain: "uplumber-61e0f.firebaseapp.com",
+        projectId: "uplumber-61e0f",
+        storageBucket: "uplumber-61e0f.appspot.com",
+        messagingSenderId: "88339093684",
+        appId: "1:88339093684:web:d49df4c3d8a6e36a49dfe1",
+        measurementId: "G-4CYVYMWS46"
     };
   // Initialize Firebase
-  if (!firebase.apps.length) {
-    console.log("FIREBASE CONNECTED111111!!!");
-    return firebase.initializeApp(firebaseConfig);
-  }
+    if (!firebase.apps.length) {
+        console.log("FIREBASE CONNECTED111111!!!");
+        return firebase.initializeApp(firebaseConfig);
+    }
 }
