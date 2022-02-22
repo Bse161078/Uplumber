@@ -900,3 +900,21 @@ export const uploadFile= (data)=>{
       }
   })
 }
+
+
+export const UpdateEmailVerificationStatus = (postData) => {
+    var data = JSON.stringify(postData);
+
+    var config = {
+        method: "put",
+        url:
+            "https://u-plumber.net/api/customerprofile/updatecustomeremailstatus/",
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            "Content-Type": "application/json",
+        },
+        data: data,
+    };
+
+    return axios(config);
+};

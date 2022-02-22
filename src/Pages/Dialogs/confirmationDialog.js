@@ -12,9 +12,10 @@ const ConfirmationDialog=(props)=>{
     const [open, setOpen] = React.useState(true);
 
 
-    const handleClose = () => {
+    const handleClose = (fromEditProfile) => {
         setOpen(false);
-        props.history.push('/')
+        if(!fromEditProfile)
+        props.history.push('/homepage')
 
     };
 
