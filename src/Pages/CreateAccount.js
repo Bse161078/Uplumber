@@ -700,7 +700,7 @@ function LoginPage(props) {
                 try{
                     const result=await firebase.auth().createUserWithEmailAndPassword(email, password);
                     const emailResult=result.user.sendEmailVerification({
-                        url: "https://uplumber-194d5.web.app/complete-profile"
+                        url: "https://localhost:3000/complete-profile"
                     });
 
                     localStorage.setItem('emailForSignIn',JSON.stringify({email,password}));
