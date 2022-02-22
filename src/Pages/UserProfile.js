@@ -64,80 +64,82 @@ export default function UserProfile() {
     localStorage.getItem("firstName1")
   );
 
-  const [email, setEmail] = useState(localStorage.getItem("firstName1"));
-  const [lastName, setLastName] = useState(localStorage.getItem("lastName1"));
-  const [phoneNumber, setPhoneNumber] = useState(
-    localStorage.getItem("phoneNumber1")
-  );
-  const [address, setAddress] = useState(localStorage.getItem("address1"));
-  const [unit, setUnit] = useState(localStorage.getItem("unit1"));
-  const [city, setCity] = useState(localStorage.getItem("city1"));
-  const [state, setState] = useState(localStorage.getItem("state1"));
-  const [zipcode, setZipcode] = useState(localStorage.getItem("zipcode1"));
-  const [country, setCountry] = useState(localStorage.getItem("country1"));
-  const [latitude, setLatitude] = useState(localStorage.getItem("latitude1"));
-  const [longitude, setLongitude] = useState(
-    localStorage.getItem("longitude1")
-  );
-  const updateMyProfile = () => {
-    var data = {
-      profileImage: profileImage,
-      firstName: firstName,
-      lastName: lastName,
-      phoneNumber: 923060052374,
-      address: address,
-      unit: unit,
-      city: city,
-      state: state,
-      zipcode: 44000,
-      latitude: 1.099232,
-      longitude: 2.33332,
-      country: country,
-    };
-    setOpenLoader(true);
-    UpdateCustomerProfile(data).then(
-      (res) => {
-        if (
-          res.data.success ||
-          res.status === 200 ||
-          res.status === 201 ||
-          res.status === 200 ||
-          res.statusText === 201 ||
-          res.statusText === "OK" ||
-          res.statusText === "Created" ||
-          res.data.statusText === "OK" ||
-          res.data.statusText === "Created" ||
-          res.data.statusText === "OK"
-        ) {
-          setOpenLoader(false);
-          console.log("This is profile",res.data.data);
-          var user = res.data.data;
-          setFirstName(user.firstName);
-          setLastName(user.lastName);
-          setPhoneNumber("+" + user.phoneNumber);
-          setAddress(user.address);
-          setCity(user.city);
-          setState(user.state);
-          setUnit(user.unit);
-          setZipcode(user.zipcode);
-          setCountry(user.country);
-          setLongitude(user.longitude);
-          setLatitude(user.latitude);
-          setEmail(user.email);
-          setProfileImage(user.profileImage);
-          setEdit(false);
-          // setAllProviders(res.data.Providers);
-        }
-      },
-      (error) => {
-        if (error.response) {
-          notify(error.response.data.message);
-        }
-        setOpenLoader(false);
-        console.log("This is response", error.response);
-      }
+    const [email, setEmail] = useState(localStorage.getItem("email"));
+    const [emailVerified, setEmailVerified] = useState(false);
+    const [lastName, setLastName] = useState(localStorage.getItem("lastName1"));
+    const [phoneNumber, setPhoneNumber] = useState(
+        localStorage.getItem("phoneNumber1")
     );
-  };
+    const [address, setAddress] = useState(localStorage.getItem("address1"));
+    const [unit, setUnit] = useState(localStorage.getItem("unit1"));
+    const [city, setCity] = useState(localStorage.getItem("city1"));
+    const [state, setState] = useState(localStorage.getItem("state1"));
+    const [zipcode, setZipcode] = useState(localStorage.getItem("zipcode1"));
+    const [country, setCountry] = useState(localStorage.getItem("country1"));
+    const [latitude, setLatitude] = useState(localStorage.getItem("latitude1"));
+    const [longitude, setLongitude] = useState(
+        localStorage.getItem("longitude1")
+    );
+    const updateMyProfile = () => {
+        var data = {
+            profileImage: profileImage,
+            firstName: firstName,
+            lastName: lastName,
+            phoneNumber: 923060052374,
+            address: address,
+            unit: unit,
+            city: city,
+            state: state,
+            zipcode: 44000,
+            latitude: 1.099232,
+            longitude: 2.33332,
+            country: country,
+        };
+        setOpenLoader(true);
+        UpdateCustomerProfile(data).then(
+            (res) => {
+                if (
+                    res.data.success ||
+                    res.status === 200 ||
+                    res.status === 201 ||
+                    res.status === 200 ||
+                    res.statusText === 201 ||
+                    res.statusText === "OK" ||
+                    res.statusText === "Created" ||
+                    res.data.statusText === "OK" ||
+                    res.data.statusText === "Created" ||
+                    res.data.statusText === "OK"
+                ) {
+                    setOpenLoader(false);
+                    console.log("This is profile", res.data.data);
+                    var user = res.data.data;
+                    setFirstName(user.firstName);
+                    setLastName(user.lastName);
+                    setPhoneNumber("+" + user.phoneNumber);
+                    setAddress(user.address);
+                    setCity(user.city);
+                    setState(user.state);
+                    setUnit(user.unit);
+                    setZipcode(user.zipcode);
+                    setCountry(user.country);
+                    setLongitude(user.longitude);
+                    setLatitude(user.latitude);
+                    setEmail(user.email);
+                    setProfileImage(user.profileImage);
+                    setEmailVerified(user.emailVerified);
+                    setEdit(false);
+                    // setAllProviders(res.data.Providers);
+                }
+            },
+            (error) => {
+                if (error.response) {
+                    notify(error.response.data.message);
+                }
+                setOpenLoader(false);
+                console.log("This is response", error.response);
+            }
+        );
+    };
 
     const [edit, setEdit] = React.useState(false);
 
