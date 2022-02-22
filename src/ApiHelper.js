@@ -61,6 +61,22 @@ export const sendForgotLink = (postData) => {
   return axios(config);
 };
 
+export const updateCustomerEmailStatus = (postData) => {
+  console.log("This is great", postData);
+  let headers = new Headers();
+  headers.append("Content-Type", "multipart/form-data");
+  var config = {
+    method: "put",
+    url: "https://u-plumber.net/api/customerprofile/updatecustomeremailstatus",
+    headers: {
+      headers,
+    },
+    data: postData,
+  };
+
+  return axios(config);
+};
+
 export const customerResetPassword = (id, newPassword) => {
   console.log("This is great customer", id, newPassword);
   const postData = {
@@ -685,7 +701,23 @@ export const verifyPhone = () => {
 
   return axios(config);
 };
+export const verifyEmail = (email,isemailVerify) => {
+  var data = JSON.stringify({
+    isPhoneNumberVerify: true,
+  });
 
+  var config = {
+    method: "post",
+    url: "https://u-plumber.net/api/customers/verifyemail",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
+
+  return axios(config);
+};
 export const changePassword = (newPassword) => {
   var data = JSON.stringify({
     password: newPassword,
@@ -704,6 +736,8 @@ export const changePassword = (newPassword) => {
 
   return axios(config);
 };
+
+
 
 export const enableNotification = (data) => {
   console.log("This is the notification data", data);

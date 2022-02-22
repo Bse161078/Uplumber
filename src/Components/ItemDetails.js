@@ -109,7 +109,7 @@ export default function ItemDetails(props){
                 </DialogContentText>
                 <Grid direction='row' > 
                 <DialogContentText id="alert-dialog-description" style={{color:'black',marginTop:'10px',width:'30%',height:'30%'}} >
-                  {item.descriptionAndPhoto.photos[0]!=null?
+                  {item.descriptionAndPhoto.photos!=null?
                    
                   ( <p>Photos :
                        <img
@@ -119,7 +119,7 @@ export default function ItemDetails(props){
                         </p>)
                         :
                       ( <p> Videos :
-                        <video src={item.descriptionAndPhoto.videos[0]}
+                        <video src={item.descriptionAndPhoto.videos}
                         style={{width:70,height:70}}
                         />
                         </p> )}        

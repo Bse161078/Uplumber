@@ -2389,7 +2389,7 @@ function ProviderDetail(props) {
                                                     setRequestData({
                                                         ...requestData,
                                                         itemName: stuff.Description,
-                                                        leadPrice: stuff.Price
+                                                        leadPrice:stuff.Price
                                                     });
 
                                                     localStorage.setItem("itemName", stuff.Description);

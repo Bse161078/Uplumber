@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { makeStyles, Grid, TextField } from "@material-ui/core";
 import { Countries, states } from "../../Data/Data";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -6,7 +6,14 @@ import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from "react-places-autocomplete";
+import {checkUser} from "../../ApiHelper";
 
+
+let id=null
+
+
+
+ 
 const useStyles = makeStyles((theme) => ({
   input: {
     border: "none",
@@ -157,8 +164,19 @@ const ContactDetails = (props) => {
   };
 
 
+  useEffect(() => {
+    function checkUserData() {
+      id=localStorage.getItem("id")
+  }
+  
+checkUserData()
 
+})
+
+  console.log("signin id",id)
   console.log('Contact details = ',props)
+  
+
   return (
     <Grid
       container
@@ -170,6 +188,7 @@ const ContactDetails = (props) => {
       <input
         className={classes.input}
         type={"text"}
+     
         value={props.userName}
         onChange={(e) => {
           props.setRequestData("userName", e.target.value);
@@ -178,15 +197,31 @@ const ContactDetails = (props) => {
       ></input>
 
       <p className={classes.label}>Phone number *</p>
-      <input
+     {id !=null ?<input
+
+     disabled
         className={classes.input}
+         
         type={"text"}
         value={props.userPhone}
         onChange={(e) => {
           props.setRequestData("userPhone", e.target.value);
           localStorage.setItem("userPhone", e.target.value);
+         
         }}
-      ></input>
+      ></input>:<input
+
+      
+         className={classes.input}
+          
+         type={"text"}
+         value={props.userPhone}
+         onChange={(e) => {
+           props.setRequestData("userPhone", e.target.value);
+           localStorage.setItem("userPhone", e.target.value);
+          
+         }}
+       ></input>}
       <p style={{ textAlign: "justify" }}>
         Do you allow U-Plumber to contact you via mobile phone number (text)?
         Please note this will help you get response from a plumber faster but it
@@ -252,7 +287,8 @@ const ContactDetails = (props) => {
         this email.
       </p>
       <p className={classes.label}>Email *</p>
-      <input
+     {id!=null && props.userEmail!=null? <input
+      disabled
         className={classes.input}
         type={"text"}
         value={props.userEmail}
@@ -260,7 +296,16 @@ const ContactDetails = (props) => {
           props.setRequestData("userEmail", e.target.value);
           localStorage.setItem("userEmail", e.target.value);
         }}
-      ></input>
+      ></input>: <input
+      
+        className={classes.input}
+        type={"text"}
+        value={props.userEmail}
+        onChange={(e) => {
+          props.setRequestData("userEmail", e.target.value);
+          localStorage.setItem("userEmail", e.target.value);
+        }}
+      ></input>}
       <p className={classes.label}>Address *</p>
       <PlacesAutocomplete
         value={props.userAddress}
