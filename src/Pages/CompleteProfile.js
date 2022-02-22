@@ -18,7 +18,7 @@ import {
     CustomerSericeUpdateInssurance,
     CustomerSericeUpdateLookingfor,
     CustomerSericeUpdateProblem,
-    CustomerSericeUpdateProperty,
+    CustomerSericeUpdateProperty, MyProfile,
     PostARequest,
     Signup,
     uploadImage,
@@ -66,10 +66,21 @@ const useStyles = makeStyles((theme) => ({
         color: "#fff",
     },
 }));
+
+const checkIfUserEmailIsVerified=async ()=>{
+    try {
+        const data = await MyProfile();
+        console.log("checkIfUserEmailIsVerified = ",data)
+    }catch (e) {
+        console.log("checkIfUserEmailIsVerified = ",e)
+    }
+}
+
  function LoginPage(props) {
     useEffect(() => {
         getLocation();
         connectFirebase();
+        checkIfUserEmailIsVerified();
     }, []);
     const classes = useStyles();
     var upload = "";

@@ -1,5 +1,3 @@
-
-
 import React, {useState, useEffect} from "react";
 import {
     makeStyles,
@@ -111,20 +109,8 @@ const useStyles = makeStyles((theme) => ({
         color: "#fff",
     },
 }));
-let id=null
+
 function ProviderDetail(props) {
-
-  
-    useEffect(() => {
-        function checkUserData() {
-          id=localStorage.getItem("id")
-      }
-      
-    checkUserData()
-    
-    })
-    console.log("idddd",id)
-
     const classes = useStyles();
     const [state, setState] = React.useState(false);
     const [bottomState, setBottomState] = React.useState(false);
@@ -249,7 +235,7 @@ function ProviderDetail(props) {
     const handleChange = (event) => {
         setValue(event.target.value);
     };
- 
+
     const uploadMyImage = async (files) => {
         var temp = [];
         setOpenLoader(true);
@@ -288,7 +274,7 @@ function ProviderDetail(props) {
     const handleFileChange = (e) => {
         console.log("THis is great", e.target.files);
         var temp = [];
-      //  uploadMyImage(e.target.files);
+        //  uploadMyImage(e.target.files);
         // for (var i = 0; i < e.target.files.length; i++) {
         //   uploadMyImage(e.target.files[i]);
         //   // temp.push();
@@ -371,7 +357,7 @@ function ProviderDetail(props) {
                     requestData.requestOption === "Auto accept 1st offer" ? true : false,
                 anyFloorOrWaterDamage: requestData.waterDamage === "Yes" ? true : false,
                 serviceCode: requestData.serviceType,
-                leadPrice:requestData.leadPrice
+                leadPrice: requestData.leadPrice
             };
             CustomerSericeUpdateProblem(data).then(
                 (res) => {
@@ -410,7 +396,7 @@ function ProviderDetail(props) {
         setOpenLoader(true);
         var data = {
             lookingFor: requestData.lookingFor,
-            leadPrice:requestData.leadPrice
+            leadPrice: requestData.leadPrice
 
         };
         CustomerSericeUpdateLookingfor(data).then(
@@ -450,7 +436,7 @@ function ProviderDetail(props) {
                 area: requestData.area,
                 structure: requestData.structure,
                 requesterStatus: requestData.requestorStatus,
-                leadPrice:requestData.leadPrice
+                leadPrice: requestData.leadPrice
             };
             CustomerSericeUpdateProperty(data).then(
                 (res) => {
@@ -484,82 +470,68 @@ function ProviderDetail(props) {
     };
 
     const updateCustomerPropertyDescriptionAndProperty = async (tab) => {
-        console.log('updateCustomerPropertyDescriptionAndProperty = ',requestData.image);
-            let photos=[];
-            let videos=[];
+        console.log('updateCustomerPropertyDescriptionAndProperty = ', requestData.image);
+        let photos = [];
+        let videos = [];
 
-        if (requestData.image != null && requestData.image.length>0 ) {
-            setOpenLoader(true);
+        setOpenLoader(true);
+        if (requestData.image != null && image.length > 0) {
 
-            try{
 
-                for(let i=0;i<requestData.image.length;i++){
-                    try{
-                        const blobRes= await fetch(requestData.image[i].data);
-                        const blob=await blobRes.blob();
-                        console.log('blob = ',blob)
-                        const uploadResponse=await uploadImage(new File([blob],requestData.image[i].name));
+            for (let i = 0; i < requestData.image.length; i++) {
+                try {
+                    const blobRes = await fetch(requestData.image[i].data);
+                    const blob = await blobRes.blob();
+                    console.log('blob = ', blob)
+                    const uploadResponse = await uploadImage(new File([blob], requestData.image[i].name));
 
-                        if(uploadResponse.status===200){
-                            if ((requestData.image[i].file_type).includes("image")) {
-                                photos.push(uploadResponse.data);
-                            } else if ((requestData.image[i].file_type).includes("video")) {
-                                videos.push(uploadResponse.data);
-                            }
+                    if (uploadResponse.status === 200) {
+                        if ((requestData.image[i].file_type).includes("image")) {
+                            photos.push(uploadResponse.data);
+                        } else if ((requestData.image[i].file_type).includes("video")) {
+                            videos.push(uploadResponse.data);
                         }
-                    }catch (e) {
-                        console.log('e = ',e)
                     }
-                }
-
-
-            }catch (error) {
-                if (error.response) {
-                    notify(error.response.data.message);
-                }
-                setOpenLoader(false);
-            }
-        } 
-        if(requestData.description && (requestData.description).length>0){
-            var data = {
-                description: requestData.description,
-                photos,videos
-            };
-            const res = await CustomerSericeUpdateDescriptionAndPhoto(data);
-            if (
-                res.data.success ||
-                res.status === 200 ||
-                res.status === 201 ||
-                res.status === 200 ||
-                res.statusText === 201
-            ) {
-                setOpenLoader(false);
-                // notify(res.data.message);
-                console.log(res);
-                localStorage.removeItem("description");
-                localStorage.removeItem("image");
-                if (requestData.waterDamage === "Yes") {
-                    updateCustomerPropertyInssurance();
-                } else {
-                    updateCustomerContactDetails();
+                } catch (e) {
+                    console.log('e = ', e)
                 }
             }
         }
-        
+        if (requestData.description && requestData.description.length > 0) {
+            var data = {
+                description: requestData.description,
+                photos, videos
+            };
+            try {
+                const res = await CustomerSericeUpdateDescriptionAndPhoto(data);
+                if (
+                    res.data.success ||
+                    res.status === 200 ||
+                    res.status === 201 ||
+                    res.status === 200 ||
+                    res.statusText === 201
+                ) {
+                    setOpenLoader(false);
+                    // notify(res.data.message);
+                    console.log(res);
+                    localStorage.removeItem("description");
+                    localStorage.removeItem("image");
+                    if (requestData.waterDamage === "Yes") {
+                        updateCustomerPropertyInssurance();
+                    } else {
+                        updateCustomerContactDetails();
+                    }
+                } else {
+                    notify("Something went wrong please try again later!");
+                }
+            }catch (e) {
+                notify("Something went wrong please try again later!");
+            }
+        }
         else {
-           // notify("Please add description!");
+            notify("Please add description!");
             setOpenLoader(false);
             // notify(res.data.message);
-        
-        
-
-            localStorage.removeItem("description");
-            localStorage.removeItem("image");
-            if (requestData.waterDamage === "Yes") {
-                updateCustomerPropertyInssurance();
-            } else {
-                updateCustomerContactDetails();
-            }
         }
     };
 
@@ -570,7 +542,7 @@ function ProviderDetail(props) {
             policyNumber: localStorage.getItem("policyNumber"),
             expiryDate: requestData.expiryDate,
             deduction: localStorage.getItem("deduction"),
-            leadPrice:requestData.leadPrice
+            leadPrice: requestData.leadPrice
         };
         CustomerSericeUpdateInssurance(data).then(
             (res) => {
@@ -629,7 +601,7 @@ function ProviderDetail(props) {
                 city: requestData.userCity,
                 state: requestData.userState,
                 zipCode: requestData.userZipCode,
-                leadPrice:requestData.leadPrice
+                leadPrice: requestData.leadPrice
             };
             CustomerSericeUpdateContactDetails(data).then(
                 (res) => {
@@ -681,7 +653,7 @@ function ProviderDetail(props) {
                     res.status === 200
                 ) {
                     setOpenLoader(false);
-                    console.log("THis si my proifle", res.data,'  ',requestData);
+                    console.log("THis si my proifle", res.data, '  ', requestData);
                     if (res.data.message === "Customer exists") {
                         localStorage.setItem("requestAfterLogin", "true");
                         document.getElementById("login").click();
@@ -813,7 +785,6 @@ function ProviderDetail(props) {
             }
         );
     };
-    
     const getAllLookingFor = () => {
         setOpenLoader(true);
         getLookingFor().then(
@@ -1817,13 +1788,13 @@ function ProviderDetail(props) {
                         {localStorage.getItem("description")}{" "}
                     </p>
                     <p className={classes.label}>Photos</p>
-                    {requestData.image  && requestData.image.length > 0 &&
+                    {requestData.image && requestData.image.length > 0 &&
                     requestData.image.map((img) => {
-                        let imageDiv=null;
-                        if(img.type==='image'){
-                            imageDiv=<img src={img.data} style={{padding:20}} className={classes.image}/>
-                        }else if(img.type==='video'){
-                            imageDiv=<video width={130} height={100} style={{padding:20}} controls>
+                        let imageDiv = null;
+                        if (img.type === 'image') {
+                            imageDiv = <img src={img.data} style={{padding: 20}} className={classes.image}/>
+                        } else if (img.type === 'video') {
+                            imageDiv = <video width={130} height={100} style={{padding: 20}} controls>
                                 <source src={img.data} id="video_here"/>
                                 Your browser does not support HTML5 video.
                             </video>
@@ -2160,10 +2131,6 @@ function ProviderDetail(props) {
                         <Insurance></Insurance>
                     ) : activeTab === "Contact Details" ? (
                         <ContactDetails
-
-
-                                                        
-
                             userName={requestData.userName}
                             userPhone={requestData.userPhone}
                             userAddress={requestData.userAddress}
@@ -2191,10 +2158,10 @@ function ProviderDetail(props) {
                                 setRequestData({
                                     ...requestData,
                                     currentLocation: data.currentLocation,
-                                    userAddress:data.userAddress,
-                                    userCity:data.userCity,
-                                    userZipCode:data.userZipCode,
-                                    userState:data.userState
+                                    userAddress: data.userAddress,
+                                    userCity: data.userCity,
+                                    userZipCode: data.userZipCode,
+                                    userState: data.userState
                                 });
                             }}
                             setActiveTab={(tab) => {
@@ -2360,12 +2327,13 @@ function ProviderDetail(props) {
                             </RadioGroup>
                         </FormControl>
                         <button
-                            style={{color: "white",
-                            border: "none",
-                            borderRadius: 15,
-                            width: "100%",
-                            background: "#1075c2",
-                            height: 45,
+                            style={{
+                                color: "white",
+                                border: "none",
+                                borderRadius: 15,
+                                width: "100%",
+                                background: "#1075c2",
+                                height: 45,
                             }}
                             onClick={() => {
                                 setBottomState(false);

@@ -28,7 +28,7 @@ import "react-calendar/dist/Calendar.css";
 
 // import "antd/dist/antd.css";
 import "./App.css";
-import VerifyEmail from "./Pages/VerifyEmail";
+import CompleteUpdateEmail from "./Pages/CompleteUpdateEmail";
 
 export default function App() {
     useEffect(() => {
@@ -93,6 +93,7 @@ export default function App() {
 
                 UserProfile
                 <Route exact path="/" render={() => <LandingPage/>}/>
+                <Route exact path="/email-verified" render={() => <CompleteUpdateEmail/>}/>
 
             </Switch>
         </BrowserRouter>
