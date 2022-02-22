@@ -111,8 +111,20 @@ const useStyles = makeStyles((theme) => ({
         color: "#fff",
     },
 }));
-
+let id=null
 function ProviderDetail(props) {
+
+  
+    useEffect(() => {
+        function checkUserData() {
+          id=localStorage.getItem("id")
+      }
+      
+    checkUserData()
+    
+    })
+    console.log("idddd",id)
+
     const classes = useStyles();
     const [state, setState] = React.useState(false);
     const [bottomState, setBottomState] = React.useState(false);
@@ -473,10 +485,11 @@ function ProviderDetail(props) {
 
     const updateCustomerPropertyDescriptionAndProperty = async (tab) => {
         console.log('updateCustomerPropertyDescriptionAndProperty = ',requestData.image);
-        if (requestData.image != null && image.length>0 ) {
-            setOpenLoader(true);
             let photos=[];
             let videos=[];
+
+        if (requestData.image != null && requestData.image.length>0 ) {
+            setOpenLoader(true);
 
             try{
 
@@ -498,29 +511,6 @@ function ProviderDetail(props) {
                         console.log('e = ',e)
                     }
                 }
-                var data = {
-                    description: requestData.description,
-                    photos,videos
-                };
-                const res = await CustomerSericeUpdateDescriptionAndPhoto(data);
-                if (
-                    res.data.success ||
-                    res.status === 200 ||
-                    res.status === 201 ||
-                    res.status === 200 ||
-                    res.statusText === 201
-                ) {
-                    setOpenLoader(false);
-                    // notify(res.data.message);
-                    console.log(res);
-                    localStorage.removeItem("description");
-                    localStorage.removeItem("image");
-                    if (requestData.waterDamage === "Yes") {
-                        updateCustomerPropertyInssurance();
-                    } else {
-                        updateCustomerContactDetails();
-                    }
-                }
 
 
             }catch (error) {
@@ -529,11 +519,40 @@ function ProviderDetail(props) {
                 }
                 setOpenLoader(false);
             }
-        } else {
+        } 
+        if(requestData.description && (requestData.description).length>0){
+            var data = {
+                description: requestData.description,
+                photos,videos
+            };
+            const res = await CustomerSericeUpdateDescriptionAndPhoto(data);
+            if (
+                res.data.success ||
+                res.status === 200 ||
+                res.status === 201 ||
+                res.status === 200 ||
+                res.statusText === 201
+            ) {
+                setOpenLoader(false);
+                // notify(res.data.message);
+                console.log(res);
+                localStorage.removeItem("description");
+                localStorage.removeItem("image");
+                if (requestData.waterDamage === "Yes") {
+                    updateCustomerPropertyInssurance();
+                } else {
+                    updateCustomerContactDetails();
+                }
+            }
+        }
+        
+        else {
            // notify("Please add description!");
             setOpenLoader(false);
             // notify(res.data.message);
         
+        
+
             localStorage.removeItem("description");
             localStorage.removeItem("image");
             if (requestData.waterDamage === "Yes") {
@@ -794,6 +813,7 @@ function ProviderDetail(props) {
             }
         );
     };
+    
     const getAllLookingFor = () => {
         setOpenLoader(true);
         getLookingFor().then(
@@ -2140,9 +2160,13 @@ function ProviderDetail(props) {
                         <Insurance></Insurance>
                     ) : activeTab === "Contact Details" ? (
                         <ContactDetails
-                            userName={requestData.userName}
+
+
+                                                        
+
+                            userName={id!=null ?null:requestData.userName}
                             userPhone={requestData.userPhone}
-                            userAddress={requestData.userAddress}
+                            userAddress={id!=null ?null:requestData.userAddress}
                             // setCurrentLoction={(e) => {
                             //   localStorage.setItem(
                             //     "userCurrentLocation",
@@ -2150,12 +2174,12 @@ function ProviderDetail(props) {
                             //   );
                             //   setCurrentLoction({ latitude: e.lat, longitude: e.lng });
                             // }}
-                            userCity={requestData.userCity}
-                            allowSms={requestData.allowSms}
+                            userCity={id!=null ?null:requestData.userCity}
+                            allowSms={id!=null ?null:requestData.allowSms}
                             userEmail={requestData.userEmail}
-                            userZipCode={requestData.userZipCode}
-                            userUnit={requestData.userUnit}
-                            userState={requestData.userState}
+                            userZipCode={id!=null ?null:requestData.userZipCode}
+                            userUnit={id!=null ?null:requestData.userUnit}
+                            userState={id!=null ?null:requestData.userState}
                             requestData={requestData}
                             setRequestData={(field, value) => {
                                 console.log("This is field", field);

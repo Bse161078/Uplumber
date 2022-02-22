@@ -341,13 +341,14 @@ function ProviderDetail(props) {
                         <p style={{fontSize: 10, margin: 0}}>
                             {props.item.descriptionAndPhoto.description || "No Description"}
                         </p>
-                        {props.item.descriptionAndPhoto.photos[0]!=null?
+                        {props.item.descriptionAndPhoto.photos!=null&&
                         <img
                             src={props.item.descriptionAndPhoto.photos[0]}
                             className={classes.image}
-                        ></img>:
+                        ></img>}{
+                        props.item.descriptionAndPhoto.videos!=null?
                         <video src={props.item.descriptionAndPhoto.videos[0]}
-                        className={classes.image}/>
+                        className={classes.image}/>:''
                         }
                     </Grid>
                     <Grid item md={8} xs={8}></Grid>

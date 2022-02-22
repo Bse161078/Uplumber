@@ -22,7 +22,7 @@ import {
     PostARequest,
     Signup,
     uploadImage,
-    verifyPhone
+    verifyPhone,updateCustomerEmailStatus
 } from "../ApiHelper";
 import {ToastContainer, toast} from "react-toastify";
 import {connectFirebase} from "../Config/firebase";
@@ -76,8 +76,20 @@ const useStyles = makeStyles((theme) => ({
 
     console.log('props = ',props)
 
-
+  
      const user=Object.assign({}, JSON.parse(localStorage.getItem('emailForSignIn')));
+     const [emailstatus,setEmailStatus]=useState([])
+     useEffect(() =>{
+       updateemailstatus()
+     })
+     const updateemailstatus =async () =>{
+      if(user)
+        {const res= await updateCustomerEmailStatus({emailVerified:true})
+       setEmailStatus(res.data);
+       console.log("emailstatus",res)
+      } }
+   console.log("emailstatus",emailstatus)
+
      if(!user){
          props.history.push('/')
      }

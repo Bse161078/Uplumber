@@ -7,17 +7,23 @@ import {
   Backdrop,
   CircularProgress,
 } from "@material-ui/core";
+import Alert from '@mui/material/Alert';
 import PhoneInput from "react-phone-number-input";
 import Header from "../Components/Header";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import Avatar from "../assets/profile.png";
-import { MyProfile, UpdateCustomerProfile, uploadImage } from "../ApiHelper";
+import { MyProfile, UpdateCustomerProfile, uploadImage,  updateCustomerEmailStatus }
+ from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 import { Countries, states } from "../Data/Data";
 import ConfirmOtp from "./ConfirmOTP";
 import firebase from "firebase";
 import {connectFirebase} from "../Config/firebase";
+
+//import { getAuth, sendSignInLinkToEmail } from "firebase/auth";
+
+
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -78,6 +84,7 @@ export default function UpdateUserProfile(props) {
     localStorage.getItem("phoneNumber1")
   );
   const [address, setAddress] = useState(localStorage.getItem("address1"));
+ 
   const [unit, setUnit] = useState(localStorage.getItem("unit1"));
   const [city, setCity] = useState(localStorage.getItem("city1"));
   const [state, setState] = useState(localStorage.getItem("state1"));
@@ -107,7 +114,7 @@ export default function UpdateUserProfile(props) {
     setLongitude(position.coords.longitude);
     localStorage.setItem("longitude1", position.coords.longitude);
   };
-
+ 
   const updateMyProfile = () => {
     var data = {
       profileImage: profileImage,
@@ -404,6 +411,22 @@ export default function UpdateUserProfile(props) {
             setPhoneNumber(e);
           }}
         />
+         <div className={classes.input} style={{ height: 10 }}></div>
+         <p
+          className={classes.label}
+          style={{ marginTop: 20 }}
+        >
+          Email
+        </p>
+        <input
+          value={email}
+          onChange={(e) => {
+            console.log(e);
+            setEmail(e.target.value);
+          }}
+          className={classes.input}
+        ></input>
+         
         <div className={classes.input} style={{ height: 10 }}></div>
         <p className={classes.label} style={{ marginTop: 10 }}>
           Address
@@ -496,15 +519,32 @@ export default function UpdateUserProfile(props) {
         />
         <button
           className={classes.button}
-          onClick={() => {
+        /*  onClick={() => {
             setOpenLoader(true);
-            if(oldPhoneNumber!==phoneNumber){
-                  sendFirebaseOTP();
+            /*if(oldPhoneNumber!==phoneNumber){
+                  //sendFirebaseOTP();
               }else{
-                  updateMyProfile();
+                // updateMyProfile();
               }
+             // const auth = getAuth();
+             </Grid></div> sendSignInLinkToEmail(auth, "hamza_satti@live.com")
+               // .then(() => {
+                  // The link was successfully sent. Inform the user.
+                  // Save the email locally so you don't need to ask the user for it again
+                  // if they open the link on the same device.
+                  window.localStorage.setItem('emailForSignIn', email);
+                  // ...
+                  console.log("emailverification")
+                })
+                .catch((error) => {
+                  console.log("emailverificationerror",error)
+                  const errorCode = error.code;
+                  const errorMessage = error.message;
+                  // ...
+                });
+              
 
-          }}
+          }}*/
         >
           Save
         </button>

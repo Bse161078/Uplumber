@@ -6,6 +6,7 @@ import {
   TextField,
   Backdrop,
   CircularProgress,
+  Button,
 } from "@material-ui/core";
 import PhoneInput from "react-phone-number-input";
 import Header from "../Components/Header";
@@ -16,7 +17,7 @@ import { MyProfile, UpdateCustomerProfile } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 import { Countries, states } from "../Data/Data";
 import EditProfile from "./EditProfile";
-
+import Alert from '@mui/material/Alert';
 const useStyles = makeStyles((theme) => ({
   input: {
     border: "none",
@@ -139,6 +140,7 @@ export default function UserProfile() {
   };
 
   const [edit, setEdit] = React.useState(false);
+  const [deleteAlert, setDeleteAlert] =React.useState(false);
 
   // const EditProfile = () => {
   //   return (
@@ -350,11 +352,18 @@ export default function UserProfile() {
         </Grid>{" "}
         <div style={{ width: "100%" }}></div>
         <div className={classes.input} style={{ height: 10 }}></div>
-        <Grid item md={12} xs={12}>
+        <Grid item md={6} xs={6}>
           <span style={{ color: "#60a3d6" }} className={classes.label}>
             Phone Number
           </span>
           <p style={{ fontSize: 12, margin: 5 }}>{phoneNumber}</p>
+        </Grid>
+      
+        <Grid item md={6} xs={6}>
+          <span style={{ color: "#60a3d6" }} className={classes.label}>
+            Email
+          </span>
+          <p style={{ fontSize: 12, margin: 5 }}>{email}</p>
         </Grid>
         <div style={{ width: "100%" }}></div>
         <div className={classes.input} style={{ height: 10 }}></div>
@@ -394,6 +403,27 @@ export default function UserProfile() {
           </span>
           <p style={{ fontSize: 12, margin: 5 }}>{country}</p>
         </Grid>
+        {deleteAlert && <Alert variant="filled" severity="error">
+        Your profile will be deleted and can't not be undone
+        <Button
+        style={{cursor:'pointer'}}
+          onClick={() => {
+            setDeleteAlert(false);
+            window.location.reload(true)
+            window.localStorage.clear();
+          }}
+        >
+          OK
+        </Button>
+        <Button
+          style={{cursor:'pointer'}}
+          onClick={() => {
+            setDeleteAlert(false);
+          }}
+        >
+          Cancel
+        </Button>
+</Alert>}
         <button
           className={classes.button}
           onClick={() => {
@@ -401,6 +431,15 @@ export default function UserProfile() {
           }}
         >
           Edit
+        </button>
+      
+        <button
+          className={classes.button}
+          onClick={() => {
+            setDeleteAlert(true);
+          }}
+        >
+          Delete
         </button>
       </Grid>
     );
