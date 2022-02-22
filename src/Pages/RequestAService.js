@@ -2164,9 +2164,9 @@ function ProviderDetail(props) {
 
                                                         
 
-                            userName={id!=null ?null:requestData.userName}
+                            userName={requestData.userName}
                             userPhone={requestData.userPhone}
-                            userAddress={id!=null ?null:requestData.userAddress}
+                            userAddress={requestData.userAddress}
                             // setCurrentLoction={(e) => {
                             //   localStorage.setItem(
                             //     "userCurrentLocation",
@@ -2174,12 +2174,12 @@ function ProviderDetail(props) {
                             //   );
                             //   setCurrentLoction({ latitude: e.lat, longitude: e.lng });
                             // }}
-                            userCity={id!=null ?null:requestData.userCity}
-                            allowSms={id!=null ?null:requestData.allowSms}
+                            userCity={requestData.userCity}
+                            allowSms={requestData.allowSms}
                             userEmail={requestData.userEmail}
-                            userZipCode={id!=null ?null:requestData.userZipCode}
-                            userUnit={id!=null ?null:requestData.userUnit}
-                            userState={id!=null ?null:requestData.userState}
+                            userZipCode={requestData.userZipCode}
+                            userUnit={requestData.userUnit}
+                            userState={requestData.userState}
                             requestData={requestData}
                             setRequestData={(field, value) => {
                                 console.log("This is field", field);
