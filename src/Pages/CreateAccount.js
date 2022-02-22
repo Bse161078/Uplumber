@@ -467,7 +467,7 @@ function LoginPage(props) {
   return (
     <div>
       {" "}
-        {emailVerificationDialog && <ConfirmationDialog/>}
+        {emailVerificationDialog && <ConfirmationDialog createAccount={true}/>}
       <ToastContainer
         position="top-center"
         autoClose={2000}
@@ -699,13 +699,15 @@ function LoginPage(props) {
 
                 try{
                     const result=await firebase.auth().createUserWithEmailAndPassword(email, password);
-                    const emailResult=result.user.sendEmailVerification({
-                        url: "https://uplumber-194d5.web.app/complete-profile"
+                    const emailResult=await result.user.sendEmailVerification({
+                        url: "https://localhost:3000/complete-profile"
                     });
 
+                    console.log("emailresult = ",emailResult)
                     localStorage.setItem('emailForSignIn',JSON.stringify({email,password}));
                     setOpenLoader(false);
-                    setEmailVerificationDialog(true)
+                    setEmailVerificationDialog(true);
+
                 }catch (e) {
                     console.log('exception while sending email',e);
                     notify(e.message);

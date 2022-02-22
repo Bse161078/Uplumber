@@ -12,9 +12,9 @@ const ConfirmationDialog=(props)=>{
     const [open, setOpen] = React.useState(true);
 
 
-    const handleClose = (fromEditProfile) => {
+    const handleClose = () => {
         setOpen(false);
-        if(!fromEditProfile)
+        if(props.createAccount)
         props.history.push('/homepage')
 
     };
