@@ -9,7 +9,6 @@ import PlacesAutocomplete, {
 import {checkUser} from "../../ApiHelper";
 
 
-let id=null
 
 
 
@@ -162,12 +161,12 @@ const ContactDetails = (props) => {
 
 
   };
-
+const [id,setId]=useState(localStorage.getItem("id"))
 
   useEffect(() => {
     function checkUserData() {
-      id=localStorage.getItem("id")
-  }
+      setId(localStorage.getItem("id"))
+      }
   
 checkUserData()
 
@@ -192,6 +191,10 @@ checkUserData()
         value={props.userName}
         onChange={(e) => {
           props.setRequestData("userName", e.target.value);
+          const firstname = props.userName?.split(' ').slice(0,-1).join(' ')
+          const lastname = props.userName?.split(' ').slice(-1).join(' ')
+          localStorage.setItem('firstName',firstname)
+          localStorage.setItem('lastName',lastname)
           localStorage.setItem("userName", e.target.value);
         }}
       ></input>
@@ -203,7 +206,8 @@ checkUserData()
         className={classes.input}
          
         type={"text"}
-        value={props.userPhone}
+        
+        value={localStorage.getItem("phoneNumber")}
         onChange={(e) => {
           props.setRequestData("userPhone", e.target.value);
           localStorage.setItem("userPhone", e.target.value);
@@ -291,7 +295,7 @@ checkUserData()
       disabled
         className={classes.input}
         type={"text"}
-        value={props.userEmail}
+        value={props.userEmail?props.userEmail:localStorage.getItem("email")}
         onChange={(e) => {
           props.setRequestData("userEmail", e.target.value);
           localStorage.setItem("userEmail", e.target.value);
@@ -387,7 +391,7 @@ checkUserData()
       ></input> */}
 
       <Autocomplete
-        options={states}
+        options={props.userState}
         getOptionLabel={(option) => option.title}
         onChange={(event, values) => {
           if (values) {

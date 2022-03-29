@@ -50,6 +50,7 @@ import {
     getRequestorStatus,
     uploadImage,
     checkUser,
+    AddLeadPrice
 } from "../ApiHelper";
 
 import PlacesAutocomplete, {
@@ -166,7 +167,7 @@ function ProviderDetail(props) {
         currentLocation: localStorage.getItem("userCurrentLocation")
             ? JSON.parse(localStorage.getItem("userCurrentLocation"))
             : "",
-        leadPrice: Number(localStorage.getItem("leadPrice")) || 0,
+        leadPrice: Number(localStorage.getItem("leadPrice"))||30,
 
     });
     console.log("this is user state", localStorage.getItem("userState"));
@@ -206,7 +207,11 @@ function ProviderDetail(props) {
         //   userUnit: user.unit,
         //   userState: user.state,
         // });
+    
     }, []);
+
+   
+
     // console.log("This is request data", requestData);
     // setRequestData({ ...requestData, [event.target.id]: event.target.value });
 
@@ -335,6 +340,39 @@ function ProviderDetail(props) {
             notify("You need to login in ordere to post request!");
         }
     };
+ 
+    const add_lead_price = () => {
+        if (localStorage.getItem("token")) {
+            setOpenLoader(true);
+            PostARequest().then(
+                (res) => {
+                    if (
+                        res.data.success ||
+                        res.status === 200 ||
+                        res.status === 201 ||
+                        res.status === 200 ||
+                        res.statusText === 201
+                    ) {
+                        setOpenLoader(false);
+                        console.log("leadpriceadd",res.data);
+                        localStorage.setItem("requestId", res.data._id);
+                        const postData={ serviceId:res.data._id,leadPrice:localStorage.getItem("leadPrice")}
+                       console.log("leadprice",postData)
+                        AddLeadPrice(postData);
+                    }
+                },
+                (error) => {
+                    if (error.response) {
+                        notify(error.response.data.message);
+                    }
+                    setOpenLoader(false);
+                    console.log("This is response", error.response);
+                }
+            );
+        } else {
+            notify("You need to login in order to post request!");
+        }
+    };
 
     const updateCustomerProblem = () => {
         if (
@@ -359,6 +397,7 @@ function ProviderDetail(props) {
                 serviceCode: requestData.serviceType,
                 leadPrice: requestData.leadPrice
             };
+            localStorage.setItem("leadPrice",requestData.leadPrice)
             CustomerSericeUpdateProblem(data).then(
                 (res) => {
                     if (
@@ -399,6 +438,7 @@ function ProviderDetail(props) {
             leadPrice: requestData.leadPrice
 
         };
+        localStorage.setItem("leadPrice",requestData.leadPrice)
         CustomerSericeUpdateLookingfor(data).then(
             (res) => {
                 if (
@@ -438,6 +478,7 @@ function ProviderDetail(props) {
                 requesterStatus: requestData.requestorStatus,
                 leadPrice: requestData.leadPrice
             };
+            localStorage.setItem("leadPrice",requestData.leadPrice)
             CustomerSericeUpdateProperty(data).then(
                 (res) => {
                     if (
@@ -573,8 +614,66 @@ function ProviderDetail(props) {
         );
     };
     // console.log("This si t", requestData);
-
-    const updateCustomerContactDetails = (tab) => {
+    const updateCustomerContactDetails = async () =>
+    {
+        
+       if (
+            requestData.userName != "" &&
+            requestData.userPhone || JSON.parse(localStorage.getItem("userData")).phoneNumber != "" &&
+            requestData.userEmail || localStorage.getItem("email") != "" &&
+            requestData.userAddress != "" &&
+            requestData.userCity != "" &&
+            requestData.userState != "" &&
+            requestData.userZipCode != ""
+        ) {
+            setOpenLoader(true);
+            var data = {
+                name: requestData.userName,
+                phone: requestData.userPhone,
+                allowSms: requestData.allowSms,
+                email: requestData.userEmail,
+                address: requestData.userAddress,
+                latitude:
+                    localStorage.getItem("userCurrentLocation") &&
+                    JSON.parse(localStorage.getItem("userCurrentLocation")).latitude,
+                longitude:
+                    localStorage.getItem("userCurrentLocation") &&
+                    JSON.parse(localStorage.getItem("userCurrentLocation")).longitude,
+                unit: requestData.userUnit,
+                city: requestData.userCity,
+                state: requestData.userState,
+                zipCode: requestData.userZipCode,
+                leadPrice: requestData.leadPrice
+            };
+            const res = await  CustomerSericeUpdateContactDetails(data)
+            const postData={ serviceId:localStorage.getItem("requestId"),leadPrice:requestData.leadPrice}
+            console.log("addleadpricedata",postData)
+            const result = await AddLeadPrice(postData)
+            console.log("customerUpdated",res.data)
+            setOpenLoader(false);
+                        // notify(res.data.message);
+                        console.log("addleadprice",result);
+                        localStorage.removeItem("userName");
+                        localStorage.removeItem("userPhone");
+                        localStorage.removeItem("allowSms");
+                        localStorage.removeItem("userEmail");
+                        localStorage.removeItem("userAddress");
+                        localStorage.removeItem("userUnit");
+                        localStorage.removeItem("userCity");
+                        localStorage.removeItem("userState");
+                        localStorage.removeItem("userZipCode");
+                        localStorage.removeItem("userCurrentLocation");
+                        setPostRequest(true);
+        
+    
+    
+}
+else{
+    notify("Please provide all information!")
+}
+}
+  { /* const updateCustomerContactDetails = () => {
+      
         if (
             requestData.userName != "" &&
             requestData.userPhone != "" &&
@@ -603,6 +702,7 @@ function ProviderDetail(props) {
                 zipCode: requestData.userZipCode,
                 leadPrice: requestData.leadPrice
             };
+            
             CustomerSericeUpdateContactDetails(data).then(
                 (res) => {
                     if (
@@ -614,8 +714,8 @@ function ProviderDetail(props) {
                         res.statusText === "OK"
                     ) {
                         setOpenLoader(false);
-                        // notify(res.data.message);
-                        console.log(res);
+                         notify(res.data.message);
+                        console.log("updateService",res);
                         localStorage.removeItem("userName");
                         localStorage.removeItem("userPhone");
                         localStorage.removeItem("allowSms");
@@ -640,7 +740,7 @@ function ProviderDetail(props) {
         } else {
             notify("Please provide all information!");
         }
-    };
+    };*/}
 
     const checkThisUser = () => {
         setOpenLoader(true);
@@ -1627,6 +1727,7 @@ function ProviderDetail(props) {
     };
 
     const ReviewRequest = () => {
+        console.log("requestData",requestData)
         return (
             <Grid
                 container
@@ -1872,13 +1973,14 @@ function ProviderDetail(props) {
                     <p className={classes.label}>Name *</p>
                     <p className={classes.labelBlack}> {requestData.userName}</p>
                     <p className={classes.label}>Phone *</p>
-                    <p className={classes.labelBlack}>{requestData.userPhone} </p>
+                    <p className={classes.labelBlack}>{"+"+localStorage.getItem("phoneNumber")} </p>
                     <p className={classes.label}>Allow U plumber to contact you</p>
                     <p className={classes.labelBlack}>
                         {requestData.allowSms ? "Yes" : "No"}{" "}
                     </p>
                     <p className={classes.label}>Email * </p>
-                    <p className={classes.labelBlack}>{requestData.userEmail} </p>
+                    
+                    <p className={classes.labelBlack}>{requestData.userEmail?requestData.userEmail:localStorage.getItem("email")} </p>
                     <p className={classes.label}>Address * </p>
                     <p className={classes.labelBlack}>{requestData.userAddress} </p>
                     <p className={classes.label}>Unit / APT </p>
@@ -1900,7 +2002,7 @@ function ProviderDetail(props) {
                             requestData.prfferedTime != "" &&
                             requestData.itemName != "" &&
                             requestData.serviceType != "" &&
-                            requestData.anyFloorOrWaterDamage != "" &&
+                            requestData.waterDamage != "" &&
                             requestData.serviceType != "" &&
                             requestData.area != "" &&
                             requestData.structure != "" &&
@@ -1912,22 +2014,21 @@ function ProviderDetail(props) {
                             requestData.userAddress != "" &&
                             requestData.userCity != "" &&
                             requestData.userState != "" &&
-                            requestData.userZipCode != "" &&
                             localStorage.getItem("userCurrentLocation") != null
                         // requestData.currentLocation != ""
                         ) {
                             if (localStorage.getItem("id") && localStorage.getItem("token")) {
                                 postMyRequest();
+                             
                             } else {
+                                localStorage.setItem("userState",requestData.userState)
                                 checkThisUser();
-                                // document.getElementById("create-account").click();
+                               
                             }
                         } else {
-                            if (localStorage.getItem("userCurrentLocation") === null) {
-                                notify("Please select a location again from drop down!");
-                            } else {
-                                notify("Please fill complete information");
-                            }
+                                console.log("PLease fill the information")
+                                alert("Please fill complete information");
+                            
                         }
                     }}
                 >

@@ -25,8 +25,10 @@ import {
   CustomerSericeUpdateDescriptionAndPhoto,
   CustomerSericeUpdateInssurance,
   CustomerSericeUpdateContactDetails,
+  sendEmailVerification
 } from "../ApiHelper";
 import ConfirmationDialog from "./Dialogs/confirmationDialog";
+import ConfirmEmail from "./ConfirmEmail";
 
 
 
@@ -72,7 +74,7 @@ function LoginPage(props) {
   const [type, setType] = useState("password");
   const [typeConfirm, setTypeConfirm] = useState("password");
   const [email, setEmail] = useState(localStorage.getItem("userEmail")||"");
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState("");
   const [accept, setAccept] = useState(true);
   const [openLoader, setOpenLoader] = useState(false);
@@ -467,7 +469,7 @@ function LoginPage(props) {
   return (
     <div>
       {" "}
-        {emailVerificationDialog && <ConfirmationDialog/>}
+        {emailVerificationDialog && <ConfirmationDialog createAccount={true}/>}
       <ToastContainer
         position="top-center"
         autoClose={2000}
@@ -550,6 +552,7 @@ function LoginPage(props) {
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
+            localStorage.setItem("email",e.target.value)
           }}
         ></input>
         <div
@@ -564,7 +567,9 @@ function LoginPage(props) {
             value={password}
             onChange={(e) => {
               setPassword(e.target.value);
+              localStorage.setItem("userPass",e.target.value);
             }}
+          
           ></input>
           {type === "text" ? (
             <VisibilityOffOutlinedIcon
@@ -651,7 +656,7 @@ function LoginPage(props) {
                 email: email,
                 password: password,
               };
-              /*Signup(data).then(
+              Signup(data).then(
                 (res) => {
                   console.log("This is signup res", res);
                   if (
@@ -689,33 +694,20 @@ function LoginPage(props) {
                   setOpenLoader(false);
                   console.log("This is response", error.response.data.messag);
                 }
-              );*/
+              );
 
                 /*props.history.push({
                     pathname: '/complete-profile',
                     state: { email: email,password:password }
                 })*/
-
-
-                try{
-                    const result=await firebase.auth().createUserWithEmailAndPassword(email, password);
-                    const emailResult=result.user.sendEmailVerification({
-                        url: "https://localhost:3000/complete-profile"
-                    });
-
-                    localStorage.setItem('emailForSignIn',JSON.stringify({email,password}));
-                    setOpenLoader(false);
-                    setEmailVerificationDialog(true)
-                }catch (e) {
-                    console.log('exception while sending email',e);
-                    notify(e.message);
-                    setOpenLoader(false);
-                }
+                localStorage.setItem('emailForSignIn',JSON.stringify({email,password}));
+                 const emaill={email:email}
+           
 
 
 
 
-                //document.getElementById("complete").click();
+             //   document.getElementById("complete-profile");
 
             }
           }}

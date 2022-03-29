@@ -6,8 +6,12 @@ import Verify from "../assets/verify.png";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import OtpInput from "react-otp-input";
 import {Link, withRouter} from "react-router-dom";
-import {verifyPhone} from "../ApiHelper";
-
+import {verifyPhone,UpdateCustomerProfile} from "../ApiHelper";
+import { Backdrop } from "@material-ui/core";
+import { CircularProgress } from "@material-ui/core";
+import { formLabelClasses } from "@mui/material";
+import Snackbar from '@mui/material/Snackbar';
+import {toast} from "react-toastify";
 const useStyles = makeStyles((theme) => ({
     input: {
         border: "none",
@@ -57,18 +61,41 @@ export default function ConfirmOTP(props) {
 
         setState(open);
     };
-    console.log("This is ", props.confirmResult);
+
+    const updateCustomerPhoneStatus=async()=>
+{
+ try
+ {
+     const emaistatus =
+     {
+        phoneNumberVerified:true
+     }
+    const res = await UpdateCustomerProfile(emaistatus)
+    console.log("updateCustomer",res.data)
+ }
+ catch(e)
+ {
+     console.log("updateCustomer",e)
+ }
+}
+    console.log("This is ", props);
     const handleVerifyCode = () => {
         // Request for OTP verification
         try {
+            console.log("OTP",OTP)
             if (OTP.length == 6) {
                 props.confirmResult
                     .confirm(OTP)
                     .then((user) => {
                         props.onSuccessOtp()
+                        updateCustomerPhoneStatus()
+                        props.setOpenLoader(false)
+                        
+                        
                     }).catch((error) => {
                     alert(error.message);
-                    console.log(error);
+                    console.log("verifyOTP",error);
+                    props.setOpenLoader(false)
                 });
             } else {
                 alert("Please enter a 6 digit OTP code.");
@@ -77,9 +104,31 @@ export default function ConfirmOTP(props) {
         }
     };
 
+    const notify = (data) => toast(data);
+const [failure,setFailure] = useState(false)
+if(props.failure){
+    setFailure(true)
+}
     return (
         <div>
-            <Link id="homepage" to="/homepage"></Link>
+                     <Snackbar
+        //anchorOrigin={{horizontal:'top' ,vertical:'center'} }
+        open={props.success}
+        onClose={props.handleClose}
+        message="User Created"
+        //key={"top" + "center"}
+      />
+                  <Snackbar
+        //anchorOrigin={{horizontal:'top' ,vertical:'center'} }
+        open={failure}
+        onClose={props.handleClose}
+        message={props.failure}
+        //key={"top" + "center"}
+      />
+           
+             <Backdrop className={classes.backdrop} open={props.openLoader}>
+                <CircularProgress color="inherit"/>
+            </Backdrop>
             <div style={{borderBottom: "1px solid #e9e9e9", height: 60}}>
                 <Grid
                     container
@@ -145,7 +194,9 @@ export default function ConfirmOTP(props) {
                             <button
                                 className={classes.button}
                                 onClick={() => {
+                                    props.setOpenLoader(true)
                                     handleVerifyCode();
+                                    
                                 }}
                             >
                                 Verify

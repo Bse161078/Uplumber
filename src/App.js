@@ -21,6 +21,7 @@ import ResetPassword from "./Pages/ResetPassword";
 import NotificationSettings from "./Pages/NotificationSettings";
 import Notifications from "./Pages/Notifications";
 import ShowRoute from "./Pages/ShowRoute";
+import EditProfile from "./Pages/EditProfile"
 import UserProfile from "./Pages/UserProfile";
 import "react-toastify/dist/ReactToastify.css";
 import "react-phone-number-input/style.css";
@@ -29,6 +30,7 @@ import "react-calendar/dist/Calendar.css";
 // import "antd/dist/antd.css";
 import "./App.css";
 import CompleteUpdateEmail from "./Pages/CompleteUpdateEmail";
+import ConfirmEmail from "./Pages/ConfirmEmail";
 
 export default function App() {
     useEffect(() => {
@@ -87,6 +89,11 @@ export default function App() {
                     path="/notificationSetting"
                     render={() => <NotificationSettings/>}
                 />
+                <Route
+                    exact
+                    path="/ConfirmEmail"
+                    render={() => <ConfirmEmail/>}
+                />
 
                 <Route exact path="/userProfile" render={() => <UserProfile/>}/><Route exact path="/userProfile"
                                                                                        render={() => <UserProfile/>}/>
@@ -94,6 +101,7 @@ export default function App() {
                 UserProfile
                 <Route exact path="/" render={() => <LandingPage/>}/>
                 <Route exact path="/email-verified" render={() => <CompleteUpdateEmail/>}/>
+                <Route exact path="/editprofile" render={() => <EditProfile/>}/>
 
             </Switch>
         </BrowserRouter>

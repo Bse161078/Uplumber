@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {Link} from "react-router-dom";
+import {Link,useHistory} from "react-router-dom";
 import {
     makeStyles,
     Grid,
@@ -12,7 +12,12 @@ import Header from "../Components/Header";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import Avatar from "../assets/profile.png";
-import {MyProfile, UpdateCustomerProfile, uploadImage} from "../ApiHelper";
+import ConfirmEmail from "./ConfirmEmail"
+import
+ {
+     MyProfile, UpdateCustomerProfile, uploadImage,
+    sendEmailVerification,
+}  from "../ApiHelper";
 import {ToastContainer, toast} from "react-toastify";
 import {Countries, states} from "../Data/Data";
 import ConfirmOtp from "./ConfirmOTP";
@@ -54,36 +59,39 @@ const useStyles = makeStyles((theme) => ({
         color: "#fff",
     },
 }));
+let confirmemail = false
 export default function UpdateUserProfile(props) {
+    console.log("UPDATEUSER",props)
     const [goToOtp, setGoToOtp] = useState(false);
+    const [goToConfirmEmail, setGoToConfirmEmail] = useState(false);
     const [confirmResult, setConfirmResult] = useState();
     const [captchaCreated, setCaptchaCreated] = useState(false);
 
-
+   
+    console.log("goTOConfirmEmail",confirmemail)
     const [openLoader, setOpenLoader] = useState(false);
     const classes = useStyles();
+    const [phoneVerified, setPhoneVerified] = useState(JSON.parse(localStorage.getItem("userData")).phoneNumberVerified);
     const [value, setValue] = useState("");
 
     const [profileImage, setProfileImage] = useState(
         localStorage.getItem("profileImage")
     );
-    const [firstName, setFirstName] = useState(
-        localStorage.getItem("firstName")
+    const [firstName, setFirstName] = useState(props.firstName
     );
-    const [emailVerified, setEmailVerified] = useState(props.emailVerified);
+    
     const [email, setEmail] = useState(localStorage.getItem("email"));
     const [oldEmail, setOldEmail] = useState(localStorage.getItem("email"));
 
     const [lastName, setLastName] = useState(props.lastName);
-    const [phoneNumber, setPhoneNumber] = useState(
-        localStorage.getItem("phoneNumber")
-    );
-    const [address, setAddress] = useState(localStorage.getItem("address"));
-    const [unit, setUnit] = useState(localStorage.getItem("unit"));
-    const [city, setCity] = useState(localStorage.getItem("city"));
-    const [state, setState] = useState(localStorage.getItem("state1"));
-    const [zipcode, setZipcode] = useState(localStorage.getItem("zipcode"));
-    const [country, setCountry] = useState(localStorage.getItem("country1"));
+    const [phoneNumber, setPhoneNumber] = useState(localStorage.getItem("userPhone"));
+   
+    const [address, setAddress] = useState(localStorage.getItem("userAddress"));
+    const [unit, setUnit] = useState(localStorage.getItem("userUnit"));
+    const [city, setCity] = useState(localStorage.getItem("userCity"));
+    const [state, setState] = useState(localStorage.getItem("userState"));
+    const [zipcode, setZipcode] = useState(localStorage.getItem("userZipCode"));
+    const [country, setCountry] = useState(props.country);
     const [latitude, setLatitude] = useState(
         localStorage.getItem("latitude1") || localStorage.getItem("latitude")
     );
@@ -93,7 +101,7 @@ export default function UpdateUserProfile(props) {
     const [oldPhoneNumber, setOldPhoneNumber] = useState(localStorage.getItem("phoneNumber"));
 
     const [emailVerificationDialog, setEmailVerificationDialog] = React.useState(false);
-
+    const history= useHistory();
 
     const getLocation = () => {
         if (navigator.geolocation) {
@@ -111,8 +119,21 @@ export default function UpdateUserProfile(props) {
         setLongitude(position.coords.longitude);
         localStorage.setItem("longitude1", position.coords.longitude);
     };
-
-    const updateMyProfile = () => {
+    const updateMyProfileEmail = async () => {
+        var data = {
+            email:email
+        }
+       try{ 
+           const res = await UpdateCustomerProfile(data)
+           console.log('hamza',res.data)
+       }
+       catch(e)
+       {
+           alert("error",e.message)
+           console.log('hamza',e)
+       }
+    }
+    const updateMyProfile = (eVerified) => {
         var data = {
             profileImage: profileImage,
             firstName: firstName,
@@ -127,8 +148,7 @@ export default function UpdateUserProfile(props) {
             longitude: longitude,
             country: country,
             email:email,
-            emailVerified:false
-        };
+           };
         console.log("THis is the data", data);
         setOpenLoader(true);
         UpdateCustomerProfile(data).then(
@@ -147,9 +167,12 @@ export default function UpdateUserProfile(props) {
                     props.setUnit(user.unit);
                     props.setZipcode(user.zipcode);
                     props.setCountry(user.country);
-                    props.setEdit(false);
                     props.setEmail(email);
+                    props.setEmailVerified(user.emailVerified)
+                    props.setEdit(false)
                     localStorage.setItem("email",email)
+                   // setOpenLoader(false);
+                 
                     // setAllProviders(res.data.Providers);
                 }
             },
@@ -196,12 +219,15 @@ export default function UpdateUserProfile(props) {
     };
 
     useEffect(() => {
+         
         getLocation();
         connectFirebase();
-        console.log(email,'  ',oldEmail,'  ',emailVerified)
+        console.log(email,'  ',oldEmail,'  ',props.emailVerified)
 
     }, []);
-
+    useEffect(() => {
+     console.log('gotconfirm2',goToConfirmEmail)
+    }, [goToConfirmEmail]);
 
     const createRecapha = () => {
         window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
@@ -220,6 +246,7 @@ export default function UpdateUserProfile(props) {
         var regexp = /^\+[0-9]?()[0-9](\s|\S)(\d[0-9]{8,16})$/;
         return phoneNumber.match(/\d/g).length === 10;
     };
+
 
     const sendFirebaseOTP = () => {
         console.log("This is valid", validatePhoneNumber(phoneNumber));
@@ -240,10 +267,11 @@ export default function UpdateUserProfile(props) {
                 setConfirmResult(result);
                 setGoToOtp(true);
                 setOpenLoader(false);
+                setPhoneVerified(true)
                 window.recaptchaVerifier = null
             })
             .catch((error) => {
-                notify(error.code);
+                notify(error.message);
                 setOpenLoader(false);
                 console.log("This is the error", error);
             });
@@ -276,9 +304,25 @@ export default function UpdateUserProfile(props) {
                         }
                     }
                 ></ConfirmOtp>
-            ) :
+            )  :
+            goToConfirmEmail ?
+            <ConfirmEmail
+            onSuccessOtp={
+                async () => {
+                    setOpenLoader(true);
+                  
+                }
+            }
+            goBack={
+                () => {
+                    setGoToConfirmEmail(false);
+                    setOpenLoader(false)
+                }
+            }
+            notify={notify}
+            setOpenLoader={setOpenLoader}
+            />:
             <div>
-                {emailVerificationDialog && <ConfirmationDialog/>}
                 <div id="recaptcha-container"></div>
                 <Backdrop className={classes.backdrop} open={openLoader}>
                     <CircularProgress color="inherit"/>
@@ -350,7 +394,7 @@ export default function UpdateUserProfile(props) {
                             ></input>
                         </Grid>
                     </Grid>
-                    <p className={classes.label} style={{marginTop: 10, color: emailVerified ? "#60a3d6" : "red"}}>
+                    <p className={classes.label} style={{marginTop: 10, color: props.emailVerified ? "#60a3d6" : "red"}}>
                         Email
                     </p>
                     <input
@@ -362,7 +406,7 @@ export default function UpdateUserProfile(props) {
                     ></input>
                     <p
                         className={classes.label}
-                        style={{marginTop: 20, marginBottom: 20}}
+                        style={{marginTop: 20, marginBottom: 20,color:props.phoneVerified?"#60a3d6":"red"}}
                     >
                         Phone Number
                     </p>
@@ -467,7 +511,7 @@ export default function UpdateUserProfile(props) {
                     />
                     <button
                         className={classes.button}
-                        onClick={async () => {
+                        onClick={ async (e) => {
                             setOpenLoader(true);
 
                             var actionCodeSettings = {
@@ -479,41 +523,44 @@ export default function UpdateUserProfile(props) {
                             };
 
                             if (email && phoneNumber) {
-                                if(email!==oldEmail || !emailVerified){
-                                    console.log("email = ",email)
+                                if(email!==oldEmail || !props.emailVerified){
+                                    
                                     try{
-                                        const emailResult=await firebase.auth().sendSignInLinkToEmail
-                                        (email,actionCodeSettings);
-
-                                        localStorage.setItem('dataForEditProfile',JSON.stringify({email}));
-                                        setOpenLoader(false);
-                                        setEmailVerificationDialog(true);
-
-                                        if (oldPhoneNumber !== phoneNumber) {
+                                        updateMyProfileEmail();
+                                        const emaill={email:email}
+                                        console.log("email = ",emaill)
+                                        
+                                        const emailResult= await sendEmailVerification(emaill)
+                                        console.log("emailResult ",emailResult)
+                                        setGoToConfirmEmail(true)
+                                        console.log('gotconfirm',goToConfirmEmail)
+                                        localStorage.setItem('email',email);
+                                        if (oldPhoneNumber !== phoneNumber||!props.phoneVerified) {
                                             sendFirebaseOTP();
-                                        }else {
-                                            updateMyProfile();
                                         }
-
-
-                                    }catch (e) {
+                                       
+                                        
+                                    }
+                                    catch (e) {
                                         console.log('exception while sending email',e);
                                         notify(e.message);
                                         setOpenLoader(false);
                                     }
-                                }else{
-                                    if (oldPhoneNumber !== phoneNumber) {
-                                        sendFirebaseOTP();
-                                    }else {
+                                }
+                            else    if (oldPhoneNumber !== phoneNumber||!props.phoneVerified) {
+                                    sendFirebaseOTP();
+                                }
+                                    else {
                                         updateMyProfile();
                                     }
-                                }
-
-
+                                
+                                 //   props.setEdit(false)
+                                  
 
                             } else {
                                 notify("Email or Phone number cant be empty");
                             }
+                          
                         }}>
                         Save
                     </button>

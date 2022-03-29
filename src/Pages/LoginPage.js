@@ -130,19 +130,30 @@ export default function LoginPage() {
   });
 
   const getMyProfile = () => {
+
+
+
     MyProfile().then(
       (res) => {
+        console.log( res.data.data ,'response = ')
         if (
-          res.data.success ||
+          (res.data.success ||
           res.status === 200 ||
           res.status === 201 ||
-          res.status === 200
-        ) {
+          res.status === 200) &&
+          res.data.data.is_deleted === false
+          ) {
+            console.log( res.data,'res.data.is_deleted')
           document.getElementById("home").click()
         }
         else if( res.data.success===404)
         {
           document.getElementById("home").click()
+        }
+        else if(res.data.data.is_deleted===true)
+        {
+          console.log(res.data.is_deleted,'res.data.is_deleted')
+          notify("Your Profile is Deleted!")
         }
       },
       (error) => {
@@ -221,7 +232,7 @@ export default function LoginPage() {
         }
       );
     } else {
-      notify("You need to login in ordere to post request!");
+      notify("You need to login in order to post request!");
     }
   };
 

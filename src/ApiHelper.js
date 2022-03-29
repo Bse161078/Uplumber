@@ -14,6 +14,31 @@ export const getAllSubjects = () => {
   });
 };
 
+export const AddLeadPrice = (postData) => {
+  return axios({
+    method: "put",
+    url: URL + `customerservicerequest/admin/leadprice/update`,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    data: postData
+  });
+ 
+};
+export const deleteProfileApi = () => {
+  return axios({
+    method: "delete",
+
+    url: URL + `customerprofile/deletecustomer`,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    data: {id:JSON.parse(localStorage.getItem("userData"))._id}
+  });
+};
+
 export const Signup = (postData) => {
   let headers = new Headers();
   headers.append("Content-Type", "multipart/form-data");
@@ -86,7 +111,7 @@ export const customerResetPassword = (id, newPassword) => {
   headers.append("Content-Type", "multipart/form-data");
   var config = {
     method: "post",
-    url: "https://u-plumber.net/api/customers/forgotpassword/" + id,
+    url:  "https://u-plumber.net/api/customers/forgotpassword/" + id,
     headers: {
       headers,
     },
@@ -130,6 +155,22 @@ export const Login = (postData) => {
   return axios(config);
 };
 
+export const DeleteCustomerProfile = (postData) => {
+  console.log("postdata",postData)
+  return axios({
+    method: "put",
+    url: URL + `customerprofile/updatecustomer/deletestatus`,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+   
+    data: postData
+    
+  });
+};
+
+
 export const CompleteProfile = (postData) => {
   var data = JSON.stringify(postData);
   var token  = "";
@@ -144,7 +185,7 @@ export const CompleteProfile = (postData) => {
 
   var config = {
     method: "post",
-    url: "https://u-plumber.net/api/customerprofile",
+    url: URL +"customerprofile",
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
@@ -714,6 +755,37 @@ export const verifyEmail = (email,isemailVerify) => {
       "Content-Type": "application/json",
     },
     data: data,
+  };
+
+  return axios(config);
+};
+
+export const sendEmailVerification = (email) => {
+  
+
+  var config = {
+    method: "post",
+    url: "https://u-plumber.net/api/customers/sendmailerifivationode",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: email,
+  };
+
+  return axios(config);
+};
+export const emailVerification = (email,code) => {
+  
+
+  var config = {
+    method: "post",
+    url: "https://u-plumber.net/api/customers/verifyemail",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: email,code
   };
 
   return axios(config);
