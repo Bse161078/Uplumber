@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from "react";
-import {Link} from "react-router-dom";
+import {Link,useHistory} from "react-router-dom";
 import {
     makeStyles,
     Grid,
@@ -7,12 +7,16 @@ import {
     Backdrop,
     CircularProgress,
 } from "@material-ui/core";
+import Alert from '@mui/material/Alert';
 import PhoneInput from "react-phone-number-input";
 import Header from "../Components/Header";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import Avatar from "../assets/profile.png";
-import {MyProfile, UpdateCustomerProfile} from "../ApiHelper";
+import {MyProfile, UpdateCustomerProfile
+,deleteProfileApi,
+DeleteCustomerProfile
+} from "../ApiHelper";
 import {ToastContainer, toast} from "react-toastify";
 import {Countries, states} from "../Data/Data";
 import EditProfile from "./EditProfile";
@@ -51,6 +55,7 @@ const useStyles = makeStyles((theme) => ({
         color: "#fff",
     },
 }));
+
 export default function UserProfile() {
   const [openLoader, setOpenLoader] = useState(false);
   const classes = useStyles();
@@ -63,82 +68,110 @@ export default function UserProfile() {
     localStorage.getItem("firstName1")
   );
 
-    const [email, setEmail] = useState(localStorage.getItem("email"));
-    const [emailVerified, setEmailVerified] = useState(false);
-    const [lastName, setLastName] = useState(localStorage.getItem("lastName1"));
-    const [phoneNumber, setPhoneNumber] = useState(
-        localStorage.getItem("phoneNumber1")
-    );
-    const [address, setAddress] = useState(localStorage.getItem("address1"));
-    const [unit, setUnit] = useState(localStorage.getItem("unit1"));
-    const [city, setCity] = useState(localStorage.getItem("city1"));
-    const [state, setState] = useState(localStorage.getItem("state1"));
-    const [zipcode, setZipcode] = useState(localStorage.getItem("zipcode1"));
-    const [country, setCountry] = useState(localStorage.getItem("country1"));
-    const [latitude, setLatitude] = useState(localStorage.getItem("latitude1"));
-    const [longitude, setLongitude] = useState(
-        localStorage.getItem("longitude1")
-    );
-    const updateMyProfile = () => {
-        var data = {
-            profileImage: profileImage,
-            firstName: firstName,
-            lastName: lastName,
-            phoneNumber: 923060052374,
-            address: address,
-            unit: unit,
-            city: city,
-            state: state,
-            zipcode: 44000,
-            latitude: 1.099232,
-            longitude: 2.33332,
-            country: country,
-        };
-        setOpenLoader(true);
-        UpdateCustomerProfile(data).then(
-            (res) => {
-                if (
-                    res.data.success ||
-                    res.status === 200 ||
-                    res.status === 201 ||
-                    res.status === 200 ||
-                    res.statusText === 201 ||
-                    res.statusText === "OK" ||
-                    res.statusText === "Created" ||
-                    res.data.statusText === "OK" ||
-                    res.data.statusText === "Created" ||
-                    res.data.statusText === "OK"
-                ) {
-                    setOpenLoader(false);
-                    console.log("This is profile", res.data.data);
-                    var user = res.data.data;
-                    setFirstName(user.firstName);
-                    setLastName(user.lastName);
-                    setPhoneNumber("+" + user.phoneNumber);
-                    setAddress(user.address);
-                    setCity(user.city);
-                    setState(user.state);
-                    setUnit(user.unit);
-                    setZipcode(user.zipcode);
-                    setCountry(user.country);
-                    setLongitude(user.longitude);
-                    setLatitude(user.latitude);
-                    setEmail(user.email);
-                    setProfileImage(user.profileImage);
-                    setEmailVerified(user.emailVerified);
-                    setEdit(false);
-                    // setAllProviders(res.data.Providers);
-                }
-            },
-            (error) => {
-                if (error.response) {
-                    notify(error.response.data.message);
-                }
-                setOpenLoader(false);
-                console.log("This is response", error.response);
-            }
-        );
+  const [email, setEmail] = useState(localStorage.getItem("firstName1"));
+  const [lastName, setLastName] = useState(localStorage.getItem("lastName1"));
+  const [phoneNumber, setPhoneNumber] = useState(
+    localStorage.getItem("phoneNumber1")
+  );
+  const [emailVerified,setEmailVerified]=React.useState(false)
+  const [phoneVerified,setPhoneVerified]=useState(false)
+  const [address, setAddress] = useState(localStorage.getItem("address1"));
+  const [unit, setUnit] = useState(localStorage.getItem("unit1"));
+  const [city, setCity] = useState(localStorage.getItem("city1"));
+  const [state, setState] = useState(localStorage.getItem("state1"));
+  const [zipcode, setZipcode] = useState(localStorage.getItem("zipcode1"));
+  const [country, setCountry] = useState(localStorage.getItem("country1"));
+  const [latitude, setLatitude] = useState(localStorage.getItem("latitude1"));
+  const [deleteProfile,setDeleteProfile]=useState(false)
+  const history= useHistory();
+  const [longitude, setLongitude] = useState(
+    localStorage.getItem("longitude1")
+  );
+
+
+  const deleteUserProfile = async () => {
+   
+const data = {customerId:localStorage.getItem("id"),is_deleted:true}
+console.log(data)
+    setOpenLoader(true);
+    try{
+    const res=await DeleteCustomerProfile(data);
+    console.log("deleteProfile",res.data)
+  
+    window.localStorage.clear();
+    history.push('/')
+    }catch(e){
+        setOpenLoader(false)
+        console.log("deleteProfile error",e)
+    }
+   }
+
+
+
+   useEffect(async ()=>{
+       const res = await UpdateCustomerProfile({emailVerified: false});
+       setEmailVerified(false);
+   },[])
+
+  const updateMyProfile = () => {
+    var data = {
+      profileImage: profileImage,
+      firstName: firstName,
+      lastName: lastName,
+      phoneNumber: 923060052374,
+      address: address,
+      unit: unit,
+      city: city,
+      state: state,
+      zipcode: 44000,
+      latitude: 1.099232,
+      longitude: 2.33332,
+      country: country,
     };
+    setOpenLoader(true);
+    UpdateCustomerProfile(data).then(
+      (res) => {
+        if (
+          res.data.success ||
+          res.status === 200 ||
+          res.status === 201 ||
+          res.status === 200 ||
+          res.statusText === 201 ||
+          res.statusText === "OK" ||
+          res.statusText === "Created" ||
+          res.data.statusText === "OK" ||
+          res.data.statusText === "Created" ||
+          res.data.statusText === "OK"
+        ) {
+          setOpenLoader(false);
+          console.log("This is profile",res.data.data);
+          var user = res.data.data;
+          setFirstName(user.firstName);
+          setLastName(user.lastName);
+          setPhoneNumber("+" + user.phoneNumber);
+          setAddress(user.address);
+          setCity(user.city);
+          setState(user.state);
+          setUnit(user.unit);
+          setZipcode(user.zipcode);
+          setCountry(user.country);
+          setLongitude(user.longitude);
+          setLatitude(user.latitude);
+          setEmail(user.email);
+          setProfileImage(user.profileImage);
+          setEdit(false);
+          // setAllProviders(res.data.Providers);
+        }
+      },
+      (error) => {
+        if (error.response) {
+          notify(error.response.data.message);
+        }
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+      }
+    );
+  };
 
     const [edit, setEdit] = React.useState(false);
 
@@ -197,7 +230,7 @@ export default function UserProfile() {
                 <div style={{width: "100%"}}></div>
                 <div className={classes.input} style={{height: 10}}></div>
                 <Grid item md={12} xs={12}>
-          <span style={{color: "#60a3d6"}} className={classes.label}>
+          <span style={{color: phoneVerified?"#60a3d6":"red"}} className={classes.label}>
             Phone Number
           </span>
                     <p style={{fontSize: 12, margin: 5}}>{phoneNumber}</p>
@@ -240,6 +273,32 @@ export default function UserProfile() {
           </span>
                     <p style={{fontSize: 12, margin: 5}}>{country}</p>
                 </Grid>
+                {deleteProfile &&<Alert severity="error" style={{margin:0}} >
+                    Your profile will be deleted and can't not be undone
+                <button
+                    
+                    style={{width:"30%",height:30,background:"red",color:'white',  border: "none",
+                    borderRadius: 15,cursor:'pointer'}}
+                    onClick={() => {
+                        
+                       deleteUserProfile()
+                    }}
+                >
+                    YES
+                </button>
+                <button
+                 
+                 style={{width:"30%",height:30,margin:20, background: "#1075c2",color:'white',border: "none",
+                 borderRadius: 15,cursor:'pointer'}}
+                    onClick={() => {
+                        
+                        setDeleteProfile(false)
+                    }}
+                >
+                    NO
+                </button>
+                </Alert>
+                }
                 <button
                     className={classes.button}
                     onClick={() => {
@@ -247,6 +306,16 @@ export default function UserProfile() {
                     }}
                 >
                     Edit
+                </button>
+                <button
+                    className={classes.button}
+              
+                    onClick={() => {
+                       setDeleteProfile(true)
+                        
+                    }}
+                >
+                    Delete
                 </button>
             </Grid>
         );
@@ -285,6 +354,8 @@ export default function UserProfile() {
                     setEmail(user.email);
                     setProfileImage(user.profileImage);
                     setEmailVerified(user.emailVerified);
+                    setPhoneVerified(user.phoneNumberVerified)
+                    console.log("myprofile",res.data)
 
                     // setAllProviders(res.data.Providers);
                 }
@@ -363,8 +434,10 @@ export default function UserProfile() {
                         setZipcode={setZipcode}
                         country={country}
                         setCountry={setCountry}
-                        emailVerfied={emailVerified}
+                        emailVerified={emailVerified}
                         setEmailVerified={setEmailVerified}
+                        phoneVerified={phoneVerified}
+                        setPhoneVerified={setPhoneVerified}
                         updateMyProfile={updateMyProfile}
                     ></EditProfile>
                 ) : (

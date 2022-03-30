@@ -7,6 +7,10 @@ import {
     Backdrop,
     CircularProgress,
 } from "@material-ui/core";
+import PlacesAutocomplete, {
+    geocodeByAddress,
+    getLatLng,
+  } from "react-places-autocomplete";
 import PhoneInput from "react-phone-number-input";
 import Drawer from "@material-ui/core/Drawer";
 import Camera from "../assets/camera.PNG";
@@ -22,13 +26,18 @@ import {
     PostARequest,
     Signup,
     uploadImage,
-    verifyPhone,updateCustomerEmailStatus
+    verifyPhone,updateCustomerEmailStatus,
+    sendEmailVerification,
+    verifyEmail
 } from "../ApiHelper";
+import Button from '@mui/material/Button';
+import Snackbar from '@mui/material/Snackbar';
 import {ToastContainer, toast} from "react-toastify";
 import {connectFirebase} from "../Config/firebase";
 import ConfirmOtp from "./ConfirmOTP";
 import firebase from "firebase";
 import {formatPhoneNumber} from "../Functions";
+import ConfirmEmail from "./ConfirmEmail";
 
 var validator = require("email-validator");
 
@@ -81,6 +90,7 @@ const checkIfUserEmailIsVerified=async ()=>{
         getLocation();
         connectFirebase();
         checkIfUserEmailIsVerified();
+        
     }, []);
     const classes = useStyles();
     var upload = "";
@@ -90,9 +100,7 @@ const checkIfUserEmailIsVerified=async ()=>{
   
      const user=Object.assign({}, JSON.parse(localStorage.getItem('emailForSignIn')));
      const [emailstatus,setEmailStatus]=useState([])
-     useEffect(() =>{
-       updateemailstatus()
-     })
+     
      const updateemailstatus =async () =>{
       if(user)
         {const res= await updateCustomerEmailStatus({emailVerified:true})
@@ -116,16 +124,23 @@ const checkIfUserEmailIsVerified=async ()=>{
     const [goToOtp, setGotoOtp] = useState();
     const [confirmResult, setConfirmResult] = useState();
     console.log("THis is greate", localStorage.getItem("firstName"))
-    const [firstName, setFirstName] = useState(localStorage.getItem("userName") ? localStorage.getItem("userName").split(" ")[0] : "");
-    const [lastName, setLastName] = useState(localStorage.getItem("userName") ? localStorage.getItem("userName").split(" ")[1] : "");
-    const [phoneNumber, setPhoneNumber] = useState(localStorage.getItem("userPhone") ? localStorage.getItem("userPhone") : "");
-    const [address, setAddress] = useState(localStorage.getItem("address") || localStorage.getItem("userAddress") || '');
-    const [unit, setUnit] = useState(localStorage.getItem("unit") || localStorage.getItem("userUnit") || "");
-    const [city, setCity] = useState(localStorage.getItem("city") || localStorage.getItem("userCity") || "");
-    const [state, setState] = useState(localStorage.getItem("state") || localStorage.getItem("userState") || "");
-    const [zipcode, setZipcode] = useState(localStorage.getItem("zipcode") || localStorage.getItem("userZipCode") || "");
+    const [firstName, setFirstName] = useState(localStorage.getItem("firstName"));
+    const [lastName, setLastName] = useState(localStorage.getItem("lastName"));
+    const [phoneNumber, setPhoneNumber] = useState(localStorage.getItem("phoneNumber"));
+    const [address, setAddress] = useState(localStorage.getItem("userAddress"));
+    const [unit, setUnit] = useState(localStorage.getItem("userUnit"));
+    const [city, setCity] = useState(localStorage.getItem("city"));
+    const [state, setState] = useState(localStorage.getItem("userState"));
+    const [zipcode, setZipcode] = useState(localStorage.getItem("userZipCode"));
+    
+  //  const [openLoader,setOpenLoader] = useState(false);
+    const [success,setSuccess] = useState(false);
+    const [failure,setFailure] = useState(false);
+    const handleClose = () => {
+        setSuccess(false)
+    }  
     const [country, setCountry] = useState(
-        localStorage.getItem("country") || "United States"
+        localStorage.getItem("userCountry") || "United States"
     );
     const [latitude, setLatitude] = useState(localStorage.getItem("latitude") || localStorage.getItem("userCurrentLocation") &&
         JSON.parse(localStorage.getItem("userCurrentLocation")).latitude);
@@ -135,7 +150,7 @@ const checkIfUserEmailIsVerified=async ()=>{
     const [openLoader, setOpenLoader] = useState(false);
     // console.log("This is",localStorage.getItem("userName").split(" "))
 
-
+ 
     const [requestData, setRequestData] = useState({
         requestDate: localStorage.getItem("requestDate") || new Date(),
         prfferedTime: localStorage.getItem("prfferedTime") || "As soon a possible",
@@ -178,6 +193,7 @@ const checkIfUserEmailIsVerified=async ()=>{
 
 
 
+    console.log("address = ",address)
 
 
      const getLocation = () => {
@@ -224,6 +240,20 @@ const checkIfUserEmailIsVerified=async ()=>{
             notify("You need to login in ordere to post request!");
         }
     };
+    const VerificanEmail=async()=>{
+        try
+        {
+            const email={
+                email:localStorage.getItem("email")
+            }
+        const res = await sendEmailVerification(email);
+        console.log("sendemailverificationcode",res)
+  }
+    catch(e)
+    {
+        console.log("sendemailverificationcode",e)
+    }
+}
 
     const updateCustomerProblem = () => {
         if (
@@ -484,7 +514,7 @@ const checkIfUserEmailIsVerified=async ()=>{
                         localStorage.removeItem("userZipCode");
                         localStorage.removeItem("userCurrentLocation");
                         //document.getElementById("complete").click();
-                        document.getElementById("homepage").click();
+                       // document.getElementById("homepage").click();
                     }
                 },
                 (error) => {
@@ -500,71 +530,7 @@ const checkIfUserEmailIsVerified=async ()=>{
         }
     };
 
-    const registerUser = () => {
-
-
-        return new Promise((resolve,reject)=>{
-            var data = {
-                email: email,
-                password: password,
-            };
-            Signup(data).then(
-                (res) => {
-                    console.log("This is signup res", res);
-                    if (
-                        res.data.success ||
-                        res.status === 200 ||
-                        res.status === 201 ||
-                        res.status === 200 ||
-                        res.statusText === 201 ||
-                        res.statusText === "OK" ||
-                        res.statusText === "Created" ||
-                        res.data.statusText === "OK" ||
-                        res.data.statusText === "Created" ||
-                        res.data.statusText === "OK"
-                    ) {
-                        setOpenLoader(false);
-                        console.log("This is greate", res.data.token);
-                        localStorage.setItem("tokenTemp", res.data.token);
-                        localStorage.setItem("idTemp", res.data._id);
-                        // localStorage.setItem("token", res.data.token);
-                        // localStorage.setItem("id", res.data._id);
-                        localStorage.setItem("email", email);
-                        if (localStorage.getItem("requestAfterLogin")) {
-                            localStorage.removeItem("requestAfterLogin");
-                            postMyRequest(res.data.token);
-                        } else {
-                            //document.getElementById("complete").click();
-                            //document.getElementById("homepage").click();
-
-                        }
-                        resolve();
-
-                    }
-                },
-                (error) => {
-                    if (error.response) {
-                        notify(error.response.data.message);
-                    }
-                    setOpenLoader(false);
-                    console.log("saveuser failed", error.response.data);
-                    resolve();
-                }
-            );
-        })
-
-
-    }
-
-
-
-
-
-
-
-
-
-
+    
 
     const showPosition = (position) => {
         setLatitude(position.coords.latitude);
@@ -656,6 +622,8 @@ const checkIfUserEmailIsVerified=async ()=>{
         setOpenLoader(true);
         createRecapha();
 
+      //  const myTimeout = setTimeout(, 5000);
+
 
         const appVerifier = window.recaptchaVerifier;
         // console.log("THis is appverifier", appVerifier);
@@ -665,7 +633,8 @@ const checkIfUserEmailIsVerified=async ()=>{
         console.log("verifier",appVerifier)
         firebase
             .auth()
-            .signInWithPhoneNumber(phoneNumber,appVerifier)
+            .signInWithPhoneNumber(phoneNumber,
+                    appVerifier)
             .then((result) => {
                 console.log('result  =   ', result);
                 setConfirmResult(result);
@@ -674,7 +643,7 @@ const checkIfUserEmailIsVerified=async ()=>{
                 window.recaptchaVerifier = null
             })
             .catch((error) => {
-                notify(error.code);
+                notify(error.message);
                 setOpenLoader(false);
                 console.log("firebase", error);
             });
@@ -684,27 +653,30 @@ const checkIfUserEmailIsVerified=async ()=>{
 
 
     const handleLoginRequest=async ()=>{
-
-
+      
+const location =[longitude,latitude]
         try{
-            await registerUser()
-            console.log('user registered');
+          
+            
             var data = {
                 profileImage: profileImage ||
                     "https://image.shutterstock.com/image-vector/profile-placeholder-image-gray-silhouette-260nw-1153673752.jpg",
                 firstName: firstName,
                 lastName: lastName,
                 phoneNumber: phoneNumber,
-                address: address,
+                address: address?.userAddress,
                 unit: unit,
                 city: city,
                 state: state,
                 zipcode: zipcode,
+                location:location,
                 country: country,
                 latitude: latitude,
                 longitude: longitude,
                 email: localStorage.getItem("email"),
             };
+            
+            console.log("completeprofiledata",data)
             CompleteProfile(data).then(
                 (res) => {
                     console.log('CompleteProfile = ',res);
@@ -751,7 +723,7 @@ const checkIfUserEmailIsVerified=async ()=>{
                                 ) {
 
 
-                                    document.getElementById("homepage").click();
+                                   // document.getElementById("homepage").click();
                                 }
                             },
                             (error) => {
@@ -760,17 +732,24 @@ const checkIfUserEmailIsVerified=async ()=>{
                                 //   notify(error.response.data.message);
                                 // }
                                 setOpenLoader(false);
-                                console.log("This is response", error.response);
+                                console.log("veriifyphone", error.response);
                             }
                         );
+                      
+                          
+                        
                         console.log(res);
-
+                        VerificanEmail()
+                        localStorage.setItem("prevurl",window.location.href)
+                        props.history.push('/ConfirmEmail')
                     }
                 },
                 (error) => {
                     if (error.response) {
-                        notify(error.response.data.message);
+                        setOpenLoader(false)
+                        alert("Already Registered",error.response.data.message);
                     }
+                    alert("Already Registered",error.response.data.message);
                     setOpenLoader(false);
                     console.log("CompleteProfile", error);
                 }
@@ -780,11 +759,85 @@ const checkIfUserEmailIsVerified=async ()=>{
         }
 
      }
-
+     function extractFromAdress(components, type){
+        for (var i=0; i<components.length; i++)
+            for (var j=0; j<components[i].types.length; j++)
+                if (components[i].types[j]==type) return components[i].long_name;
+        return "";
+    }
+    
+     const handleSelect = async (address) => {
+         
+        console.log("This is the dares", address);
+    
+    
+        try{
+            const results = await geocodeByAddress(address);
+            console.log('resultsaddress = ',results)
+    
+            if(results.length>0) {
+    
+                const addressComponents=results[0].address_components;
+                console.log('addressComponents = ',addressComponents)
+                const latLng = await getLatLng(results[0]);
+                var userZipCode = extractFromAdress(addressComponents, "postal_code");
+                var userCity = extractFromAdress(addressComponents, "locality");
+                var userState = extractFromAdress(addressComponents, "administrative_area_level_1");
+               var userCountry=extractFromAdress(addressComponents, "country");
+                address=address.split(",").length>0?address.split(",")[0]:address;
+    
+                localStorage.setItem(
+                    "userCurrentLocation",
+                    JSON.stringify({latitude: latLng.lat, longitude: latLng.lng})
+                );
+                localStorage.setItem("userZipCode", userZipCode);
+                localStorage.setItem("userCity", userCity);
+                localStorage.setItem("userState", userState);
+                localStorage.setItem("userAddress", address);
+                localStorage.setItem("userCountry", userCountry);
+    
+    
+                const data={
+                    currentLocation:{
+                        latitude: latLng.lat,
+                        longitude: latLng.lng,
+                    },
+                    userAddress:address,
+                    userCity: userCity,
+                    userZipCode:userZipCode,
+                    userState:userState,
+                    userCountry:userCountry
+                }
+                
+                setAddress(data)
+                console.log("useraddress",data)
+    
+    
+    
+             
+    
+            }
+    
+    
+        }catch (e) {
+            console.error("resultsError", e)
+        }
+    
+    
+      };
+      
+     
     return goToOtp ? (
+
+        
         <ConfirmOtp
             confirmResult={confirmResult}
             phoneNumber={phoneNumber}
+            openLoader={openLoader}
+            success = {success}
+            failure = {failure}
+            setOpenLoader= {setOpenLoader}
+            handleClose = {handleClose}
             goBack={
                 () => {
                     setGotoOtp(false);
@@ -800,11 +853,15 @@ const checkIfUserEmailIsVerified=async ()=>{
             setOpenLoader={setOpenLoader}
             onSuccessOtp={
                 async () => {
+                  
                     handleLoginRequest();
+                  
                 }
             }
         ></ConfirmOtp>
-    ) : (
+        
+    ):
+    (
         <div>
             <Backdrop className={classes.backdrop} open={openLoader}>
                 <CircularProgress color="inherit"/>
@@ -927,14 +984,56 @@ const checkIfUserEmailIsVerified=async ()=>{
                 <p className={classes.label} style={{marginTop: 10}}>
                     Address
                 </p>
-                <input
+                {console.log("addressdata",address?.userAddress,address)}
+                <PlacesAutocomplete
                     className={classes.input}
-                    value={address}
-                    onChange={(e) => {
-                        setAddress(e.target.value);
-                        localStorage.setItem("address", e.target.value);
+                   
+                    value={address?.userAddress?address.userAddress:address!=="[object Object]"?address:''}
+                    onChange={(addres) => {
+                        setAddress(addres);
+                        console.log("address",address.userAddress)
+                        localStorage.setItem("address", address);
+                        handleSelect(addres)
                     }}
-                ></input>
+                    //onSelect={handleSelect(address)}
+                >
+                      {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+          <div style={{ width: "100%" }}>
+            <input
+              {...getInputProps({
+                placeholder: "Search Places ...",
+                className: "location-search-input",
+              })}
+              className={classes.input}
+            />
+            <div className="autocomplete-dropdown-container">
+              {loading && <div>Loading...</div>}
+              {suggestions.map((suggestion) => {
+                const className = suggestion.active
+                  ? "suggestion-item--active"
+                  : "suggestion-item";
+                // inline style for demonstration purpose
+                const style = suggestion.active
+                  ? { backgroundColor: "#fafafa", cursor: "pointer" }
+                  : { backgroundColor: "#ffffff", cursor: "pointer" };
+                return (
+                  <div
+                    {...getSuggestionItemProps(suggestion, {
+                      className,
+                      style,
+                    })}
+                
+                  >{console.log("sugg",suggestion.description)}
+                      
+                    <span>{suggestion.description}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+                </PlacesAutocomplete>
                 <p className={classes.label} style={{marginTop: 10}}>
                     Unit/ Apt
                 </p>
@@ -951,7 +1050,7 @@ const checkIfUserEmailIsVerified=async ()=>{
                 </p>
                 <input
                     className={classes.input}
-                    value={city}
+                    value={address.userCity?address.userCity:city}
                     placeholder="City"
                     onChange={(e) => {
                         setCity(e.target.value);
@@ -961,26 +1060,14 @@ const checkIfUserEmailIsVerified=async ()=>{
                 <p className={classes.label} style={{marginTop: 10}}>
                     State
                 </p>
-                <Autocomplete
-                    options={states}
-                    getOptionLabel={(option) => option.title}
-                    onChange={(event, values) => {
-                        if (values) {
-                            setState(values.title);
-                            localStorage.setItem("state", values.title);
-                        }
+                <input
+                    className={classes.input}
+                    value={address.userState?address.userState:state}
+                    placeholder="State"
+                    onChange={(e) => {
+                        setState(e.target.value);
+                        localStorage.setItem("state", e.target.value);
                     }}
-                    style={{
-                        // width: 300,
-                        // marginLeft: 20,
-                        // marginTop: 20,
-                        // marginBottom: 20
-                        border: "none",
-                        width: "100%",
-                    }}
-                    renderInput={(params) => (
-                        <TextField label={state ? state : "State"} {...params} />
-                    )}
                 />
 
                 <p className={classes.label} style={{marginTop: 10}}>
@@ -988,7 +1075,7 @@ const checkIfUserEmailIsVerified=async ()=>{
                 </p>
                 <input
                     className={classes.input}
-                    value={zipcode}
+                    value={address.userZipCode?address.userZipCode:zipcode}
                     onChange={(e) => {
                         setZipcode(e.target.value);
                         localStorage.setItem("zipcode", e.target.value);
@@ -1018,7 +1105,7 @@ const checkIfUserEmailIsVerified=async ()=>{
                     }}
                     renderInput={(params) => (
                         <TextField
-                            label={country ? country : "United States"}
+                            label={address.userCountry ? address.userCountry : country}
                             {...params}
                         />
                     )}
@@ -1031,20 +1118,24 @@ const checkIfUserEmailIsVerified=async ()=>{
                     //   setVerify(true);
                     // }}
                     onClick={
-                        () => {
-                            // if (!validator.validate(email)) {
-                            //   console.log("This is an email", email);
-                            //   notify("Please Enter a valid Email");
-                            // } else if (password === "") {
-                            //   notify("Please Enter a password");
-                            // } else {
-                            // setOpenLoader(true);
-
-
+                        ()  => {
+                            
+                        try{    if(city&&
+                            firstName&&phoneNumber&&
+                            address&&
+                            lastName && unit){
                             setOpenLoader(true);
-                            // console.log("This is great", data);
                             sendFirebaseOTP();
+                             }
+                            else{
 
+                                setOpenLoader(false);
+                             
+                                notify("Please fill all the fields")
+                             
+                            }}catch(e){
+                                notify(e)
+                            }
                         }
                         // document.getElementById("complete").click();
                     }

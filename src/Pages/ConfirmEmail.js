@@ -1,12 +1,14 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {makeStyles, Grid, TextField} from "@material-ui/core";
 import PhoneInput from "react-phone-number-input";
 import Drawer from "@material-ui/core/Drawer";
 import Verify from "../assets/verify.png";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import OtpInput from "react-otp-input";
-import {Link, withRouter} from "react-router-dom";
-import {verifyPhone} from "../ApiHelper";
+import {Link, withRouter, useHistory} from "react-router-dom";
+import {emailVerification, updateCustomerEmailStatus, UpdateCustomerProfile} from "../ApiHelper";
+import Backdrop from '@mui/material/Backdrop';
+import CircularProgress from '@mui/material/CircularProgress';
 
 const useStyles = makeStyles((theme) => ({
     input: {
@@ -33,17 +35,65 @@ const useStyles = makeStyles((theme) => ({
         border: "none",
         borderRadius: 15,
         background: "#1075c2",
-        paddingLeft:30,
-        paddingRight:30,
-        paddingTop:10,
-        paddingBottom:10
+        paddingLeft: 30,
+        paddingRight: 30,
+        paddingTop: 10,
+        paddingBottom: 10
     },
 }));
+const updateCustomeEmailStatus = async () => {
+    try {
+        const emaistatus =
+            {
+                emailVerified: true
+            }
+        const res = await UpdateCustomerProfile(emaistatus)
+        console.log("updateCustomer", res.data)
+    }
+    catch (e) {
+        console.log("updateCustomer", e)
+    }
+}
+
 export default function ConfirmEmail(props) {
+    var currentUrl = window.location.href;
     const classes = useStyles();
     const [value, setValue] = useState("");
     const [OTP, setOTP] = useState("");
     const [typeConfirm, setTypeConfirm] = useState("text");
+    const history = useHistory();
+    const [open, setOpen] = useState(false);
+    //var referrer = history.go(-1)
+    console.log(document.referrer, 'hamza')
+    const handleClose = () => {
+        setOpen(false);
+    };
+    const handleVerifyCode = async () => {
+        // Request for OTP verification
+        try {
+            console.log("OTP", OTP)
+            if (OTP.length == 4) {
+                try {
+                    const verify = {email: localStorage.getItem("email"), verificationCode: OTP}
+                    const res = await emailVerification(verify)
+                    localStorage.setItem("email", verify.email)
+                    setOpen(false);
+                    props.goBack();
+                    props.onSuccessOtp();
+                }
+                catch (e) {
+                    alert(e.message);
+                    console.log("emailverification", e);
+                    setOpen(false)
+                }
+            } else {
+                alert("Please enter a 4 digit OTP code.");
+                setOpen(false)
+            }
+        } catch (e) {
+            setOpen(false)
+        }
+    };
 
     const [state, setState] = React.useState(false);
 
@@ -57,28 +107,16 @@ export default function ConfirmEmail(props) {
 
         setState(open);
     };
-    console.log("This is ", props.confirmResult);
-    const handleVerifyCode = () => {
-        // Request for OTP verification
-        try {
-            if (OTP.length == 6) {
-                props.confirmResult
-                    .confirm(OTP)
-                    .then((user) => {
-                        props.onSuccessOtp()
-                    }).catch((error) => {
-                    alert(error.message);
-                    console.log(error);
-                });
-            } else {
-                alert("Please enter a 6 digit OTP code.");
-            }
-        } catch (e) {
-        }
-    };
 
     return (
         <div>
+            <Backdrop
+                sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}
+                open={open}
+                onClick={handleClose}
+            >
+                <CircularProgress color="inherit"/>
+            </Backdrop>
             <Link id="homepage" to="/homepage"></Link>
             <div style={{borderBottom: "1px solid #e9e9e9", height: 60}}>
                 <Grid
@@ -125,7 +163,7 @@ export default function ConfirmEmail(props) {
                             margin: 0,
                         }}
                     >
-                        Enter the 6 digit code that sent to your email
+                        Enter the 4 digit code that sent to your email
                     </p>
                 </Grid>
                 <Grid item xs={12}>
@@ -133,19 +171,22 @@ export default function ConfirmEmail(props) {
                         className="otp"
                         onChange={(otp) => setOTP(otp)}
                         value={OTP}
-                        numInputs={6}
+                        numInputs={4}
                         separator={<span>-</span>}
                     />
                 </Grid>
 
 
-                <Grid item xs={12} alignItems="center" justifyContent="center" style={{width:'80vw',marginTop:10,textAlign:'center'}}>
+                <Grid item xs={12} alignItems="center" justifyContent="center"
+                      style={{width: '80vw', marginTop: 10, textAlign: 'center'}}>
                     <Grid container direction="row" alignItems="center" justifyContent="center">
                         <Grid item xs={6}>
                             <button
                                 className={classes.button}
                                 onClick={() => {
+                                    setOpen(true)
                                     handleVerifyCode();
+
                                 }}
                             >
                                 Verify
@@ -157,6 +198,7 @@ export default function ConfirmEmail(props) {
                                 className={classes.button}
                                 onClick={() => {
                                     props.goBack()
+
                                 }}
                             >
                                 Resend OTP
@@ -187,7 +229,7 @@ export default function ConfirmEmail(props) {
                     <Grid container direction="row" justify="center">
                         <p style={{width: "90%", textAlign: "center", marginTop: 0}}>
                             A 6 digit verification code has been send to you phone "
-                            {props.phoneNumber}"
+
                         </p>
 
                         <p
