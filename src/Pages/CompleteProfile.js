@@ -665,7 +665,7 @@ const checkIfUserEmailIsVerified=async ()=>{
         console.log("verifier",appVerifier)
         firebase
             .auth()
-            .signInWithPhoneNumber(phoneNumber, appVerifier)
+            .signInWithPhoneNumber(phoneNumber,appVerifier)
             .then((result) => {
                 console.log('result  =   ', result);
                 setConfirmResult(result);
