@@ -109,9 +109,9 @@ console.log(data)
 
 
    useEffect(async ()=>{
-       const res = await UpdateCustomerProfile({emailVerified: false});
-       setEmailVerified(false);
-   },[])
+        const res = await UpdateCustomerProfile({emailVerified: false});
+        setEmailVerified(false);
+    },[])
 
   const updateMyProfile = () => {
     var data = {
