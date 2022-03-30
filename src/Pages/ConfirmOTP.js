@@ -72,6 +72,7 @@ export default function ConfirmOTP(props) {
      }
     const res = await UpdateCustomerProfile(emaistatus)
     console.log("updateCustomer",res.data)
+    JSON.parse(localStorage.setItem('userData').phoneNumberVerified,true)
  }
  catch(e)
  {
@@ -87,8 +88,9 @@ export default function ConfirmOTP(props) {
                 props.confirmResult
                     .confirm(OTP)
                     .then((user) => {
-                        props.onSuccessOtp()
                         updateCustomerPhoneStatus()
+                        props.onSuccessOtp()
+                      
                         props.setOpenLoader(false)
                         
                         

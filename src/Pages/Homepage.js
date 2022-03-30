@@ -67,7 +67,8 @@ import Verify from "../assets/verify.png";
 
 
 import AlertDialog from '../Pages/Dialogs/confirmation';
-
+const phoneverify = JSON.parse(JSON.stringify(localStorage.getItem('userData'))).phoneNumberVerified
+const emailverify = JSON.parse(JSON.stringify(localStorage.getItem('userData'))).emailVerified
 const useStyles = makeStyles((theme) => ({
     input: {
         border: "none",
@@ -815,7 +816,13 @@ const HomePage = (props) => {
     };
 
     const postMyRequest = () => {
-        document.getElementById("requestAService/0").click();
+       
+        console.log("hamza",phoneverify,emailverify)
+    
+         document.getElementById("requestAService/0").click();
+      
+       
+    
         // if (localStorage.getItem("token")) {
         //   setOpenLoader(true);
         //   PostARequest().then(
@@ -1051,8 +1058,23 @@ const HomePage = (props) => {
                 title={title}
                 show={showAlertDialog}
                 onSuccess={(e) => {
-                    postMyRequest();
-                    setShowAlertDialog(true);
+                       if( emailverify&& phoneverify===true) 
+                 {   postMyRequest();
+                    setShowAlertDialog(false);
+                
+                    
+                 }else if(emailverify!=true)
+                  {
+                   setShowAlertDialog(false)
+                   alert("Your email is not verified") 
+                  }
+                  else if(phoneverify!=true)
+                  {
+                   setShowAlertDialog(false)
+                   alert("Your phone is not verified")                
+                  }
+                 
+                  
                 }}
                 onCancel={(e) => {
                     setShowAlertDialog(false);
@@ -1150,7 +1172,7 @@ const HomePage = (props) => {
                         onClose={toggleDrawer("bottom", false)}
                     >
                         <div style={{width: "60vw"}}>
-                            <Sidebar postMyRequest={postMyRequest}></Sidebar>
+                            <Sidebar postMyRequest={postMyRequest} setShowAlertDialog={setShowAlertDialog} emailverify={emailverify} phoneverify={phoneverify} ></Sidebar>
                         </div>
                     </Drawer>
                 </div>

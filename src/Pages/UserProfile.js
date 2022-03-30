@@ -15,7 +15,8 @@ import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import Avatar from "../assets/profile.png";
 import {MyProfile, UpdateCustomerProfile
 ,deleteProfileApi,
-DeleteCustomerProfile
+DeleteCustomerProfile,
+sendEmailVerification
 } from "../ApiHelper";
 import {ToastContainer, toast} from "react-toastify";
 import {Countries, states} from "../Data/Data";
@@ -73,7 +74,7 @@ export default function UserProfile() {
   const [phoneNumber, setPhoneNumber] = useState(
     localStorage.getItem("phoneNumber1")
   );
-  const [emailVerified,setEmailVerified]=React.useState(false)
+  const [emailVerified,setEmailVerified]=useState(JSON.parse(localStorage.getItem('userData')).emailVerified)
   const [phoneVerified,setPhoneVerified]=useState(false)
   const [address, setAddress] = useState(localStorage.getItem("address1"));
   const [unit, setUnit] = useState(localStorage.getItem("unit1"));

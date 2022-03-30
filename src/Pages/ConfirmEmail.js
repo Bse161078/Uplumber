@@ -49,6 +49,7 @@ const updateCustomeEmailStatus = async () => {
             }
         const res = await UpdateCustomerProfile(emaistatus)
         console.log("updateCustomer", res.data)
+        JSON.parse(localStorage.setItem('userData').emailVerified,true)
     }
     catch (e) {
         console.log("updateCustomer", e)
@@ -77,9 +78,17 @@ export default function ConfirmEmail(props) {
                     const verify = {email: localStorage.getItem("email"), verificationCode: OTP}
                     const res = await emailVerification(verify)
                     localStorage.setItem("email", verify.email)
+                    updateCustomeEmailStatus()
                     setOpen(false);
+                    const back = localStorage.getItem('prevurl')
+                    if(back!=null)
+                    {
+                        history.push('/homepage')
+                    }
+                    else{
                     props.goBack();
                     props.onSuccessOtp();
+                    }
                 }
                 catch (e) {
                     alert(e.message);
@@ -187,6 +196,7 @@ export default function ConfirmEmail(props) {
                                     setOpen(true)
                                     handleVerifyCode();
 
+
                                 }}
                             >
                                 Verify
@@ -197,8 +207,15 @@ export default function ConfirmEmail(props) {
                             <button
                                 className={classes.button}
                                 onClick={() => {
+                                    const back = localStorage.getItem("prevurl")
+                                    if(back!=null)
+                                    {
+                                        history.push('/complete-profile')
+                                    }
+                                    else
+                                    {
                                     props.goBack()
-
+                                    }
                                 }}
                             >
                                 Resend OTP
