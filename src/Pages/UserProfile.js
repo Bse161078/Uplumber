@@ -73,7 +73,7 @@ export default function UserProfile() {
   const [phoneNumber, setPhoneNumber] = useState(
     localStorage.getItem("phoneNumber1")
   );
-  const [emailVerified,setEmailVerified]=React.useState(false)
+  const [emailVerified,setEmailVerified]=useState(JSON.parse(localStorage.getItem('userData')).emailVerified)
   const [phoneVerified,setPhoneVerified]=useState(false)
   const [address, setAddress] = useState(localStorage.getItem("address1"));
   const [unit, setUnit] = useState(localStorage.getItem("unit1"));
@@ -109,8 +109,8 @@ console.log(data)
 
 
    useEffect(async ()=>{
-       const res = await UpdateCustomerProfile({emailVerified: false});
-       setEmailVerified(false);
+    //   const res = await UpdateCustomerProfile({emailVerified: false});
+      
    },[])
 
   const updateMyProfile = () => {

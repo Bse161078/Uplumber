@@ -964,14 +964,14 @@ const location =[longitude,latitude]
                 >
                     Phone Number
                 </p>
-                <input
-                    className={classes.input}
-                    value={phoneNumber}
-                    onChange={(e) => {
-                        setPhoneNumber(e.target.value);
-                        localStorage.setItem("phoneNumber", e.target.value);
-                    }}
-                ></input>
+                <PhoneInput
+                     placeholder="Enter phone number"
+                     value={phoneNumber}
+                     onChange={(e) => {
+                         console.log(e);
+                         setPhoneNumber(e);
+                     }}
+                ></PhoneInput>
                 {/* <PhoneInput
           placeholder="Enter phone number"
           value={phoneNumber}
@@ -1050,7 +1050,7 @@ const location =[longitude,latitude]
                 </p>
                 <input
                     className={classes.input}
-                    value={address.userCity?address.userCity:city}
+                    value={address?.userCity?address.userCity:city}
                     placeholder="City"
                     onChange={(e) => {
                         setCity(e.target.value);
@@ -1062,7 +1062,7 @@ const location =[longitude,latitude]
                 </p>
                 <input
                     className={classes.input}
-                    value={address.userState?address.userState:state}
+                    value={address?.userState?address.userState:state}
                     placeholder="State"
                     onChange={(e) => {
                         setState(e.target.value);
@@ -1075,7 +1075,7 @@ const location =[longitude,latitude]
                 </p>
                 <input
                     className={classes.input}
-                    value={address.userZipCode?address.userZipCode:zipcode}
+                    value={address?.userZipCode?address.userZipCode:zipcode}
                     onChange={(e) => {
                         setZipcode(e.target.value);
                         localStorage.setItem("zipcode", e.target.value);
@@ -1105,7 +1105,7 @@ const location =[longitude,latitude]
                     }}
                     renderInput={(params) => (
                         <TextField
-                            label={address.userCountry ? address.userCountry : country}
+                            label={address?.userCountry ? address?.userCountry : country}
                             {...params}
                         />
                     )}
@@ -1130,7 +1130,7 @@ const location =[longitude,latitude]
                             else{
 
                                 setOpenLoader(false);
-                             
+                                console.log(firstName,phoneNumber,address,lastName,unit,city)
                                 notify("Please fill all the fields")
                              
                             }}catch(e){

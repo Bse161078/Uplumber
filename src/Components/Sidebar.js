@@ -120,7 +120,21 @@ export default function Sidebar(props) {
                   }}
                   onClick={() => {
                     if (item.name === "New Request") {
-                      props.postMyRequest();
+                      if( props.emailverify&& props.phoneverify===true) 
+                      {   
+                        props.postMyRequest();
+                        
+                      }else if(props.emailverify!=true)
+                       {
+                        
+                        alert("Your email is not verified") 
+                       }
+                       else if(props.phoneverify!=true)
+                       {
+                        
+                        alert("Your phone is not verified")                
+                       }
+                    
                     } else {
                       document.getElementById(item.href).click();
                     }
