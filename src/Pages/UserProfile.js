@@ -15,7 +15,8 @@ import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import Avatar from "../assets/profile.png";
 import {MyProfile, UpdateCustomerProfile
 ,deleteProfileApi,
-DeleteCustomerProfile
+DeleteCustomerProfile,
+sendEmailVerification
 } from "../ApiHelper";
 import {ToastContainer, toast} from "react-toastify";
 import {Countries, states} from "../Data/Data";
@@ -230,7 +231,17 @@ console.log(data)
                 <div style={{width: "100%"}}></div>
                 <div className={classes.input} style={{height: 10}}></div>
                 <Grid item md={12} xs={12}>
-          <span style={{color: phoneVerified?"#60a3d6":"red"}} className={classes.label}>
+          <span style={{color: phoneVerified?"#60a3d6":"red"}} className={classes.label}
+          onClick={async(e)=>{
+            const res = await UpdateCustomerProfile({email: email})
+            const emaill = {email: email}
+            console.log("email = ", emaill)
+
+            const emailResult = await sendEmailVerification(emaill)
+          }
+          }
+          
+          >
             Phone Number
           </span>
                     <p style={{fontSize: 12, margin: 5}}>{phoneNumber}</p>

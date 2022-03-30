@@ -67,8 +67,8 @@ import Verify from "../assets/verify.png";
 
 
 import AlertDialog from '../Pages/Dialogs/confirmation';
-const phoneverify = JSON.parse(localStorage.getItem('userData'))?.phoneNumberVerified
-const emailverify = JSON.parse(localStorage.getItem('userData'))?.emailVerified
+const phoneverify = JSON.parse(JSON.stringify(localStorage.getItem('userData'))).phoneNumberVerified
+const emailverify = JSON.parse(JSON.stringify(localStorage.getItem('userData'))).emailVerified
 const useStyles = makeStyles((theme) => ({
     input: {
         border: "none",
