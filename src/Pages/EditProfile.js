@@ -1,3 +1,5 @@
+
+   
 import React, {useState, useEffect} from "react";
 import {Link, useHistory} from "react-router-dom";
 import {
@@ -7,6 +9,10 @@ import {
     Backdrop,
     CircularProgress,
 } from "@material-ui/core";
+import PlacesAutocomplete, {
+    geocodeByAddress,
+    getLatLng,
+  } from "react-places-autocomplete";
 import PhoneInput from "react-phone-number-input";
 import Header from "../Components/Header";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -24,7 +30,7 @@ import ConfirmOtp from "./ConfirmOTP";
 import firebase from "firebase";
 import {connectFirebase} from "../Config/firebase";
 import ConfirmationDialog from "./Dialogs/confirmationDialog";
-
+import { parsePhoneNumber } from 'react-phone-number-input'
 const useStyles = makeStyles((theme) => ({
     input: {
         border: "none",
@@ -59,19 +65,84 @@ const useStyles = makeStyles((theme) => ({
         color: "#fff",
     },
 }));
-let confirmemail = false
 export default function UpdateUserProfile(props) {
+    function extractFromAdress(components, type){
+        for (var i=0; i<components.length; i++)
+            for (var j=0; j<components[i].types.length; j++)
+                if (components[i].types[j]==type) return components[i].long_name;
+        return "";
+    }
+
+    const handleSelect = async (address) => {
+         
+        console.log("This is the dares", address);
+    
+    
+        try{
+            const results = await geocodeByAddress(address);
+            console.log('resultsaddress = ',results)
+    
+            if(results.length>0) {
+    
+                const addressComponents=results[0].address_components;
+                console.log('addressComponents = ',addressComponents)
+                const latLng = await getLatLng(results[0]);
+                var userZipCode = extractFromAdress(addressComponents, "postal_code");
+                var userCity = extractFromAdress(addressComponents, "locality");
+                var userState = extractFromAdress(addressComponents, "administrative_area_level_1");
+               var userCountry=extractFromAdress(addressComponents, "country");
+                address=address.split(",").length>0?address.split(",")[0]:address;
+    
+                localStorage.setItem(
+                    "userCurrentLocation",
+                    JSON.stringify({latitude: latLng.lat, longitude: latLng.lng})
+                );
+                localStorage.setItem("userZipCode", userZipCode);
+                localStorage.setItem("userCity", userCity);
+                localStorage.setItem("userState", userState);
+                localStorage.setItem("userAddress", address);
+                localStorage.setItem("userCountry", userCountry);
+    
+    
+                const data={
+                    currentLocation:{
+                        latitude: latLng.lat,
+                        longitude: latLng.lng,
+                    },
+                    userAddress:address,
+                    userCity: userCity,
+                    userZipCode:userZipCode,
+                    userState:userState,
+                    userCountry:userCountry
+                }
+                
+                setAddress(data)
+                setCountry(data.userCountry)
+                setZipcode(data.userZipCode)
+                setState(data.userState)
+                console.log("useraddress",data.userAddress)
+    
+    
+    
+             
+    
+            }
+    
+    
+        }catch (e) {
+            console.error("resultsError", e)
+        }
+    
+    
+      };
     console.log("UPDATEUSER", props)
     const [goToOtp, setGoToOtp] = useState(false);
     const [goToConfirmEmail, setGoToConfirmEmail] = useState(false);
     const [confirmResult, setConfirmResult] = useState();
     const [captchaCreated, setCaptchaCreated] = useState(false);
-
-
-    console.log("goTOConfirmEmail", confirmemail)
     const [openLoader, setOpenLoader] = useState(false);
     const classes = useStyles();
-    const [phoneVerified, setPhoneVerified] = useState(JSON.parse(localStorage.getItem("userData")).phoneNumberVerified);
+    const [phoneVerified, setPhoneVerified] = useState(false);
     const [value, setValue] = useState("");
 
     const [profileImage, setProfileImage] = useState(
@@ -80,12 +151,11 @@ export default function UpdateUserProfile(props) {
     const [firstName, setFirstName] = useState(props.firstName
     );
 
-    const [email, setEmail] = useState(localStorage.getItem("email"));
-    const [oldEmail, setOldEmail] = useState(localStorage.getItem("email"));
+    const [email, setEmail] = useState(props.email);
+    const [oldEmail, setOldEmail] = useState(props.email);
 
     const [lastName, setLastName] = useState(props.lastName);
-    const [phoneNumber, setPhoneNumber] = useState(localStorage.getItem("userPhone"));
-
+    const [phoneNumber, setPhoneNumber] = useState(props.phoneNumber);
     const [address, setAddress] = useState(localStorage.getItem("userAddress"));
     const [unit, setUnit] = useState(localStorage.getItem("userUnit"));
     const [city, setCity] = useState(localStorage.getItem("userCity"));
@@ -98,8 +168,8 @@ export default function UpdateUserProfile(props) {
     const [longitude, setLongitude] = useState(
         localStorage.getItem("longitude1") || localStorage.getItem("longitude")
     );
-    const [oldPhoneNumber, setOldPhoneNumber] = useState(localStorage.getItem("phoneNumber"));
-
+    const [oldPhoneNumber, setOldPhoneNumber] = useState(props.phoneNumber);
+    console.log(phoneNumber,'phonenumber',oldPhoneNumber);
     const [emailVerificationDialog, setEmailVerificationDialog] = React.useState(false);
     const history = useHistory();
 
@@ -132,16 +202,22 @@ export default function UpdateUserProfile(props) {
             console.log('hamza', e)
         }
     }
-    const updateMyProfile = (eVerified) => {
+    const updateMyProfile = () => {
+        const phone = parsePhoneNumber(phoneNumber).nationalNumber
+        const phoneCode = parsePhoneNumber(phoneNumber).countryCallingCode
+        const countrycode = parsePhoneNumber(phoneNumber).country
+        console.log("countrycode",countrycode)
         var data = {
             profileImage: profileImage,
             firstName: firstName,
             lastName: lastName,
-            phoneNumber: phoneNumber,
-            address: address,
+            address: address.userAddress,
             unit: unit,
             city: city,
             state: state,
+            phoneNumber:phone,
+            countryPhoneCode:phoneCode,
+            countryCode:countrycode,
             zipcode: zipcode,
             latitude: latitude,
             longitude: longitude,
@@ -150,16 +226,16 @@ export default function UpdateUserProfile(props) {
         };
         console.log("THis is the data", data);
         setOpenLoader(true);
+        
         UpdateCustomerProfile(data).then(
             (res) => {
                 if (res.data.success || res.status === 200 || res.status === 201) {
-                    setOpenLoader(false);
                     console.log(res.data.data);
                     var user = res.data.data;
                     props.setFirstName(user.firstName);
                     props.setProfileImage(user.profileImage);
                     props.setLastName(user.lastName);
-                    props.setPhoneNumber("+" + user.phoneNumber);
+                    props.setPhoneNumber(user.phoneNumber);
                     props.setAddress(user.address);
                     props.setCity(user.city);
                     props.setState(user.state);
@@ -167,12 +243,10 @@ export default function UpdateUserProfile(props) {
                     props.setZipcode(user.zipcode);
                     props.setCountry(user.country);
                     props.setEmail(email);
+                    props.setPhoneVerified(user.phoneNumberVerified)
                     props.setEmailVerified(user.emailVerified)
-                    props.setEdit(false)
                     localStorage.setItem("email", email)
-                    // setOpenLoader(false);
-
-                    // setAllProviders(res.data.Providers);
+                    console.log("THis is the dataprofile", user);
                 }
             },
             (error) => {
@@ -229,6 +303,7 @@ export default function UpdateUserProfile(props) {
     }, [goToConfirmEmail]);
 
     const createRecapha = () => {
+        
         window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
             "recaptcha-container",
             {
@@ -245,7 +320,7 @@ export default function UpdateUserProfile(props) {
         var regexp = /^\+[0-9]?()[0-9](\s|\S)(\d[0-9]{8,16})$/;
         return phoneNumber.match(/\d/g).length === 10;
     };
-
+    console.log('openloader',openLoader)
 
     const sendFirebaseOTP = () => {
         console.log("This is valid", validatePhoneNumber(phoneNumber));
@@ -266,7 +341,6 @@ export default function UpdateUserProfile(props) {
                 setConfirmResult(result);
                 setGoToOtp(true);
                 setOpenLoader(false);
-                setPhoneVerified(true)
                 window.recaptchaVerifier = null
             })
             .catch((error) => {
@@ -299,7 +373,8 @@ export default function UpdateUserProfile(props) {
                     onSuccessOtp={
                         async () => {
                             setOpenLoader(true);
-                            updateMyProfile();
+                            props.setEdit(false)
+                            window.location.reload()
                         }
                     }
                 ></ConfirmOtp>
@@ -308,17 +383,21 @@ export default function UpdateUserProfile(props) {
                 <ConfirmEmail
                     onSuccessOtp={
                         async () => {
-                            setOpenLoader(true);
+                          
                             try {
-                                const res = await UpdateCustomerProfile({emailVerified: true});
-                                props.setEmailVerified(true);
-                                if (oldPhoneNumber !== phoneNumber || !props.phoneVerified) {
+                                if (oldPhoneNumber != phoneNumber || !props.phoneVerified) {
                                     sendFirebaseOTP();
+                                    setOpenLoader(true);
+                                }
+                                else{
+                                    props.setEdit(false)
+                                    window.location.reload()
                                 }
                             }
                             catch (e) {
                                 console.log("emailverification", e);
                             }
+                            
                         }
                     }
                     goBack={
@@ -422,23 +501,68 @@ export default function UpdateUserProfile(props) {
                         <PhoneInput
                             // className={classes.input}
                             placeholder="Enter phone number"
+                           
                             value={phoneNumber}
+                           
                             onChange={(e) => {
-                                console.log(e);
+                                
                                 setPhoneNumber(e);
+                                
                             }}
                         />
                         <div className={classes.input} style={{height: 10}}></div>
                         <p className={classes.label} style={{marginTop: 10}}>
                             Address
                         </p>
-                        <input
-                            className={classes.input}
-                            value={address}
-                            onChange={(e) => {
-                                setAddress(e.target.value);
-                            }}
-                        ></input>
+                        <PlacesAutocomplete
+                    className={classes.input}
+                   
+                    value={address?.userAddress?address.userAddress:address!=="[object Object]"?address:''}
+                    onChange={(addres) => {
+                        setAddress(addres);
+                        console.log("address",address)
+                        localStorage.setItem("address", address);
+                        handleSelect(addres)
+                    }}
+                    //onSelect={handleSelect(address)}
+                >
+                      {({ getInputProps, suggestions, getSuggestionItemProps, loading }) => (
+          <div style={{ width: "100%" }}>
+            <input
+              {...getInputProps({
+                placeholder: "Search Places ...",
+                className: "location-search-input",
+              })}
+              className={classes.input}
+            />
+            <div className="autocomplete-dropdown-container">
+              {loading && <div>Loading...</div>}
+              {suggestions.map((suggestion) => {
+                const className = suggestion.active
+                  ? "suggestion-item--active"
+                  : "suggestion-item";
+                // inline style for demonstration purpose
+                const style = suggestion.active
+                  ? { backgroundColor: "#fafafa", cursor: "pointer" }
+                  : { backgroundColor: "#ffffff", cursor: "pointer" };
+                return (
+                  <div
+                    {...getSuggestionItemProps(suggestion, {
+                      className,
+                      style,
+                    })}
+                
+                  >{console.log("sugg",suggestion.description)}
+                      
+                    <span>{suggestion.description}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+                </PlacesAutocomplete>
                         <p className={classes.label} style={{marginTop: 10}}>
                             Unit/ Apt
                         </p>
@@ -454,7 +578,7 @@ export default function UpdateUserProfile(props) {
                         </p>
                         <input
                             className={classes.input}
-                            value={city}
+                            value={address?.userCity?address.userCity:city}
                             onChange={(e) => {
                                 setCity(e.target.value);
                             }}
@@ -462,33 +586,19 @@ export default function UpdateUserProfile(props) {
                         <p className={classes.label} style={{marginTop: 10}}>
                             State
                         </p>
-                        <Autocomplete
-                            options={states}
-                            getOptionLabel={(option) => option.title}
-                            onChange={(event, values) => {
-                                if (values) {
-                                    setState(values.title);
-                                    localStorage.setItem("state1", values.title);
-                                }
+                        <input
+                            className={classes.input}
+                            value={address?.userState?address.userState:state}
+                            onChange={(e) => {
+                                setState(e.target.value);
                             }}
-                            style={{
-                                // width: 300,
-                                // marginLeft: 20,
-                                // marginTop: 20,
-                                // marginBottom: 20
-                                border: "none",
-                                width: "100%",
-                            }}
-                            renderInput={(params) => (
-                                <TextField label={state ? state : ""} {...params} />
-                            )}
-                        />
+                        ></input>
                         <p className={classes.label} style={{marginTop: 10}}>
                             Zipcode
                         </p>
                         <input
                             className={classes.input}
-                            value={zipcode}
+                            value={address?.userZipCode?address.userZipCode:zipcode}
                             onChange={(e) => {
                                 setZipcode(e.target.value);
                             }}
@@ -496,28 +606,13 @@ export default function UpdateUserProfile(props) {
                         <p className={classes.label} style={{marginTop: 10}}>
                             Country
                         </p>
-                        <Autocomplete
-                            options={Countries}
-                            onChange={(event, values) => {
-                                if (values) {
-                                    console.log("This is co", values.title);
-                                    setCountry(values.title);
-                                    localStorage.setItem("country1", values.title);
-                                }
+                        <input
+                            className={classes.input}
+                            value={address?.userCountry?address.userCountry:country}
+                            onChange={(e) => {
+                                setCountry(e.target.value);
                             }}
-                            getOptionLabel={(option) => option.title}
-                            style={{
-                                // width: 300,
-                                // marginLeft: 20,
-                                // marginTop: 20,
-                                // marginBottom: 20
-                                border: "none",
-                                width: "100%",
-                            }}
-                            renderInput={(params) => (
-                                <TextField label={country ? country : ""} {...params} />
-                            )}
-                        />
+                        ></input>
                         <button
                             className={classes.button}
                             onClick={async (e) => {
@@ -530,15 +625,14 @@ export default function UpdateUserProfile(props) {
                                     // This must be true.
                                     handleCodeInApp: true
                                 };
-
+                                updateMyProfile();
                                 if (email && phoneNumber) {
                                     if (email !== oldEmail || !props.emailVerified) {
-
+                                        console.log("email",email,oldEmail,phoneNumber,oldPhoneNumber)
                                         try {
                                             const res = await UpdateCustomerProfile({email: email})
                                             const emaill = {email: email}
                                             console.log("email = ", emaill)
-
                                             const emailResult = await sendEmailVerification(emaill)
                                             console.log("emailResult ", emailResult)
                                             setGoToConfirmEmail(true)
@@ -551,13 +645,16 @@ export default function UpdateUserProfile(props) {
                                             setOpenLoader(false);
                                         }
                                     }
-                                    else if (oldPhoneNumber !== phoneNumber || !props.phoneVerified) {
+                                    else if (oldPhoneNumber !== phoneNumber || !props.phoneVerified) 
+                                    { 
+                                        setOpenLoader(true);
                                         sendFirebaseOTP();
-                                    } else {
-                                        updateMyProfile();
+                                       
                                     }
-
-                                    //   props.setEdit(false)
+                                    else{
+                                        window.location.reload()
+                                        props.setEdit(false)
+                                      }
 
 
                                 } else {

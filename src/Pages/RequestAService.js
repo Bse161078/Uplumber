@@ -183,8 +183,14 @@ function ProviderDetail(props) {
     const [requestorStatusData, setRequestorStatusData] = React.useState([]);
 
     useEffect(() => {
-        console.log("This si user", JSON.parse(localStorage.getItem("userData")));
+      //  console.log("This si user", JSON.parse(localStorage.getItem("userData")));
         handleSelect(localStorage.getItem("userAddress"));
+        if(localStorage.getItem("requestBeforeLogin")==="true")
+        {
+            setActiveTab("ReviewRequest")
+            localStorage.setItem("requestBeforeLogin","false")
+        }
+        console.log("requestData",requestData)
         // getMyProfile();
         getInssuranceCompnies();
         getAllLookingFor();
@@ -770,6 +776,9 @@ else{
                 setOpenLoader(false);
                 console.log("This is response", error.response);
                 if (error.response.data.message === "Customer not found") {
+                    localStorage.setItem("requestBeforeLogin", "true");
+                    localStorage.setItem("requestData",JSON.stringify(requestData))
+                    console.log("requestdata",requestData)
                     document.getElementById("create-account").click();
                 }
             }
@@ -1805,7 +1814,7 @@ else{
                         </Grid>
                     </Grid>
                     <FormGroup row style={{width: "100%"}}>
-                        {requestData.lookingFor.map((item) => {
+                        {requestData.lookingFor?.map((item) => {
                             return (
                                 <FormControlLabel
                                     checked={true}
@@ -1973,7 +1982,7 @@ else{
                     <p className={classes.label}>Name *</p>
                     <p className={classes.labelBlack}> {requestData.userName}</p>
                     <p className={classes.label}>Phone *</p>
-                    <p className={classes.labelBlack}>{"+"+localStorage.getItem("phoneNumber")} </p>
+                    <p className={classes.labelBlack}>{localStorage.getItem("userPhone")} </p>
                     <p className={classes.label}>Allow U plumber to contact you</p>
                     <p className={classes.labelBlack}>
                         {requestData.allowSms ? "Yes" : "No"}{" "}
@@ -2019,8 +2028,8 @@ else{
                         ) {
                             if (localStorage.getItem("id") && localStorage.getItem("token")) {
                                 postMyRequest();
-                             
-                            } else {
+                            }
+                             else {
                                 localStorage.setItem("userState",requestData.userState)
                                 checkThisUser();
                                
@@ -2594,7 +2603,7 @@ else{
                                     setBottomState(false);
                                 }}
                                 onClick={() => {
-                                    document.getElementById("current-requests").click();
+                                    document.getElementById("homepage").click();
                                 }}
                             >
                                 Continue

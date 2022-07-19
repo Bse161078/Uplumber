@@ -6,10 +6,10 @@ import Verify from "../assets/verify.png";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import OtpInput from "react-otp-input";
 import {Link, withRouter, useHistory} from "react-router-dom";
-import {emailVerification, updateCustomerEmailStatus, UpdateCustomerProfile} from "../ApiHelper";
+import {emailVerification, UpdateEmailVerificationStatus, sendEmailVerification} from "../ApiHelper";
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
-
+import { Snackbar } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
     input: {
         border: "none",
@@ -41,18 +41,15 @@ const useStyles = makeStyles((theme) => ({
         paddingBottom: 10
     },
 }));
+
 const updateCustomeEmailStatus = async () => {
     try {
-        const emaistatus =
-            {
-                emailVerified: true
-            }
-        const res = await UpdateCustomerProfile(emaistatus)
-        console.log("updateCustomer", res.data)
-        JSON.parse(localStorage.setItem('userData').emailVerified,true)
+        const res = await UpdateEmailVerificationStatus()
+        console.log("updateCustomeremailstatus", res.data.data)
+        localStorage.setItem('userData',JSON.stringify(res.data))
     }
     catch (e) {
-        console.log("updateCustomer", e)
+        console.log("updateCustomeremailstatuserror", e)
     }
 }
 
@@ -64,31 +61,72 @@ export default function ConfirmEmail(props) {
     const [typeConfirm, setTypeConfirm] = useState("text");
     const history = useHistory();
     const [open, setOpen] = useState(false);
+    const [openSnackbar,setOpenSnackbar] = useState(false)
     //var referrer = history.go(-1)
     console.log(document.referrer, 'hamza')
     const handleClose = () => {
         setOpen(false);
     };
+    const VerificanEmail=async()=>{
+        try
+        {
+            const email={
+                email:localStorage.getItem("email")
+            }
+    
+        const res = await sendEmailVerification(email);
+        setOpen(false)
+        console.log("sendemailverificationcode",res)
+    }
+    catch(e)
+    {
+        console.log("sendemailverificationcode",e)
+        setOpen(false)
+    }
+    }
     const handleVerifyCode = async () => {
         // Request for OTP verification
-        try {
+     
             console.log("OTP", OTP)
             if (OTP.length == 4) {
                 try {
                     const verify = {email: localStorage.getItem("email"), verificationCode: OTP}
                     const res = await emailVerification(verify)
-                    localStorage.setItem("email", verify.email)
-                    updateCustomeEmailStatus()
-                    setOpen(false);
-                    const back = localStorage.getItem('prevurl')
-                    if(back!=null)
+                    if(res.data.success===true){
+                        console.log("emailverification", res);
+                        localStorage.setItem("email", verify.email)
+                        updateCustomeEmailStatus()
+                        setOpen(false);
+                        const back = localStorage.getItem('prevurl')
+                        if(back?.includes("complete-profile"))
+                        {
+                            if(localStorage.getItem("requestBeforeLogin")==="true")
+                            {
+                                history.push('/requestAService/0')
+                                localStorage.setItem("prevurl",'')
+                                alert("Profile Created!")
+
+                            }
+                            else
+                            {
+                            history.push('/homepage')
+                            localStorage.setItem("prevurl",'')
+                            alert("Profile Created!")
+                        }
+                    }
+                        else{
+                        setOpenSnackbar(true)
+                        props.goBack();
+                        props.onSuccessOtp();
+
+                        }
+                    }
+                    else if(res.data.success===false)
                     {
-                        history.push('/homepage')
+                        alert(res.data.message)
+                        setOpen(false)
                     }
-                    else{
-                    props.goBack();
-                    props.onSuccessOtp();
-                    }
+                    
                 }
                 catch (e) {
                     alert(e.message);
@@ -99,9 +137,7 @@ export default function ConfirmEmail(props) {
                 alert("Please enter a 4 digit OTP code.");
                 setOpen(false)
             }
-        } catch (e) {
-            setOpen(false)
-        }
+        
     };
 
     const [state, setState] = React.useState(false);
@@ -116,9 +152,13 @@ export default function ConfirmEmail(props) {
 
         setState(open);
     };
-
     return (
         <div>
+            <Snackbar
+             open={openSnackbar}
+             message={"Email Updated"}
+             autoHideDuration={2000}
+             />
             <Backdrop
                 sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}
                 open={open}
@@ -208,9 +248,10 @@ export default function ConfirmEmail(props) {
                                 className={classes.button}
                                 onClick={() => {
                                     const back = localStorage.getItem("prevurl")
-                                    if(back!=null)
+                                    if(back.includes('complete-profile'))
                                     {
-                                        history.push('/complete-profile')
+                                        setOpen(true)
+                                        VerificanEmail()
                                     }
                                     else
                                     {

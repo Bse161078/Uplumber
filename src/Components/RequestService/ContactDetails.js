@@ -207,7 +207,7 @@ checkUserData()
          
         type={"text"}
         
-        value={localStorage.getItem("phoneNumber")}
+        value={localStorage.getItem("userPhone")}
         onChange={(e) => {
           props.setRequestData("userPhone", e.target.value);
           localStorage.setItem("userPhone", e.target.value);

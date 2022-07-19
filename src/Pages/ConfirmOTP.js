@@ -12,6 +12,7 @@ import { CircularProgress } from "@material-ui/core";
 import { formLabelClasses } from "@mui/material";
 import Snackbar from '@mui/material/Snackbar';
 import {toast} from "react-toastify";
+import { parsePhoneNumber } from 'react-phone-number-input'
 const useStyles = makeStyles((theme) => ({
     input: {
         border: "none",
@@ -62,21 +63,41 @@ export default function ConfirmOTP(props) {
         setState(open);
     };
 
-    const updateCustomerPhoneStatus=async()=>
+    const updateCustomerPhoneStatus = async ()=>
+    {
+       try{
+            const res = await verifyPhone()
+            localStorage.setItem('userData',JSON.stringify(res.data.data))
+            console.log('updatecustomerphonestatus',res)
+            localStorage.setItem('userPhone',props.phoneNumber)
+    }
+    catch(e)
+    {
+        console.log("updatecustomerphonestatus",e)
+    }
+    }
+    const updateCustomerPhone=async()=>
 {
  try
  {
-     const emaistatus =
+     const phone = parsePhoneNumber(props.phoneNumber).nationalNumber
+     const phoneCode = parsePhoneNumber(props.phoneNumber).countryCallingCode
+     const countrycode = parsePhoneNumber(props.phoneNumber).country
+     const status =
      {
+        phoneNumber:phone,
+        countryPhoneCode:phoneCode,
+        countryCode:countrycode,
         phoneNumberVerified:true
      }
-    const res = await UpdateCustomerProfile(emaistatus)
-    console.log("updateCustomer",res.data)
-    JSON.parse(localStorage.setItem('userData').phoneNumberVerified,true)
+     console.log('customerobject',status,phone)
+    const res = await UpdateCustomerProfile(status)
+    console.log("updateCustomernumber",res.data)
+    localStorage.setItem('userData',JSON.stringify(res.data.data))
+    
  }
  catch(e)
  {
-     console.log("updateCustomer",e)
  }
 }
     console.log("This is ", props);
@@ -88,6 +109,7 @@ export default function ConfirmOTP(props) {
                 props.confirmResult
                     .confirm(OTP)
                     .then((user) => {
+                        updateCustomerPhone()
                         updateCustomerPhoneStatus()
                         props.onSuccessOtp()
                       
@@ -113,20 +135,16 @@ if(props.failure){
 }
     return (
         <div>
-                     <Snackbar
-        //anchorOrigin={{horizontal:'top' ,vertical:'center'} }
-        open={props.success}
-        onClose={props.handleClose}
-        message="User Created"
-        //key={"top" + "center"}
-      />
+                <Snackbar
+                    open={props.success}
+                    onClose={props.handleClose}
+                    message="User Created"
+                />
                   <Snackbar
-        //anchorOrigin={{horizontal:'top' ,vertical:'center'} }
-        open={failure}
-        onClose={props.handleClose}
-        message={props.failure}
-        //key={"top" + "center"}
-      />
+                    open={failure}
+                    onClose={props.handleClose}
+                    message={props.failure}
+                  />
            
              <Backdrop className={classes.backdrop} open={props.openLoader}>
                 <CircularProgress color="inherit"/>
@@ -217,16 +235,6 @@ if(props.failure){
                         </Grid>
                     </Grid>
                 </Grid>
-
-
-                {/* <button
-          className={classes.button}
-          onClick={() => {
-           props.goBack()
-          }}
-        >
-          Change Phone
-        </button> */}
 
 
                 <Drawer

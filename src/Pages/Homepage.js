@@ -52,6 +52,7 @@ import {
     MyProfile,
     UpdateCustomerProfile,
     removeFavorite,
+    
 } from "../ApiHelper";
 import {ToastContainer, toast} from "react-toastify";
 import {
@@ -67,8 +68,7 @@ import Verify from "../assets/verify.png";
 
 
 import AlertDialog from '../Pages/Dialogs/confirmation';
-const phoneverify = JSON.parse(JSON.stringify(localStorage.getItem('userData'))).phoneNumberVerified
-const emailverify = JSON.parse(JSON.stringify(localStorage.getItem('userData'))).emailVerified
+
 const useStyles = makeStyles((theme) => ({
     input: {
         border: "none",
@@ -118,7 +118,8 @@ const useStyles = makeStyles((theme) => ({
 const HomePage = (props) => {
     console.log("This is props", props.match.params);
     const classes = useStyles();
-
+    const [emailverify, setVerifyEmail] = React.useState(false);
+    const [phoneverify, setVerifyPhone] = React.useState(false);
     const [state, setState] = React.useState(false);
     const [bottomState, setBottomState] = React.useState(false);
     const [zoom, setZoom] = React.useState(12);
@@ -133,14 +134,17 @@ const HomePage = (props) => {
     const [openPopup, setOpenPopup] = useState(null);
     const [tokenFound, setTokenFound] = useState(null);
     const [showAlertDialog, setShowAlertDialog] = useState(false);
-
+    useEffect(async() => {
+        getMyProfile();
+        console.log('emailverify',phoneverify,emailverify)
+        localStorage.setItem('userData','')
+    }, [emailverify])
     const toggleDrawer = (anchor, open) => (event) => {
         setState(open);
     };
     const position = [51.505, -0.09];
     console.log("This isid", localStorage.getItem("id"));
     console.log("This is token", localStorage.getItem("token"));
-
     const updateMyProfile = (fcmToken) => {
         var data = {
             fcmTokenWeb: fcmToken,
@@ -625,7 +629,6 @@ const HomePage = (props) => {
             return <div></div>;
         }
     };
-
     const getMyProfile = () => {
         // setOpenLoader(true);
         MyProfile().then(
@@ -646,6 +649,8 @@ const HomePage = (props) => {
                     localStorage.setItem("userCity", user.city);
                     localStorage.setItem("userState", user.state);
                     localStorage.setItem("userZipCode", user.zipcode);
+                    setVerifyEmail(user.emailVerified)
+                    setVerifyPhone(user.phoneNumberVerified)
                     localStorage.setItem(
                         "userName",
                         user.firstName + " " + user.lastName
@@ -861,6 +866,7 @@ const HomePage = (props) => {
     const getLocation = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
+            //showPosition(navigator.getLocation.getCurrentPosition(showPosition))
             return true;
         } else {
             alert("App need your location work properly");
@@ -898,7 +904,6 @@ const HomePage = (props) => {
     const [already, setAlready] = useState(false);
     useEffect(async () => {
         getLocation();
-
         if (localStorage.getItem("coords")) {
             // alert("THis will do what we want")
             setCurrentLoction(JSON.parse(localStorage.getItem("coords")));
@@ -906,7 +911,7 @@ const HomePage = (props) => {
 
         let fb = await connectFirebase();
         getToken(setTokenFound);
-        console.log("This is fb", fb);
+      //console.log("This is fb", fb);
         if (localStorage.getItem("allProviders")) {
             setAllProviders(JSON.parse(localStorage.getItem("allProviders")));
         }
@@ -987,12 +992,13 @@ const HomePage = (props) => {
                     if (item.ratings.length > 0) {
                         averageRating = averageRating / item.ratings.length;
                     }
-
+                        console.log(item,"item")
                     return (
                         <Marker
                             id="findMarker"
                             icon={Plumber}
-                            position={{lat: item.location[1], lng: item.location[0]}}
+                            position={{lat: item.currentLocation?item.currentLocation.latitude:item.location[1],
+                                lng: item.currentLocation?item.currentLocation.longitude:item.location[0]}}
                             onClick={props.onToggleOpen}
                             onClick={() => {
                                 setOpenPopup(item.providerId);
@@ -1058,7 +1064,7 @@ const HomePage = (props) => {
                 title={title}
                 show={showAlertDialog}
                 onSuccess={(e) => {
-                       if( emailverify&& phoneverify===true) 
+                       if( emailverify&& phoneverify===true||localStorage.getItem('userData')==='') 
                  {   postMyRequest();
                     setShowAlertDialog(false);
                 

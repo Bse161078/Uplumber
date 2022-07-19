@@ -7,10 +7,13 @@ import {
     Backdrop,
     CircularProgress,
 } from "@material-ui/core";
+import ConfirmOtp from './ConfirmOTP'
 import Alert from '@mui/material/Alert';
 import PhoneInput from "react-phone-number-input";
 import Header from "../Components/Header";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import firebase from "firebase";
+import {connectFirebase} from "../Config/firebase";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import Avatar from "../assets/profile.png";
 import {MyProfile, UpdateCustomerProfile
@@ -21,6 +24,7 @@ sendEmailVerification
 import {ToastContainer, toast} from "react-toastify";
 import {Countries, states} from "../Data/Data";
 import EditProfile from "./EditProfile";
+import ConfirmEmail from "./ConfirmEmail";
 
 const useStyles = makeStyles((theme) => ({
     input: {
@@ -59,9 +63,12 @@ const useStyles = makeStyles((theme) => ({
 
 export default function UserProfile() {
   const [openLoader, setOpenLoader] = useState(false);
+  const [openEmail,setOpenEmail] = useState(false)
   const classes = useStyles();
   const [value, setValue] = useState("");
-
+  const [confirmResult, setConfirmResult] = useState();
+  const [captchaCreated, setCaptchaCreated] = useState(false);
+  const [goToOtp, setGoToOtp] = useState(false);
   const [profileImage, setProfileImage] = useState(
     localStorage.getItem("profileImage1")
   );
@@ -74,7 +81,7 @@ export default function UserProfile() {
   const [phoneNumber, setPhoneNumber] = useState(
     localStorage.getItem("phoneNumber1")
   );
-  const [emailVerified,setEmailVerified]=useState(JSON.parse(localStorage.getItem('userData')).emailVerified)
+  const [emailVerified,setEmailVerified]=useState(false)
   const [phoneVerified,setPhoneVerified]=useState(false)
   const [address, setAddress] = useState(localStorage.getItem("address1"));
   const [unit, setUnit] = useState(localStorage.getItem("unit1"));
@@ -89,7 +96,51 @@ export default function UserProfile() {
     localStorage.getItem("longitude1")
   );
 
+  const createRecapha = () => {
+      
+    window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier(
+        "recaptcha-container",
+        {
+            size: "invisible",
+            callback: (response) => {
+                // reCAPTCHA solved, allow signInWithPhoneNumber.
+            },
+        }
+    );
+};
+const validatePhoneNumber = (phoneNumber) => {
+    console.log("This is validating phonenumeer", phoneNumber);
+    var regexp = /^\+[0-9]?()[0-9](\s|\S)(\d[0-9]{8,16})$/;
+    return phoneNumber.match(/\d/g).length === 10;
+};
 
+const sendFirebaseOTP = () => {
+    console.log("This is valid", validatePhoneNumber(phoneNumber));
+    setOpenLoader(true);
+    createRecapha();
+
+
+    const appVerifier = window.recaptchaVerifier
+     console.log("THis is appverifier", appVerifier);
+    if (appVerifier) {
+        setCaptchaCreated(true);
+    }
+    firebase
+        .auth()
+        .signInWithPhoneNumber(phoneNumber, appVerifier)
+        .then((result) => {
+            console.log('result  =   ', result);
+            setConfirmResult(result);
+            setGoToOtp(true);
+            setOpenLoader(false);
+            window.recaptchaVerifier = null
+        })
+        .catch((error) => {
+            notify(error.message);
+            setOpenLoader(false);
+            console.log("This is the error", error);
+        });
+};
   const deleteUserProfile = async () => {
    
 const data = {customerId:localStorage.getItem("id"),is_deleted:true}
@@ -110,8 +161,8 @@ console.log(data)
 
 
    useEffect(async ()=>{
-        const res = await UpdateCustomerProfile({emailVerified: false});
-        setEmailVerified(false);
+    connectFirebase();
+        
     },[])
 
   const updateMyProfile = () => {
@@ -149,7 +200,7 @@ console.log(data)
           var user = res.data.data;
           setFirstName(user.firstName);
           setLastName(user.lastName);
-          setPhoneNumber("+" + user.phoneNumber);
+          setPhoneNumber(user.phoneNumber);
           setAddress(user.address);
           setCity(user.city);
           setState(user.state);
@@ -178,12 +229,14 @@ console.log(data)
 
     const Profile = () => {
         return (
+            
             <Grid
                 container
                 direction="row"
                 justify="center"
                 style={{marginTop: 30, padding: 20}}
             >
+               
                 <img
                     src={profileImage}
                     style={{
@@ -223,7 +276,24 @@ console.log(data)
                 <div style={{width: "100%"}}></div>
                 <div className={classes.input} style={{height: 10}}></div>
                 <Grid item md={12} xs={12}>
-          <span style={{color: emailVerified?"#60a3d6":"red"}} className={classes.label}>
+          <span style={{color: emailVerified?"#60a3d6":"red"}} className={classes.label}
+          
+          onClick={ async ()=>{
+            if(!emailVerified){
+            try  {
+                const emaill = {email: email}
+            const emailResult = await sendEmailVerification(emaill)
+            setOpenEmail(true)
+            }
+            catch(e)
+            {
+                setOpenLoader(false)
+                alert(e)
+            }
+        }
+          }
+        }
+          >
             Email
           </span>
                     <p style={{fontSize: 12, margin: 5}}>{email}</p>
@@ -231,7 +301,21 @@ console.log(data)
                 <div style={{width: "100%"}}></div>
                 <div className={classes.input} style={{height: 10}}></div>
                 <Grid item md={12} xs={12}>
-          <span style={{color: phoneVerified?"#60a3d6":"red"}} className={classes.label}>
+          <span style={{color: phoneVerified?"#60a3d6":"red"}} className={classes.label}
+          onClick={ ()=>{
+            if(!phoneVerified){
+            try  {
+             sendFirebaseOTP()
+            }
+            catch(e)
+            {
+                setOpenLoader(false)
+                alert(e)
+            }
+        }
+          }
+        }
+          >
             Phone Number
           </span>
                     <p style={{fontSize: 12, margin: 5}}>{phoneNumber}</p>
@@ -339,11 +423,11 @@ console.log(data)
                     res.data.statusText === "OK"
                 ) {
                     setOpenLoader(false);
-                    console.log(res.data.data);
+                    console.log(res.data.data,'myprofile');
                     var user = res.data.data;
                     setFirstName(user.firstName);
                     setLastName(user.lastName);
-                    setPhoneNumber("+" + user.countryPhoneCode + user.phoneNumber);
+                    setPhoneNumber("+"+user.countryPhoneCode+user.phoneNumber);
                     setAddress(user.address);
                     setCity(user.city);
                     setState(user.state);
@@ -373,11 +457,15 @@ console.log(data)
 
     useEffect(() => {
         getMyProfile();
+        localStorage.setItem('prevurl','')
     }, []);
 
     const notify = (data) => toast(data);
     return (
         <div>
+           <div id="recaptcha-container"></div>  
+                   
+                
             <Backdrop className={classes.backdrop} open={openLoader}>
                 <CircularProgress color="inherit"/>
             </Backdrop>
@@ -399,11 +487,17 @@ console.log(data)
                     onSidebarDisplay={() => {
                         setEdit(true);
                     }}
-                    heading={"User Profile"}
+                    heading={edit?"Edit Profile":"User Profile"}
                     leftIcon={
                         <ArrowBackIosIcon
                             style={{cursor: "pointer"}}
                             onClick={() => {
+                               if(edit)
+                            {
+                                setEdit(false)
+                                window.location.reload()
+                            }
+                                else
                                 document.getElementById("homepage").click();
                             }}
                         ></ArrowBackIosIcon>
@@ -441,7 +535,59 @@ console.log(data)
                         setPhoneVerified={setPhoneVerified}
                         updateMyProfile={updateMyProfile}
                     ></EditProfile>
-                ) : (
+                ) :
+                openEmail ?(
+                    <ConfirmEmail
+                      onSuccessOtp={
+                    async () => {
+                        setOpenLoader(true);
+                        try {
+                            const res = await UpdateCustomerProfile({emailVerified: true});
+                            window.location.reload()
+                        }catch(e)
+                        { 
+                            alert(e)
+                        }
+                      }
+                    }
+                    goBack={
+                        () => {
+                            setOpenEmail(false);
+                            setOpenLoader(false)
+                        }
+                    }
+                    notify={notify}
+                    setOpenLoader={setOpenLoader}
+                    
+                    />
+                ):
+                goToOtp ? (
+                    <ConfirmOtp
+                        confirmResult={confirmResult}
+                        phoneNumber={phoneNumber}
+                        goBack={
+                            () => {
+                                setGoToOtp(false);
+                                setOpenLoader(false)
+                            }
+                        }
+                        sendFirebaseOTP={
+                            () => {
+                                sendFirebaseOTP()
+                            }
+                        }
+                        notify={notify}
+                        setOpenLoader={setOpenLoader}
+                        onSuccessOtp={
+                            async () => {
+                                setOpenLoader(true);
+                              setPhoneVerified(true)
+                             setGoToOtp(false)
+                            }
+                        }
+                    ></ConfirmOtp>
+                ) :
+                 (
                     <Profile></Profile>
                 )}
             </div>

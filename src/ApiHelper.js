@@ -727,12 +727,12 @@ export const acceptNewCompletionDate = (id, newEstimatedCompletionDate) => {
 
 export const verifyPhone = () => {
   var data = JSON.stringify({
-    isPhoneNumberVerify: true,
+    phoneNumberVerified: true,
   });
 
   var config = {
     method: "put",
-    url: "https://u-plumber.net/api/customerprofile/updatecustomer",
+    url: "https://u-plumber.net/api/customerprofile/updatecustomerphonestatus",
     headers: {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
@@ -1008,8 +1008,10 @@ export const uploadFile= (data)=>{
 }
 
 
-export const UpdateEmailVerificationStatus = (postData) => {
-    var data = JSON.stringify(postData);
+export const UpdateEmailVerificationStatus = () => {
+  var data = JSON.stringify({
+    emailVerified: true,
+  });
 
     var config = {
         method: "put",

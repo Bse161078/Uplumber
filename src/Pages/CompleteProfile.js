@@ -113,23 +113,25 @@ const checkIfUserEmailIsVerified=async ()=>{
          props.history.push('/')
      }
      localStorage.removeItem('emailForSignIn');
-
+     const fName = localStorage.getItem("userName").split(' ').slice(0, -1).join(' ')
+     const lName = localStorage.getItem("userName").split(' ').slice(-1).join(' ')
      console.log("user = ",user)
     const [email, setEmail] = useState(user.email)
     const [password, setPassword] = useState(user.password);
     const [value, setValue] = useState("");
+    const [openSnackbar,setOpenSnackbar] = useState(false)
     const [typeConfirm, setTypeConfirm] = useState("text");
     const [verify, setVerify] = React.useState(false);
     const [profileImage, setProfileImage] = useState(null);
     const [goToOtp, setGotoOtp] = useState();
     const [confirmResult, setConfirmResult] = useState();
     console.log("THis is greate", localStorage.getItem("firstName"))
-    const [firstName, setFirstName] = useState(localStorage.getItem("firstName"));
-    const [lastName, setLastName] = useState(localStorage.getItem("lastName"));
-    const [phoneNumber, setPhoneNumber] = useState(localStorage.getItem("phoneNumber"));
+    const [firstName, setFirstName] = useState(localStorage.getItem("firstName")?localStorage.getItem("firstName"):fName);
+    const [lastName, setLastName] = useState(localStorage.getItem("lastName")?localStorage.getItem("lastName"):lName);
+    const [phoneNumber, setPhoneNumber] = useState(localStorage.getItem("userPhone"));
     const [address, setAddress] = useState(localStorage.getItem("userAddress"));
     const [unit, setUnit] = useState(localStorage.getItem("userUnit"));
-    const [city, setCity] = useState(localStorage.getItem("city"));
+    const [city, setCity] = useState(localStorage.getItem("userCity"));
     const [state, setState] = useState(localStorage.getItem("userState"));
     const [zipcode, setZipcode] = useState(localStorage.getItem("userZipCode"));
     
@@ -664,7 +666,7 @@ const location =[longitude,latitude]
                 firstName: firstName,
                 lastName: lastName,
                 phoneNumber: phoneNumber,
-                address: address?.userAddress,
+                address: address.userAddress?address.userAddress:address,
                 unit: unit,
                 city: city,
                 state: state,
@@ -693,17 +695,6 @@ const location =[longitude,latitude]
                         res.data.statusText === "OK"
                     ) {
                         setOpenLoader(false);
-                        localStorage.removeItem("userName");
-                        localStorage.removeItem("userPhone");
-                        localStorage.removeItem("allowSms");
-                        localStorage.removeItem("userEmail");
-                        localStorage.removeItem("userAddress");
-                        localStorage.removeItem("userUnit");
-                        localStorage.removeItem("userCity");
-                        localStorage.removeItem("userState");
-                        localStorage.removeItem("userZipCode");
-                        localStorage.removeItem("userCurrentLocation");
-
                         localStorage.setItem("token", localStorage.getItem("tokenTemp"));
                         // localStorage.setItem("id", res.data._id);
                         localStorage.setItem("id", res.data.customerId);
@@ -735,21 +726,18 @@ const location =[longitude,latitude]
                                 console.log("veriifyphone", error.response);
                             }
                         );
-                      
-                          
-                        
-                        console.log(res);
                         VerificanEmail()
                         localStorage.setItem("prevurl",window.location.href)
+                        setOpenSnackbar(true)
                         props.history.push('/ConfirmEmail')
                     }
                 },
                 (error) => {
                     if (error.response) {
                         setOpenLoader(false)
-                        alert("Already Registered",error.response.data.message);
                     }
                     alert("Already Registered",error.response.data.message);
+                    props.history.push('/homepage')
                     setOpenLoader(false);
                     console.log("CompleteProfile", error);
                 }
@@ -826,7 +814,9 @@ const location =[longitude,latitude]
     
       };
       
-     
+     const closeSnackBar=()=>{
+        setOpenSnackbar(false)
+      }
     return goToOtp ? (
 
         
@@ -853,7 +843,7 @@ const location =[longitude,latitude]
             setOpenLoader={setOpenLoader}
             onSuccessOtp={
                 async () => {
-                  
+                    
                     handleLoginRequest();
                   
                 }
@@ -863,6 +853,12 @@ const location =[longitude,latitude]
     ):
     (
         <div>
+            <Snackbar
+            open={openSnackbar}
+            message="User Created"
+            autoHideDuration={2000} 
+            onClose={() => closeSnackBar()}
+          />
             <Backdrop className={classes.backdrop} open={openLoader}>
                 <CircularProgress color="inherit"/>
             </Backdrop>
@@ -970,6 +966,7 @@ const location =[longitude,latitude]
                      onChange={(e) => {
                          console.log(e);
                          setPhoneNumber(e);
+                         localStorage.setItem("userPhone", e);
                      }}
                 ></PhoneInput>
                 {/* <PhoneInput
@@ -992,7 +989,7 @@ const location =[longitude,latitude]
                     onChange={(addres) => {
                         setAddress(addres);
                         console.log("address",address.userAddress)
-                        localStorage.setItem("address", address);
+                        localStorage.setItem("userAddress", address?.userAddress?address.userAddress:addres);
                         handleSelect(addres)
                     }}
                     //onSelect={handleSelect(address)}
@@ -1042,7 +1039,7 @@ const location =[longitude,latitude]
                     value={unit}
                     onChange={(e) => {
                         setUnit(e.target.value);
-                        localStorage.setItem("unit", e.target.value);
+                        localStorage.setItem("userAddress", e.target.value);
                     }}
                 ></input>
                 <p className={classes.label} style={{marginTop: 10}}>
@@ -1054,7 +1051,7 @@ const location =[longitude,latitude]
                     placeholder="City"
                     onChange={(e) => {
                         setCity(e.target.value);
-                        localStorage.setItem("city", e.target.value);
+                        localStorage.setItem("userCity", address?.userCity?address.userCity:e.target.value);
                     }}
                 ></input>
                 <p className={classes.label} style={{marginTop: 10}}>
@@ -1066,7 +1063,7 @@ const location =[longitude,latitude]
                     placeholder="State"
                     onChange={(e) => {
                         setState(e.target.value);
-                        localStorage.setItem("state", e.target.value);
+                        localStorage.setItem("userState", address?.userState?address.userState:e.target.value);
                     }}
                 />
 
@@ -1078,7 +1075,7 @@ const location =[longitude,latitude]
                     value={address?.userZipCode?address.userZipCode:zipcode}
                     onChange={(e) => {
                         setZipcode(e.target.value);
-                        localStorage.setItem("zipcode", e.target.value);
+                        localStorage.setItem("userZipcode", address?.userZipCode?address.userZipCode:e.target.value);
                     }}
                 ></input>
 
@@ -1091,7 +1088,7 @@ const location =[longitude,latitude]
                         if (values) {
                             console.log("This is co", values.title);
                             setCountry(value.title);
-                            localStorage.setItem("country", values.title);
+                            localStorage.setItem("userCountry", values.title);
                         }
                     }}
                     getOptionLabel={(option) => option.title}
@@ -1123,7 +1120,7 @@ const location =[longitude,latitude]
                         try{    if(city&&
                             firstName&&phoneNumber&&
                             address&&
-                            lastName && unit){
+                            lastName ){
                             setOpenLoader(true);
                             sendFirebaseOTP();
                              }
