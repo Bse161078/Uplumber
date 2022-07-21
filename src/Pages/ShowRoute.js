@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles, Grid, Paper } from "@material-ui/core";
 import Drawer from "@material-ui/core/Drawer";
 import Sidebar from "../Components/Sidebar";
@@ -10,6 +10,7 @@ import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import { Link, withRouter } from "react-router-dom";
 import MyRoute from "./MyRoute";
 import { withScriptjs } from "react-google-maps";
+import { getApikey } from "../ApiHelper";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -59,7 +60,14 @@ function ProviderDetail(props) {
   const toggleDrawerBottom = (anchor, open) => (event) => {
     setBottomState(open);
   };
+  const getMapKey = async () => {
+    debugger
+    const res = await getApikey()
+  }
   const position = [51.505, -0.09];
+  useEffect(() => {
+    getMapKey()
+  })
   //console.log("THis is great", props);
   return (
     <div
@@ -89,7 +97,7 @@ function ProviderDetail(props) {
         loadingElement={<div style={{ height: `100%` }} />}
       /> */}
       <MapLoader
-        googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyAY-S1OMvpOMhUrXgmtAiJ-jDTAX0jJzSU"
+        googleMapURL="https://maps.googleapis.com/maps/api/js?key=AIzaSyA0O_MV5VjO7FMAl6kZFok35pyI1x6YMl4"
         loadingElement={<div style={{ height: `100%` }} />}
       />
 

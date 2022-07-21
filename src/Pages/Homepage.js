@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import {
     makeStyles,
     Grid,
@@ -9,7 +9,7 @@ import {
     CircularProgress,
 } from "@material-ui/core";
 import moment from "moment";
-import {withRouter} from "react-router";
+import { withRouter } from "react-router";
 import Drawer from "@material-ui/core/Drawer";
 import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
@@ -20,8 +20,8 @@ import Rating from "@material-ui/lab/Rating";
 import ExploreIcon from "@material-ui/icons/Explore";
 import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import PersonIcon from "@material-ui/icons/Person";
-import {compose, withProps, withStateHandlers} from "recompose";
-import {connectFirebase} from "../Config/firebase";
+import { compose, withProps, withStateHandlers } from "recompose";
+import { connectFirebase } from "../Config/firebase";
 // import {
 //   Map,
 //   TileLayer,
@@ -31,7 +31,7 @@ import {connectFirebase} from "../Config/firebase";
 //   MapContainer,
 // } from "react-leaflet";
 // import "leaflet-routing-machine";
-import {Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import FavoriteBorderOutlinedIcon from "@material-ui/icons/FavoriteBorderOutlined";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import PhoneEnabledIcon from "@material-ui/icons/PhoneEnabled";
@@ -52,9 +52,9 @@ import {
     MyProfile,
     UpdateCustomerProfile,
     removeFavorite,
-    
+
 } from "../ApiHelper";
-import {ToastContainer, toast} from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 import {
     withScriptjs,
     withGoogleMap,
@@ -134,10 +134,10 @@ const HomePage = (props) => {
     const [openPopup, setOpenPopup] = useState(null);
     const [tokenFound, setTokenFound] = useState(null);
     const [showAlertDialog, setShowAlertDialog] = useState(false);
-    useEffect(async() => {
+    useEffect(async () => {
         getMyProfile();
-        console.log('emailverify',phoneverify,emailverify)
-        localStorage.setItem('userData','')
+        console.log('emailverify', phoneverify, emailverify)
+        localStorage.setItem('userData', '')
     }, [emailverify])
     const toggleDrawer = (anchor, open) => (event) => {
         setState(open);
@@ -252,10 +252,10 @@ const HomePage = (props) => {
         // console.log("This sis great", props.item.providerProfileId);
 
         return calculatedStatus !== "Offer Created" &&
-        calculatedStatus !== "Order Cancelled" &&
-        calculatedStatus !== "Order Completed" &&
-        calculatedStatus !== "Job Completed" ? (
-            <Paper style={{width: "90%", padding: 10, marginBottom: 10}}>
+            calculatedStatus !== "Order Cancelled" &&
+            calculatedStatus !== "Order Completed" &&
+            calculatedStatus !== "Job Completed" ? (
+            <Paper style={{ width: "90%", padding: 10, marginBottom: 10 }}>
                 <Link
                     id={"details" + props.item._id}
                     to={"/details/" + props.item._id}
@@ -267,7 +267,7 @@ const HomePage = (props) => {
                 <Grid
                     container
                     direction="row"
-                    style={{cursor: "pointer"}}
+                    style={{ cursor: "pointer" }}
                     onClick={() => {
                         console.log("This si he click", props.item);
                         if (
@@ -276,7 +276,7 @@ const HomePage = (props) => {
                                 : props.item.serviceId.isAccepted === false
                         ) {
                             if (calculatedStatus != "Order Cancelled+ props.item._id") {
-                                document.getElementById("details" ).click();
+                                document.getElementById("details").click();
                                 localStorage.setItem("job", JSON.stringify(props.item));
                             } else {
                                 console.log("This is props item", props.item);
@@ -299,11 +299,11 @@ const HomePage = (props) => {
                                 props.item.providerImage ||
                                 props.item.providerProfileId.profileImage
                             }
-                            style={{width: 50, height: 50, borderRadius: "50%"}}
+                            style={{ width: 50, height: 50, borderRadius: "50%" }}
                         ></img>
                     </Grid>
                     <Grid item md={6} xs={6}>
-                        <Grid container direction="row" style={{marginLeft: 5}}>
+                        <Grid container direction="row" style={{ marginLeft: 5 }}>
                             <p
                                 style={{
                                     width: "100%",
@@ -312,29 +312,29 @@ const HomePage = (props) => {
                                 }}
                             >
                                 {props.item.providerName ||
-                                props.item.providerProfileId.firstName +
-                                " " +
-                                props.item.providerProfileId.lastName}
+                                    props.item.providerProfileId.firstName +
+                                    " " +
+                                    props.item.providerProfileId.lastName}
                             </p>
                             <Rating
                                 value={
                                     props.item.providerRating ||
                                     props.item.providerProfileId.providerRating
                                 }
-                                style={{fontSize: 10}}
+                                style={{ fontSize: 10 }}
                             ></Rating>
-                            <span style={{fontSize: 10}}>
-                {props.item.providerRating ||
-                props.item.providerProfileId.providerRating}
+                            <span style={{ fontSize: 10 }}>
+                                {props.item.providerRating ||
+                                    props.item.providerProfileId.providerRating}
                                 (
                                 {props.item.providerReviews ||
-                                props.item.providerProfileId.providerReviews}
+                                    props.item.providerProfileId.providerReviews}
                                 ){" "}
-              </span>
-                            <div style={{width: "100%"}}></div>
-                            <span style={{fontSize: 10}}>
-                ${props.item.pricePerHour || props.item.labourRatePerHour} / hr
-              </span>
+                            </span>
+                            <div style={{ width: "100%" }}></div>
+                            <span style={{ fontSize: 10 }}>
+                                ${props.item.pricePerHour || props.item.labourRatePerHour} / hr
+                            </span>
                         </Grid>
                     </Grid>
                     <Grid item md={4} xs={4}>
@@ -388,7 +388,7 @@ const HomePage = (props) => {
               )} */}
                     </Grid>
                 </Grid>
-                <div style={{width: "100%", border: "1px solid #f6f6f6"}}></div>
+                <div style={{ width: "100%", border: "1px solid #f6f6f6" }}></div>
                 <Grid
                     container
                     direction="row"
@@ -417,18 +417,18 @@ const HomePage = (props) => {
                             document.getElementById("jobdetails" + props.item._id).click();
                         }
                     }}
-                    style={{cursor: "pointer"}}
+                    style={{ cursor: "pointer" }}
                 >
                     <Grid item md={6} xs={6}>
-                        <span style={{color: "#60a3d6", fontSize: 10}}>Date</span>
-                        <p style={{fontSize: 10, margin: 0}}>
+                        <span style={{ color: "#60a3d6", fontSize: 10 }}>Date</span>
+                        <p style={{ fontSize: 10, margin: 0 }}>
                             {props.item.serviceDate ||
-                            props.item.serviceId.problem.serviceDate}
+                                props.item.serviceId.problem.serviceDate}
                         </p>
                     </Grid>
                     <Grid item md={6} xs={6}>
-                        <span style={{color: "#60a3d6", fontSize: 10}}>Item</span>
-                        <p style={{fontSize: 10, margin: 0}}>
+                        <span style={{ color: "#60a3d6", fontSize: 10 }}>Item</span>
+                        <p style={{ fontSize: 10, margin: 0 }}>
                             {" "}
                             {props.item.itemName || props.item.serviceId.problem.problemItem}
                         </p>
@@ -460,7 +460,7 @@ const HomePage = (props) => {
             calculatedStatus !== "Job Completed"
         ) {
             return (
-                <Paper style={{width: "90%", padding: 10, marginBottom: 10}}>
+                <Paper style={{ width: "90%", padding: 10, marginBottom: 10 }}>
                     <Link
                         id={"jobdetails" + props.item._id}
                         to={"/jobDetails/" + props.item._id}
@@ -468,19 +468,19 @@ const HomePage = (props) => {
                     <Grid
                         container
                         direction="row"
-                        style={{cursor: "pointer"}}
-                        // onClick={() => {
-                        //   // document.getElementById("jobdetails" + props.item._id).click();
-                        // }}
+                        style={{ cursor: "pointer" }}
+                    // onClick={() => {
+                    //   // document.getElementById("jobdetails" + props.item._id).click();
+                    // }}
                     >
                         <Grid item md={2} xs={2}>
                             <img
                                 src={user.providerProfileId.profileImage}
-                                style={{width: 50, height: 50, borderRadius: "50%"}}
+                                style={{ width: 50, height: 50, borderRadius: "50%" }}
                             ></img>
                         </Grid>
                         <Grid item md={6} xs={6}>
-                            <Grid container direction="row" style={{marginLeft: 5}}>
+                            <Grid container direction="row" style={{ marginLeft: 5 }}>
                                 <p
                                     style={{
                                         width: "100%",
@@ -489,23 +489,23 @@ const HomePage = (props) => {
                                     }}
                                 >
                                     {user.providerProfileId.firstName +
-                                    " " +
-                                    user.providerProfileId.lastName}
+                                        " " +
+                                        user.providerProfileId.lastName}
                                 </p>
-                                <Rating value={5} style={{fontSize: 10}}></Rating>
-                                <span style={{fontSize: 10}}>
-                  {user.providerProfileId.averageRating}(
+                                <Rating value={5} style={{ fontSize: 10 }}></Rating>
+                                <span style={{ fontSize: 10 }}>
+                                    {user.providerProfileId.averageRating}(
                                     {user.providerProfileId.ratings.length}){" "}
-                </span>
-                                <div style={{width: "100%"}}></div>
-                                <span style={{fontSize: 10}}>
-                  ${user.providerProfileId.hourlyRates} / hr
-                </span>
+                                </span>
+                                <div style={{ width: "100%" }}></div>
+                                <span style={{ fontSize: 10 }}>
+                                    ${user.providerProfileId.hourlyRates} / hr
+                                </span>
                             </Grid>
                         </Grid>
                         <Grid item md={4} xs={4}>
                             <Grid container direction="row">
-                                <p style={{fontSize: 12, margin: 0}}>
+                                <p style={{ fontSize: 12, margin: 0 }}>
                                     {moment(user.serviceId.problem.serviceDate).format(
                                         "MMMM Do YYYY"
                                     )}
@@ -541,7 +541,7 @@ const HomePage = (props) => {
                                         direction="row"
                                         alignItems="center"
                                         justify="center"
-                                        style={{height: 25}}
+                                        style={{ height: 25 }}
                                     >
                                         {isFavorite ? (
                                             <FavoriteIcon
@@ -551,7 +551,7 @@ const HomePage = (props) => {
                                                         !user.providerProfileId.isLike
                                                     );
                                                 }}
-                                                style={{fontSize: 20}}
+                                                style={{ fontSize: 20 }}
                                             ></FavoriteIcon>
                                         ) : (
                                             <FavoriteBorderOutlinedIcon
@@ -561,7 +561,7 @@ const HomePage = (props) => {
                                                         !user.providerProfileId.isLike
                                                     );
                                                 }}
-                                                style={{fontSize: 20}}
+                                                style={{ fontSize: 20 }}
                                             ></FavoriteBorderOutlinedIcon>
                                         )}
                                     </Grid>
@@ -569,13 +569,13 @@ const HomePage = (props) => {
                             </Grid>
                         </Grid>
                     </Grid>
-                    <div style={{width: "100%", border: "1px solid #f6f6f6"}}></div>
+                    <div style={{ width: "100%", border: "1px solid #f6f6f6" }}></div>
                     <Grid
                         container
                         direction="row"
                         justify="center"
                         spacing={1}
-                        style={{marginTop: 5}}
+                        style={{ marginTop: 5 }}
                     >
                         <Grid item md={6} xs={6}>
                             <Grid
@@ -594,7 +594,7 @@ const HomePage = (props) => {
                                     window.open(`tel:${user.providerProfileId.phoneNumber}`);
                                 }}
                             >
-                                <PhoneEnabledIcon style={{fontSize: 18}}></PhoneEnabledIcon>{" "}
+                                <PhoneEnabledIcon style={{ fontSize: 18 }}></PhoneEnabledIcon>{" "}
                                 Call
                             </Grid>
                         </Grid>
@@ -612,7 +612,7 @@ const HomePage = (props) => {
                                 }}
                             >
                                 <MessageIcon
-                                    style={{fontSize: 18}}
+                                    style={{ fontSize: 18 }}
                                     onClick={() => {
                                         window.open(
                                             `sms:${user.providerProfileId.phoneNumber}&body=Hi there i have recently placed on order you`
@@ -821,13 +821,13 @@ const HomePage = (props) => {
     };
 
     const postMyRequest = () => {
-       
-        console.log("hamza",phoneverify,emailverify)
-    
-         document.getElementById("requestAService/0").click();
-      
-       
-    
+
+        console.log("hamza", phoneverify, emailverify)
+
+        document.getElementById("requestAService/0").click();
+
+
+
         // if (localStorage.getItem("token")) {
         //   setOpenLoader(true);
         //   PostARequest().then(
@@ -911,7 +911,7 @@ const HomePage = (props) => {
 
         let fb = await connectFirebase();
         getToken(setTokenFound);
-      //console.log("This is fb", fb);
+        //console.log("This is fb", fb);
         if (localStorage.getItem("allProviders")) {
             setAllProviders(JSON.parse(localStorage.getItem("allProviders")));
         }
@@ -941,8 +941,8 @@ const HomePage = (props) => {
     const MyMapComponent = compose(
         withProps({
             googleMapURL:
-                "https://maps.googleapis.com/maps/api/js?key=AIzaSyAY-S1OMvpOMhUrXgmtAiJ-jDTAX0jJzSU&v=3.exp&libraries=geometry,drawing,places",
-            loadingElement: <div style={{height: `100%`}}/>,
+                "https://maps.googleapis.com/maps/api/js?key=AIzaSyA0O_MV5VjO7FMAl6kZFok35pyI1x6YMl4&v=3.exp&libraries=geometry,drawing,places",
+            loadingElement: <div style={{ height: `100%` }} />,
             containerElement: (
                 <div
                     style={{
@@ -951,7 +951,7 @@ const HomePage = (props) => {
                     }}
                 />
             ),
-            mapElement: <div style={{height: "100%"}}/>,
+            mapElement: <div style={{ height: "100%" }} />,
         }),
         withStateHandlers(
             () => ({
@@ -959,7 +959,7 @@ const HomePage = (props) => {
             }),
             {
                 onToggleOpen:
-                    ({isOpen}) =>
+                    ({ isOpen }) =>
                         () => ({
                             isOpen: !isOpen,
                         }),
@@ -970,87 +970,89 @@ const HomePage = (props) => {
     )((props) => (
         <GoogleMap
             defaultZoom={zoom}
-            defaultCenter={{lat: -34.397, lng: 150.644}}
+            defaultCenter={{ lat: -34.397, lng: 150.644 }}
             center={
                 currentLocation
                     ? {
                         lat: currentLocation.latitude,
                         lng: currentLocation.longitude,
                     }
-                    : {lat: -34.397, lng: 150.644}
+                    : { lat: -34.397, lng: 150.644 }
             }
         >
             {allProviders &&
-            allProviders.map((item) => {
-                // console.log("THis isthe lat long", item.location);
-                if (item.isOnline) {
-                    var averageRating = 0;
-                    item.ratings &&
-                    item.ratings.map((item) => {
-                        averageRating = averageRating + item;
-                    });
-                    if (item.ratings.length > 0) {
-                        averageRating = averageRating / item.ratings.length;
+                allProviders.map((item) => {
+                    // console.log("THis isthe lat long", item.location);
+                    if (item.isOnline) {
+                        var averageRating = 0;
+                        item.ratings &&
+                            item.ratings.map((item) => {
+                                averageRating = averageRating + item;
+                            });
+                        if (item.ratings.length > 0) {
+                            averageRating = averageRating / item.ratings.length;
+                        }
+                        console.log(item, "item")
+                        return (
+                            <Marker
+                                id="findMarker"
+                                icon={Plumber}
+                                position={{
+                                    lat: item.currentLocation ? item.currentLocation.latitude : item.location[1],
+                                    lng: item.currentLocation ? item.currentLocation.longitude : item.location[0]
+                                }}
+                                onClick={props.onToggleOpen}
+                                onClick={() => {
+                                    setOpenPopup(item.providerId);
+                                }}
+                            >
+                                {openPopup === item.providerId && (
+                                    <InfoWindow
+                                        onCloseClick={() => {
+                                            setOpenPopup(null);
+                                        }}
+                                    >
+                                        <div style={{ width: 100 }}>
+                                            <Grid container direction="row" justify="center">
+                                                <img
+                                                    src={item.profileImage}
+                                                    style={{ width: 50, height: 50, borderRadius: 40 }}
+                                                ></img>
+                                                <p
+                                                    style={{
+                                                        width: "100%",
+                                                        fontWeight: 600,
+                                                        textAlign: "center",
+                                                    }}
+                                                >
+                                                    {item.firstName + " " + item.lastName}
+                                                </p>
+                                                <Rating
+                                                    value={item.averageRating}
+                                                    style={{ fontSize: 10 }}
+                                                ></Rating>
+                                                <span style={{ fontSize: 10 }}>
+                                                    {item.averageRating}(
+                                                    {item.ratings && item.ratings.length}){" "}
+                                                </span>
+                                                <p
+                                                    style={{
+                                                        fontSize: 10,
+                                                        width: "100%",
+                                                        textAlign: "center",
+                                                        margin: 0,
+                                                    }}
+                                                >
+                                                    ${item.hourlyRates + "/hr"}
+                                                </p>
+                                            </Grid>
+                                        </div>
+                                    </InfoWindow>
+                                )}
+                            </Marker>
+                        );
                     }
-                        console.log(item,"item")
-                    return (
-                        <Marker
-                            id="findMarker"
-                            icon={Plumber}
-                            position={{lat: item.currentLocation?item.currentLocation.latitude:item.location[1],
-                                lng: item.currentLocation?item.currentLocation.longitude:item.location[0]}}
-                            onClick={props.onToggleOpen}
-                            onClick={() => {
-                                setOpenPopup(item.providerId);
-                            }}
-                        >
-                            {openPopup === item.providerId && (
-                                <InfoWindow
-                                    onCloseClick={() => {
-                                        setOpenPopup(null);
-                                    }}
-                                >
-                                    <div style={{width: 100}}>
-                                        <Grid container direction="row" justify="center">
-                                            <img
-                                                src={item.profileImage}
-                                                style={{width: 50, height: 50, borderRadius: 40}}
-                                            ></img>
-                                            <p
-                                                style={{
-                                                    width: "100%",
-                                                    fontWeight: 600,
-                                                    textAlign: "center",
-                                                }}
-                                            >
-                                                {item.firstName + " " + item.lastName}
-                                            </p>
-                                            <Rating
-                                                value={item.averageRating}
-                                                style={{fontSize: 10}}
-                                            ></Rating>
-                                            <span style={{fontSize: 10}}>
-                          {item.averageRating}(
-                                                {item.ratings && item.ratings.length}){" "}
-                        </span>
-                                            <p
-                                                style={{
-                                                    fontSize: 10,
-                                                    width: "100%",
-                                                    textAlign: "center",
-                                                    margin: 0,
-                                                }}
-                                            >
-                                                ${item.hourlyRates + "/hr"}
-                                            </p>
-                                        </Grid>
-                                    </div>
-                                </InfoWindow>
-                            )}
-                        </Marker>
-                    );
-                }
-            })}
+                })}
         </GoogleMap>
     ));
 
@@ -1058,36 +1060,34 @@ const HomePage = (props) => {
     const title = "By submitting a request,your contact information will not be disclosed until you accept an offer from a provider";
 
     return (
-        <div style={{background: "#f2f2f2"}}>
+        <div style={{ background: "#f2f2f2" }}>
             <AlertDialog
                 headerImage={Verify}
                 title={title}
                 show={showAlertDialog}
                 onSuccess={(e) => {
-                       if( emailverify&& phoneverify===true||localStorage.getItem('userData')==='') 
-                 {   postMyRequest();
-                    setShowAlertDialog(false);
-                
-                    
-                 }else if(emailverify!=true)
-                  {
-                   setShowAlertDialog(false)
-                   alert("Your email is not verified") 
-                  }
-                  else if(phoneverify!=true)
-                  {
-                   setShowAlertDialog(false)
-                   alert("Your phone is not verified")                
-                  }
-                 
-                  
+                    if (emailverify && phoneverify === true || localStorage.getItem('userData') === '') {
+                        postMyRequest();
+                        setShowAlertDialog(false);
+
+
+                    } else if (emailverify != true) {
+                        setShowAlertDialog(false)
+                        alert("Your email is not verified")
+                    }
+                    else if (phoneverify != true) {
+                        setShowAlertDialog(false)
+                        alert("Your phone is not verified")
+                    }
+
+
                 }}
                 onCancel={(e) => {
                     setShowAlertDialog(false);
                 }}
             />
             <Backdrop className={classes.backdrop} open={openLoader}>
-                <CircularProgress color="inherit"/>
+                <CircularProgress color="inherit" />
             </Backdrop>
             <ToastContainer
                 position="top-center"
@@ -1100,7 +1100,7 @@ const HomePage = (props) => {
                 draggable
                 pauseOnHover
             />
-            <div style={{borderBottom: "1px solid #e9e9e9", height: 60}}>
+            <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
                 <Header
                     onSidebarDisplay={() => {
                         setState(true);
@@ -1132,13 +1132,13 @@ const HomePage = (props) => {
                             direction="row"
                             justify="center"
                             alignItems="flex-start"
-                            style={{height: "max-content"}}
+                            style={{ height: "max-content" }}
                         >
                             {allOffers &&
-                            allOffers.map((item, index) => {
-                                return <OfferCards index={index} item={item}></OfferCards>;
-                            })}
-                            <div style={{height: 120, width: "100%"}}></div>
+                                allOffers.map((item, index) => {
+                                    return <OfferCards index={index} item={item}></OfferCards>;
+                                })}
+                            <div style={{ height: 120, width: "100%" }}></div>
                         </Grid>
                     </Grid>
                 ) : (
@@ -1159,25 +1159,25 @@ const HomePage = (props) => {
                             direction="row"
                             justify="center"
                             alignItems="flex-start"
-                            style={{height: "max-content"}}
+                            style={{ height: "max-content" }}
                         >
                             {allOffers &&
-                            allOffers.map((item, index) => {
-                                return (
-                                    <ContactCards index={index} item={item}></ContactCards>
-                                );
-                            })}
+                                allOffers.map((item, index) => {
+                                    return (
+                                        <ContactCards index={index} item={item}></ContactCards>
+                                    );
+                                })}
                         </Grid>
                     </Grid>
                 )}
 
-                <div className="sideBar" style={{background: "red"}}>
+                <div className="sideBar" style={{ background: "red" }}>
                     <Drawer
                         anchor={"left"}
                         open={state}
                         onClose={toggleDrawer("bottom", false)}
                     >
-                        <div style={{width: "60vw"}}>
+                        <div style={{ width: "60vw" }}>
                             <Sidebar postMyRequest={postMyRequest} setShowAlertDialog={setShowAlertDialog} emailverify={emailverify} phoneverify={phoneverify} ></Sidebar>
                         </div>
                     </Drawer>
@@ -1254,7 +1254,7 @@ const HomePage = (props) => {
                                 container
                                 direction="row"
                                 justify="center"
-                                style={{color: activeTab === "NearBy" ? "black" : "gray",}}
+                                style={{ color: activeTab === "NearBy" ? "black" : "gray", }}
                                 onClick={() => {
                                     setActiveTab("NearBy");
                                 }}
@@ -1277,7 +1277,7 @@ const HomePage = (props) => {
                                 container
                                 direction="row"
                                 justify="center"
-                                style={{color: activeTab === "Offers" ? "black" : "gray"}}
+                                style={{ color: activeTab === "Offers" ? "black" : "gray" }}
                                 onClick={() => {
                                     setActiveTab("Offers");
                                 }}
@@ -1301,7 +1301,7 @@ const HomePage = (props) => {
                                 container
                                 direction="row"
                                 justify="center"
-                                style={{color: activeTab === "Services" ? "black" : "gray"}}
+                                style={{ color: activeTab === "Services" ? "black" : "gray" }}
                                 onClick={() => {
                                     setActiveTab("Services");
                                 }}

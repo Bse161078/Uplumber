@@ -13,6 +13,17 @@ export const getAllSubjects = () => {
     },
   });
 };
+export const getApikey = () => {
+  debugger
+  return axios({
+    method: "get",
+    url: URL + `statickeys/customer/get`,
+    headers: {
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+  });
+};
 
 export const AddLeadPrice = (postData) => {
   return axios({
@@ -24,7 +35,7 @@ export const AddLeadPrice = (postData) => {
     },
     data: postData
   });
- 
+
 };
 export const deleteProfileApi = () => {
   return axios({
@@ -35,7 +46,7 @@ export const deleteProfileApi = () => {
       Accept: "application/json",
       "Content-Type": "application/json",
     },
-    data: {id:JSON.parse(localStorage.getItem("userData"))._id}
+    data: { id: JSON.parse(localStorage.getItem("userData"))._id }
   });
 };
 
@@ -111,7 +122,7 @@ export const customerResetPassword = (id, newPassword) => {
   headers.append("Content-Type", "multipart/form-data");
   var config = {
     method: "post",
-    url:  "https://u-plumber.net/api/customers/forgotpassword/" + id,
+    url: "https://u-plumber.net/api/customers/forgotpassword/" + id,
     headers: {
       headers,
     },
@@ -156,7 +167,7 @@ export const Login = (postData) => {
 };
 
 export const DeleteCustomerProfile = (postData) => {
-  console.log("postdata",postData)
+  console.log("postdata", postData)
   return axios({
     method: "put",
     url: URL + `customerprofile/updatecustomer/deletestatus`,
@@ -164,28 +175,26 @@ export const DeleteCustomerProfile = (postData) => {
       Accept: "application/json",
       "Content-Type": "application/json",
     },
-   
+
     data: postData
-    
+
   });
 };
 
 
 export const CompleteProfile = (postData) => {
   var data = JSON.stringify(postData);
-  var token  = "";
-  if(localStorage.getItem("tokenTemp"))
-  {
+  var token = "";
+  if (localStorage.getItem("tokenTemp")) {
     token = localStorage.getItem("tokenTemp")
   }
-  else if(localStorage.getItem("token"))
-  {
-    token =  localStorage.getItem("token")
+  else if (localStorage.getItem("token")) {
+    token = localStorage.getItem("token")
   }
 
   var config = {
     method: "post",
-    url: URL +"customerprofile",
+    url: URL + "customerprofile",
     headers: {
       Authorization: `Bearer ${token}`,
       "Content-Type": "application/json",
@@ -509,7 +518,7 @@ export const getItems = () => {
 export const getDistanceFromCordintates = (cordinates) => {
   var config = {
     method: "get",
-    url: "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592&key=AIzaSyAY-S1OMvpOMhUrXgmtAiJ-jDTAX0jJzSU",
+    url: "https://maps.googleapis.com/maps/api/distancematrix/json?units=imperial&origins=40.6655101,-73.89188969999998&destinations=40.6905615%2C-73.9976592&key=AIzaSyA0O_MV5VjO7FMAl6kZFok35pyI1x6YMl4",
     headers: {
       "Access-Control-Allow-Origin": "*",
     },
@@ -742,7 +751,7 @@ export const verifyPhone = () => {
 
   return axios(config);
 };
-export const verifyEmail = (email,isemailVerify) => {
+export const verifyEmail = (email, isemailVerify) => {
   var data = JSON.stringify({
     isPhoneNumberVerify: true,
   });
@@ -761,7 +770,7 @@ export const verifyEmail = (email,isemailVerify) => {
 };
 
 export const sendEmailVerification = (email) => {
-  
+
 
   var config = {
     method: "post",
@@ -775,8 +784,8 @@ export const sendEmailVerification = (email) => {
 
   return axios(config);
 };
-export const emailVerification = (email,code) => {
-  
+export const emailVerification = (email, code) => {
+
 
   var config = {
     method: "post",
@@ -785,7 +794,7 @@ export const emailVerification = (email,code) => {
       Authorization: `Bearer ${localStorage.getItem("token")}`,
       "Content-Type": "application/json",
     },
-    data: email,code
+    data: email, code
   };
 
   return axios(config);
@@ -997,13 +1006,13 @@ export const viewNotification = (id) => {
 };
 
 
-export const uploadFile= (data)=>{
-  return  axios.post("https://u-plumber.net/api/upload", data, {
-      headers: {
-          'accept': 'application/json',
-          'Accept-Language': 'en-US,en;q=0.8',
-          'Content-Type': `multipart/form-data`,
-      }
+export const uploadFile = (data) => {
+  return axios.post("https://u-plumber.net/api/upload", data, {
+    headers: {
+      'accept': 'application/json',
+      'Accept-Language': 'en-US,en;q=0.8',
+      'Content-Type': `multipart/form-data`,
+    }
   })
 }
 
@@ -1013,16 +1022,16 @@ export const UpdateEmailVerificationStatus = () => {
     emailVerified: true,
   });
 
-    var config = {
-        method: "put",
-        url:
-            "https://u-plumber.net/api/customerprofile/updatecustomeremailstatus/",
-        headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            "Content-Type": "application/json",
-        },
-        data: data,
-    };
+  var config = {
+    method: "put",
+    url:
+      "https://u-plumber.net/api/customerprofile/updatecustomeremailstatus/",
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+      "Content-Type": "application/json",
+    },
+    data: data,
+  };
 
-    return axios(config);
+  return axios(config);
 };
