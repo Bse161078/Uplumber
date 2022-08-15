@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import {
     makeStyles,
     Grid,
@@ -18,7 +18,7 @@ import Header from "../Components/Header";
 import moment from "moment";
 import Rating from "@material-ui/lab/Rating";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import {Link, withRouter} from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import Calendar from "react-calendar";
@@ -28,7 +28,7 @@ import AddCircleIcon from "@material-ui/icons/AddCircle";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import EditIcon from "@material-ui/icons/Edit";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
-import {ToastContainer, toast} from "react-toastify";
+import { ToastContainer, toast } from "react-toastify";
 
 import ContactDetails from "../Components/RequestService/ContactDetails";
 import DescriptionAndPhoto from "../Components/RequestService/DescriptionAndPhoto";
@@ -92,7 +92,7 @@ const useStyles = makeStyles((theme) => ({
         marginTop: 10,
         fontWeight: 600,
     },
-    icon: {marginTop: 10, fontSize: 16, color: "#2d86c9"},
+    icon: { marginTop: 10, fontSize: 16, color: "#2d86c9" },
     labelBlack: {
         width: "100%",
         margin: 0,
@@ -167,11 +167,11 @@ function ProviderDetail(props) {
         currentLocation: localStorage.getItem("userCurrentLocation")
             ? JSON.parse(localStorage.getItem("userCurrentLocation"))
             : "",
-        leadPrice: Number(localStorage.getItem("leadPrice"))||30,
-
+        leadPrice: Number(localStorage.getItem("leadPrice")) || 30,
+        waterDamagePrice: Number(localStorage.getItem("waterDamagePrice")) || 0,
     });
     console.log("this is user state", localStorage.getItem("userState"));
-
+    console.log(requestData, "requestData 175")
     const [prefferedTimeData, setPrefferedTimeData] = React.useState([]);
     const [inssuranceCompaniesData, setInssuranceCompaniesData] = React.useState(
         []
@@ -183,14 +183,8 @@ function ProviderDetail(props) {
     const [requestorStatusData, setRequestorStatusData] = React.useState([]);
 
     useEffect(() => {
-      //  console.log("This si user", JSON.parse(localStorage.getItem("userData")));
+        console.log("This si user", JSON.parse(localStorage.getItem("userData")));
         handleSelect(localStorage.getItem("userAddress"));
-        if(localStorage.getItem("requestBeforeLogin")==="true")
-        {
-            setActiveTab("ReviewRequest")
-            localStorage.setItem("requestBeforeLogin","false")
-        }
-        console.log("requestData",requestData)
         // getMyProfile();
         getInssuranceCompnies();
         getAllLookingFor();
@@ -213,12 +207,12 @@ function ProviderDetail(props) {
         //   userUnit: user.unit,
         //   userState: user.state,
         // });
-    
+
     }, []);
 
-   
 
-    // console.log("This is request data", requestData);
+
+    console.log("This is request data", requestData);
     // setRequestData({ ...requestData, [event.target.id]: event.target.value });
 
     // const handleChange = (address) => {
@@ -237,7 +231,7 @@ function ProviderDetail(props) {
 
                 localStorage.setItem(
                     "userCurrentLocation",
-                    JSON.stringify({latitude: latLng.lat, longitude: latLng.lng})
+                    JSON.stringify({ latitude: latLng.lat, longitude: latLng.lng })
                 );
             })
             .catch((error) => console.error("Error", error));
@@ -258,7 +252,7 @@ function ProviderDetail(props) {
                     if (res.data.success || res.status === 200 || res.status === 201) {
                         console.log("This is res of image upload", res);
                         temp.push(res.data);
-                        setRequestData({...requestData, ["image"]: temp});
+                        setRequestData({ ...requestData, ["image"]: temp });
                         localStorage.setItem("image", JSON.stringify(temp));
                         console.log("Thiss i the requset data", requestData);
                         // localStorage.setItem("profileImage", res.data);
@@ -280,7 +274,6 @@ function ProviderDetail(props) {
         // setRequestData({ ...requestData, ["image"]: temp });
     };
 
-    console.log("This is requesst data", requestData);
 
     const handleFileChange = (e) => {
         console.log("THis is great", e.target.files);
@@ -346,7 +339,7 @@ function ProviderDetail(props) {
             notify("You need to login in ordere to post request!");
         }
     };
- 
+
     const add_lead_price = () => {
         if (localStorage.getItem("token")) {
             setOpenLoader(true);
@@ -360,10 +353,10 @@ function ProviderDetail(props) {
                         res.statusText === 201
                     ) {
                         setOpenLoader(false);
-                        console.log("leadpriceadd",res.data);
+                        console.log("leadpriceadd", res.data);
                         localStorage.setItem("requestId", res.data._id);
-                        const postData={ serviceId:res.data._id,leadPrice:localStorage.getItem("leadPrice")}
-                       console.log("leadprice",postData)
+                        const postData = { serviceId: res.data._id, leadPrice: localStorage.getItem("leadPrice") }
+                        console.log("leadprice", postData)
                         AddLeadPrice(postData);
                     }
                 },
@@ -381,6 +374,7 @@ function ProviderDetail(props) {
     };
 
     const updateCustomerProblem = () => {
+        debugger
         if (
             requestData.requestDate != "" &&
             requestData.prfferedTime != "" &&
@@ -401,9 +395,13 @@ function ProviderDetail(props) {
                     requestData.requestOption === "Auto accept 1st offer" ? true : false,
                 anyFloorOrWaterDamage: requestData.waterDamage === "Yes" ? true : false,
                 serviceCode: requestData.serviceType,
-                leadPrice: requestData.leadPrice
+                leadPrice: requestData.waterDamage === "Yes" ? requestData.waterDamagePrice : requestData.leadPrice,
             };
-            localStorage.setItem("leadPrice",requestData.leadPrice)
+            console.log('=================data cinst===================');
+            console.log(data);
+            debugger
+            console.log('=================data===================');
+            localStorage.setItem("leadPrice", requestData.waterDamage === "Yes" ? requestData.waterDamagePrice : requestData.Price)
             CustomerSericeUpdateProblem(data).then(
                 (res) => {
                     if (
@@ -420,6 +418,7 @@ function ProviderDetail(props) {
                         localStorage.removeItem("serviceType");
                         localStorage.removeItem("requestOption");
                         console.log(res);
+                        debugger
                         // notify(res.data.message);
                         updateCustomerLookingFor();
                     }
@@ -441,10 +440,11 @@ function ProviderDetail(props) {
         setOpenLoader(true);
         var data = {
             lookingFor: requestData.lookingFor,
-            leadPrice: requestData.leadPrice
+            // leadPrice: requestData.leadPrice
+            leadPrice: requestData.waterDamage === "Yes" ? requestData.waterDamagePrice : requestData.leadPrice
 
         };
-        localStorage.setItem("leadPrice",requestData.leadPrice)
+        localStorage.setItem("leadPrice", requestData.waterDamage === "Yes" ? requestData.waterDamagePrice : requestData.leadPrice)
         CustomerSericeUpdateLookingfor(data).then(
             (res) => {
                 if (
@@ -482,9 +482,11 @@ function ProviderDetail(props) {
                 area: requestData.area,
                 structure: requestData.structure,
                 requesterStatus: requestData.requestorStatus,
-                leadPrice: requestData.leadPrice
+                // leadPrice: requestData.leadPrice
+                leadPrice: requestData.waterDamage === "Yes" ? requestData.waterDamagePrice : requestData.leadPrice
             };
-            localStorage.setItem("leadPrice",requestData.leadPrice)
+            debugger
+            localStorage.setItem("leadPrice", requestData.waterDamage === "Yes" ? requestData.waterDamagePrice : requestData.leadPrice)
             CustomerSericeUpdateProperty(data).then(
                 (res) => {
                     if (
@@ -571,7 +573,7 @@ function ProviderDetail(props) {
                 } else {
                     notify("Something went wrong please try again later!");
                 }
-            }catch (e) {
+            } catch (e) {
                 notify("Something went wrong please try again later!");
             }
         }
@@ -583,14 +585,17 @@ function ProviderDetail(props) {
     };
 
     const updateCustomerPropertyInssurance = (tab) => {
+        debugger
         setOpenLoader(true);
         var data = {
             company: requestData.company,
             policyNumber: localStorage.getItem("policyNumber"),
             expiryDate: requestData.expiryDate,
             deduction: localStorage.getItem("deduction"),
-            leadPrice: requestData.leadPrice
+            // leadPrice: requestData.leadPrice
+            leadPrice: requestData.waterDamage === "Yes" ? requestData.waterDamagePrice : requestData.leadPrice
         };
+        debugger
         CustomerSericeUpdateInssurance(data).then(
             (res) => {
                 if (
@@ -620,10 +625,9 @@ function ProviderDetail(props) {
         );
     };
     // console.log("This si t", requestData);
-    const updateCustomerContactDetails = async () =>
-    {
-        
-       if (
+    const updateCustomerContactDetails = async () => {
+        debugger
+        if (
             requestData.userName != "" &&
             requestData.userPhone || JSON.parse(localStorage.getItem("userData")).phoneNumber != "" &&
             requestData.userEmail || localStorage.getItem("email") != "" &&
@@ -649,36 +653,39 @@ function ProviderDetail(props) {
                 city: requestData.userCity,
                 state: requestData.userState,
                 zipCode: requestData.userZipCode,
-                leadPrice: requestData.leadPrice
+                // leadPrice: requestData.leadPrice
+                leadPrice: requestData?.waterDamage === "Yes" ? requestData.waterDamagePrice : requestData.leadPricerequestData?.waterDamage === "Yes" ? requestData.waterDamagePrice : requestData.leadPrice
             };
-            const res = await  CustomerSericeUpdateContactDetails(data)
-            const postData={ serviceId:localStorage.getItem("requestId"),leadPrice:requestData.leadPrice}
-            console.log("addleadpricedata",postData)
+            const res = await CustomerSericeUpdateContactDetails(data)
+            debugger
+            const postData = { serviceId: localStorage.getItem("requestId"), leadPrice: requestData?.waterDamage === "Yes" ? requestData.waterDamagePrice : requestData.leadPrice }
+            console.log("addleadpricedata", postData, items)
             const result = await AddLeadPrice(postData)
-            console.log("customerUpdated",res.data)
+
+            console.log("customerUpdated", res.data)
             setOpenLoader(false);
-                        // notify(res.data.message);
-                        console.log("addleadprice",result);
-                        localStorage.removeItem("userName");
-                        localStorage.removeItem("userPhone");
-                        localStorage.removeItem("allowSms");
-                        localStorage.removeItem("userEmail");
-                        localStorage.removeItem("userAddress");
-                        localStorage.removeItem("userUnit");
-                        localStorage.removeItem("userCity");
-                        localStorage.removeItem("userState");
-                        localStorage.removeItem("userZipCode");
-                        localStorage.removeItem("userCurrentLocation");
-                        setPostRequest(true);
-        
-    
-    
-}
-else{
-    notify("Please provide all information!")
-}
-}
-  { /* const updateCustomerContactDetails = () => {
+            // notify(res.data.message);
+            console.log("addleadprice", result);
+            localStorage.removeItem("userName");
+            localStorage.removeItem("userPhone");
+            localStorage.removeItem("allowSms");
+            localStorage.removeItem("userEmail");
+            localStorage.removeItem("userAddress");
+            localStorage.removeItem("userUnit");
+            localStorage.removeItem("userCity");
+            localStorage.removeItem("userState");
+            localStorage.removeItem("userZipCode");
+            localStorage.removeItem("userCurrentLocation");
+            setPostRequest(true);
+
+
+
+        }
+        else {
+            notify("Please provide all information!")
+        }
+    }
+    { /* const updateCustomerContactDetails = () => {
       
         if (
             requestData.userName != "" &&
@@ -776,9 +783,6 @@ else{
                 setOpenLoader(false);
                 console.log("This is response", error.response);
                 if (error.response.data.message === "Customer not found") {
-                    localStorage.setItem("requestBeforeLogin", "true");
-                    localStorage.setItem("requestData",JSON.stringify(requestData))
-                    console.log("requestdata",requestData)
                     document.getElementById("create-account").click();
                 }
             }
@@ -873,7 +877,7 @@ else{
                         if (index == 0) {
                             console.log("This is coming here");
                             setTimeout(() => {
-                                setRequestData({...requestData, area: item.Area});
+                                setRequestData({ ...requestData, area: item.Area });
                                 localStorage.setItem("area", item.Area);
                             }, 3000);
                         }
@@ -1033,11 +1037,11 @@ else{
                 container
                 direction="row"
                 justify="center"
-                style={{padding: 20, height: "max-content"}}
+                style={{ padding: 20, height: "max-content" }}
             >
                 <div
                     className={classes.input}
-                    style={{height: 50, paddingBottom: 35, marginBottom: 10}}
+                    style={{ height: 50, paddingBottom: 35, marginBottom: 10 }}
                 >
                     <p className={classes.label}>Request Service on date *</p>
                     <input
@@ -1046,11 +1050,11 @@ else{
                             setCalendar(true);
                         }}
                         value={moment(requestData.requestDate).format("MMMM Do YYYY")}
-                        style={{border: "none", width: "90%"}}
+                        style={{ border: "none", width: "90%" }}
                         type={"text"}
                     ></input>
                     <DateRangeIcon
-                        style={{color: "#1075c2"}}
+                        style={{ color: "#1075c2" }}
                         onClick={() => {
                             setCalendar(true);
                         }}
@@ -1059,12 +1063,12 @@ else{
 
                 <div
                     className={classes.input}
-                    style={{height: 50, paddingBottom: 35, marginBottom: 10}}
+                    style={{ height: 50, paddingBottom: 35, marginBottom: 10 }}
                 >
                     <p className={classes.label}>Preffered Service Time *</p>
                     <input
                         className={classes.input}
-                        style={{border: "none", width: "90%"}}
+                        style={{ border: "none", width: "90%" }}
                         type={"text"}
                         onFocus={() => {
                             setPrefferedTime(true);
@@ -1072,7 +1076,7 @@ else{
                         value={requestData.prfferedTime}
                     ></input>
                     <ArrowDropDownIcon
-                        style={{color: "#1075c2"}}
+                        style={{ color: "#1075c2" }}
                         onClick={() => {
                             setPrefferedTime(true);
                         }}
@@ -1081,12 +1085,12 @@ else{
 
                 <div
                     className={classes.input}
-                    style={{height: 50, paddingBottom: 35, marginBottom: 10}}
+                    style={{ height: 50, paddingBottom: 35, marginBottom: 10 }}
                 >
                     <p className={classes.label}>Service Item *</p>
                     <input
                         className={classes.input}
-                        style={{border: "none", width: "90%"}}
+                        style={{ border: "none", width: "90%" }}
                         type={"text"}
                         onFocus={() => {
                             setItem(true);
@@ -1094,7 +1098,7 @@ else{
                         value={requestData.itemName}
                     ></input>
                     <ArrowDropDownIcon
-                        style={{color: "#1075c2"}}
+                        style={{ color: "#1075c2" }}
                         onClick={() => {
                             setItem(true);
                         }}
@@ -1164,12 +1168,12 @@ else{
                         >
                             <FormControlLabel
                                 value="Auto accept 1st offer"
-                                control={<Radio color="primary"/>}
+                                control={<Radio color="primary" />}
                                 label="Auto accept 1st offer"
                             />
                             <FormControlLabel
                                 value="Open for multiple offers"
-                                control={<Radio color="primary"/>}
+                                control={<Radio color="primary" />}
                                 label="Open for multiple offers"
                             />
                         </RadioGroup>
@@ -1292,56 +1296,56 @@ else{
                 container
                 direction="row"
                 justify="center"
-                style={{padding: 20, height: "max-content"}}
+                style={{ padding: 20, height: "max-content" }}
             >
-                <p style={{textAlign: "justify"}}>
+                <p style={{ textAlign: "justify" }}>
                     You indicated that you have water damage , water damage expert my also
                     contact you. You may change below.
                 </p>
-                <FormGroup row style={{width: "100%"}}>
+                <FormGroup row style={{ width: "100%" }}>
                     {lookingForData &&
-                    lookingForData.map((item) => {
-                        return (
-                            <FormControlLabel
-                                style={{width: "100%"}}
-                                control={
-                                    <Checkbox
-                                        onClick={() => {
-                                            if (requestData.lookingFor.includes(item.LookingFor)) {
-                                                var temp = [];
-                                                requestData.lookingFor.map((data) => {
-                                                    if (data !== item.LookingFor) {
-                                                        temp.push(data);
-                                                    }
-                                                });
-                                                setRequestData({...requestData, lookingFor: temp});
-                                                localStorage.setItem(
-                                                    "lookingFor",
-                                                    JSON.stringify(temp)
-                                                );
-                                            } else {
-                                                var temp = requestData.lookingFor;
-                                                temp.push(item.LookingFor);
-                                                console.log("This is item", item.LookingFor);
-                                                setRequestData({...requestData, lookingFor: temp});
-                                                localStorage.setItem(
-                                                    "lookingFor",
-                                                    JSON.stringify(temp)
-                                                );
+                        lookingForData.map((item) => {
+                            return (
+                                <FormControlLabel
+                                    style={{ width: "100%" }}
+                                    control={
+                                        <Checkbox
+                                            onClick={() => {
+                                                if (requestData.lookingFor.includes(item.LookingFor)) {
+                                                    var temp = [];
+                                                    requestData.lookingFor.map((data) => {
+                                                        if (data !== item.LookingFor) {
+                                                            temp.push(data);
+                                                        }
+                                                    });
+                                                    setRequestData({ ...requestData, lookingFor: temp });
+                                                    localStorage.setItem(
+                                                        "lookingFor",
+                                                        JSON.stringify(temp)
+                                                    );
+                                                } else {
+                                                    var temp = requestData.lookingFor;
+                                                    temp.push(item.LookingFor);
+                                                    console.log("This is item", item.LookingFor);
+                                                    setRequestData({ ...requestData, lookingFor: temp });
+                                                    localStorage.setItem(
+                                                        "lookingFor",
+                                                        JSON.stringify(temp)
+                                                    );
+                                                }
+                                            }}
+                                            icon={<CheckCircleIcon style={{ color: "#efefef" }} />}
+                                            checkedIcon={
+                                                <CheckCircleIcon style={{ color: "#1075c2" }} />
                                             }
-                                        }}
-                                        icon={<CheckCircleIcon style={{color: "#efefef"}}/>}
-                                        checkedIcon={
-                                            <CheckCircleIcon style={{color: "#1075c2"}}/>
-                                        }
-                                        checked={requestData.lookingFor.includes(item.LookingFor)}
-                                        name="checkedH"
-                                    />
-                                }
-                                label={item.LookingFor}
-                            />
-                        );
-                    })}
+                                            checked={requestData.lookingFor.includes(item.LookingFor)}
+                                            name="checkedH"
+                                        />
+                                    }
+                                    label={item.LookingFor}
+                                />
+                            );
+                        })}
                 </FormGroup>
                 <div
                     style={{
@@ -1411,7 +1415,7 @@ else{
                 container
                 direction="row"
                 justify="center"
-                style={{padding: 20, height: "max-content"}}
+                style={{ padding: 20, height: "max-content" }}
             >
                 <p className={classes.label}>Area *</p>
                 {areasData && (
@@ -1419,7 +1423,7 @@ else{
                         options={areasData && areasData}
                         onChange={(event, values) => {
                             if (values) {
-                                setRequestData({...requestData, area: values.title});
+                                setRequestData({ ...requestData, area: values.title });
                                 localStorage.setItem("area", values.title);
                             }
                         }}
@@ -1449,8 +1453,54 @@ else{
                     }}
                 >
                     {structuresData &&
-                    structuresData.map((value) => {
-                        if (value.Name != "") {
+                        structuresData.map((value) => {
+                            if (value.Name != "") {
+                                return (
+                                    <button
+                                        className={classes.button}
+                                        style={{
+                                            height: 30,
+                                            padding: 5,
+                                            paddingLeft: 10,
+                                            paddingRight: 10,
+                                            marginRight: 10,
+                                            minWidth: 80,
+                                            fontSize: 11,
+                                            width: "max-content",
+                                            background:
+                                                requestData.structure === value.property ||
+                                                    structuresData[0] === value.property
+                                                    ? "#1075c2"
+                                                    : "#f2f2f2",
+                                            color:
+                                                requestData.structure === value.property ||
+                                                    structuresData[0] === value.property
+                                                    ? "white"
+                                                    : "black",
+                                        }}
+                                        onClick={() => {
+                                            setRequestData({
+                                                ...requestData,
+                                                structure: value.property,
+                                            });
+                                            localStorage.setItem("structure", value.property);
+                                        }}
+                                    >
+                                        {value.property}
+                                    </button>
+                                );
+                            }
+                        })}
+                </div>
+                <p className={classes.label}>Requestor Status *</p>
+                <div
+                    style={{
+                        width: "100vw",
+                        maxWidth: "100vw",
+                    }}
+                >
+                    {requestorStatusData &&
+                        requestorStatusData.map((value) => {
                             return (
                                 <button
                                     className={classes.button}
@@ -1464,74 +1514,28 @@ else{
                                         fontSize: 11,
                                         width: "max-content",
                                         background:
-                                            requestData.structure === value.property ||
-                                            structuresData[0] === value.property
+                                            requestData.requestorStatus === value.Status ||
+                                                requestorStatusData[0] === value.Status
                                                 ? "#1075c2"
                                                 : "#f2f2f2",
                                         color:
-                                            requestData.structure === value.property ||
-                                            structuresData[0] === value.property
+                                            requestData.requestorStatus === value.Status ||
+                                                requestorStatusData[0] === value.Status
                                                 ? "white"
                                                 : "black",
                                     }}
                                     onClick={() => {
                                         setRequestData({
                                             ...requestData,
-                                            structure: value.property,
+                                            requestorStatus: value.Status,
                                         });
-                                        localStorage.setItem("structure", value.property);
+                                        localStorage.setItem("requestorStatus", value.Status);
                                     }}
                                 >
-                                    {value.property}
+                                    {value.Status}
                                 </button>
                             );
-                        }
-                    })}
-                </div>
-                <p className={classes.label}>Requestor Status *</p>
-                <div
-                    style={{
-                        width: "100vw",
-                        maxWidth: "100vw",
-                    }}
-                >
-                    {requestorStatusData &&
-                    requestorStatusData.map((value) => {
-                        return (
-                            <button
-                                className={classes.button}
-                                style={{
-                                    height: 30,
-                                    padding: 5,
-                                    paddingLeft: 10,
-                                    paddingRight: 10,
-                                    marginRight: 10,
-                                    minWidth: 80,
-                                    fontSize: 11,
-                                    width: "max-content",
-                                    background:
-                                        requestData.requestorStatus === value.Status ||
-                                        requestorStatusData[0] === value.Status
-                                            ? "#1075c2"
-                                            : "#f2f2f2",
-                                    color:
-                                        requestData.requestorStatus === value.Status ||
-                                        requestorStatusData[0] === value.Status
-                                            ? "white"
-                                            : "black",
-                                }}
-                                onClick={() => {
-                                    setRequestData({
-                                        ...requestData,
-                                        requestorStatus: value.Status,
-                                    });
-                                    localStorage.setItem("requestorStatus", value.Status);
-                                }}
-                            >
-                                {value.Status}
-                            </button>
-                        );
-                    })}
+                        })}
                 </div>
                 <div
                     style={{
@@ -1601,7 +1605,7 @@ else{
                 container
                 direction="row"
                 justify="center"
-                style={{padding: 20, height: "max-content"}}
+                style={{ padding: 20, height: "max-content" }}
             >
                 <p className={classes.label}>Company *</p>
                 <Autocomplete
@@ -1617,7 +1621,7 @@ else{
                     }}
                     onChange={(event, values) => {
                         if (values) {
-                            setRequestData({...requestData, company: values.title});
+                            setRequestData({ ...requestData, company: values.title });
                         }
                     }}
                     renderInput={(params) => (
@@ -1638,17 +1642,17 @@ else{
 
                 <div
                     className={classes.input}
-                    style={{height: 50, paddingBottom: 35, marginBottom: 10}}
+                    style={{ height: 50, paddingBottom: 35, marginBottom: 10 }}
                 >
                     <p className={classes.label}>Expiry Date *</p>
                     <input
                         className={classes.input}
-                        style={{border: "none", width: "90%"}}
+                        style={{ border: "none", width: "90%" }}
                         type={"text"}
                         value={moment(requestData.expiryDate).format("MMMM Do YYYY")}
                     ></input>
                     <DateRangeIcon
-                        style={{color: "#1075c2"}}
+                        style={{ color: "#1075c2" }}
                         onClick={() => {
                             setCalendarType("expiryDate");
                             setCalendar(true);
@@ -1658,12 +1662,12 @@ else{
 
                 <div
                     className={classes.input}
-                    style={{height: 50, paddingBottom: 35, marginBottom: 10}}
+                    style={{ height: 50, paddingBottom: 35, marginBottom: 10 }}
                 >
                     <p className={classes.label}>Deduction </p>
                     <input
                         className={classes.input}
-                        style={{border: "none", width: "80%"}}
+                        style={{ border: "none", width: "80%" }}
                         type={"text"}
                         onChange={(e) => {
                             //  setRequestData({ ...requestData, deduction: e.target.value });
@@ -1736,13 +1740,13 @@ else{
     };
 
     const ReviewRequest = () => {
-        console.log("requestData",requestData)
+        console.log("requestData", requestData)
         return (
             <Grid
                 container
                 direction="row"
                 justify="center"
-                style={{padding: 10, height: "max-content", marginTop: -60}}
+                style={{ padding: 10, height: "max-content", marginTop: -60 }}
             >
                 <div
                     style={{
@@ -1813,16 +1817,16 @@ else{
                             ></EditIcon>
                         </Grid>
                     </Grid>
-                    <FormGroup row style={{width: "100%"}}>
-                        {requestData.lookingFor?.map((item) => {
+                    <FormGroup row style={{ width: "100%" }}>
+                        {requestData?.lookingFor?.map((item) => {
                             return (
                                 <FormControlLabel
                                     checked={true}
                                     control={
                                         <Checkbox
-                                            icon={<CheckCircleIcon style={{color: "#efefef"}}/>}
+                                            icon={<CheckCircleIcon style={{ color: "#efefef" }} />}
                                             checkedIcon={
-                                                <CheckCircleIcon style={{color: "#1075c2"}}/>
+                                                <CheckCircleIcon style={{ color: "#1075c2" }} />
                                             }
                                             name="checkedH"
                                         />
@@ -1899,18 +1903,18 @@ else{
                     </p>
                     <p className={classes.label}>Photos</p>
                     {requestData.image && requestData.image.length > 0 &&
-                    requestData.image.map((img) => {
-                        let imageDiv = null;
-                        if (img.type === 'image') {
-                            imageDiv = <img src={img.data} style={{padding: 20}} className={classes.image}/>
-                        } else if (img.type === 'video') {
-                            imageDiv = <video width={130} height={100} style={{padding: 20}} controls>
-                                <source src={img.data} id="video_here"/>
-                                Your browser does not support HTML5 video.
-                            </video>
-                        }
-                        return imageDiv;
-                    })}
+                        requestData.image.map((img) => {
+                            let imageDiv = null;
+                            if (img.type === 'image') {
+                                imageDiv = <img src={img.data} style={{ padding: 20 }} className={classes.image} />
+                            } else if (img.type === 'video') {
+                                imageDiv = <video width={130} height={100} style={{ padding: 20 }} controls>
+                                    <source src={img.data} id="video_here" />
+                                    Your browser does not support HTML5 video.
+                                </video>
+                            }
+                            return imageDiv;
+                        })}
                 </div>
 
                 <div
@@ -1988,8 +1992,8 @@ else{
                         {requestData.allowSms ? "Yes" : "No"}{" "}
                     </p>
                     <p className={classes.label}>Email * </p>
-                    
-                    <p className={classes.labelBlack}>{requestData.userEmail?requestData.userEmail:localStorage.getItem("email")} </p>
+
+                    <p className={classes.labelBlack}>{requestData.userEmail ? requestData.userEmail : localStorage.getItem("email")} </p>
                     <p className={classes.label}>Address * </p>
                     <p className={classes.labelBlack}>{requestData.userAddress} </p>
                     <p className={classes.label}>Unit / APT </p>
@@ -2024,20 +2028,20 @@ else{
                             requestData.userCity != "" &&
                             requestData.userState != "" &&
                             localStorage.getItem("userCurrentLocation") != null
-                        // requestData.currentLocation != ""
+                            // requestData.currentLocation != ""
                         ) {
                             if (localStorage.getItem("id") && localStorage.getItem("token")) {
                                 postMyRequest();
-                            }
-                             else {
-                                localStorage.setItem("userState",requestData.userState)
+
+                            } else {
+                                localStorage.setItem("userState", requestData.userState)
                                 checkThisUser();
-                               
+
                             }
                         } else {
-                                console.log("PLease fill the information")
-                                alert("Please fill complete information");
-                            
+                            console.log("PLease fill the information")
+                            alert("Please fill complete information");
+
                         }
                     }}
                 >
@@ -2049,14 +2053,14 @@ else{
     const notify = (data) => toast(data);
     // console.log("This iserquest data", requestData);
     return (
-        <div style={{background: "#f2f2f2", background: "white"}}>
+        <div style={{ background: "#f2f2f2", background: "white" }}>
             <Link id="sumittedRequest" to="/sumittedRequest"></Link>
             <Link id="homepage" to="/homepage"></Link>
             <Link id="login" to="/login"></Link>
             <Link id="create-account" to="/create-account"></Link>
 
             <Backdrop className={classes.backdrop} open={openLoader}>
-                <CircularProgress color="inherit"/>
+                <CircularProgress color="inherit" />
             </Backdrop>
             <ToastContainer
                 position="top-center"
@@ -2070,7 +2074,7 @@ else{
                 pauseOnHover
             />
             <Link id="reviews" to="/reviews/0"></Link>
-            <div style={{borderBottom: "1px solid #e9e9e9", height: 60}}>
+            <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
                 <Header
                     onSidebarDisplay={() => {
                         setState(true);
@@ -2082,7 +2086,7 @@ else{
                     }
                     leftIcon={
                         <ArrowBackIosIcon
-                            style={{cursor: "pointer"}}
+                            style={{ cursor: "pointer" }}
                             onClick={() => {
                                 if (activeTab != "ReviewRequest") {
                                     if (activeTab === "Problem") {
@@ -2142,7 +2146,7 @@ else{
                 }}
                 className="hideScrollBar"
             >
-                <div style={{width: "100%"}}>
+                <div style={{ width: "100%" }}>
                     <div
                         style={{
                             width: "100vw",
@@ -2153,16 +2157,41 @@ else{
                         }}
                     >
                         {activeTab != "ReviewRequest" &&
-                        [
-                            "Problem",
-                            "Looking For",
-                            "Property",
-                            "Description and Photo",
-                            "Insurance",
-                            "Contact Details",
-                        ].map((value) => {
-                            if (value === "Looking For" || value === "Insurance") {
-                                if (requestData.waterDamage === "Yes") {
+                            [
+                                "Problem",
+                                "Looking For",
+                                "Property",
+                                "Description and Photo",
+                                "Insurance",
+                                "Contact Details",
+                            ].map((value) => {
+                                if (value === "Looking For" || value === "Insurance") {
+                                    if (requestData.waterDamage === "Yes") {
+                                        return (
+                                            <button
+                                                className={classes.button}
+                                                style={{
+                                                    height: 30,
+                                                    padding: 5,
+                                                    paddingLeft: 10,
+                                                    paddingRight: 10,
+                                                    marginLeft: 10,
+                                                    minWidth: 130,
+                                                    fontSize: 11,
+                                                    width: "max-content",
+                                                    background:
+                                                        activeTab === value ? "#1075c2" : "#f2f2f2",
+                                                    color: activeTab === value ? "white" : "black",
+                                                }}
+                                                onClick={() => {
+                                                    setActiveTab(value);
+                                                }}
+                                            >
+                                                {value}
+                                            </button>
+                                        );
+                                    }
+                                } else {
                                     return (
                                         <button
                                             className={classes.button}
@@ -2175,8 +2204,7 @@ else{
                                                 minWidth: 130,
                                                 fontSize: 11,
                                                 width: "max-content",
-                                                background:
-                                                    activeTab === value ? "#1075c2" : "#f2f2f2",
+                                                background: activeTab === value ? "#1075c2" : "#f2f2f2",
                                                 color: activeTab === value ? "white" : "black",
                                             }}
                                             onClick={() => {
@@ -2187,31 +2215,7 @@ else{
                                         </button>
                                     );
                                 }
-                            } else {
-                                return (
-                                    <button
-                                        className={classes.button}
-                                        style={{
-                                            height: 30,
-                                            padding: 5,
-                                            paddingLeft: 10,
-                                            paddingRight: 10,
-                                            marginLeft: 10,
-                                            minWidth: 130,
-                                            fontSize: 11,
-                                            width: "max-content",
-                                            background: activeTab === value ? "#1075c2" : "#f2f2f2",
-                                            color: activeTab === value ? "white" : "black",
-                                        }}
-                                        onClick={() => {
-                                            setActiveTab(value);
-                                        }}
-                                    >
-                                        {value}
-                                    </button>
-                                );
-                            }
-                        })}
+                            })}
                     </div>
                     {activeTab === "Problem" ? (
                         <ProblemSection></ProblemSection>
@@ -2223,7 +2227,7 @@ else{
                         <DescriptionAndPhoto
                             handleFileChange={handleFileChange}
                             setRequestData={(field, value) => {
-                                setRequestData({...requestData, [field]: value});
+                                setRequestData({ ...requestData, [field]: value });
                                 console.log("THis is the request Data", requestData);
                             }}
                             image={requestData.image}
@@ -2260,7 +2264,7 @@ else{
                             requestData={requestData}
                             setRequestData={(field, value) => {
                                 console.log("This is field", field);
-                                setRequestData({...requestData, [field]: value});
+                                setRequestData({ ...requestData, [field]: value });
                                 console.log("THis is the request Data", requestData);
                             }}
                             updateAddressDetails={(data) => {
@@ -2290,7 +2294,7 @@ else{
                         open={state}
                         onClose={toggleDrawer("bottom", false)}
                     >
-                        <div style={{width: "60vw"}}>
+                        <div style={{ width: "60vw" }}>
                             <Sidebar></Sidebar>
                         </div>
                     </Drawer>
@@ -2305,7 +2309,7 @@ else{
                         direction="row"
                         justify="center"
                         // alignItems="center"
-                        style={{height: "max-content", paddingLeft: 20, paddingRight: 20}}
+                        style={{ height: "max-content", paddingLeft: 20, paddingRight: 20 }}
                     >
                         {" "}
                         <p
@@ -2319,12 +2323,12 @@ else{
                         >
                             Rate and Review
                         </p>
-                        <Rating style={{fontSize: 40}}></Rating>
+                        <Rating style={{ fontSize: 40 }}></Rating>
                         <p className={classes.label}>Write Something</p>
                         <input
                             className={classes.input}
                             placeholder="Write Something"
-                            style={{border: "none"}}
+                            style={{ border: "none" }}
                         ></input>
                         <button
                             className={classes.button}
@@ -2350,7 +2354,7 @@ else{
                         direction="row"
                         justify="center"
                         // alignItems="center"
-                        style={{height: "max-content", paddingLeft: 20, paddingRight: 20}}
+                        style={{ height: "max-content", paddingLeft: 20, paddingRight: 20 }}
                     >
                         {" "}
                         <p
@@ -2398,7 +2402,7 @@ else{
                         direction="row"
                         justify="center"
                         // alignItems="center"
-                        style={{height: "max-content", paddingLeft: 20, paddingRight: 20}}
+                        style={{ height: "max-content", paddingLeft: 20, paddingRight: 20 }}
                     >
                         {" "}
                         <p
@@ -2425,15 +2429,15 @@ else{
                                 }}
                             >
                                 {prefferedTimeData &&
-                                prefferedTimeData.map((item) => {
-                                    return (
-                                        <FormControlLabel
-                                            value={item.ServiceTime}
-                                            control={<Radio color="primary"/>}
-                                            label={item.ServiceTime}
-                                        />
-                                    );
-                                })}
+                                    prefferedTimeData.map((item) => {
+                                        return (
+                                            <FormControlLabel
+                                                value={item.ServiceTime}
+                                                control={<Radio color="primary" />}
+                                                label={item.ServiceTime}
+                                            />
+                                        );
+                                    })}
                             </RadioGroup>
                         </FormControl>
                         <button
@@ -2470,7 +2474,7 @@ else{
                         direction="row"
                         justify="center"
                         // alignItems="center"
-                        style={{height: "max-content", paddingLeft: 20, paddingRight: 20}}
+                        style={{ height: "max-content", paddingLeft: 20, paddingRight: 20 }}
                     >
                         {" "}
                         <p
@@ -2484,45 +2488,49 @@ else{
                         >
                             What item is having a problem?
                         </p>
-                        <div style={{height: 400, maxHeight: 400, overflow: "scroll"}}>
+                        <div style={{ height: 400, maxHeight: 400, overflow: "scroll" }}>
                             <Grid container direction="row">
+
                                 {items &&
-                                items.map((stuff) => {
-                                    return (
-                                        <Grid item md={4} xs={4}>
-                                            <Grid
-                                                container
-                                                direction="column"
-                                                alignItems="center"
-                                                style={{marginBottom: 20}}
-                                                onClick={() => {
-                                                    setRequestData({
-                                                        ...requestData,
-                                                        itemName: stuff.Description,
-                                                        leadPrice:stuff.Price
-                                                    });
+                                    items.map((stuff) => {
+                                        return (
+                                            <Grid item md={4} xs={4}>
+                                                <Grid
+                                                    container
+                                                    direction="column"
+                                                    alignItems="center"
+                                                    style={{ marginBottom: 20 }}
+                                                    onClick={() => {
+                                                        debugger
+                                                        setRequestData({
+                                                            ...requestData,
+                                                            itemName: stuff.Description,
+                                                            leadPrice: stuff.Price,
+                                                            waterDamagePrice: stuff.waterDamagePrice,
 
-                                                    localStorage.setItem("itemName", stuff.Description);
-                                                    localStorage.setItem("leadPrice", stuff.Price);
+                                                        });
+                                                        localStorage.setItem("waterDamagePrice", stuff.waterDamagePrice);
+                                                        localStorage.setItem("itemName", stuff.Description);
+                                                        localStorage.setItem("leadPrice", stuff.Price);
 
-                                                    setItem(false);
-                                                }}
-                                            >
-                                                <img style={{width: "70%"}} src={stuff.Image}></img>
-                                                <p
-                                                    style={{
-                                                        width: "100%",
-                                                        textAlign: "center",
-                                                        fontSize: 12,
-                                                        fontWeight: 600,
+                                                        setItem(false);
                                                     }}
                                                 >
-                                                    {stuff.Description}
-                                                </p>
+                                                    <img style={{ width: "70%" }} src={stuff.Image}></img>
+                                                    <p
+                                                        style={{
+                                                            width: "100%",
+                                                            textAlign: "center",
+                                                            fontSize: 12,
+                                                            fontWeight: 600,
+                                                        }}
+                                                    >
+                                                        {stuff.Description}
+                                                    </p>
+                                                </Grid>
                                             </Grid>
-                                        </Grid>
-                                    );
-                                })}
+                                        );
+                                    })}
                             </Grid>
                         </div>
                         <button
@@ -2547,10 +2555,10 @@ else{
                         document.getElementById("current-requests").click();
                     }}
                 >
-                    <div style={{width: "100%", height: 300}}>
+                    <div style={{ width: "100%", height: 300 }}>
                         <Grid container direction="row" justify="center">
                             <CheckCircleIcon
-                                style={{marginTop: 20, fontSize: 50, color: "#1075c2"}}
+                                style={{ marginTop: 20, fontSize: 50, color: "#1075c2" }}
                             ></CheckCircleIcon>
                         </Grid>
                         <p
@@ -2570,7 +2578,7 @@ else{
                             direction="row"
                             justify="center"
                             // alignItems="center"
-                            style={{height: 120}}
+                            style={{ height: 120 }}
                         >
                             <p
                                 style={{
@@ -2603,7 +2611,7 @@ else{
                                     setBottomState(false);
                                 }}
                                 onClick={() => {
-                                    document.getElementById("homepage").click();
+                                    document.getElementById("current-requests").click();
                                 }}
                             >
                                 Continue

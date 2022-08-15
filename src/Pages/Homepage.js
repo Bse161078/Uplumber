@@ -42,7 +42,7 @@ import MessageIcon from "@material-ui/icons/Message";
 // } from "react-leaflet-google-tile-layer";
 // import ReactLeafletGoogleLayer from "react-leaflet-google-layer";
 import {
-    AllProvidersByLocation,
+    AllProviders,
     PostARequest,
     GetAllRequests,
     GetAllOffers,
@@ -52,7 +52,6 @@ import {
     MyProfile,
     UpdateCustomerProfile,
     removeFavorite,
-
 } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 import {
@@ -68,6 +67,7 @@ import Verify from "../assets/verify.png";
 
 
 import AlertDialog from '../Pages/Dialogs/confirmation';
+
 
 const useStyles = makeStyles((theme) => ({
     input: {
@@ -116,10 +116,11 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 const HomePage = (props) => {
+    let phoneverify = localStorage.getItem('userData') && JSON.parse(localStorage.getItem('userData'))?.phoneNumberVerified
+    let emailverify = localStorage.getItem('userData') && JSON.parse(localStorage.getItem('userData'))?.emailVerified
     console.log("This is props", props.match.params);
     const classes = useStyles();
-    const [emailverify, setVerifyEmail] = React.useState(false);
-    const [phoneverify, setVerifyPhone] = React.useState(false);
+
     const [state, setState] = React.useState(false);
     const [bottomState, setBottomState] = React.useState(false);
     const [zoom, setZoom] = React.useState(12);
@@ -134,17 +135,14 @@ const HomePage = (props) => {
     const [openPopup, setOpenPopup] = useState(null);
     const [tokenFound, setTokenFound] = useState(null);
     const [showAlertDialog, setShowAlertDialog] = useState(false);
-    useEffect(async () => {
-        getMyProfile();
-        console.log('emailverify', phoneverify, emailverify)
-        localStorage.setItem('userData', '')
-    }, [emailverify])
+
     const toggleDrawer = (anchor, open) => (event) => {
         setState(open);
     };
     const position = [51.505, -0.09];
     console.log("This isid", localStorage.getItem("id"));
     console.log("This is token", localStorage.getItem("token"));
+
     const updateMyProfile = (fcmToken) => {
         var data = {
             fcmTokenWeb: fcmToken,
@@ -629,6 +627,7 @@ const HomePage = (props) => {
             return <div></div>;
         }
     };
+
     const getMyProfile = () => {
         // setOpenLoader(true);
         MyProfile().then(
@@ -649,8 +648,6 @@ const HomePage = (props) => {
                     localStorage.setItem("userCity", user.city);
                     localStorage.setItem("userState", user.state);
                     localStorage.setItem("userZipCode", user.zipcode);
-                    setVerifyEmail(user.emailVerified)
-                    setVerifyPhone(user.phoneNumberVerified)
                     localStorage.setItem(
                         "userName",
                         user.firstName + " " + user.lastName
@@ -785,9 +782,9 @@ const HomePage = (props) => {
         );
     };
 
-    const getAllProvidersbyLocation = (lat, long, distance) => {
+    const getAllProviders = () => {
         // setOpenLoader(true);
-        AllProvidersByLocation(lat, long, distance).then(
+        AllProviders().then(
             (res) => {
                 if (
                     res.data.success ||
@@ -797,15 +794,15 @@ const HomePage = (props) => {
                 ) {
                     setOpenLoader(false);
                     // console.log("This is res for plumber", res);
-                    if (res.data.data.length === 0) {
+                    if (res.data.Providers.length === 0) {
                         notify("No providers were found withing this radius!!");
                     } else {
-                        localStorage.setItem("allProviders", JSON.stringify(res.data.data));
-                        setAllProviders(res.data.data);
+                        localStorage.setItem("allProviders", JSON.stringify(res.data.Providers));
+                        setAllProviders(res.data.Providers);
                     }
                     setTimeout(() => {
-                        getAllProvidersbyLocation(lat, long, distance);
-                    }, 10000);
+                        getAllProviders();
+                    }, 300000);
 
                 }
             },
@@ -866,7 +863,6 @@ const HomePage = (props) => {
     const getLocation = () => {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(showPosition);
-            //showPosition(navigator.getLocation.getCurrentPosition(showPosition))
             return true;
         } else {
             alert("App need your location work properly");
@@ -885,7 +881,7 @@ const HomePage = (props) => {
             setCurrentLoction(position.coords);
             setZoom(12);
         }
-        getAllProvidersbyLocation(
+        getAllProviders(
             position.coords.latitude,
             position.coords.longitude,
             100000000000
@@ -893,7 +889,7 @@ const HomePage = (props) => {
         if (localStorage.getItem("already") === null) {
             localStorage.setItem("already", "already");
             // setInterval(() => {
-            //   getAllProvidersbyLocation(
+            //   getAllProviders(
             //     position.coords.latitude,
             //     position.coords.longitude,
             //     100000000000
@@ -904,6 +900,7 @@ const HomePage = (props) => {
     const [already, setAlready] = useState(false);
     useEffect(async () => {
         getLocation();
+
         if (localStorage.getItem("coords")) {
             // alert("THis will do what we want")
             setCurrentLoction(JSON.parse(localStorage.getItem("coords")));
@@ -911,7 +908,7 @@ const HomePage = (props) => {
 
         let fb = await connectFirebase();
         getToken(setTokenFound);
-        //console.log("This is fb", fb);
+        console.log("This is fb", fb);
         if (localStorage.getItem("allProviders")) {
             setAllProviders(JSON.parse(localStorage.getItem("allProviders")));
         }
@@ -992,15 +989,12 @@ const HomePage = (props) => {
                         if (item.ratings.length > 0) {
                             averageRating = averageRating / item.ratings.length;
                         }
-                        console.log(item, "item")
+
                         return (
                             <Marker
                                 id="findMarker"
                                 icon={Plumber}
-                                position={{
-                                    lat: item.currentLocation ? item.currentLocation.latitude : item.location[1],
-                                    lng: item.currentLocation ? item.currentLocation.longitude : item.location[0]
-                                }}
+                                position={{ lat: item.location[1], lng: item.location[0] }}
                                 onClick={props.onToggleOpen}
                                 onClick={() => {
                                     setOpenPopup(item.providerId);
@@ -1045,6 +1039,16 @@ const HomePage = (props) => {
                                                 >
                                                     ${item.hourlyRates + "/hr"}
                                                 </p>
+                                                <p
+                                                    style={{
+                                                        fontSize: 10,
+                                                        width: "100%",
+                                                        textAlign: "center",
+                                                        margin: 0,
+                                                    }}
+                                                >
+                                                    {"LIC: " + item.licenseNumber || 'N/A'}
+                                                </p>
                                             </Grid>
                                         </div>
                                     </InfoWindow>
@@ -1066,19 +1070,22 @@ const HomePage = (props) => {
                 title={title}
                 show={showAlertDialog}
                 onSuccess={(e) => {
-                    if (emailverify && phoneverify === true || localStorage.getItem('userData') === '') {
-                        postMyRequest();
-                        setShowAlertDialog(false);
+                    postMyRequest();
+                    setShowAlertDialog(false);
+                    // if (emailverify && phoneverify === true) {
+                    //     postMyRequest();
+                    //     setShowAlertDialog(false);
 
 
-                    } else if (emailverify != true) {
-                        setShowAlertDialog(false)
-                        alert("Your email is not verified")
-                    }
-                    else if (phoneverify != true) {
-                        setShowAlertDialog(false)
-                        alert("Your phone is not verified")
-                    }
+                    // }
+                    //  else if (emailverify != true) {
+                    //     setShowAlertDialog(false)
+                    //     alert("Your email is not verified")
+                    // }
+                    // else if (phoneverify != true) {
+                    //     setShowAlertDialog(false)
+                    //     alert("Your phone is not verified")
+                    // }
 
 
                 }}

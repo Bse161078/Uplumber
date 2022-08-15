@@ -36,8 +36,6 @@ import { getApikey } from "./ApiHelper";
 export default function App() {
     const [apikey, setapikey] = useState("")
     const getapi = async () => {
-        debugger
-
         const res = await getApikey()
         // setapikey(res.data.CustomerOffer.googlePlacesApiKey)
         // console.log(res.data.CustomerOffer)

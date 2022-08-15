@@ -1,7 +1,8 @@
 import axios from "axios";
 import Avatar from "./assets/avatar.png";
-
+import Geocode from "react-geocode";
 var URL = "https://u-plumber.net/api/";
+Geocode.setApiKey("AIzaSyA0O_MV5VjO7FMAl6kZFok35pyI1x6YMl4");
 
 export const getAllSubjects = () => {
   return axios({
@@ -14,7 +15,7 @@ export const getAllSubjects = () => {
   });
 };
 export const getApikey = () => {
-  debugger
+
   return axios({
     method: "get",
     url: URL + `statickeys/customer/get`,
@@ -204,7 +205,86 @@ export const CompleteProfile = (postData) => {
 
   return axios(config);
 };
+// Get formatted address, city, state, country from latitude & longitude when
+// Geocode.setLocationType("ROOFTOP") enabled
+// the below parser will work for most of the countries
+export const getLocationDetailsFromLatLong = async (latitude, longitude) => {
+  debugger
+  let response = null
+  Geocode.fromLatLng(
+    latitude,
+    longitude
+  ).then(res => {
+    debugger
 
+    console.log('Geocoder address ', res)
+    console.log('Geocoder res.results. ', res.results[0].address_components)
+    let address = "";
+    let zipcode = "";
+    let city = "";
+    let state = "";
+    let country = "";
+
+    // Get each component of the address from the place details,
+    // and then fill-in the corresponding field on the form.
+    // place.address_components are google.maps.GeocoderAddressComponent objects
+    // which are documented at http://goo.gle/3l5i5Mr
+    for (const component of res.results[0].address_components) {
+      const componentType = component.types[0];
+
+      switch (componentType) {
+        case "street_number": {
+          address = `${component.long_name} ${address}`;
+          break;
+        }
+
+        case "route": {
+          address += component.short_name;
+          break;
+        }
+
+        case "postal_code": {
+          zipcode = `${component.long_name}${zipcode}`;
+          break;
+        }
+
+        case "postal_code_suffix": {
+          zipcode = `${zipcode}-${component.long_name}`;
+          break;
+        }
+        case "locality":
+          //console.log('city/locality ',component.long_name)
+          city = component.long_name
+          break;
+        case "administrative_area_level_1": {
+          //console.log('state ',component.short_name)
+          state = component.short_name
+          // document.querySelector("#state").value = component.short_name;
+          break;
+        }
+        case "country":
+          //console.log('country ',component.long_name)
+          country = component.long_name
+          // document.querySelector("#country").value = component.long_name;
+          break;
+      }
+    }
+
+    response = { address, zipcode, city, state, country }
+    console.log('address ', address)
+    console.log('zipcode ', zipcode)
+    console.log('city ', city)
+    console.log('state ', state)
+    console.log('country ', country)
+  }).catch((error) => {
+    debugger
+    console.log('error', error)
+
+
+
+  })
+  return response
+};
 export const CustomerNotifications = () => {
   var config = {
     method: "get",

@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles, Grid, TextField } from "@material-ui/core";
 import { Countries, states } from "../../Data/Data";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -6,13 +6,11 @@ import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from "react-places-autocomplete";
-import {checkUser} from "../../ApiHelper";
+import { checkUser } from "../../ApiHelper";
+import Geocode from "react-geocode";
+var URL = "https://u-plumber.net/api/";
+Geocode.setApiKey("AIzaSyA0O_MV5VjO7FMAl6kZFok35pyI1x6YMl4");
 
-
-
-
-
- 
 const useStyles = makeStyles((theme) => ({
   input: {
     border: "none",
@@ -62,14 +60,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-function extractFromAdress(components, type){
-    for (var i=0; i<components.length; i++)
-        for (var j=0; j<components[i].types.length; j++)
-            if (components[i].types[j]==type) return components[i].long_name;
-    return "";
+function extractFromAdress(components, type) {
+  for (var i = 0; i < components.length; i++)
+    for (var j = 0; j < components[i].types.length; j++)
+      if (components[i].types[j] == type) return components[i].long_name;
+  return "";
 }
-
 
 const ContactDetails = (props) => {
   const classes = useStyles();
@@ -80,101 +76,90 @@ const ContactDetails = (props) => {
     // console.log("This is the adress", address);
   };
 
-             //  if(add.types.includes("postal_code"))
-            //  {
-            //   props.setRequestData("userZipCode",  add.long_name);
-            //   localStorage.setItem("userZipCode",   add.long_name);
-            //  }
-            //  else if(add.types.includes("administrative_area_level_2"))
-            //  {
-            //    console.log("THis is the results userCity", add.long_name)
-            //   // props.setRequestData("userCity",  add.long_name);
-            //   setTimeout(() => {
-                
-            //   }, 400);
-            //   // localStorage.setItem("userCity",   add.long_name);
-            //  }
+  //  if(add.types.includes("postal_code"))
+  //  {
+  //   props.setRequestData("userZipCode",  add.long_name);
+  //   localStorage.setItem("userZipCode",   add.long_name);
+  //  }
+  //  else if(add.types.includes("administrative_area_level_2"))
+  //  {
+  //    console.log("THis is the results userCity", add.long_name)
+  //   // props.setRequestData("userCity",  add.long_name);
+  //   setTimeout(() => {
 
-            //  else if(add.types.includes("administrative_area_level_1"))
-            //  {
-            //   console.log("THis is the results administrative_area_level_1", add.long_name)
-            //   props.setRequestData("userState",  add.long_name);
-            //   // localStorage.setItem("userState",   add.long_name);
-            //  }
-          // }
-          // )
-          // ;
+  //   }, 400);
+  //   // localStorage.setItem("userCity",   add.long_name);
+  //  }
+
+  //  else if(add.types.includes("administrative_area_level_1"))
+  //  {
+  //   console.log("THis is the results administrative_area_level_1", add.long_name)
+  //   props.setRequestData("userState",  add.long_name);
+  //   // localStorage.setItem("userState",   add.long_name);
+  //  }
+  // }
+  // )
+  // ;
 
   const handleSelect = async (address) => {
     console.log("This is the dares", address);
 
+    try {
+      const results = await geocodeByAddress(address);
+      console.log("results = ", results);
 
-    try{
-        const results = await geocodeByAddress(address);
-        console.log('results = ',results)
+      if (results.length > 0) {
+        const addressComponents = results[0].address_components;
+        console.log("addressComponents = ", addressComponents);
+        const latLng = await getLatLng(results[0]);
+        var userZipCode = extractFromAdress(addressComponents, "postal_code");
+        var userCity = extractFromAdress(addressComponents, "locality");
+        var userState = extractFromAdress(
+          addressComponents,
+          "administrative_area_level_1"
+        );
+        //address=extractFromAdress(addressComponents, "political");
+        address =
+          address.split(",").length > 0 ? address.split(",")[0] : address;
 
-        if(results.length>0) {
+        localStorage.setItem(
+          "userCurrentLocation",
+          JSON.stringify({ latitude: latLng.lat, longitude: latLng.lng })
+        );
+        localStorage.setItem("userZipCode", userZipCode);
+        localStorage.setItem("userCity", userCity);
+        localStorage.setItem("userState", userState);
+        localStorage.setItem("userAddress", address);
 
-            const addressComponents=results[0].address_components;
-            console.log('addressComponents = ',addressComponents)
-            const latLng = await getLatLng(results[0]);
-            var userZipCode = extractFromAdress(addressComponents, "postal_code");
-            var userCity = extractFromAdress(addressComponents, "locality");
-            var userState = extractFromAdress(addressComponents, "administrative_area_level_1");
-            //address=extractFromAdress(addressComponents, "political");
-            address=address.split(",").length>0?address.split(",")[0]:address;
+        const data = {
+          currentLocation: {
+            latitude: latLng.lat,
+            longitude: latLng.lng,
+          },
+          userAddress: address,
+          userCity,
+          userZipCode,
+          userState,
+        };
 
-            localStorage.setItem(
-                "userCurrentLocation",
-                JSON.stringify({latitude: latLng.lat, longitude: latLng.lng})
-            );
-            localStorage.setItem("userZipCode", userZipCode);
-            localStorage.setItem("userCity", userCity);
-            localStorage.setItem("userState", userState);
-            localStorage.setItem("userAddress", address);
-
-
-            const data={
-                currentLocation:{
-                    latitude: latLng.lat,
-                    longitude: latLng.lng,
-                },
-                userAddress:address,
-                userCity,
-                userZipCode,
-                userState
-            }
-
-
-
-
-
-
-            props.updateAddressDetails(data)
-
-        }
-
-
-    }catch (e) {
-        console.error("Error", e)
+        props.updateAddressDetails(data);
+      }
+    } catch (e) {
+      console.error("Error", e);
     }
-
-
   };
-const [id,setId]=useState(localStorage.getItem("id"))
+  const [id, setId] = useState(localStorage.getItem("id"));
 
   useEffect(() => {
     function checkUserData() {
-      setId(localStorage.getItem("id"))
-      }
-  
-checkUserData()
+      setId(localStorage.getItem("id"));
+    }
 
-})
+    checkUserData();
+  });
 
-  console.log("signin id",id)
-  console.log('Contact details = ',props)
-  
+  console.log("signin id", id);
+  console.log("Contact details = ", props);
 
   return (
     <Grid
@@ -187,45 +172,40 @@ checkUserData()
       <input
         className={classes.input}
         type={"text"}
-     
         value={props.userName}
         onChange={(e) => {
           props.setRequestData("userName", e.target.value);
-          const firstname = props.userName?.split(' ').slice(0,-1).join(' ')
-          const lastname = props.userName?.split(' ').slice(-1).join(' ')
-          localStorage.setItem('firstName',firstname)
-          localStorage.setItem('lastName',lastname)
+          const firstname = props.userName?.split(" ").slice(0, -1).join(" ");
+          const lastname = props.userName?.split(" ").slice(-1).join(" ");
+          localStorage.setItem("firstName", firstname);
+          localStorage.setItem("lastName", lastname);
           localStorage.setItem("userName", e.target.value);
         }}
       ></input>
 
       <p className={classes.label}>Phone number *</p>
-     {id !=null ?<input
-
-     disabled
-        className={classes.input}
-         
-        type={"text"}
-        
-        value={localStorage.getItem("userPhone")}
-        onChange={(e) => {
-          props.setRequestData("userPhone", e.target.value);
-          localStorage.setItem("userPhone", e.target.value);
-         
-        }}
-      ></input>:<input
-
-      
-         className={classes.input}
-          
-         type={"text"}
-         value={props.userPhone}
-         onChange={(e) => {
-           props.setRequestData("userPhone", e.target.value);
-           localStorage.setItem("userPhone", e.target.value);
-          
-         }}
-       ></input>}
+      {id != null ? (
+        <input
+          disabled
+          className={classes.input}
+          type={"text"}
+          value={localStorage.getItem("userPhone")}
+          onChange={(e) => {
+            props.setRequestData("userPhone", e.target.value);
+            localStorage.setItem("userPhone", e.target.value);
+          }}
+        ></input>
+      ) : (
+        <input
+          className={classes.input}
+          type={"text"}
+          value={props.userPhone}
+          onChange={(e) => {
+            props.setRequestData("userPhone", e.target.value);
+            localStorage.setItem("userPhone", e.target.value);
+          }}
+        ></input>
+      )}
       <p style={{ textAlign: "justify" }}>
         Do you allow U-Plumber to contact you via mobile phone number (text)?
         Please note this will help you get response from a plumber faster but it
@@ -291,25 +271,30 @@ checkUserData()
         this email.
       </p>
       <p className={classes.label}>Email *</p>
-     {id!=null && props.userEmail!=null? <input
-      disabled
-        className={classes.input}
-        type={"text"}
-        value={props.userEmail?props.userEmail:localStorage.getItem("email")}
-        onChange={(e) => {
-          props.setRequestData("userEmail", e.target.value);
-          localStorage.setItem("userEmail", e.target.value);
-        }}
-      ></input>: <input
-      
-        className={classes.input}
-        type={"text"}
-        value={props.userEmail}
-        onChange={(e) => {
-          props.setRequestData("userEmail", e.target.value);
-          localStorage.setItem("userEmail", e.target.value);
-        }}
-      ></input>}
+      {id != null && props.userEmail != null ? (
+        <input
+          disabled
+          className={classes.input}
+          type={"text"}
+          value={
+            props.userEmail ? props.userEmail : localStorage.getItem("email")
+          }
+          onChange={(e) => {
+            props.setRequestData("userEmail", e.target.value);
+            localStorage.setItem("userEmail", e.target.value);
+          }}
+        ></input>
+      ) : (
+        <input
+          className={classes.input}
+          type={"text"}
+          value={props.userEmail}
+          onChange={(e) => {
+            props.setRequestData("userEmail", e.target.value);
+            localStorage.setItem("userEmail", e.target.value);
+          }}
+        ></input>
+      )}
       <p className={classes.label}>Address *</p>
       <PlacesAutocomplete
         value={props.userAddress}
