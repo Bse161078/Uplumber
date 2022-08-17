@@ -120,21 +120,18 @@ export default function Sidebar(props) {
                   }}
                   onClick={() => {
                     if (item.name === "New Request") {
-                      if( props.emailverify&& props.phoneverify===true) 
-                      {   
+                      if (props.emailverify && props.phoneverify === true) {
                         props.postMyRequest();
-                        
-                      }else if(props.emailverify!=true)
-                       {
-                        
-                        alert("Your email is not verified") 
-                       }
-                       else if(props.phoneverify!=true)
-                       {
-                        
-                        alert("Your phone is not verified")                
-                       }
-                    
+
+                      } else if (props.emailverify != true) {
+
+                        alert("Your email is not verified")
+                      }
+                      else if (props.phoneverify != true) {
+
+                        alert("Your phone is not verified")
+                      }
+
                     } else {
                       document.getElementById(item.href).click();
                     }
@@ -165,6 +162,36 @@ export default function Sidebar(props) {
               localStorage.removeItem("token");
               localStorage.removeItem("userData");
               localStorage.removeItem("allNotifications");
+              localStorage.removeItem("coords");
+              localStorage.removeItem("area");
+              localStorage.removeItem("userCurrentLocation");
+              localStorage.removeItem("allContacts");
+              localStorage.removeItem("tokenTemp");
+              localStorage.removeItem("description");
+              localStorage.removeItem("userPhone");
+              localStorage.removeItem("userEmail");
+              localStorage.removeItem("userPass");
+              localStorage.removeItem("longitude");
+              localStorage.removeItem("requestorStatus");
+              localStorage.removeItem("userState");
+              localStorage.removeItem("userName");
+              localStorage.removeItem("allProviders");
+              localStorage.removeItem("prevurl");
+              localStorage.removeItem("lastName");
+              localStorage.removeItem("structure");
+              localStorage.removeItem("userCity");
+              localStorage.removeItem("idTemp");
+              localStorage.removeItem("already");
+              localStorage.removeItem("latitude");
+              localStorage.removeItem("userAddress");
+              localStorage.removeItem("allNotifications");
+              localStorage.removeItem("allOffers");
+              localStorage.removeItem("email");
+              localStorage.removeItem("userZipCode");
+              localStorage.removeItem("_grecaptcha");
+              localStorage.removeItem("firstName");
+              localStorage.removeItem("activeTab");
+
 
               setTimeout(() => {
                 window.location.reload();

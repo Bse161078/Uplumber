@@ -183,7 +183,7 @@ function ProviderDetail(props) {
     const [requestorStatusData, setRequestorStatusData] = React.useState([]);
 
     useEffect(() => {
-        console.log("This si user", JSON.parse(localStorage.getItem("userData")));
+        // console.log("This si user", JSON.parse(localStorage.getItem("userData")));
         handleSelect(localStorage.getItem("userAddress"));
         // getMyProfile();
         getInssuranceCompnies();
@@ -194,7 +194,10 @@ function ProviderDetail(props) {
         getAllItems();
         getAllRequestorStatus();
         getLocation();
-
+        const newactiveTab = localStorage.getItem("activeTab")
+        if (newactiveTab === "ReviewRequest") {
+            setActiveTab(newactiveTab)
+        }
         // setRequestData({
         //   ...requestData,
         //   userName: user.firstName + " " + user.lastName,
@@ -2032,10 +2035,12 @@ function ProviderDetail(props) {
                         ) {
                             if (localStorage.getItem("id") && localStorage.getItem("token")) {
                                 postMyRequest();
+                                localStorage.setItem("activeTab", activeTab)
 
                             } else {
                                 localStorage.setItem("userState", requestData.userState)
                                 checkThisUser();
+                                localStorage.setItem("activeTab", activeTab)
 
                             }
                         } else {

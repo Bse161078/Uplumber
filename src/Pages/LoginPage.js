@@ -5,7 +5,7 @@ import {
   Backdrop,
   CircularProgress,
 } from "@material-ui/core";
-import moment from "moment";
+import moment, { locale } from "moment";
 import { Link } from "react-router-dom";
 import LoginPic from "../assets/loginPic.png";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
@@ -38,10 +38,10 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   loginimg: {
-     width: "50%", height: "45vh", [theme.breakpoints.down("sm")]: {
+    width: "50%", height: "45vh", [theme.breakpoints.down("sm")]: {
       width: "100%",
     }
-    
+
   },
   label: {
     width: "50%",
@@ -135,24 +135,29 @@ export default function LoginPage() {
 
     MyProfile().then(
       (res) => {
-        console.log( res.data.data ,'response = ')
+        console.log(res.data.data, 'response = ')
         if (
           (res.data.success ||
-          res.status === 200 ||
-          res.status === 201 ||
-          res.status === 200) &&
+            res.status === 200 ||
+            res.status === 201 ||
+            res.status === 200) &&
           res.data.data.is_deleted === false
-          ) {
-            console.log( res.data,'res.data.is_deleted')
+        ) {
+          console.log(res.data, 'res.data.is_deleted')
           document.getElementById("home").click()
+          const activeTab = localStorage.getItem("activeTab")
+          if (activeTab === "ReviewRequest") {
+            document.getElementById("requestAService/0").click()
+
+          }
+
         }
-        else if( res.data.success===404)
-        {
+        else if (res.data.success === 404) {
           document.getElementById("home").click()
+
         }
-        else if(res.data.data.is_deleted===true)
-        {
-          console.log(res.data.is_deleted,'res.data.is_deleted')
+        else if (res.data.data.is_deleted === true) {
+          console.log(res.data.is_deleted, 'res.data.is_deleted')
           notify("Your Profile is Deleted!")
         }
       },
@@ -203,6 +208,7 @@ export default function LoginPage() {
 
   useEffect(() => {
     getLocation();
+    // console.log(window.history, "Get history")
   }, []);
 
   const postMyRequest = () => {
@@ -533,12 +539,12 @@ export default function LoginPage() {
 
       <Link id="landing" to="/"></Link>
       <Grid container direction="row" justify="center" lg={12} >
-      <img
-        className={classes.loginimg}
-        src={LoginPic}
-      ></img>
+        <img
+          className={classes.loginimg}
+          src={LoginPic}
+        ></img>
       </Grid>
-      
+
       <Grid
         container
         direction="row"
@@ -657,8 +663,9 @@ export default function LoginPage() {
                       localStorage.removeItem("requestAfterLogin");
                       postMyRequest();
                     } else {
+
                       getMyProfile()
-                   
+
                     }
                   }
                 },

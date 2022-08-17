@@ -50,19 +50,19 @@ export async function connectFirebase() {
   // };
 
   // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    const firebaseConfig = {
-      apiKey: "AIzaSyAPDoekF3spw79qd_W8PCZUrGuYsoXVY60",
-  authDomain: "uplumberpro.firebaseapp.com",
-  projectId: "uplumberpro",
-  storageBucket: "uplumberpro.appspot.com",
-  messagingSenderId: "199907760127",
-  appId: "1:199907760127:web:bae9245c753dd03751f9ca",
-  measurementId: "G-RL5BNGG753"
-    };
+  // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+  const firebaseConfig = {
+    apiKey: "AIzaSyAPDoekF3spw79qd_W8PCZUrGuYsoXVY60",
+    authDomain: "uplumberpro.firebaseapp.com",
+    projectId: "uplumberpro",
+    storageBucket: "uplumberpro.appspot.com",
+    messagingSenderId: "199907760127",
+    appId: "1:199907760127:web:bae9245c753dd03751f9ca",
+    measurementId: "G-RL5BNGG753"
+  };
   // Initialize Firebase
-    if (!firebase.apps.length) {
-        console.log("FIREBASE CONNECTED111111!!!");
-        return firebase.initializeApp(firebaseConfig);
-    }
+  if (!firebase.apps.length) {
+    console.log("FIREBASE CONNECTED111111!!!");
+    return firebase.initializeApp(firebaseConfig);
+  }
 }

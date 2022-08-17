@@ -1,12 +1,12 @@
-import React, {useState, useEffect} from "react";
-import {makeStyles, Grid, TextField} from "@material-ui/core";
+import React, { useState, useEffect } from "react";
+import { makeStyles, Grid, TextField } from "@material-ui/core";
 import PhoneInput from "react-phone-number-input";
 import Drawer from "@material-ui/core/Drawer";
 import Verify from "../assets/verify.png";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import OtpInput from "react-otp-input";
-import {Link, withRouter, useHistory} from "react-router-dom";
-import {emailVerification, UpdateEmailVerificationStatus, sendEmailVerification} from "../ApiHelper";
+import { Link, withRouter, useHistory } from "react-router-dom";
+import { emailVerification, UpdateEmailVerificationStatus, sendEmailVerification } from "../ApiHelper";
 import Backdrop from '@mui/material/Backdrop';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Snackbar } from "@material-ui/core";
@@ -46,7 +46,7 @@ const updateCustomeEmailStatus = async () => {
     try {
         const res = await UpdateEmailVerificationStatus()
         console.log("updateCustomeremailstatus", res.data.data)
-        localStorage.setItem('userData',JSON.stringify(res.data))
+        localStorage.setItem('userData', JSON.stringify(res.data))
     }
     catch (e) {
         console.log("updateCustomeremailstatuserror", e)
@@ -61,83 +61,82 @@ export default function ConfirmEmail(props) {
     const [typeConfirm, setTypeConfirm] = useState("text");
     const history = useHistory();
     const [open, setOpen] = useState(false);
-    const [openSnackbar,setOpenSnackbar] = useState(false)
+    const [openSnackbar, setOpenSnackbar] = useState(false)
     //var referrer = history.go(-1)
     console.log(document.referrer, 'hamza')
     const handleClose = () => {
         setOpen(false);
     };
-    const VerificanEmail=async()=>{
-        try
-        {
-            const email={
-                email:localStorage.getItem("email")
+    const VerificanEmail = async () => {
+        try {
+            const email = {
+                email: localStorage.getItem("email")
             }
-    
-        const res = await sendEmailVerification(email);
-        setOpen(false)
-        console.log("sendemailverificationcode",res)
-    }
-    catch(e)
-    {
-        console.log("sendemailverificationcode",e)
-        setOpen(false)
-    }
+
+            const res = await sendEmailVerification(email);
+            setOpen(false)
+            console.log("sendemailverificationcode", res)
+        }
+        catch (e) {
+            console.log("sendemailverificationcode", e)
+            setOpen(false)
+        }
     }
     const handleVerifyCode = async () => {
         // Request for OTP verification
-     
-            console.log("OTP", OTP)
-            if (OTP.length == 4) {
-                try {
-                    const verify = {email: localStorage.getItem("email"), verificationCode: OTP}
-                    const res = await emailVerification(verify)
-                    if(res.data.success===true){
-                        console.log("emailverification", res);
-                        localStorage.setItem("email", verify.email)
-                        updateCustomeEmailStatus()
-                        setOpen(false);
-                        const back = localStorage.getItem('prevurl')
-                        if(back?.includes("complete-profile"))
-                        {
-                            if(localStorage.getItem("requestBeforeLogin")==="true")
-                            {
-                                history.push('/requestAService/0')
-                                localStorage.setItem("prevurl",'')
-                                alert("Profile Created!")
 
+        console.log("OTP", OTP)
+        if (OTP.length == 4) {
+            try {
+                const verify = { email: localStorage.getItem("email"), verificationCode: OTP }
+                const res = await emailVerification(verify)
+                if (res.data.success === true) {
+                    console.log("emailverification", res);
+                    localStorage.setItem("email", verify.email)
+                    updateCustomeEmailStatus()
+                    setOpen(false);
+                    const back = localStorage.getItem('prevurl')
+                    if (back?.includes("complete-profile")) {
+                        if (localStorage.getItem("requestBeforeLogin") === "true") {
+
+                            const activeTab = localStorage.getItem("activeTab")
+                            if (activeTab === "ReviewRequest") {
+                                history.push('/requestAService/0')
                             }
-                            else
-                            {
-                            history.push('/homepage')
-                            localStorage.setItem("prevurl",'')
+                            localStorage.setItem("prevurl", '')
+                            alert("Profile Created! ")
+
+                        }
+                        else {
+                            // history.push('/homepage')
+                            history.push('/requestAService/0')
+                            localStorage.setItem("prevurl", '')
                             alert("Profile Created!")
                         }
                     }
-                        else{
+                    else {
                         setOpenSnackbar(true)
                         props.goBack();
                         props.onSuccessOtp();
 
-                        }
                     }
-                    else if(res.data.success===false)
-                    {
-                        alert(res.data.message)
-                        setOpen(false)
-                    }
-                    
                 }
-                catch (e) {
-                    alert(e.message);
-                    console.log("emailverification", e);
+                else if (res.data.success === false) {
+                    alert(res.data.message)
                     setOpen(false)
                 }
-            } else {
-                alert("Please enter a 4 digit OTP code.");
+
+            }
+            catch (e) {
+                alert(e.message);
+                console.log("emailverification", e);
                 setOpen(false)
             }
-        
+        } else {
+            alert("Please enter a 4 digit OTP code.");
+            setOpen(false)
+        }
+
     };
 
     const [state, setState] = React.useState(false);
@@ -155,25 +154,25 @@ export default function ConfirmEmail(props) {
     return (
         <div>
             <Snackbar
-             open={openSnackbar}
-             message={"Email Updated"}
-             autoHideDuration={2000}
-             />
+                open={openSnackbar}
+                message={"Email Updated"}
+                autoHideDuration={2000}
+            />
             <Backdrop
-                sx={{color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1}}
+                sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
                 open={open}
                 onClick={handleClose}
             >
-                <CircularProgress color="inherit"/>
+                <CircularProgress color="inherit" />
             </Backdrop>
             <Link id="homepage" to="/homepage"></Link>
-            <div style={{borderBottom: "1px solid #e9e9e9", height: 60}}>
+            <div style={{ borderBottom: "1px solid #e9e9e9", height: 60 }}>
                 <Grid
                     container
                     direction="row"
                     alignItems="center"
                     justifyContent="center"
-                    style={{height: 60}}
+                    style={{ height: 60 }}
                 >
                     <p
                         style={{
@@ -227,7 +226,7 @@ export default function ConfirmEmail(props) {
 
 
                 <Grid item xs={12} alignItems="center" justifyContent="center"
-                      style={{width: '80vw', marginTop: 10, textAlign: 'center'}}>
+                    style={{ width: '80vw', marginTop: 10, textAlign: 'center' }}>
                     <Grid container direction="row" alignItems="center" justifyContent="center">
                         <Grid item xs={6}>
                             <button
@@ -248,14 +247,12 @@ export default function ConfirmEmail(props) {
                                 className={classes.button}
                                 onClick={() => {
                                     const back = localStorage.getItem("prevurl")
-                                    if(back.includes('complete-profile'))
-                                    {
+                                    if (back.includes('complete-profile')) {
                                         setOpen(true)
                                         VerificanEmail()
                                     }
-                                    else
-                                    {
-                                    props.goBack()
+                                    else {
+                                        props.goBack()
                                     }
                                 }}
                             >
@@ -281,22 +278,22 @@ export default function ConfirmEmail(props) {
                     open={state}
                     onClose={toggleDrawer("bottom", false)}
                 >
-                    <p style={{fontWeight: 600, fontSize: 26, textAlign: "center"}}>
+                    <p style={{ fontWeight: 600, fontSize: 26, textAlign: "center" }}>
                         Verificatin Code Sent
                     </p>
                     <Grid container direction="row" justify="center">
-                        <p style={{width: "90%", textAlign: "center", marginTop: 0}}>
+                        <p style={{ width: "90%", textAlign: "center", marginTop: 0 }}>
                             A 6 digit verification code has been send to you phone "
 
                         </p>
 
                         <p
                             className={classes.label}
-                            style={{fontSize: 14, textAlign: "center"}}
+                            style={{ fontSize: 14, textAlign: "center" }}
                         >
                             Tap Continue to enter code
                         </p>
-                        <button className={classes.button} style={{marginBottom: 40}}>
+                        <button className={classes.button} style={{ marginBottom: 40 }}>
                             Continue
                         </button>
                     </Grid>

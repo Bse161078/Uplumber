@@ -167,6 +167,7 @@ const HomePage = (props) => {
     };
 
     const getToken = (setTokenFound) => {
+        debugger
         return firebase
             .messaging()
             .getToken()
@@ -184,6 +185,7 @@ const HomePage = (props) => {
                     setTokenFound(false);
                     // shows on the UI that permission is required
                 }
+                onMessageListener()
             })
             .catch((err) => {
                 console.log("An error occurred while retrieving token. ", err);
@@ -899,6 +901,7 @@ const HomePage = (props) => {
     };
     const [already, setAlready] = useState(false);
     useEffect(async () => {
+        debugger
         getLocation();
 
         if (localStorage.getItem("coords")) {
