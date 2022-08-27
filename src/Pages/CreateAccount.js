@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-import firebase from "firebase";
-import {connectFirebase} from "../Config/firebase";
+
 
 import {
   makeStyles,
@@ -9,7 +8,7 @@ import {
   CircularProgress,
 } from "@material-ui/core";
 import moment from "moment";
-import {Link, withRouter} from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
 import VisibilityOutlinedIcon from "@material-ui/icons/VisibilityOutlined";
 import VisibilityOffOutlinedIcon from "@material-ui/icons/VisibilityOffOutlined";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
@@ -73,7 +72,7 @@ function LoginPage(props) {
   const classes = useStyles();
   const [type, setType] = useState("password");
   const [typeConfirm, setTypeConfirm] = useState("password");
-  const [email, setEmail] = useState(localStorage.getItem("userEmail")||"");
+  const [email, setEmail] = useState(localStorage.getItem("userEmail") || "");
   const [password, setPassword] = useState();
   const [confirmPassword, setConfirmPassword] = useState("");
   const [accept, setAccept] = useState(true);
@@ -144,7 +143,6 @@ function LoginPage(props) {
 
   useEffect(() => {
     getLocation();
-    connectFirebase();
   }, []);
 
   const postMyRequest = () => {
@@ -162,7 +160,7 @@ function LoginPage(props) {
             setOpenLoader(false);
             console.log(res.data);
             localStorage.setItem("requestId", res.data._id);
-              updateCustomerProblem();
+            updateCustomerProblem();
           }
         },
         (error) => {
@@ -469,7 +467,7 @@ function LoginPage(props) {
   return (
     <div>
       {" "}
-        {emailVerificationDialog && <ConfirmationDialog createAccount={true}/>}
+      {emailVerificationDialog && <ConfirmationDialog createAccount={true} />}
       <ToastContainer
         position="top-center"
         autoClose={2000}
@@ -492,11 +490,11 @@ function LoginPage(props) {
           style={{ height: 60 }}
         >
           <Link
-              id="complete"
-              to={{
-                  pathname: '/complete-profile',
-                  state: { email: email,password:password }
-              }}
+            id="complete"
+            to={{
+              pathname: '/complete-profile',
+              state: { email: email, password: password }
+            }}
           ></Link>
           <Link id="homepage" to="/homepage"></Link>
           <ArrowBackIosIcon
@@ -552,7 +550,7 @@ function LoginPage(props) {
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
-            localStorage.setItem("email",e.target.value)
+            localStorage.setItem("email", e.target.value)
           }}
         ></input>
         <div
@@ -567,9 +565,9 @@ function LoginPage(props) {
             value={password}
             onChange={(e) => {
               setPassword(e.target.value);
-              localStorage.setItem("userPass",e.target.value);
+              localStorage.setItem("userPass", e.target.value);
             }}
-          
+
           ></input>
           {type === "text" ? (
             <VisibilityOffOutlinedIcon
@@ -696,18 +694,18 @@ function LoginPage(props) {
                 }
               );
 
-                /*props.history.push({
-                    pathname: '/complete-profile',
-                    state: { email: email,password:password }
-                })*/
-                localStorage.setItem('emailForSignIn',JSON.stringify({email,password}));
-                 const emaill={email:email}
-           
+              /*props.history.push({
+                  pathname: '/complete-profile',
+                  state: { email: email,password:password }
+              })*/
+              localStorage.setItem('emailForSignIn', JSON.stringify({ email, password }));
+              const emaill = { email: email }
 
 
 
 
-             //   document.getElementById("complete-profile");
+
+              //   document.getElementById("complete-profile");
 
             }
           }}
@@ -735,7 +733,7 @@ function LoginPage(props) {
             <button
               className={classes.button}
               style={{ marginBottom: 40 }}
-              onClick={() => {}}
+              onClick={() => { }}
             >
               Register
             </button>

@@ -11,6 +11,8 @@ import PlacesAutocomplete, {
     geocodeByAddress,
     getLatLng,
 } from "react-places-autocomplete";
+import { firebase, onMessageListener } from "../Config/firebase";
+
 import PhoneInput from "react-phone-number-input";
 import Header from "../Components/Header";
 import Autocomplete from "@material-ui/lab/Autocomplete";
@@ -23,12 +25,11 @@ import {
     uploadImage,
     sendEmailVerification,
     emailVerification,
+    convertUsStateAbbrAndName,
 } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 import { Countries, states } from "../Data/Data";
 import ConfirmOtp from "./ConfirmOTP";
-import firebase from "firebase";
-import { connectFirebase } from "../Config/firebase";
 import ConfirmationDialog from "./Dialogs/confirmationDialog";
 import { parsePhoneNumber } from "react-phone-number-input";
 import Geocode from "react-geocode";
@@ -89,10 +90,12 @@ export default function UpdateUserProfile(props) {
                 const latLng = await getLatLng(results[0]);
                 var userZipCode = extractFromAdress(addressComponents, "postal_code");
                 var userCity = extractFromAdress(addressComponents, "locality");
-                var userState = extractFromAdress(
+                var userfullState = extractFromAdress(
                     addressComponents,
                     "administrative_area_level_1"
                 );
+                var userState = await convertUsStateAbbrAndName(userfullState)
+                console.log(userState, "This is user State")
                 var userCountry = extractFromAdress(addressComponents, "country");
                 address =
                     address.split(",").length > 0 ? address.split(",")[0] : address;
@@ -196,6 +199,7 @@ export default function UpdateUserProfile(props) {
         }
     };
     const updateMyProfile = () => {
+        debugger
         const phone = parsePhoneNumber(phoneNumber).nationalNumber;
         const phoneCode = parsePhoneNumber(phoneNumber).countryCallingCode;
         const countrycode = parsePhoneNumber(phoneNumber).country;
@@ -285,7 +289,6 @@ export default function UpdateUserProfile(props) {
 
     useEffect(() => {
         getLocation();
-        connectFirebase();
         console.log(email, "  ", oldEmail, "  ", props.emailVerified);
     }, []);
     useEffect(() => {

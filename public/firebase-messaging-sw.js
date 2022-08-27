@@ -12,19 +12,23 @@ const firebaseConfig = {
 	appId: "1:199907760127:web:bae9245c753dd03751f9ca",
 	measurementId: "G-RL5BNGG753"
 };
-
 firebase.initializeApp(firebaseConfig)
-
 // Retrieve firebase messaging
 const messaging = firebase.messaging()
-
 messaging.onBackgroundMessage(function (payload) {
 	console.log('Received background message ', payload)
-
 	const notificationTitle = payload.notification.title
 	const notificationOptions = {
 		body: payload.notification.body,
 	}
-
 	self.registration.showNotification(notificationTitle, notificationOptions)
 })
+// smessaging.usePublicVapidKey("set your key here")
+if ('serviceWorker' in navigator) {
+	navigator.serviceWorker.register('./firebase-messaging-sw.js', { type: 'module' })
+		.then(function (registration) {
+			console.log('Registration successful, scope is:', registration.scope);
+		}).catch(function (err) {
+			console.log('Service worker registration failed, error:', err);
+		});
+}

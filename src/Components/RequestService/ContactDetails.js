@@ -6,7 +6,7 @@ import PlacesAutocomplete, {
   geocodeByAddress,
   getLatLng,
 } from "react-places-autocomplete";
-import { checkUser } from "../../ApiHelper";
+import { checkUser, convertUsStateAbbrAndName } from "../../ApiHelper";
 import Geocode from "react-geocode";
 var URL = "https://u-plumber.net/api/";
 Geocode.setApiKey("AIzaSyA0O_MV5VjO7FMAl6kZFok35pyI1x6YMl4");
@@ -114,11 +114,13 @@ const ContactDetails = (props) => {
         const latLng = await getLatLng(results[0]);
         var userZipCode = extractFromAdress(addressComponents, "postal_code");
         var userCity = extractFromAdress(addressComponents, "locality");
-        var userState = extractFromAdress(
+
+        var userfullState = extractFromAdress(
           addressComponents,
           "administrative_area_level_1"
         );
-        //address=extractFromAdress(addressComponents, "political");
+        var userState = await convertUsStateAbbrAndName(userfullState)
+        // address = extractFromAdress(addressComponents, "political");
         address =
           address.split(",").length > 0 ? address.split(",")[0] : address;
 

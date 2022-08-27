@@ -4,10 +4,12 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+import { Router } from "react-router";
 
 ReactDOM.render(
 
   <App />
+
   ,
   document.getElementById("root")
 );

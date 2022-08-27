@@ -16,6 +16,7 @@ import Drawer from "@material-ui/core/Drawer";
 import Camera from "../assets/camera.PNG";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import { Countries, states } from "../Data/Data";
+
 import {
     CompleteProfile,
     CustomerSericeUpdateContactDetails,
@@ -34,17 +35,18 @@ import {
     verifyEmail,
     getLocationDetailFromLatLng,
     getLocationDetailsFromLatLong,
+    convertUsStateAbbrAndName,
 } from "../ApiHelper";
 import Button from "@mui/material/Button";
 import Snackbar from "@mui/material/Snackbar";
 import { ToastContainer, toast } from "react-toastify";
-import { connectFirebase } from "../Config/firebase";
+import { firebase, onMessageListener } from "../Config/firebase";
 import ConfirmOtp from "./ConfirmOTP";
-import firebase from "firebase";
 import { formatPhoneNumber } from "../Functions";
 import ConfirmEmail from "./ConfirmEmail";
 import Geocode from "react-geocode";
 import ReactGoogleAutocomplete from "react-google-autocomplete";
+import addNotification, { Notifications } from "react-push-notification";
 var URL = "https://u-plumber.net/api/";
 Geocode.setApiKey("AIzaSyA0O_MV5VjO7FMAl6kZFok35pyI1x6YMl4");
 var validator = require("email-validator");
@@ -95,8 +97,8 @@ const checkIfUserEmailIsVerified = async () => {
 
 function LoginPage(props) {
     useEffect(() => {
+
         getLocation();
-        connectFirebase();
         checkIfUserEmailIsVerified();
     }, []);
     const classes = useStyles();
@@ -123,12 +125,10 @@ function LoginPage(props) {
         props.history.push("/");
     }
     localStorage.removeItem("emailForSignIn");
-    const fName = localStorage
-        .getItem("userName")
-        .split(" ")
-        .slice(0, -1)
-        .join(" ");
-    const lName = localStorage.getItem("userName").split(" ").slice(-1).join(" ");
+    const fName = localStorage.getItem("userName")?.split(" ")
+        ?.slice(0, -1)
+        ?.join(" ");
+    const lName = localStorage.getItem("userName")?.split(" ")?.slice(-1)?.join(" ");
     console.log("user = ", user);
     const [email, setEmail] = useState(user.email);
     const [password, setPassword] = useState(user.password);
@@ -665,6 +665,7 @@ function LoginPage(props) {
             });
     };
 
+
     const handleLoginRequest = async () => {
         const location = [longitude, latitude];
         try {
@@ -684,6 +685,7 @@ function LoginPage(props) {
                 country: country,
                 latitude: latitude,
                 longitude: longitude,
+                fcmTokenWeb: localStorage.getItem("fcmToken"),
                 email: localStorage.getItem("email"),
             };
 
@@ -773,10 +775,12 @@ function LoginPage(props) {
                 const latLng = await getLatLng(results[0]);
                 var userZipCode = extractFromAdress(addressComponents, "postal_code");
                 var userCity = extractFromAdress(addressComponents, "locality");
-                var userState = extractFromAdress(
+
+                var userfullState = extractFromAdress(
                     addressComponents,
                     "administrative_area_level_1"
                 );
+                var userState = await convertUsStateAbbrAndName(userfullState)
                 var userCountry = extractFromAdress(addressComponents, "country");
                 address =
                     address.split(",").length > 0 ? address.split(",")[0] : address;
@@ -838,6 +842,8 @@ function LoginPage(props) {
         ></ConfirmOtp>
     ) : (
         <div>
+            <Notifications />
+
             <Snackbar
                 open={openSnackbar}
                 message="User Created"
@@ -978,7 +984,6 @@ function LoginPage(props) {
                     }
                     onChange={(addres) => {
                         setAddress(addres);
-                        console.log("address", address.userAddress);
                         localStorage.setItem(
                             "userAddress",
                             address?.userAddress ? address.userAddress : addres
@@ -1124,18 +1129,19 @@ function LoginPage(props) {
                     onClick={
                         () => {
                             try {
-                                if (city && firstName && phoneNumber && address && lastName) {
+
+                                if (localStorage.getItem('userCity') && firstName && phoneNumber && address && lastName) {
                                     setOpenLoader(true);
                                     sendFirebaseOTP();
                                 } else {
                                     setOpenLoader(false);
                                     console.log(
-                                        firstName,
-                                        phoneNumber,
-                                        address,
-                                        lastName,
-                                        unit,
-                                        city
+                                        { firstName },
+                                        { phoneNumber },
+                                        { address },
+                                        { lastName },
+                                        { unit },
+                                        localStorage.getItem('userCity')
                                     );
                                     notify("Please fill all the fields");
                                 }

@@ -108,8 +108,8 @@ export default function ConfirmEmail(props) {
 
                         }
                         else {
-                            // history.push('/homepage')
-                            history.push('/requestAService/0')
+                            history.push('/homepage')
+                            // history.push('/requestAService/0')
                             localStorage.setItem("prevurl", '')
                             alert("Profile Created!")
                         }

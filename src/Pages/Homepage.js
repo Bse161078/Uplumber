@@ -15,13 +15,12 @@ import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
 import Avatar from "../assets/profile.png";
 import Plumber from "../assets/Plumber.png";
-import firebase from "firebase";
 import Rating from "@material-ui/lab/Rating";
 import ExploreIcon from "@material-ui/icons/Explore";
 import MonetizationOnIcon from "@material-ui/icons/MonetizationOn";
 import PersonIcon from "@material-ui/icons/Person";
 import { compose, withProps, withStateHandlers } from "recompose";
-import { connectFirebase } from "../Config/firebase";
+import { firebase, onMessageListener } from "../Config/firebase";
 // import {
 //   Map,
 //   TileLayer,
@@ -67,6 +66,7 @@ import Verify from "../assets/verify.png";
 
 
 import AlertDialog from '../Pages/Dialogs/confirmation';
+import addNotification, { Notifications } from "react-push-notification";
 
 
 const useStyles = makeStyles((theme) => ({
@@ -166,15 +166,17 @@ const HomePage = (props) => {
         );
     };
 
-    const getToken = (setTokenFound) => {
-        debugger
+    const getTokens = (setTokenFound) => {
+
         return firebase
             .messaging()
-            .getToken()
+            .getToken({ vapidKey: "BOVlu_RjNxUBXYELKc_BtKoZe_evMFXggd0CwWy9sVs2l5tUyvq2TiNFsymAnZDFXc2za6r6PpShkt7Z_xW8r9E" })
             .then((currentToken) => {
                 if (currentToken) {
+
                     console.log("current token for client: ", currentToken);
                     updateMyProfile(currentToken);
+                    localStorage.setItem("fcmToken", currentToken);
                     setTokenFound(true);
                     // Track the token -> client mapping, by sending to backend server
                     // show on the UI that permission is secured
@@ -185,7 +187,6 @@ const HomePage = (props) => {
                     setTokenFound(false);
                     // shows on the UI that permission is required
                 }
-                onMessageListener()
             })
             .catch((err) => {
                 console.log("An error occurred while retrieving token. ", err);
@@ -193,13 +194,11 @@ const HomePage = (props) => {
             });
     };
 
-    const onMessageListener = () =>
-        new Promise((resolve) => {
-            firebase.messaging().onMessage((payload) => {
-                resolve(payload);
-            });
-        });
+    onMessageListener().then(payload => {
 
+        showNotification()
+        console.log(payload);
+    }).catch(err => console.log('failed: ', err));
     const calculateTheStatus = (item) => {
         var calculatedStatus = "";
         if (item.isAccepted) {
@@ -899,19 +898,32 @@ const HomePage = (props) => {
             // }, 10000);
         }
     };
+
+    const showNotification = () => {
+        addNotification({
+            title: 'Success!',
+            subtitle: 'This is a subtitle',
+            message: 'This is a very long message',
+            theme: 'darkblue',
+            native: true, // when using native, your OS will handle theming.
+            onClick: (e) => { console.log(e, "push notification click"); alert("fad") },
+
+        });
+
+    }
+
     const [already, setAlready] = useState(false);
     useEffect(async () => {
         debugger
         getLocation();
+
 
         if (localStorage.getItem("coords")) {
             // alert("THis will do what we want")
             setCurrentLoction(JSON.parse(localStorage.getItem("coords")));
         }
 
-        let fb = await connectFirebase();
-        getToken(setTokenFound);
-        console.log("This is fb", fb);
+        getTokens(setTokenFound);
         if (localStorage.getItem("allProviders")) {
             setAllProviders(JSON.parse(localStorage.getItem("allProviders")));
         }
@@ -1068,6 +1080,8 @@ const HomePage = (props) => {
 
     return (
         <div style={{ background: "#f2f2f2" }}>
+            <Notifications />
+
             <AlertDialog
                 headerImage={Verify}
                 title={title}
@@ -1237,6 +1251,7 @@ const HomePage = (props) => {
                         >
                             Request A Service
                         </button>
+                        {/* <button onClick={showNotification}>Show notification</button> */}
                     </Grid>{" "}
                 </Paper>
                 <Paper

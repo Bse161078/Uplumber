@@ -1,11 +1,12 @@
-import React, {useEffect} from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Grid, makeStyles } from "@material-ui/core";
 import UPlumberLogo from "../assets/uplumberlogo.png";
 import Plumbers from "../assets/Plumbers.png";
 import ArrowRightAltIcon from "@material-ui/icons/ArrowRightAlt";
 import { withRouter } from "react-router-dom";
-import {connectFirebase} from "../Config/firebase";
+import { firebase, onMessageListener } from "../Config/firebase";
+
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -44,15 +45,41 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
- function LandingPage(props) {
+function LandingPage(props) {
   const classes = useStyles();
+  const [tokenFound, setTokenFound] = useState(null);
 
-console.log("landing pagesss")
+  console.log("landing pagesss")
 
-     useEffect(() => {
-         connectFirebase();
-     }, []);
+  useEffect(() => {
+    getTokens()
+  }, []);
+  const getTokens = (setTokenFound) => {
 
+    return firebase
+      .messaging()
+      .getToken({ vapidKey: "BOVlu_RjNxUBXYELKc_BtKoZe_evMFXggd0CwWy9sVs2l5tUyvq2TiNFsymAnZDFXc2za6r6PpShkt7Z_xW8r9E" })
+      .then((currentToken) => {
+        if (currentToken) {
+
+          console.log("current token for client: ", currentToken);
+          localStorage.setItem("fcmToken", currentToken);
+          setTokenFound(true);
+          // Track the token -> client mapping, by sending to backend server
+          // show on the UI that permission is secured
+        } else {
+          console.log(
+            "No registration token available. Request permission to generate one."
+          );
+          setTokenFound(false);
+          // shows on the UI that permission is required
+        }
+      })
+      .catch((err) => {
+        console.log("An error occurred while retrieving token. ", err);
+        // catch error while creating client token
+      });
+  };
 
   return (
     <div

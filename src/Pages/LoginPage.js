@@ -22,7 +22,8 @@ import {
   CustomerSericeUpdateDescriptionAndPhoto,
   CustomerSericeUpdateInssurance,
   CustomerSericeUpdateContactDetails,
-  MyProfile
+  MyProfile,
+  UpdateCustomerProfile
 } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 var validator = require("email-validator");
@@ -128,6 +129,8 @@ export default function LoginPage() {
       localStorage.getItem("userCurrentLocation") &&
       JSON.parse(localStorage.getItem("userCurrentLocation")),
   });
+
+
 
   const getMyProfile = () => {
 
@@ -449,7 +452,28 @@ export default function LoginPage() {
     );
   };
   // console.log("This si t", requestData);
-
+  const updateMyProfile = (fcmToken) => {
+    var data = {
+      fcmTokenWeb: localStorage.getItem("fcmToken"),
+    };
+    console.log("THis is the data", data);
+    setOpenLoader(true);
+    UpdateCustomerProfile(data).then(
+      (res) => {
+        if (res.data.success || res.status === 200 || res.status === 201) {
+          setOpenLoader(false);
+          console.log(res.data.data);
+        }
+      },
+      (error) => {
+        if (error.response) {
+          notify(error.response.data.message);
+        }
+        setOpenLoader(false);
+        console.log("This is response", error.response);
+      }
+    );
+  };
   const updateCustomerContactDetails = (tab) => {
     if (
       requestData.userName != "" &&
@@ -655,9 +679,10 @@ export default function LoginPage() {
                   ) {
                     setOpenLoader(false);
                     const user = res.data;
+
                     localStorage.setItem("token", res.data.token);
                     localStorage.setItem("id", res.data._id);
-
+                    updateMyProfile()
                     localStorage.setItem("email", email);
                     if (localStorage.getItem("requestAfterLogin")) {
                       localStorage.removeItem("requestAfterLogin");
