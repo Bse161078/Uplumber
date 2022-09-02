@@ -608,6 +608,7 @@ export const getDistanceFromCordintates = (cordinates) => {
 };
 
 export const UpdateCustomerProfile = (postData) => {
+  debugger
   var data = JSON.stringify(postData);
 
   var config = {
@@ -619,7 +620,6 @@ export const UpdateCustomerProfile = (postData) => {
     },
     data: data,
   };
-
   return axios(config);
 };
 

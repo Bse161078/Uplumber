@@ -23,7 +23,7 @@ import {
   sendCustomerNotification,
   getOfferDetail,
   getItems,
-  getProviderReviews
+  getProviderReviews,
 } from "../ApiHelper";
 import { GoogleMap, DistanceMatrixService } from "@react-google-maps/api";
 
@@ -165,7 +165,7 @@ function ProviderDetail(props) {
       setTheStatus(JSON.parse(localStorage.getItem("job")));
       findIcon(
         JSON.parse(localStorage.getItem("job")).itemName ||
-        JSON.parse(localStorage.getItem("job")).serviceId.problem.problemItem
+          JSON.parse(localStorage.getItem("job")).serviceId.problem.problemItem
       );
       providerReviews(JSON.parse(localStorage.getItem("job")));
       getOfferDetailsById();
@@ -188,9 +188,9 @@ function ProviderDetail(props) {
           console.log(res.data);
           sendCustomeNotification(
             JSON.parse(localStorage.getItem("userData")).firstName +
-            " " +
-            JSON.parse(localStorage.getItem("userData")).lastName +
-            " requested a modification in the job",
+              " " +
+              JSON.parse(localStorage.getItem("userData")).lastName +
+              " requested a modification in the job",
             jobData.serviceId,
             "modificationReqeusted"
           );
@@ -229,8 +229,8 @@ function ProviderDetail(props) {
           );
           findIcon(
             JSON.parse(localStorage.getItem("job")).itemName ||
-            JSON.parse(localStorage.getItem("job")).serviceId.problem
-              .problemItem
+              JSON.parse(localStorage.getItem("job")).serviceId.problem
+                .problemItem
           );
           providerReviews(JSON.parse(localStorage.getItem("job")));
           setJobData(JSON.parse(localStorage.getItem("job")));
@@ -324,9 +324,9 @@ function ProviderDetail(props) {
           console.log(res.data);
           sendCustomeNotification(
             JSON.parse(localStorage.getItem("userData")).firstName +
-            " " +
-            JSON.parse(localStorage.getItem("userData")).lastName +
-            " marked your order complete",
+              " " +
+              JSON.parse(localStorage.getItem("userData")).lastName +
+              " marked your order complete",
             jobData.serviceId,
             "jobCompleted"
           );
@@ -358,12 +358,12 @@ function ProviderDetail(props) {
           res.status === 200
         ) {
           setOpenLoader(false);
-          alert("You accepted new completion date.")
+          alert("You accepted new completion date.");
           sendCustomeNotification(
             JSON.parse(localStorage.getItem("userData")).firstName +
-            " " +
-            JSON.parse(localStorage.getItem("userData")).lastName +
-            " has updated the completion date",
+              " " +
+              JSON.parse(localStorage.getItem("userData")).lastName +
+              " has updated the completion date",
             jobData.serviceId,
             "completionDateUpdated"
           );
@@ -401,9 +401,9 @@ function ProviderDetail(props) {
           setBottomState(false);
           sendCustomeNotification(
             JSON.parse(localStorage.getItem("userData")).firstName +
-            " " +
-            JSON.parse(localStorage.getItem("userData")).lastName +
-            " provided you a review",
+              " " +
+              JSON.parse(localStorage.getItem("userData")).lastName +
+              " provided you a review",
             jobData.serviceId,
             "jobReviewed"
           );
@@ -446,13 +446,12 @@ function ProviderDetail(props) {
 
   const notify = (data) => toast(data);
   if (jobData) {
-    console.log("This is job data", jobData.serviceId)
+    console.log("This is job data", jobData.serviceId);
   }
 
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
       {jobData && (
-
         <DistanceMatrixService
           options={{
             destinations: [
@@ -690,13 +689,13 @@ function ProviderDetail(props) {
               height: 60,
               paddingLeft: 15,
               paddingRight: 15,
-              cursor: 'pointer'
+              cursor: "pointer",
             }}
-          // onClick={
-          //   ()=>{
-          //     document.getElementById("homepage/contacts").click()
-          //   }
-          // }
+            // onClick={
+            //   ()=>{
+            //     document.getElementById("homepage/contacts").click()
+            //   }
+            // }
           >
             <Grid item md={2} xs={2}>
               <img
@@ -719,14 +718,11 @@ function ProviderDetail(props) {
                 >
                   {jobData.providerName ||
                     jobData.providerProfileId.firstName +
-                    " " +
-                    jobData.providerProfileId.lastName}
+                      " " +
+                      jobData.providerProfileId.lastName}
                 </p>
                 <Rating
-
-                  value={
-                    Math.round(jobData.providerProfileId.averageRating)
-                  }
+                  value={Math.round(jobData.providerProfileId.averageRating)}
                   style={{ fontSize: 10 }}
                 ></Rating>
                 <span style={{ fontSize: 10 }}>
@@ -741,7 +737,8 @@ function ProviderDetail(props) {
                 <span style={{ fontSize: 10 }}>
                   ${jobData.pricePerHour || jobData.labourRatePerHour} / hr
                 </span>
-                <span style={{ fontSize: 12 }}>
+
+                <span style={{ fontSize: 12, paddingLeft: "20px" }}>
                   {"LIC: " + jobData?.providerProfileId?.licenseNumber}
                 </span>
               </Grid>
@@ -793,11 +790,13 @@ function ProviderDetail(props) {
                 <span style={{ color: "#60a3d6", fontSize: 10 }}>Service</span>
                 <p style={{ fontSize: 10, margin: 0 }}>
                   {" "}
-                  {jobData.serviceName || jobData.serviceId.problem.serviceName}
+                  {jobData.problemItem || jobData.serviceId.problem.problemItem}
                 </p>
               </Grid>
               <Grid item md={6} xs={6}>
-                <span style={{ color: "#60a3d6", fontSize: 10 }}>Request Number</span>
+                <span style={{ color: "#60a3d6", fontSize: 10 }}>
+                  Request Number
+                </span>
                 <p style={{ fontSize: 10, margin: 0 }}>
                   {" "}
                   {jobData.serviceName || jobData.serviceId._id}
@@ -807,8 +806,8 @@ function ProviderDetail(props) {
             <div
               style={{ width: "100%", border: "1px solid #f6f6f6", margin: 0 }}
             ></div>
-            {
-              !leadUnpaid && <Grid
+            {!leadUnpaid && (
+              <Grid
                 container
                 direction="row"
                 justify="center"
@@ -820,7 +819,8 @@ function ProviderDetail(props) {
                     Provider Phone
                   </span>
                   <p style={{ fontSize: 10, margin: 0 }}>
-                    {jobData.providerProfileId.countryPhoneCode + jobData.providerProfileId.phoneNumber}
+                    {jobData.providerProfileId.countryPhoneCode +
+                      jobData.providerProfileId.phoneNumber}
                   </p>
                 </Grid>{" "}
                 <Grid item md={12} xs={12}>
@@ -833,8 +833,7 @@ function ProviderDetail(props) {
                   </p>
                 </Grid>
               </Grid>
-
-            }
+            )}
             <div
               style={{ width: "100%", border: "1px solid #f6f6f6", margin: 0 }}
             ></div>
@@ -859,9 +858,11 @@ function ProviderDetail(props) {
                 </span>
                 <p style={{ fontSize: 10, margin: 0 }}>
                   {" "}
-                  {jobData.estimatedCompletionDate ? moment(new Date(jobData.estimatedCompletionDate)).format(
-                    "MMMM Do YYYY"
-                  ) : "N/A"}
+                  {jobData.estimatedCompletionDate
+                    ? moment(new Date(jobData.estimatedCompletionDate)).format(
+                        "MMMM Do YYYY"
+                      )
+                    : "N/A"}
                 </p>
               </Grid>{" "}
               <Grid item md={12} xs={12}>
@@ -869,7 +870,7 @@ function ProviderDetail(props) {
                   Estimated Labour Cost
                 </span>
                 <p style={{ fontSize: 10, margin: 0 }}>
-                  $ {jobData.labourRatePerHour}
+                  $ {jobData.labourRatePerHour * jobData.estimatedHours}
                 </p>
               </Grid>
             </Grid>
@@ -884,9 +885,9 @@ function ProviderDetail(props) {
                 markComplete === false &&
                 JSON.parse(localStorage.getItem("job")).status != "delivered" &&
                 JSON.parse(localStorage.getItem("job")).status !=
-                "NeedModification" &&
+                  "NeedModification" &&
                 JSON.parse(localStorage.getItem("job")).status !=
-                "OrderCompleted" && (
+                  "OrderCompleted" && (
                   <button
                     className={classes.button}
                     style={{ marginTop: 10 }}
@@ -904,50 +905,108 @@ function ProviderDetail(props) {
                     </Grid>
                   </button>
                 )}
-              {
-                OrderCancelled || markComplete && <button
-                  className={classes.button}
-                  style={{ marginTop: 10 }}
-                  onClick={() => {
-                    console.log('THis is jobData', jobData.serviceId);
-                    localStorage.setItem("requestDate", jobData.serviceId.problem.serviceDate);
-                    localStorage.setItem("prfferedTime", jobData.serviceId.problem.serviceTime);
-                    localStorage.setItem("itemName", jobData.serviceId.problem.problemItem);
-                    localStorage.setItem("serviceType", jobData.serviceId.problem.serviceName);
-                    localStorage.setItem("requestOption", jobData.serviceId.problem.autoAccept ? "Auto accept 1st offer" : "Open for multiple offers");
-                    localStorage.setItem("waterDamage", jobData.serviceId.problem.anyFloorOrWaterDamage ? "Yes" : "No")
-                    if (jobData.serviceId.problem.anyFloorOrWaterDamage) {
-                      localStorage.setItem("lookingFor", JSON.stringify(jobData.serviceId.lookingFor));
-                    }
-                    localStorage.setItem("description", jobData.serviceId.descriptionAndPhoto.description);
-                    localStorage.setItem("image", JSON.stringify(jobData.serviceId.descriptionAndPhoto.photos));
-                    localStorage.setItem("area", jobData.serviceId.property.area);
-                    localStorage.setItem("structure", jobData.serviceId.property.structure);
-                    localStorage.setItem("requestorStatus", jobData.serviceId.property.requesterStatus);
-                    if (jobData.serviceId.problem.anyFloorOrWaterDamage) {
-                      localStorage.setItem("company", jobData.serviceId.insurance.company);
-                      localStorage.setItem("deduction", jobData.serviceId.insurance.deduction);
-                      localStorage.setItem("expiryDate", jobData.serviceId.insurance.expiryDate);
-                      localStorage.setItem("policyNumber", jobData.serviceId.insurance.policyNumber);
-                    }
-                    localStorage.setItem("", JSON.stringify({
-                      latitude: jobData.serviceId.contactDetails.latitude,
-                      longitude: jobData.serviceId.contactDetails.longitude,
-                    }))
+              {OrderCancelled ||
+                (markComplete && (
+                  <button
+                    className={classes.button}
+                    style={{ marginTop: 10 }}
+                    onClick={() => {
+                      console.log("THis is jobData", jobData.serviceId);
+                      localStorage.setItem(
+                        "requestDate",
+                        jobData.serviceId.problem.serviceDate
+                      );
+                      localStorage.setItem(
+                        "prfferedTime",
+                        jobData.serviceId.problem.serviceTime
+                      );
+                      localStorage.setItem(
+                        "itemName",
+                        jobData.serviceId.problem.problemItem
+                      );
+                      localStorage.setItem(
+                        "serviceType",
+                        jobData.serviceId.problem.serviceName
+                      );
+                      localStorage.setItem(
+                        "requestOption",
+                        jobData.serviceId.problem.autoAccept
+                          ? "Auto accept 1st offer"
+                          : "Open for multiple offers"
+                      );
+                      localStorage.setItem(
+                        "waterDamage",
+                        jobData.serviceId.problem.anyFloorOrWaterDamage
+                          ? "Yes"
+                          : "No"
+                      );
+                      if (jobData.serviceId.problem.anyFloorOrWaterDamage) {
+                        localStorage.setItem(
+                          "lookingFor",
+                          JSON.stringify(jobData.serviceId.lookingFor)
+                        );
+                      }
+                      localStorage.setItem(
+                        "description",
+                        jobData.serviceId.descriptionAndPhoto.description
+                      );
+                      localStorage.setItem(
+                        "image",
+                        JSON.stringify(
+                          jobData.serviceId.descriptionAndPhoto.photos
+                        )
+                      );
+                      localStorage.setItem(
+                        "area",
+                        jobData.serviceId.property.area
+                      );
+                      localStorage.setItem(
+                        "structure",
+                        jobData.serviceId.property.structure
+                      );
+                      localStorage.setItem(
+                        "requestorStatus",
+                        jobData.serviceId.property.requesterStatus
+                      );
+                      if (jobData.serviceId.problem.anyFloorOrWaterDamage) {
+                        localStorage.setItem(
+                          "company",
+                          jobData.serviceId.insurance.company
+                        );
+                        localStorage.setItem(
+                          "deduction",
+                          jobData.serviceId.insurance.deduction
+                        );
+                        localStorage.setItem(
+                          "expiryDate",
+                          jobData.serviceId.insurance.expiryDate
+                        );
+                        localStorage.setItem(
+                          "policyNumber",
+                          jobData.serviceId.insurance.policyNumber
+                        );
+                      }
+                      localStorage.setItem(
+                        "",
+                        JSON.stringify({
+                          latitude: jobData.serviceId.contactDetails.latitude,
+                          longitude: jobData.serviceId.contactDetails.longitude,
+                        })
+                      );
 
-                    document.getElementById("requestAService").click()
-                  }}
-                >
-                  <Grid
-                    container
-                    direction="row"
-                    justify="center"
-                    alignItems="center"
+                      document.getElementById("requestAService").click();
+                    }}
                   >
-                    Create Copy
-                  </Grid>
-                </button>
-              }
+                    <Grid
+                      container
+                      direction="row"
+                      justify="center"
+                      alignItems="center"
+                    >
+                      Create Copy
+                    </Grid>
+                  </button>
+                ))}
               {JSON.parse(localStorage.getItem("job")).status === "delivered" &&
                 markComplete === false && (
                   <button
@@ -969,42 +1028,42 @@ function ProviderDetail(props) {
                 )}
               {JSON.parse(localStorage.getItem("job")).status ===
                 "NeedModification" && (
-                  <button
-                    className={classes.button}
-                    style={{ marginTop: 10 }}
-                    onClick={() => {
-                      orderComplete();
-                    }}
+                <button
+                  className={classes.button}
+                  style={{ marginTop: 10 }}
+                  onClick={() => {
+                    orderComplete();
+                  }}
+                >
+                  <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="center"
                   >
-                    <Grid
-                      container
-                      direction="row"
-                      justify="center"
-                      alignItems="center"
-                    >
-                      Job Acceptance
-                    </Grid>
-                  </button>
-                )}
+                    Job Acceptance
+                  </Grid>
+                </button>
+              )}
               {JSON.parse(localStorage.getItem("job")).status ===
                 "onTheWay" && (
-                  <button
-                    className={classes.button}
-                    style={{ marginTop: 10 }}
-                    onClick={() => {
-                      requestLocation();
-                    }}
+                <button
+                  className={classes.button}
+                  style={{ marginTop: 10 }}
+                  onClick={() => {
+                    requestLocation();
+                  }}
+                >
+                  <Grid
+                    container
+                    direction="row"
+                    justify="center"
+                    alignItems="center"
                   >
-                    <Grid
-                      container
-                      direction="row"
-                      justify="center"
-                      alignItems="center"
-                    >
-                      Request Location
-                    </Grid>
-                  </button>
-                )}
+                    Request Location
+                  </Grid>
+                </button>
+              )}
               {JSON.parse(localStorage.getItem("job")).status === "delivered" &&
                 markComplete === false && (
                   <button
@@ -1043,8 +1102,8 @@ function ProviderDetail(props) {
                 >
                   {jobData.providerName ||
                     jobData.providerProfileId.firstName +
-                    " " +
-                    jobData.providerProfileId.lastName}
+                      " " +
+                      jobData.providerProfileId.lastName}
                 </p>
               </Grid>
               <Grid item md={4} xs={4}>
@@ -1126,7 +1185,6 @@ function ProviderDetail(props) {
                   );
                 })}
             </Grid>
-
           </Grid>
         )}
         <div className="sideBar" style={{ background: "red" }}>

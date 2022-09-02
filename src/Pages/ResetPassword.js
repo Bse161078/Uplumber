@@ -31,11 +31,12 @@ const useStyles = makeStyles((theme) => ({
     // },
   },
   loginimg: {
-    width: "50%", height: "45vh", [theme.breakpoints.down("sm")]: {
-     width: "100%",
-   }
-   
- },
+    width: "50%",
+    height: "45vh",
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
+  },
   label: {
     width: "90%",
     color: "#aeaeae",
@@ -103,11 +104,8 @@ function ResetPage(props) {
       <Link id="home" to="/homepage"></Link>
       <Link id="login" to="/login"></Link>
       <Link id="landing" to="/"></Link>
-      <Grid container direction="row" justify="center" lg={12} >
-      <img
-        className={classes.loginimg}
-        src={LoginPic}
-      ></img>
+      <Grid container direction="row" justify="center" lg={12}>
+        <img className={classes.loginimg} src={LoginPic}></img>
       </Grid>
       <Grid
         container
@@ -229,19 +227,25 @@ function ResetPage(props) {
                       setOpenLoader(false);
                       setState(false);
                       notify("Password Changed Succesfully!");
-                      window.open("uplumberpro://auth/signin")
+                      window.open("uplumberpro://auth/signin");
                       // document.getElementById("login").click();
+                      setOpenLoader(false);
                     }
                   },
                   (error) => {
                     if (error.response) {
-                      console.log("THis is error.response",error.response.data.seccess)
-                      if (error.response.data.success || error.response.data.seccess) {
-                      //   document.getElementById("login").click();
-                      notify("Password Changed Succesfully!");
-                      window.open("uplumberpro://auth/signin")
-                      } 
-                      else {
+                      console.log(
+                        "THis is error.response",
+                        error.response.data.seccess
+                      );
+                      if (
+                        error.response.data.success ||
+                        error.response.data.seccess
+                      ) {
+                        //   document.getElementById("login").click();
+                        notify("Password Changed Succesfully!");
+                        window.open("uplumberpro://auth/signin");
+                      } else {
                         notify(error.response.data.message);
                       }
                     }
@@ -285,6 +289,7 @@ function ResetPage(props) {
             <input
               className={classes.input}
               type="password"
+              minLength={8}
               onChange={(e) => {
                 setNewPassword(e.target.value);
               }}

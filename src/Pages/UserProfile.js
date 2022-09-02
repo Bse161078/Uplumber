@@ -165,6 +165,7 @@ export default function UserProfile() {
     }, [])
 
     const updateMyProfile = () => {
+        debugger
         var data = {
             profileImage: profileImage,
             firstName: firstName,
@@ -180,6 +181,7 @@ export default function UserProfile() {
             country: country,
         };
         setOpenLoader(true);
+
         UpdateCustomerProfile(data).then(
             (res) => {
                 if (
@@ -407,9 +409,10 @@ export default function UserProfile() {
         );
     };
 
-    const getMyProfile = () => {
+    const getMyProfile = async () => {
+        debugger
         setOpenLoader(true);
-        MyProfile().then(
+        await MyProfile().then(
             (res) => {
                 if (
                     res.data.success ||

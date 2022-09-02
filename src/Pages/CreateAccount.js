@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 
-
 import {
   makeStyles,
   Grid,
@@ -24,13 +23,10 @@ import {
   CustomerSericeUpdateDescriptionAndPhoto,
   CustomerSericeUpdateInssurance,
   CustomerSericeUpdateContactDetails,
-  sendEmailVerification
+  sendEmailVerification,
 } from "../ApiHelper";
 import ConfirmationDialog from "./Dialogs/confirmationDialog";
 import ConfirmEmail from "./ConfirmEmail";
-
-
-
 
 var validator = require("email-validator");
 
@@ -78,7 +74,8 @@ function LoginPage(props) {
   const [accept, setAccept] = useState(true);
   const [openLoader, setOpenLoader] = useState(false);
   const [state, setState] = React.useState(false);
-  const [emailVerificationDialog, setEmailVerificationDialog] = React.useState(false);
+  const [emailVerificationDialog, setEmailVerificationDialog] =
+    React.useState(false);
 
   const [requestData, setRequestData] = useState({
     requestDate: localStorage.getItem("requestDate") || new Date(),
@@ -451,7 +448,6 @@ function LoginPage(props) {
     }
   };
 
-
   const toggleDrawer = (anchor, open) => (event) => {
     if (
       event.type === "keydown" &&
@@ -492,8 +488,8 @@ function LoginPage(props) {
           <Link
             id="complete"
             to={{
-              pathname: '/complete-profile',
-              state: { email: email, password: password }
+              pathname: "/complete-profile",
+              state: { email: email, password: password },
             }}
           ></Link>
           <Link id="homepage" to="/homepage"></Link>
@@ -550,7 +546,7 @@ function LoginPage(props) {
           value={email}
           onChange={(e) => {
             setEmail(e.target.value);
-            localStorage.setItem("email", e.target.value)
+            localStorage.setItem("email", e.target.value);
           }}
         ></input>
         <div
@@ -567,7 +563,6 @@ function LoginPage(props) {
               setPassword(e.target.value);
               localStorage.setItem("userPass", e.target.value);
             }}
-
           ></input>
           {type === "text" ? (
             <VisibilityOffOutlinedIcon
@@ -648,7 +643,7 @@ function LoginPage(props) {
               notify("Please Enter a password");
             } else if (password != confirmPassword) {
               notify("Password do not match");
-            } else {
+            } else if (password.length > 8) {
               setOpenLoader(true);
               var data = {
                 email: email,
@@ -682,7 +677,6 @@ function LoginPage(props) {
                     } else {
                       document.getElementById("complete").click();
                     }
-
                   }
                 },
                 (error) => {
@@ -695,18 +689,18 @@ function LoginPage(props) {
               );
 
               /*props.history.push({
-                  pathname: '/complete-profile',
-                  state: { email: email,password:password }
-              })*/
-              localStorage.setItem('emailForSignIn', JSON.stringify({ email, password }));
-              const emaill = { email: email }
-
-
-
-
+                    pathname: '/complete-profile',
+                    state: { email: email,password:password }
+                })*/
+              localStorage.setItem(
+                "emailForSignIn",
+                JSON.stringify({ email, password })
+              );
+              const emaill = { email: email };
 
               //   document.getElementById("complete-profile");
-
+            } else {
+              notify("At least 8 characters required!!");
             }
           }}
         >
@@ -733,7 +727,7 @@ function LoginPage(props) {
             <button
               className={classes.button}
               style={{ marginBottom: 40 }}
-              onClick={() => { }}
+              onClick={() => {}}
             >
               Register
             </button>

@@ -24,10 +24,11 @@ import {
   getOfferDetail,
   createContact,
   getItems,
-  hideAllOffers
+  hideAllOffers,
 } from "../ApiHelper";
 import { GoogleMap, DistanceMatrixService } from "@react-google-maps/api";
 import { ToastContainer, toast } from "react-toastify";
+import Moment from "react-moment";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -108,7 +109,14 @@ function ProviderDetail(props) {
   };
 
   const sendCustomeNotification = (text, serviceId, type) => {
-    console.log("This is being passed",text,"ServiceId",serviceId,"type",type)
+    console.log(
+      "This is being passed",
+      text,
+      "ServiceId",
+      serviceId,
+      "type",
+      type
+    );
     setOpenLoader(true);
     sendCustomerNotification(
       jobData.providerId,
@@ -219,7 +227,7 @@ function ProviderDetail(props) {
           setOpenLoader(false);
           console.log("This is the order canel", res.data);
           sendCustomeNotification(
-            JSON.parse("Sorry, ",localStorage.getItem("userData")).firstName +
+            JSON.parse("Sorry, ", localStorage.getItem("userData")).firstName +
               " " +
               JSON.parse(localStorage.getItem("userData")).lastName +
               " did not accept your offer",
@@ -241,6 +249,7 @@ function ProviderDetail(props) {
 
   const acceptTheOffer = () => {
     setOpenLoader(true);
+    console.log(jobData);
     acceptOffer(jobData._id).then(
       (res) => {
         if (
@@ -259,7 +268,7 @@ function ProviderDetail(props) {
             jobData.serviceId,
             "offerAccepted"
           );
-          cancleTheOffers(jobData.serviceId._id)
+          cancleTheOffers(jobData.serviceId._id);
           createMyContact(jobData.serviceId._id);
         }
       },
@@ -404,7 +413,7 @@ function ProviderDetail(props) {
                 lng: jobData.serviceId.contactDetails.longitude,
               },
             ],
-            unitSystem : window.google.maps.UnitSystem.IMPERIAL,
+            unitSystem: window.google.maps.UnitSystem.IMPERIAL,
             travelMode: "DRIVING",
           }}
           callback={(res) => {
@@ -574,12 +583,10 @@ function ProviderDetail(props) {
             container
             direction="row"
             justify="center"
-            style={{ height: "max-content",cursor:'pointer' }}
-            onClick={
-              ()=>{
-                document.getElementById("homepage/contacts").click()
-              }
-            }
+            style={{ height: "max-content", cursor: "pointer" }}
+            onClick={() => {
+              document.getElementById("homepage/contacts").click();
+            }}
           >
             <img
               src={jobData.providerProfileId.profileImage}
@@ -607,17 +614,17 @@ function ProviderDetail(props) {
               </p>
               <Rating
                 value={
-                  jobData.providerRating ||
-                  jobData.providerProfileId.providerRating
+                  jobData.providerProfileId.ratings.length - 1 ||
+                  jobData.providerProfileId.ratings.length - 1
                 }
                 style={{ fontSize: 10 }}
               ></Rating>
               <span style={{ fontSize: 10 }}>
-                {jobData.providerRating ||
-                  jobData.providerProfileId.providerRating}
+                {jobData.providerProfileId.ratings.length - 1 ||
+                  jobData.providerProfileId.ratings.length - 1}
                 (
                 {jobData.providerReviews ||
-                  jobData.providerProfileId.providerReviews}
+                  jobData.providerProfileId.totalRatings}
                 ){" "}
               </span>
               <div style={{ width: "100%" }}></div>
@@ -639,7 +646,10 @@ function ProviderDetail(props) {
                 <span style={{ color: "#60a3d6", fontSize: 10 }}>Date</span>
 
                 <p style={{ fontSize: 10, margin: 0 }}>
-                  {jobData.serviceDate || jobData.serviceId.problem.serviceDate}
+                  <Moment format="MMMM-DD-YY">
+                    {jobData.serviceDate ||
+                      jobData.serviceId.problem.serviceDate}
+                  </Moment>
                 </p>
               </Grid>
               <Grid item md={6} xs={6}>
@@ -675,8 +685,6 @@ estimatedTravelTime: "20 minutes" */}
                   {jobData.specialOffer || "N/A"}
                 </p>
               </Grid>
-
-              
             </Grid>
             <div
               style={{ width: "100%", border: "1px solid #f6f6f6", margin: 20 }}

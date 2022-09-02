@@ -23,7 +23,7 @@ import {
   CustomerSericeUpdateInssurance,
   CustomerSericeUpdateContactDetails,
   MyProfile,
-  UpdateCustomerProfile
+  UpdateCustomerProfile,
 } from "../ApiHelper";
 import { ToastContainer, toast } from "react-toastify";
 var validator = require("email-validator");
@@ -39,10 +39,11 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   loginimg: {
-    width: "50%", height: "45vh", [theme.breakpoints.down("sm")]: {
+    width: "50%",
+    height: "45vh",
+    [theme.breakpoints.down("sm")]: {
       width: "100%",
-    }
-
+    },
   },
   label: {
     width: "50%",
@@ -130,15 +131,10 @@ export default function LoginPage() {
       JSON.parse(localStorage.getItem("userCurrentLocation")),
   });
 
-
-
   const getMyProfile = () => {
-
-
-
     MyProfile().then(
       (res) => {
-        console.log(res.data.data, 'response = ')
+        console.log(res.data.data, "response = ");
         if (
           (res.data.success ||
             res.status === 200 ||
@@ -146,29 +142,24 @@ export default function LoginPage() {
             res.status === 200) &&
           res.data.data.is_deleted === false
         ) {
-          console.log(res.data, 'res.data.is_deleted')
-          document.getElementById("home").click()
-          const activeTab = localStorage.getItem("activeTab")
+          console.log(res.data, "res.data.is_deleted");
+          document.getElementById("home").click();
+          const activeTab = localStorage.getItem("activeTab");
           if (activeTab === "ReviewRequest") {
-            document.getElementById("requestAService/0").click()
-
+            document.getElementById("requestAService/0").click();
           }
-
-        }
-        else if (res.data.success === 404) {
-          document.getElementById("home").click()
-
-        }
-        else if (res.data.data.is_deleted === true) {
-          console.log(res.data.is_deleted, 'res.data.is_deleted')
-          notify("Your Profile is Deleted!")
+        } else if (res.data.success === 404) {
+          document.getElementById("home").click();
+        } else if (res.data.data.is_deleted === true) {
+          console.log(res.data.is_deleted, "res.data.is_deleted");
+          notify("Your Profile is Deleted!");
         }
       },
       (error) => {
         setOpenLoader(false);
         if (error.response) {
           // notify(error.response.data.message);
-          document.getElementById("completeProfile").click()
+          document.getElementById("completeProfile").click();
         }
         setOpenLoader(false);
         console.log("This is response", error.response);
@@ -562,11 +553,8 @@ export default function LoginPage() {
       <Link id="completeProfile" to="/complete-profile"></Link>
 
       <Link id="landing" to="/"></Link>
-      <Grid container direction="row" justify="center" lg={12} >
-        <img
-          className={classes.loginimg}
-          src={LoginPic}
-        ></img>
+      <Grid container direction="row" justify="center" lg={12}>
+        <img className={classes.loginimg} src={LoginPic}></img>
       </Grid>
 
       <Grid
@@ -613,7 +601,7 @@ export default function LoginPage() {
             ></VisibilityOutlinedIcon>
           )}
         </div>
-        <Grid container direction="row" justify="center" >
+        <Grid container direction="row" justify="center">
           <div className={classes.rememberMeDiv}>
             <Grid container direction="row">
               <Grid item md={6} xs={6}>
@@ -682,15 +670,13 @@ export default function LoginPage() {
 
                     localStorage.setItem("token", res.data.token);
                     localStorage.setItem("id", res.data._id);
-                    updateMyProfile()
+                    updateMyProfile();
                     localStorage.setItem("email", email);
                     if (localStorage.getItem("requestAfterLogin")) {
                       localStorage.removeItem("requestAfterLogin");
                       postMyRequest();
                     } else {
-
-                      getMyProfile()
-
+                      getMyProfile();
                     }
                   }
                 },

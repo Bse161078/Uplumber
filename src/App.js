@@ -241,21 +241,21 @@ export default function App() {
         });
 
     }
-    onMessageListener().then(payload => {
+    // onMessageListener().then(payload => {
 
-        showNotification()
-        console.log(payload);
-    }).catch(err => console.log('onMessageListener failed: ', err));
+    //     showNotification()
+    //     console.log(payload);
+    // }).catch(err => console.log('onMessageListener failed: ', err));
     useEffect(async () => {
-        // getapi()
         let fb = firebase;
+        getapi()
 
         console.log("This is fb app", fb);
     }, []);
-    useEffect(() => {
+    // useEffect(() => {
 
-        getTokens(setTokenFound);
-    }, []);
+    //     getTokens(setTokenFound);
+    // }, []);
 
 
     return (

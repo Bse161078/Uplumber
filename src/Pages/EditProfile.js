@@ -198,7 +198,7 @@ export default function UpdateUserProfile(props) {
             console.log("hamza", e);
         }
     };
-    const updateMyProfile = () => {
+    const updateMyProfile = async () => {
         debugger
         const phone = parsePhoneNumber(phoneNumber).nationalNumber;
         const phoneCode = parsePhoneNumber(phoneNumber).countryCallingCode;
@@ -208,25 +208,27 @@ export default function UpdateUserProfile(props) {
             profileImage: profileImage,
             firstName: firstName,
             lastName: lastName,
-            address: address.userAddress,
+            address: localStorage.getItem("userAddress"),
             unit: unit,
-            city: city,
-            state: state,
+            city: localStorage.getItem("userCity"),
+            state: localStorage.getItem("userState"),
             phoneNumber: phone,
             countryPhoneCode: phoneCode,
             countryCode: countrycode,
             zipcode: zipcode,
             latitude: latitude,
             longitude: longitude,
-            country: country,
+            country: localStorage.getItem("userCountry"),
             email: email,
         };
         console.log("THis is the data", data);
         setOpenLoader(true);
 
-        UpdateCustomerProfile(data).then(
+        await UpdateCustomerProfile(data).then(
             (res) => {
                 if (res.data.success || res.status === 200 || res.status === 201) {
+
+
                     console.log(res.data.data);
                     var user = res.data.data;
                     props.setFirstName(user.firstName);
@@ -247,6 +249,8 @@ export default function UpdateUserProfile(props) {
                 }
             },
             (error) => {
+
+
                 if (error.response) {
                     notify(error.response.data.message);
                 }
@@ -614,7 +618,7 @@ export default function UpdateUserProfile(props) {
                             // This must be true.
                             handleCodeInApp: true,
                         };
-                        updateMyProfile();
+                        await updateMyProfile();
                         if (email && phoneNumber) {
                             if (email !== oldEmail || !props.emailVerified) {
                                 console.log(

@@ -10,7 +10,7 @@ import Sidebar from "../Components/Sidebar";
 import Header from "../Components/Header";
 import Rating from "@material-ui/lab/Rating";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import { Link, withRouter } from "react-router-dom";
+import { Link, useHistory, withRouter } from "react-router-dom";
 import Calendar from "react-calendar";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
@@ -88,7 +88,7 @@ function ProviderDetail(props) {
 
   const [type, setType] = useState("password");
   const [typeConfirm, setTypeConfirm] = useState("password");
-
+  const history = useHistory();
   const handleChange = (event) => {
     setValue(event.target.value);
   };
@@ -102,6 +102,7 @@ function ProviderDetail(props) {
   const position = [51.505, -0.09];
   // //console.log("THis is great", props);
   const notify = (data) => toast(data);
+
   return (
     <div style={{ background: "#f2f2f2", background: "white" }}>
       <Backdrop className={classes.backdrop} open={openLoader}>
@@ -200,6 +201,7 @@ function ProviderDetail(props) {
               onChange={(e) => {
                 setNewPassword(e.target.value);
               }}
+              minLength={3}
             ></input>
             {type === "text" ? (
               <VisibilityOffOutlinedIcon
@@ -226,6 +228,7 @@ function ProviderDetail(props) {
             <input
               className={classes.input}
               style={{ border: "none" }}
+              minLength={3}
               type={typeConfirm}
               onChange={(e) => {
                 setConfirmNewPassword(e.target.value);
@@ -249,21 +252,21 @@ function ProviderDetail(props) {
           </div>
           <button
             className={classes.button}
-            onClick={() => {
+            onClick={(async) => {
+              debugger;
               if (newPassword === "") {
                 notify("Please enter password!!");
               } else if (newPassword != confirmNewPassword) {
                 notify("Passwords dont matchs!!");
-              } else {
+              } else if (newPassword.length > 8) {
                 setOpenLoader(true);
                 changePassword(newPassword).then(
                   (res) => {
-                    if (
-                      res.statusText === "OK" ||
-                      res.statusText === "Created"
-                    ) {
-                      setOpenLoader(false);
+                    if (res.data.status === true) {
                       document.getElementById("back").click();
+                      // history.push("/homepage");
+                      setOpenLoader(false);
+                      notify("Passwords Updated Successfully");
                     }
                   },
                   (error) => {
@@ -274,7 +277,11 @@ function ProviderDetail(props) {
                     console.log("This is response", error.response);
                   }
                 );
+              } else {
+                notify("At least 8 characters required!!");
               }
+
+              setOpenLoader(false);
             }}
           >
             Save Changes

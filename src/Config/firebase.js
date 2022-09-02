@@ -66,13 +66,13 @@ import firebase from "firebase";
 //     return firebase.initializeApp(firebaseConfig);
 //   }
 // }
-export const onMessageListener = () =>
+// export const onMessageListener = () =>
 
-  new Promise((resolve) => {
-    firebase.messaging().onMessage((payload) => {
-      resolve(payload);
-    });
-  });
+//   new Promise((resolve) => {
+//     firebase.messaging().onMessage((payload) => {
+//       resolve(payload);
+//     });
+//   });
 
 const firebaseProduction = {
   apiKey: "AIzaSyAPDoekF3spw79qd_W8PCZUrGuYsoXVY60",

@@ -172,7 +172,7 @@ function ProviderDetail(props) {
 
   const OfferCards = (props) => {
     var type = props.item;
-    console.log("This is props.item ",props.item._id)
+    console.log("This is props.item ", props.item._id)
     if (props.item === "Job Started") {
       type = "jobStarted";
     }
@@ -184,10 +184,10 @@ function ProviderDetail(props) {
       <Paper
         style={{ width: "90%", padding: 10, marginBottom: 10 }}
       >
-            <Link
-            id={"jobdetails" + props.item._id}
-            to={"/jobDetails/" + props.item._id}
-          ></Link>
+        <Link
+          id={"jobdetails" + props.item._id}
+          to={"/jobDetails/" + props.item._id}
+        ></Link>
 
         <Grid
           container
@@ -195,8 +195,8 @@ function ProviderDetail(props) {
           style={{ cursor: "pointer" }}
           onClick={() => {
             document
-            .getElementById("jobdetails" + props.item._id)
-            .click();
+              .getElementById("jobdetails" + props.item._id)
+              .click();
           }}
         >
           <Grid item md={8} xs={8}>
@@ -221,7 +221,7 @@ function ProviderDetail(props) {
                   style={{ width: "10%" }}
                   src={findIcon(
                     props.item.itemName ||
-                      props.item.serviceId.problem.problemItem
+                    props.item.serviceId.problem.problemItem
                   )}
                 ></img>
               )}
@@ -254,17 +254,17 @@ function ProviderDetail(props) {
           style={{ width: "100%", border: "1px solid #f6f6f6", marginTop: 15 }}
           onClick={() => {
             document
-            .getElementById("jobdetails" + props.item._id)
-            .click();
+              .getElementById("jobdetails" + props.item._id)
+              .click();
           }}
         ></div>
-        <Grid container direction="row" justify="center" 
+        <Grid container direction="row" justify="center"
           style={{ cursor: "pointer" }}
-         onClick={() => {
-          document
-          .getElementById("jobdetails" + props.item._id)
-          .click();
-        }}
+          onClick={() => {
+            document
+              .getElementById("jobdetails" + props.item._id)
+              .click();
+          }}
         >
           <Grid item md={12} xs={12}>
             <span style={{ color: "#60a3d6", fontSize: 10 }}>Date</span>
