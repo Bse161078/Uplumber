@@ -643,7 +643,7 @@ function LoginPage(props) {
               notify("Please Enter a password");
             } else if (password != confirmPassword) {
               notify("Password do not match");
-            } else if (password.length > 8) {
+            } else if (password.length >= 8) {
               setOpenLoader(true);
               var data = {
                 email: email,

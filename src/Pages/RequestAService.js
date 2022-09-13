@@ -798,6 +798,7 @@ function ProviderDetail(props) {
 
   const checkThisUser = () => {
     setOpenLoader(true);
+    debugger;
     checkUser(requestData.userEmail, requestData.userPhone).then(
       (res) => {
         if (
@@ -809,9 +810,11 @@ function ProviderDetail(props) {
           setOpenLoader(false);
           console.log("THis si my proifle", res.data, "  ", requestData);
           if (res.data.message === "Customer exists") {
-            localStorage.setItem("requestAfterLogin", "true");
+            localStorage.setItem("requestAfterLogin", true);
             document.getElementById("login").click();
           } else {
+            localStorage.setItem("requestBeforeLogin", true);
+
             document.getElementById("create-account").click();
           }
         } else if (res.status === 404) {
@@ -2527,7 +2530,7 @@ function ProviderDetail(props) {
             <p
               style={{
                 fontWeight: "bold",
-                fontSize: 18,
+                fontSize: 22,
 
                 textAlign: "center",
                 width: "100%",
@@ -2569,7 +2572,7 @@ function ProviderDetail(props) {
                             style={{
                               width: "100%",
                               textAlign: "center",
-                              fontSize: 12,
+                              fontSize: 18,
                               fontWeight: 600,
                             }}
                           >
